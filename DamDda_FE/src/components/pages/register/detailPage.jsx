@@ -89,8 +89,8 @@ const DetailPage = () => {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
         {/* 페이지 제목과 버튼 */}
-        <div style={{ width: "100%", textAlign: "center" }}>
-          <Typography variant="h4">상세설명</Typography>
+        <div style={{ width: "100%", display:"flex", textAlign: "center" }}>
+          <Typography variant="h6">상세설명</Typography>
           <Button variant="outlined" onClick={openAiModal}>
             AI 도움받기
           </Button>

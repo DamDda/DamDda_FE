@@ -1,9 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { Typography, LinearProgress, Divider, Button, Tabs, Tab } from "@mui/material";
+import {
+  Typography,
+  LinearProgress,
+  Divider,
+  Button,
+  Tabs,
+  Tab,
+} from "@mui/material";
 import { styled } from "@mui/system";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ProjectDetail from "./details";
+import Notice from "./notices";
+import Qna from "./qna";
 
 const ThumbnailContainer = styled("div")({
   position: "relative",
@@ -126,7 +135,9 @@ const Detail = () => {
             </Button>
           </div>
           <Indicator>
-            <div style={{ width: "100%", backgroundColor: "#ccc", height: "5px" }}>
+            <div
+              style={{ width: "100%", backgroundColor: "#ccc", height: "5px" }}
+            >
               <div
                 style={{
                   width: `${progress}%`,
@@ -164,16 +175,16 @@ const Detail = () => {
           <div style={{ marginTop: "20px" }}>
             <Button variant="contained">이 프로젝트에 후원하기</Button>
             <p>
-            <Button
-              variant="outlined"
-              onClick={handleHeartClick}
-              style={{ marginLeft: "10px" }}
-            >
-              {isHearted ? "♥" : "♡"} <br /> {liked_count}명
-            </Button>
-            <Button variant="outlined" style={{ marginLeft: "10px" }}>
-              협업하기
-            </Button>
+              <Button
+                variant="outlined"
+                onClick={handleHeartClick}
+                style={{ marginLeft: "10px" }}
+              >
+                {isHearted ? "♥" : "♡"} <br /> {liked_count}명
+              </Button>
+              <Button variant="outlined" style={{ marginLeft: "10px" }}>
+                협업하기
+              </Button>
             </p>
           </div>
         </div>
@@ -184,9 +195,9 @@ const Detail = () => {
       {/* 상세설명 섹션 */}
       <div id="details">
         <Tabs value={0} indicatorColor="primary" textColor="primary">
-          <Tab label="상세설명" onClick={() => scrollToSection('details')} />
-          <Tab label="공지사항" onClick={() => scrollToSection('notices')} />
-          <Tab label="Q&A" onClick={() => scrollToSection('qna')} />
+          <Tab label="상세설명" onClick={() => scrollToSection("details")} />
+          <Tab label="공지사항" onClick={() => scrollToSection("notices")} />
+          <Tab label="Q&A" onClick={() => scrollToSection("qna")} />
         </Tabs>
         <Typography variant="body1" style={{ marginTop: "10px" }}>
           <ProjectDetail />
@@ -198,12 +209,12 @@ const Detail = () => {
       {/* 공지사항 섹션 */}
       <div id="notices">
         <Tabs value={1} indicatorColor="primary" textColor="primary">
-          <Tab label="상세설명" onClick={() => scrollToSection('details')} />
-          <Tab label="공지사항" onClick={() => scrollToSection('notices')} />
-          <Tab label="Q&A" onClick={() => scrollToSection('qna')} />
+          <Tab label="상세설명" onClick={() => scrollToSection("details")} />
+          <Tab label="공지사항" onClick={() => scrollToSection("notices")} />
+          <Tab label="Q&A" onClick={() => scrollToSection("qna")} />
         </Tabs>
         <Typography variant="body1" style={{ marginTop: "10px" }}>
-          여기에는 공지사항 내용이 들어갑니다.
+          <Notice />
         </Typography>
       </div>
 
@@ -212,12 +223,12 @@ const Detail = () => {
       {/* Q&A 섹션 */}
       <div id="qna">
         <Tabs value={2} indicatorColor="primary" textColor="primary">
-          <Tab label="상세설명" onClick={() => scrollToSection('details')} />
-          <Tab label="공지사항" onClick={() => scrollToSection('notices')} />
-          <Tab label="Q&A" onClick={() => scrollToSection('qna')} />
+          <Tab label="상세설명" onClick={() => scrollToSection("details")} />
+          <Tab label="공지사항" onClick={() => scrollToSection("notices")} />
+          <Tab label="Q&A" onClick={() => scrollToSection("qna")} />
         </Tabs>
         <Typography variant="body1" style={{ marginTop: "10px" }}>
-          여기에는 Q&A 내용이 들어갑니다.
+          <Qna />
         </Typography>
       </div>
     </div>

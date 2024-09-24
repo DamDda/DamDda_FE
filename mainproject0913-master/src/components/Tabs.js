@@ -12,8 +12,8 @@ export default function TabsUnderlinePlacement() {
   };
 
   return (
-    <Box sx={{ width: "100%", display: 'flex', justifyContent: 'center' }}>
-      <Box sx={{ borderBottom: "none", paddingRight: '300px' }}>
+    <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
+      <Box sx={{ borderBottom: "none", paddingRight: "300px" }}>
         <Tabs
           value={value}
           onChange={handleChange}
@@ -28,8 +28,8 @@ export default function TabsUnderlinePlacement() {
           <Tab
             label="Tab 1. 프로필"
             sx={{
-              minWidth: "150px", 
-              borderBottom: value === 0 ? "2px solid blue" : "none", 
+              minWidth: "150px",
+              borderBottom: value === 0 ? "2px solid blue" : "none",
             }}
             component={Link}
             to="/profile"

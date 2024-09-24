@@ -1,13 +1,23 @@
-import React, { useState } from 'react';
-import { Box, Grid, Typography, Card, CardMedia, CardContent, Button, IconButton, LinearProgress } from '@mui/material';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import Pagination from '@mui/material/Pagination';
-import Stack from '@mui/material/Stack';
-import StatusButton from './StatusButton';
-import axios from 'axios'; // 나중에 백엔드 연결 시 주석 해제
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import {
+  Box,
+  Grid,
+  Typography,
+  Card,
+  CardMedia,
+  CardContent,
+  Button,
+  IconButton,
+  LinearProgress,
+} from "@mui/material";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
+import StatusButton from "./StatusButton";
+import axios from "axios"; // 나중에 백엔드 연결 시 주석 해제
+import { useNavigate } from "react-router-dom";
 
 // 가짜 프로젝트 데이터 배열(11개의 데이터로 페이징 처리 확인 가능)
 const projectList = Array.from({ length: 11 }, (_, index) => ({
@@ -20,40 +30,57 @@ const projectList = Array.from({ length: 11 }, (_, index) => ({
   image: `https://example.com/project${index + 1}.jpg`,
   hearted: index % 2 === 0,
   host: `호스트 ${index + 1}`,
-  approval : index % 3 ===0 ? 1 : index % 3 === 1 ? 0: -1, // 승인상태 
+  approval: index % 3 === 0 ? 1 : index % 3 === 1 ? 0 : -1, // 승인상태
 }));
 
 // 프로젝트 카드 컴포넌트
 export const ProductCard = ({ product }) => {
   const navigate = useNavigate(); // 페이지 이동을 위한 훅
 
-  // 승인 상태에 따른 상태 라벨 결정
-  const getApprovalStatus = ({approval}) => {
-    switch(approval) {
-      case 1: 
-        return '승인완료';
-      case 0: 
-        return '승인대기';
-      case -1:
-        return '승인거절';
-      default :
-        return '미정';
-    }
-  }; 
-
-  // 카드 클릭 시 상세 페이지로 이동
+  // 카드 클릭 시 상세 페이지로 이동 (지금은 index +1 사용할거임)
   const handleCardClick = () => {
-    navigate(`/projects/myproject/{projectId}`); // 백엔드 api함수
+    console.log("누락된 인덱스:", product.id); // index값 확인
+
+    // index값이 유효한 숫자인지 체크하고 url로 전달
+    if (typeof product.id == "number" && !isNaN(product.id)) {
+      // 페이지 이동
+      navigate(`/myproject/${product.id}`); // 올바른 url로 navigate
+    } else {
+      console.log("인덱스 번호 없음");
+    }
+    // navigate(`/projects/myproject/${index + 1}`); // index +1 사용
+    // // navigate(`/projects/myproject/${projectId}`); // 백엔드 api함수
   };
-  
+
+  // 승인 상태에 따른 상태 라벨 결정
+  const getApprovalStatus = ({ approval }) => {
+    switch (approval) {
+      case 1:
+        return "승인완료";
+      case 0:
+        return "승인대기";
+      case -1:
+        return "승인거절";
+      default:
+        return "미정";
+    }
+  };
+
   return (
-    <Card 
-      onClick = {handleCardClick} // 클릭 시 상세페이지로 이동
-      sx={{ borderRadius: '15px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', padding: 2, position: 'relative', width: '100%' }}>
+    <Card
+      onClick={handleCardClick} // 클릭 시 상세페이지로 이동
+      sx={{
+        borderRadius: "15px",
+        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+        padding: 2,
+        position: "relative",
+        width: "100%",
+      }}
+    >
       <CardMedia
         component="img"
         image={product.image}
-        sx={{ height: '180px', borderRadius: '10px', objectFit: 'cover' }}
+        sx={{ height: "180px", borderRadius: "10px", objectFit: "cover" }}
       />
       {/* <IconButton
         sx={{ position: 'absolute', top: 10, right: 10, color: product.hearted ? 'red' : 'gray' }}
@@ -62,34 +89,84 @@ export const ProductCard = ({ product }) => {
       </IconButton> */}
 
       {/* 관리자 승인 상태에 따른 StatusButton 추가*/}
-      <StatusButton 
-      status={getApprovalStatus(product.approval)} // approval 값에 따라 버튼 상태 결정
-      label={getApprovalStatus(product.approval)}
-      sx = {{ position: 'absolute', top: 25, right: 20, borderRadius: '50px', width: 90, height: 10}} />
+      <StatusButton
+        status={getApprovalStatus(product.approval)} // approval 값에 따라 버튼 상태 결정
+        label={getApprovalStatus(product.approval)}
+        sx={{
+          position: "absolute",
+          top: 25,
+          right: 20,
+          borderRadius: "50px",
+          width: 90,
+          height: 10,
+        }}
+      />
 
       <CardContent>
-        <Typography variant="h6" component="div" sx={{ fontWeight: 'bold', fontSize: '1rem', mb: 1 }}>
+        <Typography
+          variant="h6"
+          component="div"
+          sx={{ fontWeight: "bold", fontSize: "1rem", mb: 1 }}
+        >
           {product.title}
         </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.85rem', mb: 1 }}>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{ fontSize: "0.85rem", mb: 1 }}
+        >
           {product.description}
         </Typography>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Typography variant="body2" sx={{ fontWeight: 'bold', fontSize: '0.75rem' }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <Typography
+              variant="body2"
+              sx={{ fontWeight: "bold", fontSize: "0.75rem" }}
+            >
               달성률 {product.progress}%
             </Typography>
-            <Typography variant="body2" sx={{ fontWeight: 'bold', fontSize: '0.75rem' }}>
+            <Typography
+              variant="body2"
+              sx={{ fontWeight: "bold", fontSize: "0.75rem" }}
+            >
               {product.goal}
             </Typography>
           </Box>
         </Box>
-        <LinearProgress variant="determinate" value={product.progress} sx={{ height: 8, borderRadius: '5px', mt: 1, mb: 1 }} />
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Button variant="contained" color="secondary" size="small" sx={{ backgroundColor: '#5a87f7', borderRadius: '12px', fontSize: '0.75rem' }}>
+        <LinearProgress
+          variant="determinate"
+          value={product.progress}
+          sx={{ height: 8, borderRadius: "5px", mt: 1, mb: 1 }}
+        />
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Button
+            variant="contained"
+            color="secondary"
+            size="small"
+            sx={{
+              backgroundColor: "#5a87f7",
+              borderRadius: "12px",
+              fontSize: "0.75rem",
+            }}
+          >
             마감임박 {product.daysLeft}
           </Button>
-          <Typography variant="body2" sx={{ fontWeight: 'bold', fontSize: '0.75rem' }}>
+          <Typography
+            variant="body2"
+            sx={{ fontWeight: "bold", fontSize: "0.75rem" }}
+          >
             진행자: {product.host}
           </Typography>
         </Box>
@@ -125,20 +202,47 @@ export const Myproject = () => {
   */
 
   // 현재 페이지에서 보여줄 프로젝트들만 추출
-  const displayedProducts = projectList.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+  const displayedProducts = projectList.slice(
+    (page - 1) * itemsPerPage,
+    page * itemsPerPage
+  );
 
   return (
-    <Box sx={{ margin: '0 auto', padding: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', maxWidth: '100%' }}>
-      <Grid container justifyContent="center" alignItems="center" spacing={4} sx={{ flexGrow: 1 }}>
+    <Box
+      sx={{
+        margin: "0 auto",
+        padding: 2,
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        maxWidth: "100%",
+      }}
+    >
+      <Grid
+        container
+        justifyContent="center"
+        alignItems="center"
+        spacing={4}
+        sx={{ flexGrow: 1 }}
+      >
         {displayedProducts.map((product) => (
-          <Grid item key={product.id} xs={12} sm={6} md={2.4} display="flex" justifyContent="center">
+          <Grid
+            item
+            key={product.id}
+            xs={12}
+            sm={6}
+            md={2.4}
+            display="flex"
+            justifyContent="center"
+          >
             <ProductCard product={product} />
           </Grid>
         ))}
       </Grid>
 
       {/* Pagination 컴포넌트 추가 */}
-      <Stack spacing={2} sx={{ marginTop: '20px' }}>
+      <Stack spacing={2} sx={{ marginTop: "20px" }}>
         <Pagination
           count={Math.ceil(totalProducts / itemsPerPage)} // 페이지 수 계산
           page={page} // 현재 페이지
@@ -151,4 +255,4 @@ export const Myproject = () => {
   );
 };
 
-export default MyProject;
+export default Myproject;

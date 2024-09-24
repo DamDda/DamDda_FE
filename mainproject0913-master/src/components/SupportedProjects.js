@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ProjectCard from "./ProjectCard"; // ProjectCard 컴포넌트
-import './css/SupportedProjects.css'; // CSS 파일 경로 수정
+import "./css/SupportedProjects.css"; // CSS 파일 경로 수정
 
 export default function SupportedProjects({ memberId }) {
   const [projects, setProjects] = useState([]);
@@ -16,7 +16,7 @@ export default function SupportedProjects({ memberId }) {
         packagePrice: 50000,
         paymentDate: "2024-09-05T11:30:00",
         supportNumber: 18236915671,
-        status: '진행중'
+        status: "진행중",
       },
       {
         title: "프로젝트 제목 2",
@@ -25,7 +25,7 @@ export default function SupportedProjects({ memberId }) {
         packagePrice: 100000,
         paymentDate: "2023-12-20T18:30:00",
         supportNumber: 17534789126,
-        status: '마감'
+        status: "마감",
       },
       {
         title: "프로젝트 제목 3",
@@ -34,7 +34,7 @@ export default function SupportedProjects({ memberId }) {
         packagePrice: 10000,
         paymentDate: "2024-09-05T11:30:00",
         supportNumber: 16236915671,
-        status: '진행중'
+        status: "진행중",
       },
     ];
     setProjects(mockData);

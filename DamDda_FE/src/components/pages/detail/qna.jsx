@@ -105,8 +105,7 @@ const Qna = () => {
           문의하기
         </Button>
       </Card>
-
-      {/* 등록된 질문 리스트 */}
+      {/* 등록된 질문 리스트 */}s
       <div style={{ maxWidth: "600px", margin: "0 auto" }}>
         {questions.map((question) => (
           <Card

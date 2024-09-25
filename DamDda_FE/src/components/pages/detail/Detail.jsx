@@ -11,7 +11,7 @@ import { styled } from "@mui/system";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ProjectDetail from "./details";
-import Notice from "./notices";
+import Notice from "./notice";
 import Qna from "./qna";
 
 const ThumbnailContainer = styled("div")({

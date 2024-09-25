@@ -1,7 +1,14 @@
 import React from "react";
-import Button from "@mui/joy/Button";
+import { Button, Tooltip } from "@mui/material";
 
-const StatusButton = ({ status, label, onClick, sx }) => {
+const StatusButton = ({
+  status,
+  label,
+  showRejectReason,
+  rejectMessage,
+  onClick,
+  sx,
+}) => {
   const getButtonProps = () => {
     switch (status) {
       case "진행중":
@@ -74,30 +81,36 @@ const StatusButton = ({ status, label, onClick, sx }) => {
   } = getButtonProps();
 
   return (
-    <Button
-      variant="outlined"
-      onClick={onClick} // 여기에 onClick 추가
-      sx={{
-        "--variant-borderWidth": "2px",
-        borderRadius: 20,
-        width: width || "100px",
-        height: "40px",
-        fontSize: "14px",
-        color,
-        borderColor,
-        backgroundColor,
-        ...sx,
-        "&:hover": {
-          backgroundColor: disableHover
-            ? backgroundColor
-            : hoverBackgroundColor || backgroundColor, // 결제 취소일 때 hover 시 색 변경 안 함
-          borderColor,
-          color,
-        },
-      }}
+    <Tooltip
+      title={showRejectReason && rejectMessage ? rejectMessage : ""} //showRejectReason이 true일 때만 rejectMessage를 보여줌
+      arrow
+      placement="top"
     >
-      {label}
-    </Button>
+      <Button
+        variant="outlined"
+        onClick={onClick} // 여기에 onClick 추가
+        sx={{
+          "--variant-borderWidth": "2px",
+          borderRadius: 20,
+          width: width || "100px",
+          height: "40px",
+          fontSize: "14px",
+          color,
+          borderColor,
+          backgroundColor,
+          ...sx,
+          "&:hover": {
+            backgroundColor: disableHover
+              ? backgroundColor
+              : hoverBackgroundColor || backgroundColor, // 결제 취소일 때 hover 시 색 변경 안 함
+            borderColor,
+            color,
+          },
+        }}
+      >
+        {label}
+      </Button>
+    </Tooltip>
   );
 };
 

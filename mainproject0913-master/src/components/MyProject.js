@@ -217,6 +217,7 @@ export const Myproject = () => {
         justifyContent: "center",
         alignItems: "center",
         maxWidth: "100%",
+        width: "1600px"
       }}
     >
       <Grid
@@ -232,7 +233,9 @@ export const Myproject = () => {
             key={product.id}
             xs={12}
             sm={6}
-            md={2.4}
+            md={4}
+            lg={3}
+            xl={2.4}
             display="flex"
             justifyContent="center"
           >

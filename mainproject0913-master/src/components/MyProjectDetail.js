@@ -4,11 +4,11 @@ import {
   Typography,
   LinearProgress,
   Divider,
-  Button,
   IconButton,
+  Box,
+  Tooltip,
 } from "@mui/material";
 import { styled } from "@mui/system";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import StatusButton from "./StatusButton";
 
@@ -18,16 +18,16 @@ const mockProjectData = {
     category: "💄뷰티",
     organizer_id: "홍길동",
     title: "세상에 단 하나뿐인 멋진 프로젝트",
-    description:
-      "세상에 단 하나뿐인 아주아주 멋진 예술품을 만들었습니다. 많이많이사세요",
-    currentAmount: 500000,
-    target_funding: 1000000,
-    start_date: "2024.01.01",
-    end_date: "2024.06.30",
+    description: "세상에 단 하나뿐인 아주아주 멋진 예술품을 만들었습니다.",
+    fundsReceive: 500000,
+    targetFunding: 1000000,
+    startDate: "2024.01.01",
+    endDate: "2024.06.30",
     delivery_date: 30,
-    liked_count: 500,
+    supporterCnt: 500,
     supporter_count: 100,
-    approval: 1,
+    approval: -1,
+    rejectMessage: "내용부족",
     thumbnail_url: "https://via.placeholder.com/500",
   },
 };
@@ -42,6 +42,7 @@ const ThumbnailContainer = styled("div")({
   justifyContent: "center",
   borderRadius: "8px",
   overflow: "hidden",
+  marginRight: "30px",
 });
 
 const ThumbnailImage = styled("img")({
@@ -64,38 +65,28 @@ const DetailContainer = styled("div")({
 
 const InfoSection = styled("div")({
   display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
+  justifyContent: "flex-start", // 이미지와 정보를 나란히 배치
+  alignItems: "flex-start", // 상단 정렬
   width: "100%",
+  marginTop: "20px",
 });
 
 const ProgressSection = styled("div")({
-  width: "100%",
-  margin: "20px 0",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "flex-start", // 상단 정렬
+  alignItems: "flex-start",
+  marginLeft: "20px", // 이미지와 텍스트 사이의 간격을 줄임
+  marginTop: "19px",
 });
 
 const MyProjectDetail = () => {
-  const { id } = useParams(); // URL에서 projectId를 가져옴
+  const { id } = useParams();
   const [projectData, setProjectData] = useState(null);
-  const navigate = useNavigate(); // 페이지 이동을 위한 훅
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // 백엔드 구현 후 주석 해제
-    /*
-    const fetchProjectData = async () => {
-      try {
-        const response = await axios.get(`/projects/myproject/${id}`);
-        setProjectData(response.data);
-      } catch (error) {
-        console.error("프로젝트 데이터를 가져오는 중 오류 발생", error);
-      }
-    };
-
-    fetchProjectData();
-    */
-
-    // 백엔드가 구현되기 전에는 가짜 데이터 사용
-    const mockData = mockProjectData[id] || mockProjectData[1]; // 가짜 데이터로 설정
+    const mockData = mockProjectData[id] || mockProjectData[1];
     setProjectData(mockData);
   }, [id]);
 
@@ -108,20 +99,22 @@ const MyProjectDetail = () => {
     organizer_id,
     title,
     description,
-    currentAmount,
-    target_funding,
-    start_date,
-    end_date,
-    liked_count,
+    fundsReceive,
+    targetFunding,
+    startDate,
+    endDate,
+    supporterCnt,
     thumbnail_url,
+    rejectMessage,
   } = projectData;
 
-  const remainingDays = Math.ceil(
-    (new Date(end_date) - new Date()) / (1000 * 3600 * 24)
+  // 남은 기간이 0 이하일 경우 0으로 표시
+  const remainingDays = Math.max(
+    Math.ceil((new Date(endDate) - new Date()) / (1000 * 3600 * 24)),
+    0
   );
-  const progress = (currentAmount / target_funding) * 100;
+  const progress = (fundsReceive / targetFunding) * 100;
 
-  // 승인 상태에 따른 상태 라벨 결정
   const getApprovalStatus = (approval) => {
     switch (approval) {
       case 1:
@@ -137,7 +130,6 @@ const MyProjectDetail = () => {
 
   return (
     <DetailContainer>
-      {/* 좌측 상단에 < 버튼 추가, 누르면 Myproject로 돌아감 */}
       <IconButton
         onClick={() => navigate("/myproject")}
         style={{ position: "absolute", top: "200px", left: "500px" }}
@@ -145,7 +137,6 @@ const MyProjectDetail = () => {
         <ArrowBackIcon fontSize="large" />
       </IconButton>
 
-      {/* 상단 제목: 프로젝트 진행률 확인 */}
       <Typography
         variant="h4"
         sx={{ fontWeight: "bold", marginBottom: "20px" }}
@@ -153,8 +144,18 @@ const MyProjectDetail = () => {
         프로젝트 진행률 확인
       </Typography>
 
-      {/* 카테고리, 진행자명, 제목, 설명 */}
+      <div style={{ padding: "20px" }}>
+        <div style={{ marginBottom: "20px" }}>
+          <Typography variant="category">{category}</Typography>
+          <br />
+          <Typography variant="organizer">{organizer_id}</Typography>
+          <Typography variant="h6">{title}</Typography>
+          <Typography variant="body2">{description}</Typography>
+        </div>
+      </div>
+
       <InfoSection>
+        {/* 이미지 섹션 */}
         <ThumbnailContainer>
           {thumbnail_url ? (
             <ThumbnailImage src={thumbnail_url} alt="Project Thumbnail" />
@@ -165,62 +166,105 @@ const MyProjectDetail = () => {
           )}
         </ThumbnailContainer>
 
-        <div style={{ marginLeft: "40px", textAlign: "left" }}>
-          <Typography variant="category">{category}</Typography>
-          <Typography
-            variant="h6"
-            sx={{ fontWeight: "bold", marginBottom: "10px" }}
+        {/* 관리자 승인 상태에 따른 StatusButton */}
+        <Box>
+          <StatusButton
+            status={getApprovalStatus(projectData.approval)}
+            label={getApprovalStatus(projectData.approval)}
+            showRejectReason={true} // 이 페이지에서만 Tooltip이 작동하도록 설정
+            rejectMessage={rejectMessage} // 거절 사유 전달
+            sx={{
+              marginTop: "-50px",
+              marginRight: "-1150px",
+              backgroundColor: projectData.approval === -1 ? "red" : "#4caf50", // 거절일 때는 버튼 색을 다르게
+              borderRadius: "50px",
+              padding: "10px 20px",
+              zIndex: 2, // Tooltip이 정상적으로 표시되도록 zIndex 추가
+            }}
+          />
+        </Box>
+
+        {/* 후원 정보 섹션 */}
+        <ProgressSection>
+          {/* 후원금액(진행률) 부분 */}
+          <Typography variant="h6" style={{ marginTop: "20px" }}>
+            후원금액
+          </Typography>
+
+          {/* 금액 표시 */}
+          <Typography variant="h4" fontWeight="bold">
+            {fundsReceive.toLocaleString()}원
+          </Typography>
+
+          {/* 진행률 바와 % */}
+          <Box position="relative" width="600px" marginTop="10px">
+            <LinearProgress
+              variant="determinate"
+              value={progress}
+              style={{ height: "10px", borderRadius: "5px" }}
+            />
+
+            {/* % 표시를 바의 우측 상단에 배치 */}
+            <Typography
+              variant="body2"
+              style={{
+                position: "absolute",
+                right: 0,
+                top: "-20px", // 바의 위쪽에 위치하도록 설정
+                fontSize: "16px", // 글씨 작게 설정
+                color: "gray",
+              }}
+            >
+              {progress.toFixed(2)}%
+            </Typography>
+          </Box>
+
+          <Typography variant="h6" style={{ marginTop: "20px" }}>
+            남은 기간 <br />
+          </Typography>
+
+          {/* 남은 기간 표시   */}
+          <Typography variant="h4" fontWeight="bold">
+            {remainingDays}일
+          </Typography>
+
+          <Typography variant="h6" style={{ marginTop: "20px" }}>
+            후원자 수
+          </Typography>
+
+          {/* 후원자 수 표시 */}
+          <Typography variant="h4" fontWeight="bold">
+            {supporterCnt}명
+          </Typography>
+
+          {/* 회색 선 */}
+          <Divider style={{ margin: "20px 0", width: "600px" }} />
+
+          {/* 목표금액 */}
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
           >
-            {title}
-          </Typography>
-          <Typography variant="body2">{description}</Typography>
-          <Typography variant="body2" sx={{ marginTop: "10px", color: "gray" }}>
-            진행자: {organizer_id}
-          </Typography>
-        </div>
+            <Typography style={{ fontSize: "14px" }}>목표금액</Typography>
+            <Typography style={{ fontSize: "14px", marginLeft: "50px" }}>
+              {targetFunding}원
+            </Typography>
+          </Box>
+
+          {/* 펀딩기간 */}
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Typography style={{ fontSize: "14px" }}>펀딩기간</Typography>
+            <Typography style={{ fontSize: "14px", marginLeft: "50px" }}>
+              {startDate}~{endDate}
+            </Typography>
+          </Box>
+        </ProgressSection>
       </InfoSection>
-
-      {/* 후원금액과 진행률 */}
-      <ProgressSection>
-        <Typography
-          variant="h5"
-          sx={{ fontWeight: "bold", marginBottom: "10px" }}
-        >
-          후원금액 (진행률): {currentAmount}원 ({progress.toFixed(2)}%)
-        </Typography>
-        <LinearProgress
-          variant="determinate"
-          value={progress}
-          sx={{ height: "10px" }}
-        />
-        <Typography variant="h5" sx={{ marginTop: "20px" }}>
-          남은 기간: {remainingDays}일
-        </Typography>
-        <Typography variant="h5">후원자 수: {liked_count}명</Typography>
-      </ProgressSection>
-
-      <Divider sx={{ width: "100%", margin: "20px 0" }} />
-
-      {/* 목표 금액과 펀딩 기간 */}
-      <Typography variant="body2">목표금액: {target_funding}원</Typography>
-      <Typography variant="body2">
-        펀딩 기간: {start_date} ~ {end_date}
-      </Typography>
-      <Typography variant="body2">
-        예상 전달일: 프로젝트 종료일로부터 {projectData.delivery_date}일 이내
-      </Typography>
-
-      {/* 관리자 승인 상태에 따른 StatusButton 추가 */}
-      <StatusButton
-        status={getApprovalStatus(projectData.approval)}
-        label={getApprovalStatus(projectData.approval)}
-        sx={{
-          marginTop: "20px",
-          backgroundColor: "#4caf50",
-          borderRadius: "50px",
-          padding: "10px 20px",
-        }}
-      />
     </DetailContainer>
   );
 };

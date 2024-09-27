@@ -1,0 +1,261 @@
+import React, { useEffect, useState } from "react";
+import {
+  Box,
+  Grid,
+  Typography,
+  Card,
+  CardMedia,
+  CardContent,
+  Button,
+  IconButton,
+  LinearProgress,
+} from "@mui/material";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
+import StatusButton from "./StatusButton";
+import axios from "axios"; // 나중에 백엔드 연결 시 주석 해제
+import { useNavigate } from "react-router-dom";
+
+// 가짜 프로젝트 데이터 배열(11개의 데이터로 페이징 처리 확인 가능)
+const projectList = Array.from({ length: 11 }, (_, index) => ({
+  id: index + 1,
+  title: `[프로젝트 ${index + 1}] 제목`,
+  description: `${index + 1}번째 프로젝트의 설명입니다.`,
+  progress: Math.ceil(Math.random() * 100),
+  goal: `${(index + 1) * 500000}원`,
+  daysLeft: `D-${index + 5}`,
+  image: `https://example.com/project${index + 1}.jpg`,
+  hearted: index % 2 === 0,
+  host: `호스트 ${index + 1}`,
+  approval: index % 3 === 0 ? 1 : index % 3 === 1 ? 0 : -1, // 승인상태
+}));
+
+// 프로젝트 카드 컴포넌트
+export const ProductCard = ({ product }) => {
+  const navigate = useNavigate(); // 페이지 이동을 위한 훅
+
+  // 카드 클릭 시 상세 페이지로 이동 (지금은 index +1 사용할거임)
+  const handleCardClick = () => {
+    console.log("누락된 인덱스:", product.id); // index값 확인
+
+    // index값이 유효한 숫자인지 체크하고 url로 전달
+    if (typeof product.id == "number" && !isNaN(product.id)) {
+      // 페이지 이동
+      navigate(`/myproject/${product.id}`); // 올바른 url로 navigate
+    } else {
+      console.log("인덱스 번호 없음");
+    }
+    // navigate(`/projects/myproject/${index + 1}`); // index +1 사용
+    // // navigate(`/projects/myproject/${projectId}`); // 백엔드 api함수
+  };
+
+  // 승인 상태에 따른 상태 라벨 결정
+  const getApprovalStatus = ({ approval }) => {
+    switch (approval) {
+      case 1:
+        return "승인완료";
+      case 0:
+        return "승인대기";
+      case -1:
+        return "승인거절";
+      default:
+        return "미정";
+    }
+  };
+
+  return (
+    <Card
+      onClick={handleCardClick} // 클릭 시 상세페이지로 이동
+      sx={{
+        borderRadius: "15px",
+        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+        padding: 2,
+        position: "relative",
+        width: "100%",
+      }}
+    >
+      <CardMedia
+        component="img"
+        image={product.image}
+        sx={{ height: "180px", borderRadius: "10px", objectFit: "cover" }}
+      />
+      {/* <IconButton
+        sx={{ position: 'absolute', top: 10, right: 10, color: product.hearted ? 'red' : 'gray' }}
+      > 
+        <FavoriteIcon />
+      </IconButton> */}
+
+      {/* 관리자 승인 상태에 따른 StatusButton 추가*/}
+      <StatusButton
+        status={getApprovalStatus(product.approval)} // approval 값에 따라 버튼 상태 결정
+        label={getApprovalStatus(product.approval)}
+        sx={{
+          position: "absolute",
+          top: 25,
+          right: 20,
+          borderRadius: "50px",
+          width: 90,
+          height: 10,
+        }}
+      />
+
+      <CardContent>
+        <Typography
+          variant="h6"
+          component="div"
+          sx={{ fontWeight: "bold", fontSize: "1rem", mb: 1 }}
+        >
+          {product.title}
+        </Typography>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{ fontSize: "0.85rem", mb: 1 }}
+        >
+          {product.description}
+        </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <Typography
+              variant="body2"
+              sx={{ fontWeight: "bold", fontSize: "0.75rem" }}
+            >
+              달성률 {product.progress}%
+            </Typography>
+            <Typography
+              variant="body2"
+              sx={{ fontWeight: "bold", fontSize: "0.75rem" }}
+            >
+              {product.goal}
+            </Typography>
+          </Box>
+        </Box>
+        <LinearProgress
+          variant="determinate"
+          value={product.progress}
+          sx={{ height: 8, borderRadius: "5px", mt: 1, mb: 1 }}
+        />
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Button
+            variant="contained"
+            color="secondary"
+            size="small"
+            sx={{
+              backgroundColor: "#5a87f7",
+              borderRadius: "12px",
+              fontSize: "0.75rem",
+            }}
+          >
+            마감임박 {product.daysLeft}
+          </Button>
+          <Typography
+            variant="body2"
+            sx={{ fontWeight: "bold", fontSize: "0.75rem" }}
+          >
+            진행자: {product.host}
+          </Typography>
+        </Box>
+      </CardContent>
+    </Card>
+  );
+};
+
+// Myproject 컴포넌트
+export const Myproject = () => {
+  const itemsPerPage = 10; // 한 페이지에 10개의 항목을 표시
+  const [page, setPage] = useState(1); // 현재 페이지 상태
+  const totalProducts = projectList.length; // 전체 프로젝트 개수
+
+  // 페이지 변경 핸들러
+  const handlePageChange = (event, value) => {
+    setPage(value);
+  };
+
+  // 백엔드 구현 시 주석 해제
+  /*
+  useEffect() = > {
+  const fetchProject = async() => {
+    try {
+    const response = await.get(`projects/myproject?page=1&size=10}`);
+    setProject(response.data); // 서버에서 받아온 데이터
+    } catch(error) {
+    console.error('프로젝트 데이터를 불러오는 중...':error);
+    }
+   };
+   fetchProject();
+  }, [page]);
+  */
+
+  // 현재 페이지에서 보여줄 프로젝트들만 추출
+  const displayedProducts = projectList.slice(
+    (page - 1) * itemsPerPage,
+    page * itemsPerPage
+  );
+
+  return (
+    <Box
+      sx={{
+        margin: "0 auto",
+        padding: 2,
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        maxWidth: "100%",
+        width: "1600px"
+      }}
+    >
+      <Grid
+        container
+        justifyContent="center"
+        alignItems="center"
+        spacing={4}
+        sx={{ flexGrow: 1 }}
+      >
+        {displayedProducts.map((product) => (
+          <Grid
+            item
+            key={product.id}
+            xs={12}
+            sm={6}
+            md={4}
+            lg={3}
+            xl={2.4}
+            display="flex"
+            justifyContent="center"
+          >
+            <ProductCard product={product} />
+          </Grid>
+        ))}
+      </Grid>
+
+      {/* Pagination 컴포넌트 추가 */}
+      <Stack spacing={2} sx={{ marginTop: "20px" }}>
+        <Pagination
+          count={Math.ceil(totalProducts / itemsPerPage)} // 페이지 수 계산
+          page={page} // 현재 페이지
+          onChange={handlePageChange} // 페이지 변경 핸들러
+          showFirstButton
+          showLastButton
+        />
+      </Stack>
+    </Box>
+  );
+};
+
+export default Myproject;

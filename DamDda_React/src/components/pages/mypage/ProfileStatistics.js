@@ -84,7 +84,6 @@ export default function ProfileStatistics({ setIsEditing }) {
     }
   };
 
-  
   if (!profile) {
     return <div>로딩 중...</div>;
   }
@@ -96,19 +95,19 @@ export default function ProfileStatistics({ setIsEditing }) {
         justifyContent: "center",
         alignItems: "flex-start",
         minHeight: "100vh",
-        backgroundColor: "#fff",
+        // backgroundColor: "#fff",
       }}
     >
-      <MDBContainer>
+      <MDBContainer style={{ width: "200%" }}>
         <MDBRow className="justify-content-center">
           <MDBCol md="8" xl="6" className="d-flex justify-content-center">
             <MDBCard
               style={{
                 width: "100%",
-                maxWidth: "600px",
-                borderRadius: "15px",
+                // maxWidth: "600px",
+                // borderRadius: "15px",
                 backgroundColor: "transparent",
-                boxShadow: "none",
+                // boxShadow: "none",
               }}
             >
               <MDBCardBody
@@ -125,7 +124,7 @@ export default function ProfileStatistics({ setIsEditing }) {
                   }}
                 >
                   <Avatar
-                    sx={{ width: 80, height: 80, marginTop: "20px" }}
+                    sx={{ width: 100, height: 100, marginTop: "20px" }}
                     src={profile.imageUrl}
                   />
                   <MDBTypography tag="h4" className="mt-3 mb-4">
@@ -233,9 +232,9 @@ export default function ProfileStatistics({ setIsEditing }) {
 
       {/* 비밀번호 입력 모달 */}
       <Modal
-         open={isModalOpen} // 모달이 열려 있는지 여부
-         onClose={() => setIsModalOpen(false)} // 모달 닫기
-         onSubmit={handlePasswordSubmit} // 비밀번호 확인 로직
+        open={isModalOpen} // 모달이 열려 있는지 여부
+        onClose={() => setIsModalOpen(false)} // 모달 닫기
+        onSubmit={handlePasswordSubmit} // 비밀번호 확인 로직
         currentPassword={password}
         errorMessage={passwordError} // 비밀번호 오류 메시지
       />

@@ -69,12 +69,12 @@ export default function SupportedProjects({ memberId }) {
   }
 
   return (
-    <div className="supported-projects-container">
-      <div className="projects-list">
-        {projects.map((project, index) => (
-          <ProjectCard key={index} project={project} />
-        ))}
-      </div>
+    // <div className="supported-projects-container">
+    <div className="projects-list">
+      {projects.map((project, index) => (
+        <ProjectCard key={index} project={project} />
+      ))}
     </div>
+    // </div>
   );
 }

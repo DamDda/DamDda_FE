@@ -84,7 +84,6 @@ export default function ProfileEditPage({
     return;
   };
 
-
   const handleSubmit = async () => {
     // 닉네임 중복 확인이 실패한 경우 프로필 저장을 중단
     if (!nicknameCheck) {
@@ -93,10 +92,9 @@ export default function ProfileEditPage({
     }
 
     const updatedFormData = { ...formData, imageUrl: profileImage };
- 
-    // 부모 컴포넌트에 데이터 전달
- updateProfileData(updatedFormData);
 
+    // 부모 컴포넌트에 데이터 전달
+    updateProfileData(updatedFormData);
 
     // 스낵바 열기
     setOpenSnackbar(true);
@@ -173,7 +171,7 @@ export default function ProfileEditPage({
     setOpenSnackbar(false);
   };
 
-// 데이터를 불러오는 중일 때 화면에 표시될 메시지
+  // 데이터를 불러오는 중일 때 화면에 표시될 메시지
   if (isLoading) {
     return <p>데이터를 불러오는 중입니다...</p>;
   }

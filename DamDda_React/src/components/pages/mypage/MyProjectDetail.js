@@ -7,10 +7,13 @@ import {
   IconButton,
   Box,
   Tooltip,
+  Tab,
+  Tabs,
 } from "@mui/material";
 import { styled } from "@mui/system";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import StatusButton from "./StatusButton";
+import axios from "axios";
 
 // 가짜 데이터 (실제 백엔드 구현 전까지 사용)
 const mockProjectData = {
@@ -30,6 +33,13 @@ const mockProjectData = {
     rejectMessage: "내용부족",
     thumbnail_url: "https://via.placeholder.com/500",
   },
+};
+
+const mockSupportStat = {
+  totalAmount: 80771500,
+  percentage: 161.54,
+  supporters: 708,
+  remainingDays: 0,
 };
 
 const ThumbnailContainer = styled("div")({
@@ -80,32 +90,96 @@ const ProgressSection = styled("div")({
   marginTop: "19px",
 });
 
+const DashboardSection = styled("div")({
+  width: "100%",
+  backgroundColor: "#f7f7f7",
+  padding: "20px",
+  borderRadius: "10px",
+  marginTop: "40px",
+  textAlign: "center",
+  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+});
+
 const MyProjectDetail = () => {
-  const { id } = useParams();
-  const [projectData, setProjectData] = useState(null);
+  const { projectId } = useParams(); // URL에서 projectId 추출
+  const [projectData, setProjectData] = useState(null); // 프로젝트 정보 상태
+  const [supportStat, setSupportStat] = useState(null); // 후원 통계 상태
+  const [loading, setLoading] = useState(true);
+  const [tabIndex, setTabIndex] = useState(0);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const mockData = mockProjectData[id] || mockProjectData[1];
-    setProjectData(mockData);
-  }, [id]);
+  // // 두 API를 병렬로 호출하여 데이터를 가져옴
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       // 프로젝트 상세 정보 api 호출
+  //       const projectResponse = await axios.get(
+  //         `/projects/myproject/${projectId}`
+  //       );
+  //       // 후원 통계 api 호출
+  //       const supportStatResponse = await axios.get(
+  //         `/projects/myproject/sptstat/${projectId}`
+  //       );
 
-  if (!projectData) {
-    return <div>프로젝트 데이터를 불러오는 중입니다...</div>;
+  //       setProjectData(projectResponse.data); // 프로젝트 데이터 저장
+  //       setSupportStat(supportStatResponse.data); // 후원통계 데이터 저장
+  //       setLoding(false); // 로딩 상태 완료
+  //     } catch (error) {
+  //       console.log("데이터를 불러오는 중 오류 발생:", error);
+  //       setLoding(false);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, [projectId]);
+
+  // if (loading) {
+  //   return <div>로딩중..</div>;
+  // }
+
+  // if (!projectData || supportStat) {
+  //   return <div>데이터를 가져오는 중 오류가 발생</div>;
+  // }
+
+   // 백엔드가 준비되지 않았을 때 가짜 데이터 사용
+   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const projectResponse = mockProjectData[projectId] || mockProjectData[1];
+        const supportStatResponse = mockSupportStat;
+
+        setProjectData(projectResponse); // 프로젝트 데이터 저장
+        setSupportStat(supportStatResponse); // 후원 통계 데이터 저장
+        setLoading(false); // 로딩 상태 완료
+      } catch (error) {
+        console.log("데이터를 불러오는 중 오류 발생:", error);
+        setLoading(false); 
+      }
+    };
+
+    fetchData();
+  }, [projectId]); 
+
+  if (loading) {
+    return <div>로딩 중...</div>;
+  }
+
+  if (!projectData || !supportStat) {
+    return <div>데이터를 가져오는 중 오류가 발생했습니다.</div>;
   }
 
   const {
-    category,
-    organizer_id,
-    title,
-    description,
-    fundsReceive,
-    targetFunding,
-    startDate,
-    endDate,
-    supporterCnt,
-    thumbnail_url,
-    rejectMessage,
+    category, // 카테고리
+    organizer_id, // 진행자
+    title, // 제목
+    description, // 설명
+    fundsReceive, // 받은 후원금
+    targetFunding, // 목표 후원금
+    startDate, // 시작일
+    endDate, // 마감일
+    supporterCnt, // 후원자수
+    thumbnail_url, // 썸네일 주소
+    rejectMessage, // 거절 메세지
   } = projectData;
 
   // 남은 기간이 0 이하일 경우 0으로 표시
@@ -128,11 +202,17 @@ const MyProjectDetail = () => {
     }
   };
 
+  // 탭 핸들러
+  const handleTabChange = (event, newValue) => {
+    setTabIndex(newValue);
+  };
+
   return (
     <DetailContainer>
+      {/* 뒤로 가기 버튼 */}
       <IconButton
         onClick={() => navigate("/myproject")}
-        style={{ position: "absolute", top: "200px", left: "500px" }}
+        style={{ position: "absolute", top: "330px", left: "700px" }}
       >
         <ArrowBackIcon fontSize="large" />
       </IconButton>
@@ -265,6 +345,54 @@ const MyProjectDetail = () => {
           </Box>
         </ProgressSection>
       </InfoSection>
+
+      {/* 탭 섹션 */}
+      <Tabs
+        value={tabIndex}
+        onChange={handleTabChange}
+        aria-label="후원통계 및 후원자 조회 탭"
+        sx={{ marginTop: "60px", marginBottom: "20px",
+          '& .MuiTab-root' : {
+            fontSize: "20px",
+            
+          }
+        }}
+      >
+        <Tab label="후원 통계" />
+        <Tab label="후원자 조회" />
+      </Tabs>
+
+      {/* 후원 통계 정보 */}
+      {tabIndex === 0 && (
+        <DashboardSection>
+          <Typography
+            variant="h5"
+            sx={{ marginBottom: "20px", fontWeight: "bold" }}
+          >
+            {/* 후원 통계 */}
+          </Typography>
+          <Typography>
+            총 후원금액: {supportStat.totalAmount.toLocaleString()}원
+          </Typography>
+          <Typography>달성률: {supportStat.percentage}%</Typography>
+          <Typography>후원자 수: {supportStat.supporters}명</Typography>
+          <Typography>남은 기간: {remainingDays}일</Typography>
+        </DashboardSection>
+      )}
+
+      {/* 후원자 조회 */}
+      {tabIndex === 1 && (
+        <DashboardSection>
+          <Typography
+            variant="h5"
+            sx={{ marginBottom: "20px", fontWeight: "bold" }}
+          >
+            후원자 조회
+          </Typography>
+          {/* 후원자 조회 관련 데이터 표시 */}
+          <Typography>후원자 데이터가 여기에 표시됩니다.</Typography>
+        </DashboardSection>
+      )}
     </DetailContainer>
   );
 };

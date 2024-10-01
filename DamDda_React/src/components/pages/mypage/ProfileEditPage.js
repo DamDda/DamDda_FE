@@ -24,7 +24,11 @@ const mockProfileData = {
   imageUrl: null,
 };
 
-export default function ProfileEditPage() {
+export default function ProfileEditPage({
+  profile = mockProfileData, // profile이 없으면 mockProfileData 사용
+  setIsEditing,
+  updateProfileData,
+}) {
   const [formData, setFormData] = useState(mockProfileData);
   const [profileImage, setProfileImage] = useState(null);
   const [nicknameCheck, setNicknameCheck] = useState(false); // 닉네임 중복 확인 상태
@@ -35,7 +39,7 @@ export default function ProfileEditPage() {
   const [confirmPassword, setConfirmPassword] = useState(""); // 새로운 비밀번호 확인
   const [errorMessage, setErrorMessage] = useState(""); // 에러 메시지
   const [openSnackbar, setOpenSnackbar] = useState(false); // Snackbar 열림 상태
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
 
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
@@ -56,7 +60,7 @@ export default function ProfileEditPage() {
     } catch (error) {
       console.error("프로필 데이터를 불러오는 중 오류 발생:", error);
     } finally {
-      setIsLoading(false);
+      setIsLoading(false); // 로딩 종료
     }
   };
 
@@ -74,6 +78,11 @@ export default function ProfileEditPage() {
       reader.readAsDataURL(file);
     }
   };
+  const handleImageDelete = () => {
+    setProfileImage(null);
+    fileInputRef.current.value = "";
+    return;
+  };
 
   const handleSubmit = async () => {
     // 닉네임 중복 확인이 실패한 경우 프로필 저장을 중단
@@ -83,6 +92,9 @@ export default function ProfileEditPage() {
     }
 
     const updatedFormData = { ...formData, imageUrl: profileImage };
+
+    // 부모 컴포넌트에 데이터 전달
+    updateProfileData(updatedFormData);
 
     // 스낵바 열기
     setOpenSnackbar(true);
@@ -97,8 +109,8 @@ export default function ProfileEditPage() {
 
       // 스낵바가 화면에 나타날 시간을 주기 위해 지연
       setTimeout(() => {
-        navigate("/profile"); // 저장 후 프로필 페이지로 이동
-      }, 3000); // 3초 지연
+        setIsEditing(false); // 저장 후 프로필 페이지로 이동
+      }, 1000); // 1초 지연
     } catch (error) {
       console.error("프로필 저장 중 오류 발생:", error);
     }
@@ -159,6 +171,7 @@ export default function ProfileEditPage() {
     setOpenSnackbar(false);
   };
 
+  // 데이터를 불러오는 중일 때 화면에 표시될 메시지
   if (isLoading) {
     return <p>데이터를 불러오는 중입니다...</p>;
   }
@@ -205,7 +218,7 @@ export default function ProfileEditPage() {
       <Typography
         variant="caption"
         color="textSecondary"
-        onClick={() => setProfileImage(null)}
+        onClick={handleImageDelete}
         sx={{ cursor: "pointer", textDecoration: "underline", color: "#999" }}
       >
         현재 사진 삭제
@@ -351,7 +364,7 @@ export default function ProfileEditPage() {
         <Typography
           variant="caption"
           sx={{ cursor: "pointer", textDecoration: "underline", color: "#999" }}
-          onClick={() => navigate("/profile")}
+          onClick={() => setIsEditing(false)}
         >
           돌아가기
         </Typography>
@@ -424,7 +437,7 @@ export default function ProfileEditPage() {
       {/* 안내 메시지 (Snackbar) */}
       <Snackbar
         open={openSnackbar}
-        autoHideDuration={3000}
+        autoHideDuration={1000}
         onClose={handleSnackbarClose}
       >
         <Alert

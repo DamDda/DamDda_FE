@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import {
   MDBCol,
   MDBContainer,
@@ -14,8 +13,7 @@ import Avatar from "@mui/joy/Avatar";
 import Modal from "./EditModal"; // 비밀번호 모달 컴포넌트
 import axios from "axios"; // API 호출을 위해 axios를 import
 
-export default function ProfileStatistics() {
-  const navigate = useNavigate();
+export default function ProfileStatistics({ setIsEditing }) {
   const [profile, setProfile] = useState(null); // 사용자 프로필 정보 상태
   const [isModalOpen, setIsModalOpen] = useState(false); // 비밀번호 모달 상태
   const [passwordError, setPasswordError] = useState(""); // 비밀번호 에러 메시지
@@ -66,29 +64,26 @@ export default function ProfileStatistics() {
     }
   };
 
-  // 컴포넌트가 처음 로드될 때 사용자 정보를 가져오는 로직
   useEffect(() => {
     fetchProfileData(); // 프로필 데이터 로드
   }, []);
 
   // 프로필 수정 버튼 클릭 시 모달 열기
   const handleProfileEdit = () => {
-    setIsModalOpen(true);
+    setIsModalOpen(true); // 모달 열기
   };
 
   // 비밀번호 모달에서 확인 버튼 클릭 시 처리 로직
   const handlePasswordSubmit = (inputPassword) => {
     if (inputPassword === password) {
-      // 비밀번호가 동일한지 비교
       setPasswordError(""); // 에러 메시지 초기화
       setIsModalOpen(false); // 모달 닫기
-      navigate("/profileEdit"); // 프로필 수정 페이지로 이동
+      setIsEditing(true); // 프로필 수정 페이지로 이동
     } else {
       setPasswordError("비밀번호가 틀렸습니다. 다시 입력해주세요.");
     }
   };
 
-  // 데이터를 로딩 중일 때 표시할 화면
   if (!profile) {
     return <div>로딩 중...</div>;
   }
@@ -100,19 +95,19 @@ export default function ProfileStatistics() {
         justifyContent: "center",
         alignItems: "flex-start",
         minHeight: "100vh",
-        backgroundColor: "#fff",
+        // backgroundColor: "#fff",
       }}
     >
-      <MDBContainer>
+      <MDBContainer style={{ width: "200%" }}>
         <MDBRow className="justify-content-center">
           <MDBCol md="8" xl="6" className="d-flex justify-content-center">
             <MDBCard
               style={{
                 width: "100%",
-                maxWidth: "600px",
-                borderRadius: "15px",
+                // maxWidth: "600px",
+                // borderRadius: "15px",
                 backgroundColor: "transparent",
-                boxShadow: "none",
+                // boxShadow: "none",
               }}
             >
               <MDBCardBody
@@ -129,7 +124,7 @@ export default function ProfileStatistics() {
                   }}
                 >
                   <Avatar
-                    sx={{ width: 80, height: 80, marginTop: "20px" }}
+                    sx={{ width: 100, height: 100, marginTop: "20px" }}
                     src={profile.imageUrl}
                   />
                   <MDBTypography tag="h4" className="mt-3 mb-4">
@@ -218,7 +213,7 @@ export default function ProfileStatistics() {
                 >
                   <MDBTypography
                     tag="span"
-                    onClick={handleProfileEdit}
+                    onClick={handleProfileEdit} // 수정 버튼 클릭 시 모달 열기
                     style={{
                       color: "#999",
                       textDecoration: "underline",
@@ -237,10 +232,11 @@ export default function ProfileStatistics() {
 
       {/* 비밀번호 입력 모달 */}
       <Modal
-        open={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSubmit={handlePasswordSubmit}
+        open={isModalOpen} // 모달이 열려 있는지 여부
+        onClose={() => setIsModalOpen(false)} // 모달 닫기
+        onSubmit={handlePasswordSubmit} // 비밀번호 확인 로직
         currentPassword={password}
+        errorMessage={passwordError} // 비밀번호 오류 메시지
       />
     </div>
   );

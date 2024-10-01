@@ -17,7 +17,7 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import CoverImage from "../../assets/coverImage.png";
 import axios from "axios"; // axios를 사용하여 REST API 호출
 import { useState, useEffect } from "react";
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 
 // Individual product card component
@@ -179,6 +179,9 @@ export const ProductCard = ({ product, handleLike }) => {
   // 밀리초를 일(day) 단위로 변환
   const daysLeft = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
 
+  const navigate = useNavigate(); //새로운 프로젝트 눌렀을 때 이동하는 네비게이트
+
+
   return (
     <>
       <Card
@@ -202,6 +205,7 @@ export const ProductCard = ({ product, handleLike }) => {
           transform: "scale(0.95)", // 전체 요소의 크기를 0.9배로 축소
           transformOrigin: "top left", // 스케일 기준점 설정
         }}
+        onClick={() => navigate(`/detail?projectId=${product.id}`)}
       >
         {/* 타이틀과 서브타이틀 */}
         <Box
@@ -223,7 +227,10 @@ export const ProductCard = ({ product, handleLike }) => {
               right: 7,
               color: product.liked ? "red" : "gray",
             }}
-            onClick={() => handleLike(product)} // 클릭 시 좋아요 요청
+            onClick={(event) => {
+              event.stopPropagation(); // Card 클릭 이벤트가 실행되지 않도록 방지
+              handleLike(product); // 좋아요 처리
+            }}
           >
             <FavoriteIcon />
           </IconButton>
@@ -292,7 +299,7 @@ export const ProductCard = ({ product, handleLike }) => {
             {/* Progress bar */}
             <LinearProgress
               variant="determinate"
-              value={15}
+              value={achievementRate}
               sx={{ height: 9, borderRadius: "5px", mt: 1, mb: 2 }}
             />
           </Box>
@@ -485,6 +492,12 @@ export const ProductRecommendations = ({search, cartegory}) => {
 
       // 이후에 필요한 처리 (예: UI 업데이트)
       setProducts((prevProjects) =>
+        prevProjects.map((prevProject) =>
+          prevProject.id === project.id ? { ...prevProject, liked: !prevProject.liked } : prevProject
+        )
+      );
+      // 이후에 필요한 처리 (예: UI 업데이트)
+      setRecommendedProducts((prevProjects) =>
         prevProjects.map((prevProject) =>
           prevProject.id === project.id ? { ...prevProject, liked: !prevProject.liked } : prevProject
         )

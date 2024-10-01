@@ -20,7 +20,7 @@ import "../../styles/style.css"
 function Main() {
   const navigate = useNavigate();
   
-  const [cartegory, setCartegory] = useState('전체');
+  const [cartegory, setCartegory] = useState('--');
   const [search, setSearch] = useState('');
   const isFirstRender = useRef(true); // 처음 렌더링 여부 추적
 
@@ -71,9 +71,6 @@ function Main() {
       <SearchBar search={search} setSearch={setSearch}/>
 
       <ServiceCards></ServiceCards>
-
-
-
       
       <ProductRecommendations sortCondition={"likeCnt"} title={"인기 프로젝트"} subTitle={"좋아요가 가장 많은 프로젝트"}></ProductRecommendations>
       <ProductRecommendations sortCondition={"endDate"} title={"마감 임박 프로젝트"} subTitle={"마감임박! 마지막 기회 놓치지 말아요!"}></ProductRecommendations>

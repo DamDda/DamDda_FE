@@ -9,7 +9,7 @@ const OrderPage = () => {
         price: 0,
         quantity: 0
     });
-
+//완료
     const navigate = useNavigate();
 
     const handleChange = (e) => {

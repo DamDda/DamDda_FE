@@ -86,7 +86,10 @@ export const ProductCard = ({ product, handleLike }) => {
               right: 7,
               color: product.liked ? "red" : "gray",
             }}
-            onClick={() => handleLike(product)} // 클릭 시 좋아요 요청
+            onClick={(event) => {
+              event.stopPropagation(); // Card 클릭 이벤트가 실행되지 않도록 방지
+              handleLike(product); // 좋아요 처리
+            }}
           >
             <FavoriteIcon />
           </IconButton>
@@ -155,7 +158,7 @@ export const ProductCard = ({ product, handleLike }) => {
             {/* Progress bar */}
             <LinearProgress
               variant="determinate"
-              value={15}
+              value={achievementRate}
               sx={{ height: 9, borderRadius: "5px", mt: 1, mb: 2 }}
             />
           </Box>

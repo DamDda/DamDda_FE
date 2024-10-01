@@ -5,9 +5,9 @@ import Typography from "@mui/joy/Typography";
 
 const PaymentDeliveryInfo = ({ project }) => {
   return (
-    <Box sx={{ padding: "20px" }}>
+    <Box sx={{ marginLeft: "80px" }}>
       {/* 배송 정보 */}
-      <Box sx={{ marginBottom: "20px" }}>
+      <Box sx={{ marginTop: "-20px", marginBottom: "20px" }}>
         <Typography
           variant="h6"
           sx={{
@@ -66,7 +66,7 @@ const PaymentDeliveryInfo = ({ project }) => {
         sx={{
           borderBottom: "1px solid #e0e0e0",
           marginBottom: "20px",
-          width: "1000px",
+          width: "700px",
         }}
       />
 
@@ -120,8 +120,8 @@ const PaymentDeliveryInfo = ({ project }) => {
         sx={{
           textAlign: "right",
           position: "relative",
-          top: "-60px",
-          left: "-180px",
+          top: "-40px",
+          left: "30px",
         }}
       >
         <StatusButton
@@ -130,10 +130,10 @@ const PaymentDeliveryInfo = ({ project }) => {
           sx={{
             backgroundColor: "white", // 아주 연한 회색 배경색
             color: "red",
-
+           
             fontSize: "12px", // 폰트 크기 줄이기
-            width: "90px", // 버튼 너비 줄이기
-            height: "30px", // 버튼 높이 줄이기
+            width: "100px", // 버튼 너비 줄이기
+            height: "40px", // 버튼 높이 줄이기
           }}
         />
       </Box>

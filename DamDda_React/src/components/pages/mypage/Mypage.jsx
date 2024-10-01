@@ -6,9 +6,11 @@ import MyProjectDetail from "./MyProjectDetail";
 import ProfileStatistics from "./ProfileStatistics";
 import SupportedProjects from "./SupportedProjects";
 import TabsUnderlinePlacement from "./TabsUnderlinePlacement";
+import LikeProject from "./LikeProject";
 import "../../styles/style.css";
 import { Header } from "../../layout/Header";
 import { Footer } from "../../layout/Footer";
+import MypageHeader from "./MypageHeader";
 
 const Mypage = () => {
   const [profileData, setProfileData] = useState(null); // 프로필 데이터 상태
@@ -22,7 +24,7 @@ const Mypage = () => {
       loginId: "shine2462",
       name: "김철수", // 사용자 이름
       email: "shine2462@naver.com",
-      nickname: "수세미",
+      nickname: "",
       phoneNumber: "010-1234-5678",
       address: "서울시 성동구 oo동",
     };
@@ -70,7 +72,9 @@ const Mypage = () => {
       case 2:
         return <Myproject />;
       case 3:
-        return <MyProjectDetail />;
+        return <LikeProject />;
+      case 4:
+        return <MyProjectDetail/>;
       default:
         return (
           <ProfileStatistics
@@ -87,7 +91,10 @@ const Mypage = () => {
       <div className="container">
         <div>
           {/* 헤더와 탭은 공통으로 표시됩니다 */}
-          <Headers nickname={profileData.nickname || "사용자"} />{" "}
+          {/* <Headers nickname={profileData.nickname || "사용자"} />{" "} */}
+          {/* <Headers profile={profileData.nickname || "사용자"} />{" "} */}
+          {/* <Headers profileData={profileData} /> */}
+          <MypageHeader nickname={profileData.nickname || "사용자"} />
           <TabsUnderlinePlacement
             selectedTab={selectedTab}
             setSelectedTab={setSelectedTab}

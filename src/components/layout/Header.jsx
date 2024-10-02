@@ -15,6 +15,7 @@ import AdbIcon from "@mui/icons-material/Adb";
 import TextField from "@mui/material/TextField"; // 검색바를 위해 추가
 import { Card, CardMedia, CardContent, Grid } from "@mui/material"; // MUI 컴포넌트 사용
 import CloseIcon from "@mui/icons-material/Close"; // 프로젝트 삭제 버튼을 위한 CloseIcon
+import EditIcon from "@mui/icons-material/Edit";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import logo from "../assets/logo.png"; // 로고 파일
 import { SearchBar } from "./SearchBar";
@@ -27,10 +28,7 @@ export function Header({ search, setSearch }) {
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [showProfileCard, setShowProfileCard] = useState(false); // 프로필 카드 표시 여부
   const [showProjects, setShowProjects] = useState(false); // 프로젝트 목록 표시 여부
-  const [projects, setProjects] = useState([
-    { name: "프로젝트 이름 1", id: 1 },
-    { name: "프로젝트 이름 2", id: 2 },
-  ]);
+  const [projects, setProjects] = useState([]);
   const location = useLocation();
 
   const [isLoggedIn, setIsLoggedIn] = React.useState(false); // 로그인 상태 관리
@@ -59,6 +57,25 @@ export function Header({ search, setSearch }) {
     setAnchorElNav();
   };
 
+  const fetchWritingProject = async () => {
+    const writings = await axios({
+      method: "GET",
+      url: "http://localhost:9000/api/projects/write",
+      params: {
+        memberId: memberId,
+      },
+    })
+      .then((response) => {
+        setProjects(response.data);
+      })
+      .catch((e) => console.error(e));
+    return writings;
+  };
+
+  useEffect(() => {
+    fetchWritingProject();
+  }, []);
+
   const handleShowProjects = () => {
     setShowProjects(!showProjects); // 버튼을 누를 때마다 프로젝트 리스트 표시 여부 토글
     if (!showProjects) {
@@ -66,45 +83,72 @@ export function Header({ search, setSearch }) {
     }
   };
 
-  const handleDeleteProject = (id) => {
+  const handleDeleteProject = async (id) => {
+    console.log(id);
     // 프로젝트 삭제 기능
-    setProjects(projects.filter((project) => project.id !== id));
+    if (
+      window.confirm(
+        `작성중인 프로젝트를 정말 삭제하시겠습니까?\n프로젝트 이름 : "${projects.filter((p) => p.id === id)[0].title}"`
+      )
+    ) {
+      const responseCode = await axios({
+        method: "DELETE",
+        url: `http://localhost:9000/api/projects/${id}`,
+      })
+        .then((response) => response.status)
+        .catch((e) => console.error(e));
+      console.log(responseCode);
+      if (responseCode === 200) {
+        setProjects(projects.filter((project) => project.id !== id));
+        window.location.reload();
+      }
+    }
   };
 
   const navigate = useNavigate(); //새로운 프로젝트 눌렀을 때 이동하는 네비게이트
+  const navigateModifier = (id) => navigate(`/register?projectId=${id}`);
 
   const navigateRegister = async () => {
-    navigate("/register");
-    // const formData = new FormData();
-    
-    // // 텍스트 데이터 추가
-    // formData.append("memberId", memberId);
-    // formData.append("submit", "저장");
-    
-    // // 파일 데이터 추가 (productImages, descriptionImages, docs)
-    // // 예시로서 파일을 직접 추가하는 경우:
-    // // formData.append("productImages", productImageFile); // productImageFile는 파일 객체
-    // // formData.append("descriptionImages", descriptionImageFile); // descriptionImageFile도 파일 객체
-    // // formData.append("docs", docFile); // docFile도 파일 객체
-  
-    // try {
-    //   const response = await axios.post(
-    //     'http://localhost:9000/api/projects/register',
-    //     formData, // FormData 객체를 전송
-    //     {
-    //       headers: {
-    //         'Content-Type': 'multipart/form-data', // 헤더 설정
-    //       },
-    //       withCredentials: true, // 인증 쿠키 전송
-    //     }
-    //   );
-      
-    //   console.log("프로젝트 등록 성공:", response.data);
-    // } catch (error) {
-    //   console.error("프로젝트 등록 중 오류 발생:", error);
-    // }
-  };
+    const formData = new FormData();
+    formData.append(
+      "projectDetailDTO",
+      new Blob(
+        [
+          JSON.stringify({
+            title: "작성중인 프로젝트",
+            description: null,
+            descriptionDetail: null,
+            fundsReceive: null,
+            targetFunding: null,
+            nickName: null,
+            startDate: null,
+            endDate: null,
+            supporterCnt: null,
+            likeCnt: null,
+            category: null,
+            tags: [],
+          }),
+        ],
+        { type: "application/json" }
+      )
+    );
+    const projectId = await axios({
+      method: "POST",
+      url: `http://localhost:9000/api/projects/register`,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      data: formData,
+      params: {
+        memberId: memberId,
+        submit: "저장",
+      },
+    })
+      .then((response) => response.data)
+      .catch((e) => console.error(e));
 
+    navigate(`/register?projectId=${projectId}`);
+  };
 
   return (
     <AppBar position="static" sx={{ bgcolor: "white", color: "black" }}>
@@ -237,29 +281,45 @@ export function Header({ search, setSearch }) {
                     top: "100%", // 버튼 바로 아래에 위치
                     left: "50%", // 수평 중앙 정렬
                     transform: "translateX(-50%)", // 중앙 정렬 보정
-                    width: "200px", // 원하는 너비로 설정
+                    width: "300px", // 원하는 너비로 설정
                     zIndex: 1000, // 다른 요소보다 상위에 위치하도록 zIndex를 크게 설정
                   }}
                 >
-                  <Typography
-                    variant="subtitle1"
-                    sx={{ fontWeight: "bold", marginBottom: "10px" }}
-                    onClick={navigateRegister} //() => navigate("/register")} // 클릭 시 이동
-                    style={{ cursor: "pointer" }} // 클릭 가능한 텍스트로 설정
-                  >
-                    + 새로운 프로젝트
-                  </Typography>
+                  {projects.length < 3 ? (
+                    <Typography
+                      variant="subtitle1"
+                      sx={{
+                        fontWeight: "bold",
+                        marginBottom: "10px",
+                        color: "#1263CE",
+                        textAlign: "center",
+                      }}
+                      onClick={navigateRegister} //() => navigate("/register")} // 클릭 시 이동
+                      style={{ cursor: "pointer" }} // 클릭 가능한 텍스트로 설정
+                    >
+                      + 새로운 프로젝트
+                    </Typography>
+                  ) : (
+                    <></>
+                  )}
+
                   {projects.map((project) => (
                     <Box
                       key={project.id}
                       sx={{
                         display: "flex",
-                        justifyContent: "space-between",
+                        justifyContent: "end",
                         alignItems: "center",
                         marginBottom: "5px",
                       }}
                     >
-                      <Typography>{project.name}</Typography>
+                      <Typography>{project.title}</Typography>
+                      <IconButton
+                        size="small"
+                        onClick={() => navigateModifier(project.id)}
+                      >
+                        <EditIcon sx={{ color: "#4B89DC" }} />
+                      </IconButton>
                       <IconButton
                         size="small"
                         onClick={() => handleDeleteProject(project.id)}

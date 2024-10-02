@@ -28,6 +28,7 @@ import { Footer } from "../../layout/Footer";
 import axios from "axios";
 import { useLocation } from "react-router-dom"
 
+//작성중
 const Register = () => {
   const [descriptionDetail, setDescriptionDetail] = useState("");
   

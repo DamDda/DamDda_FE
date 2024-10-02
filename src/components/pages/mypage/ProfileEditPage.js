@@ -12,24 +12,14 @@ import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Modal from "@mui/material/Modal"; // Modal 컴포넌트 import
-
-const mockProfileData = {
-  loginId: "shine2462",
-  name: "김철수",
-  email: "shine2462@naver.com",
-  nickname: "수세미",
-  phoneNumber: "010-1234-5678",
-  address: "서울시 성동구 oo동",
-  password: "00000000", // 현재 비밀번호
-  imageUrl: null,
-};
+import { useUser } from "../../../UserContext";
 
 export default function ProfileEditPage({
-  profile = mockProfileData, // profile이 없으면 mockProfileData 사용
+  profile,
   setIsEditing,
   updateProfileData,
 }) {
-  const [formData, setFormData] = useState(mockProfileData);
+  const [formData, setFormData] = useState({});
   const [profileImage, setProfileImage] = useState(null);
   const [nicknameCheck, setNicknameCheck] = useState(false); // 닉네임 중복 확인 상태
   const [nicknameError, setNicknameError] = useState(""); // 닉네임 중복 확인 에러 메시지
@@ -37,9 +27,10 @@ export default function ProfileEditPage({
   const [currentPassword, setCurrentPassword] = useState(""); // 현재 비밀번호
   const [newPassword, setNewPassword] = useState(""); // 새로운 비밀번호
   const [confirmPassword, setConfirmPassword] = useState(""); // 새로운 비밀번호 확인
-  const [errorMessage, setErrorMessage] = useState(""); // 에러 메시지
+  const [errorMessage, setErrorMessage] = useState({}); // 에러 메시지
   const [openSnackbar, setOpenSnackbar] = useState(false); // Snackbar 열림 상태
   const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
+  const { user } = useUser();
 
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
@@ -47,16 +38,7 @@ export default function ProfileEditPage({
   const fetchProfileData = async () => {
     setIsLoading(true);
     try {
-      const savedProfileData = localStorage.getItem("profileData");
-      if (savedProfileData) {
-        const parsedData = JSON.parse(savedProfileData);
-        setFormData(parsedData);
-        setProfileImage(parsedData.imageUrl);
-      } else {
-        localStorage.setItem("profileData", JSON.stringify(mockProfileData));
-        setFormData(mockProfileData);
-        setProfileImage(mockProfileData.imageUrl);
-      }
+      setFormData(profile);
     } catch (error) {
       console.error("프로필 데이터를 불러오는 중 오류 발생:", error);
     } finally {
@@ -91,6 +73,27 @@ export default function ProfileEditPage({
       return; // 닉네임 중복 확인이 완료되지 않았으면 저장 중단
     }
 
+    if (!formData.nickname) {
+      setErrorMessage((prevErrors) => ({
+        ...prevErrors,
+        name: "이름을 입력해주세요.",
+      }));
+      return;
+    }
+    if (!formData.phoneNumber) {
+      setErrorMessage((prevErrors) => ({
+        ...prevErrors,
+        phoneNumber: "전화번호를 입력해주세요.",
+      }));
+      return;
+    }
+    if (!formData.address) {
+      setErrorMessage((prevErrors) => ({
+        ...prevErrors,
+        address: "주소를 입력해주세요.",
+      }));
+      return;
+    }
     const updatedFormData = { ...formData, imageUrl: profileImage };
 
     // 부모 컴포넌트에 데이터 전달
@@ -101,7 +104,7 @@ export default function ProfileEditPage({
 
     try {
       // 백엔드에 데이터를 저장하는 로직 (주석 처리)
-      // await axios.put('/members/profile', updatedFormData);
+      // await axios.put('/members/profile', updatedFormData,);
 
       // 모의 로컬 스토리지 저장
       localStorage.setItem("profileData", JSON.stringify(updatedFormData));
@@ -111,24 +114,30 @@ export default function ProfileEditPage({
       setTimeout(() => {
         setIsEditing(false); // 저장 후 프로필 페이지로 이동
       }, 1000); // 1초 지연
+
+      fetchProfileData();
     } catch (error) {
       console.error("프로필 저장 중 오류 발생:", error);
     }
   };
 
-  const handleNicknameCheck = async () => {
-    setNicknameError("");
+  const handleNicknameCheck = async (event) => {
+    event.preventDefault(); // Prevent default action
+    const { nickname } = formData;
     try {
-      if (formData.nickname === "수세미") {
-        setNicknameCheck(false);
-        setNicknameError("이미 사용 중인 닉네임입니다.");
-      } else {
-        setNicknameCheck(true);
-        setNicknameError("사용 가능한 닉네임입니다.");
-      }
-    } catch (error) {
-      console.error("닉네임 중복 확인 중 오류 발생:", error);
-      setNicknameError("닉네임 확인 중 오류가 발생했습니다.");
+      const response = await axios.get(
+        `/members/profile/nickname?nickname=${nickname}`
+      );
+      console.log(response.data);
+      setNicknameError(
+        response.data === "available"
+          ? "사용 가능한 닉네임입니다."
+          : "이미 사용중인 닉네임입니다."
+      );
+      setNicknameCheck(response.data === "available" ? true : false);
+    } catch (err) {
+      console.error(err);
+      setNicknameError("닉네임 확인에 실패했습니다.");
     }
   };
 
@@ -137,20 +146,30 @@ export default function ProfileEditPage({
   const handleCloseModal = () => setModalOpen(false);
 
   const handlePasswordChange = async () => {
-    setErrorMessage("");
+    setErrorMessage((prevErrors) => ({ ...prevErrors, password: "" }));
 
     if (currentPassword !== formData.password) {
-      setErrorMessage("현재 비밀번호가 틀립니다.");
+      setErrorMessage((prevErrors) => ({
+        ...prevErrors,
+        password: "현재 비밀번호가 틀립니다.",
+      }));
       return;
     }
 
     if (newPassword.length < 8 || newPassword.length > 16) {
-      setErrorMessage("비밀번호는 8자 이상 16자 이하로 입력해주세요.");
+      setErrorMessage((prevErrors) => ({
+        ...prevErrors,
+        password: "비밀번호는 8자 이상 16자 이하로 입력해주세요.",
+      }));
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      setErrorMessage("새 비밀번호가 일치하지 않습니다.");
+      setErrorMessage((prevErrors) => ({
+        ...prevErrors,
+        password: "새 비밀번호가 일치하지 않습니다.",
+      }));
+
       return;
     }
 

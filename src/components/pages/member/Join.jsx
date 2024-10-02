@@ -15,7 +15,7 @@ import {
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import styled from "styled-components";
 
-import '../../styles/style.css'
+import "../../styles/style.css";
 import { Header } from "../../layout/Header";
 import { Footer } from "../../layout/Footer";
 const FormHelperTexts = styled(FormHelperText)`
@@ -44,6 +44,7 @@ const Join = () => {
     phone_number: "",
     address: "",
     detailed_address: "",
+    postcode: "",
   });
 
   const navigate = useNavigate();
@@ -88,14 +89,16 @@ const Join = () => {
     }
 
     try {
-      const response = await axios.post("/member/check-id", { id });
-      const available = response.data.available;
-
+      const response = await axios.get(
+        `/members/profile/idcheck?loginId=${id}`
+      );
+      const available = response.data;
       setStatusMessages((prev) => ({
         ...prev,
-        id: available
-          ? "사용 가능한 아이디입니다."
-          : "이미 사용 중인 아이디입니다.",
+        id:
+          response.data === "available"
+            ? "사용 가능한 아이디입니다."
+            : "이미 사용 중인 아이디입니다.",
       }));
       setErrors({ id: available ? "" : "이미 사용 중인 아이디입니다." });
     } catch (err) {
@@ -112,16 +115,20 @@ const Join = () => {
     event.preventDefault(); // Prevent default action
     const { nickname } = formData;
     try {
-      const response = await axios.post("/member/check-nickname", { nickname });
+      const response = await axios.get(
+        `/members/profile/nickname?nickname=${nickname}`
+      );
+      console.log(response.data);
       setStatusMessages((prev) => ({
         ...prev,
-        nickname: response.data.available
-          ? "사용 가능한 닉네임입니다."
-          : "이미 사용중인 닉네임입니다.",
+        nickname:
+          response.data === "available"
+            ? "사용 가능한 닉네임입니다."
+            : "이미 사용중인 닉네임입니다.",
       }));
       setErrors((prev) => ({
         ...prev,
-        nickname: response.data.available ? "" : "중복된 닉네임입니다.",
+        nickname: response.data ? "" : "중복된 닉네임입니다.",
       }));
     } catch (err) {
       console.error(err);
@@ -164,7 +171,7 @@ const Join = () => {
           ...formData,
           postcode: data.zonecode,
           address: addr,
-          extraAddress: extraAddr,
+          detailed_address: extraAddr,
         });
 
         // 상세주소 필드로 커서 이동
@@ -173,7 +180,7 @@ const Join = () => {
     }).open();
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const {
       id,
@@ -185,6 +192,7 @@ const Join = () => {
       phone_number,
       address,
       detailed_address,
+      postcode,
     } = formData;
 
     const currentErrors = {
@@ -212,28 +220,68 @@ const Join = () => {
           : "",
     };
 
+    // 아이디와 닉네임 중복 확인
+    if (!statusMessages.id.includes("사용 가능한 아이디입니다.")) {
+      if (window.confirm("닉네임 중복 확인이 필요합니다. ")) {
+        return;
+      }
+    }
+    if (!statusMessages.nickname.includes("사용 가능한 닉네임입니다.")) {
+      if (window.confirm("닉네임 중복 확인이 필요합니다. ")) {
+        return;
+      }
+    }
+
+    // statusMessages에서 중복 확인 결과 가져오기
+    if (
+      statusMessages.id &&
+      !statusMessages.id.includes("사용 가능한 아이디입니다.")
+    ) {
+      currentErrors.id = statusMessages.id;
+    }
+    if (
+      statusMessages.nickname &&
+      !statusMessages.nickname.includes("사용 가능한 닉네임입니다.")
+    ) {
+      currentErrors.nickname = statusMessages.nickname;
+    }
+
     setErrors(currentErrors);
 
+    // 에러가 없는 경우에만 폼 제출
     if (!Object.values(currentErrors).some((error) => error)) {
+      console.log("폼 제출 가능: 에러 없음");
       onhandlePost(formData);
+    } else {
+      console.log("폼 제출 불가: 다음 에러가 있습니다", currentErrors);
+      // 에러 메시지를 사용자에게 표시
+      const errorMessages = Object.entries(currentErrors)
+        .filter(([_, value]) => value !== "")
+        .map(([field, message]) => `${message}`)
+        .join("\n");
+      //alert(`다음 오류를 해결해주세요:\n\n${errorMessages}`);
     }
   };
 
   const onhandlePost = async (data) => {
-    const postData = {
-      id: data.id,
+    const formattedJoin = {
+      loginId: data.id,
       password: data.password,
-      name: data.name,
       nickname: data.nickname,
+      name: data.name,
       email: data.email,
-      phone_number: data.phone_number,
-      ...(data.address && { address: data.address }),
-      ...(data.detailed_address && { detailed_address: data.detailed_address }),
+      phoneNumber: data.phone_number,
+      address: data.address,
+      detailedAddress: data.detailed_address,
+      postCode: data.postcode,
     };
 
     try {
-      const response = await axios.post("/member/join", postData);
-      console.log(response, "성공");
+      const response = await axios.post("/members/profile", formattedJoin, {
+        withCredentials: true,
+      });
+
+      console.log(response + "성공");
       navigate("/login");
     } catch (err) {
       console.log(err);
@@ -246,212 +294,219 @@ const Join = () => {
 
   return (
     <>
-    <Header />
-     	 <div className="container">
-    <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Typography component="h1" variant="h5">
-          회원가입
-        </Typography>
-        <form noValidate onSubmit={handleSubmit}>
-          <FormControl component="fieldset" variant="standard">
-            <div>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <TextField
-                  required
-                  id="id"
-                  name="id"
-                  label="아이디"
-                  variant="standard"
-                  value={formData.id}
-                  onChange={handleChange}
-                  error={Boolean(errors.id)}
-                  helperText={errors.id}
-                />
-                <Button
-                  variant="outlined"
-                  onClick={checkIdDuplicate}
-                  sx={{ mt: 1 }}
+      <Header />
+      <div className="container">
+        <ThemeProvider theme={theme}>
+          <Container component="main" maxWidth="xs">
+            <CssBaseline />
+            <Typography component="h1" variant="h5">
+              회원가입
+            </Typography>
+            <form noValidate onSubmit={handleSubmit}>
+              <FormControl component="fieldset" variant="standard">
+                <div>
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <TextField
+                      required
+                      id="id"
+                      name="id"
+                      label="아이디"
+                      variant="standard"
+                      value={formData.id}
+                      onChange={handleChange}
+                      error={Boolean(errors.id)}
+                      helperText={errors.id}
+                    />
+                    <Button
+                      variant="outlined"
+                      onClick={checkIdDuplicate}
+                      sx={{ mt: 1 }}
+                    >
+                      중복 확인
+                    </Button>
+                  </div>
+                  <FormHelperTexts
+                    color={
+                      statusMessages.id.includes("사용 가능한 아이디입니다.")
+                        ? "green"
+                        : "red"
+                    }
+                  >
+                    {statusMessages.id}
+                  </FormHelperTexts>
+
+                  <TextField
+                    required
+                    fullWidth
+                    type="password"
+                    id="password"
+                    name="password"
+                    label="비밀번호"
+                    variant="standard"
+                    value={formData.password}
+                    onChange={handleChange}
+                    error={Boolean(errors.password)}
+                    helperText={errors.password}
+                  />
+                  <TextField
+                    required
+                    fullWidth
+                    type="password"
+                    id="password_confirm"
+                    name="password_confirm"
+                    label="비밀번호 확인"
+                    variant="standard"
+                    value={formData.password_confirm}
+                    onChange={handleChange}
+                    error={Boolean(errors.password_confirm)}
+                    helperText={errors.password_confirm}
+                  />
+
+                  <TextField
+                    required
+                    fullWidth
+                    id="name"
+                    name="name"
+                    label="이름"
+                    variant="standard"
+                    value={formData.name}
+                    onChange={handleChange}
+                    error={Boolean(errors.name)}
+                    helperText={errors.name}
+                  />
+
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <TextField
+                      required
+                      id="nickname"
+                      name="nickname"
+                      label="닉네임"
+                      variant="standard"
+                      value={formData.nickname}
+                      onChange={handleChange}
+                      error={Boolean(errors.nickname)}
+                      helperText={errors.nickname}
+                    />
+                    <Button
+                      variant="outlined"
+                      onClick={checkNickNameDuplicate}
+                      sx={{ mt: 1 }}
+                    >
+                      중복 확인
+                    </Button>
+                  </div>
+                  <FormHelperTexts
+                    color={
+                      statusMessages.nickname.includes(
+                        "사용 가능한 닉네임입니다."
+                      )
+                        ? "green"
+                        : "red"
+                    }
+                  >
+                    {statusMessages.nickname}
+                  </FormHelperTexts>
+
+                  <TextField
+                    required
+                    fullWidth
+                    id="email"
+                    name="email"
+                    label="이메일 주소"
+                    variant="standard"
+                    value={formData.email}
+                    onChange={handleChange}
+                    error={Boolean(errors.email)}
+                    helperText={errors.email}
+                  />
+
+                  <TextField
+                    required
+                    fullWidth
+                    id="phone_number"
+                    name="phone_number"
+                    label="연락처"
+                    variant="standard"
+                    value={formData.phone_number}
+                    onChange={handleChange}
+                    error={Boolean(errors.phone_number)}
+                    helperText={errors.phone_number}
+                  />
+
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <TextField
+                      fullWidth
+                      id="postcode"
+                      name="postcode"
+                      label="우편번호"
+                      variant="standard"
+                      value={formData.postcode}
+                      onChange={handleChange}
+                    />
+                    <Button
+                      variant="outlined"
+                      onClick={handleAddressSearch}
+                      sx={{ mb: 1, mr: 1, mt: 1 }}
+                    >
+                      우편번호 검색
+                    </Button>
+                  </div>
+                  <br />
+                  <TextField
+                    fullWidth
+                    id="address"
+                    name="address"
+                    label="주소"
+                    variant="standard"
+                    value={formData.address}
+                    onChange={handleChange}
+                  />
+                  <br />
+                  <TextField
+                    fullWidth
+                    id="detailAddress"
+                    name="detailAddress"
+                    label="상세주소"
+                    variant="standard"
+                    error={Boolean(errors.detailed_address)}
+                    value={formData.detailed_address}
+                    onChange={(e) => {
+                      handleChange({
+                        target: {
+                          name: "detailed_address",
+                          value: e.target.value,
+                        },
+                      });
+                    }}
+                  />
+                  <br />
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    marginTop: "16px",
+                  }}
                 >
-                  중복 확인
-                </Button>
-              </div>
-              <FormHelperTexts
-                color={
-                  statusMessages.id.includes("사용 가능한 아이디입니다.")
-                    ? "green"
-                    : "red"
-                }
-              >
-                {statusMessages.id}
-              </FormHelperTexts>
-
-              <TextField
-                required
-                fullWidth
-                type="password"
-                id="password"
-                name="password"
-                label="비밀번호"
-                variant="standard"
-                value={formData.password}
-                onChange={handleChange}
-                error={Boolean(errors.password)}
-                helperText={errors.password}
-              />
-              <TextField
-                required
-                fullWidth
-                type="password"
-                id="password_confirm"
-                name="password_confirm"
-                label="비밀번호 확인"
-                variant="standard"
-                value={formData.password_confirm}
-                onChange={handleChange}
-                error={Boolean(errors.password_confirm)}
-                helperText={errors.password_confirm}
-              />
-
-              <TextField
-                required
-                fullWidth
-                id="name"
-                name="name"
-                label="이름"
-                variant="standard"
-                value={formData.name}
-                onChange={handleChange}
-                error={Boolean(errors.name)}
-                helperText={errors.name}
-              />
-
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <TextField
-                  required
-                  id="nickname"
-                  name="nickname"
-                  label="닉네임"
-                  variant="standard"
-                  value={formData.nickname}
-                  onChange={handleChange}
-                  error={Boolean(errors.nickname)}
-                  helperText={errors.nickname}
-                />
-                <Button
-                  variant="outlined"
-                  onClick={checkNickNameDuplicate}
-                  sx={{ mt: 1 }}
-                >
-                  중복 확인
-                </Button>
-              </div>
-              <FormHelperTexts
-                color={
-                  statusMessages.nickname.includes("사용 가능한 닉네임입니다.")
-                    ? "green"
-                    : "red"
-                }
-              >
-                {statusMessages.nickname}
-              </FormHelperTexts>
-
-              <TextField
-                required
-                fullWidth
-                id="email"
-                name="email"
-                label="이메일 주소"
-                variant="standard"
-                value={formData.email}
-                onChange={handleChange}
-                error={Boolean(errors.email)}
-                helperText={errors.email}
-              />
-
-              <TextField
-                required
-                fullWidth
-                id="phone_number"
-                name="phone_number"
-                label="연락처"
-                variant="standard"
-                value={formData.phone_number}
-                onChange={handleChange}
-                error={Boolean(errors.phone_number)}
-                helperText={errors.phone_number}
-              />
-
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <TextField
-                  fullWidth
-                  id="postcode"
-                  name="postcode"
-                  label="우편번호"
-                  variant="standard"
-                  value={formData.postcode}
-                  onChange={handleChange}
-                />
-                <Button
-                  variant="outlined"
-                  onClick={handleAddressSearch}
-                  sx={{ mb: 1, mr: 1, mt: 1 }}
-                >
-                  우편번호 검색
-                </Button>
-                
-              </div>
-              <br />
-              <TextField
-                fullWidth
-                id="address"
-                name="address"
-                label="주소"
-                variant="standard"
-                value={formData.address}
-                onChange={handleChange}
-              />
-              <br />
-              <TextField
-                fullWidth
-                id="detailAddress"
-                name="detailAddress"
-                label="상세주소"
-                variant="standard"
-                error={Boolean(errors.detailAddress)}
-                value={formData.detailAddress}
-                onChange={handleChange}
-              />
-              <br />
-            </div>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                marginTop: "16px",
-              }}
-            >
-              <Button
-                variant="outlined"
-                onClick={handleCancel}
-                sx={{ mb: 2, mr: 1 }}
-              >
-                취소
-              </Button>
-              <Button type="submit" variant="contained" sx={{ mb: 2 }}>
-                회원가입
-              </Button>
-            </div>
-          </FormControl>
-          <FormHelperTexts>{statusMessages.register}</FormHelperTexts>
-        </form>
-      </Container>
-    </ThemeProvider>
-    </div>
-    <Footer />
+                  <Button
+                    variant="outlined"
+                    onClick={handleCancel}
+                    sx={{ mb: 2, mr: 1 }}
+                  >
+                    취소
+                  </Button>
+                  <Button type="submit" variant="contained" sx={{ mb: 2 }}>
+                    회원가입
+                  </Button>
+                </div>
+              </FormControl>
+              <FormHelperTexts>{statusMessages.register}</FormHelperTexts>
+            </form>
+          </Container>
+        </ThemeProvider>
+      </div>
+      <Footer />
     </>
-
   );
 };
 

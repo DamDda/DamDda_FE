@@ -20,8 +20,8 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import logo from "../assets/logo.png"; // 로고 파일
 import { SearchBar } from "./SearchBar";
 import axios from "axios"; // axios를 사용하여 REST API 호출
+import { useUser } from "../../UserContext";
 
-// const pages = ['카테고리'];
 
 export function Header({ search, setSearch }) {
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -31,15 +31,15 @@ export function Header({ search, setSearch }) {
   const [projects, setProjects] = useState([]);
   const location = useLocation();
 
-  const [isLoggedIn, setIsLoggedIn] = React.useState(false); // 로그인 상태 관리
 
   const memberId = 1;
+  const { logout, user } = useUser();
 
-  useEffect(() => {
-    if (location.state?.id) {
-      setIsLoggedIn(true);
-    }
-  }, [location.state?.id]);
+  // useEffect(() => {
+  //   if (location.state?.id) {
+  //     setIsLoggedIn(true);
+  //   }
+  // }, [location.state?.id]);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -334,7 +334,7 @@ export function Header({ search, setSearch }) {
 
             {/* 프로필 카드 부분 */}
             <Box sx={{ position: "relative" }}>
-              {isLoggedIn ? (
+              {user ? (
                 // 로그인 후 프로필 카드
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -365,7 +365,7 @@ export function Header({ search, setSearch }) {
                 </Button>
               )}
 
-              {showProfileCard && isLoggedIn && (
+              {showProfileCard && user && (
                 <Box
                   sx={{
                     position: "absolute",
@@ -400,7 +400,7 @@ export function Header({ search, setSearch }) {
                         textAlign="center"
                         sx={{ fontWeight: "bold" }}
                       >
-                        {location.state?.id} 님
+                        {user.nickname} 님
                       </Typography>
 
                       <Box
@@ -460,8 +460,7 @@ export function Header({ search, setSearch }) {
                             cursor: "pointer",
                           }}
                           onClick={() => {
-                            setIsLoggedIn(false);
-
+                            logout();
                             navigate("/");
                           }}
                         >

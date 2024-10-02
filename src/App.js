@@ -23,6 +23,7 @@ import ErrorPage from './components/pages/error/ErrorPage';
 import MyPage from './components/pages/mypage/Mypage';
 import styles from './components/styles/style.css'
 import ProjectDetail from './components/pages/detail/ProjectDetail';
+import { UserProvider } from "./UserContext";
 
 /////////////////////////////주현////////////////////////////////////
 import Entire from './components/pages/entire/Main';
@@ -30,11 +31,11 @@ function App() {
  
 
   return (
+    <UserProvider>
     <Router>
       <Routes>
       {/* /////////////////////////////지영//////////////////////////////////// */}
         <Route path="/" element={<Home />} />  
-
         <Route path="/order" element={<OrderPage />} />
         <Route path="/user/myorders/:userId" element={<MyOrders />} />
         <Route path="/yourpage" element={<YourPage />} />
@@ -49,17 +50,14 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/error" element={<ErrorPage />} />
         <Route path="/projectDetail" element={<ProjectDetail />} />
-
       {/* /////////////////////////////혜원/////////////////////////////////// */}
       <Route path="/mypage" element={<MyPage />} />
       {/* /////////////////////////////주현/////////////////////////////////// */}
-
       <Route path="/entire" element={<Entire />} />
-
-
-
         </Routes>
     </Router>
+    </UserProvider>
+
   );
 }
 

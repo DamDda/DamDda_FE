@@ -85,6 +85,7 @@ const Register = () => {
   // setCertDocs((certDocs || []).map(createFileLikeObjectFromUrl));
   
   convertUrlsToFileObjects();
+  
    writeData.tags && setTags(writeData.tags);
 
   }, [writeData])

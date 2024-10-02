@@ -1,14 +1,13 @@
-import React from "react";
+import * as React from "react";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 
-export default function TabsUnderlinePlacement({
-  selectedTab,
-  setSelectedTab,
-}) {
+
+export default function TabsUnderlinePlacement( { selectedTab, setSelectedTab, setMyprojectClick }) {
   const handleChange = (event, newValue) => {
     setSelectedTab(newValue);
+    setMyprojectClick(false);
   };
 
   return (
@@ -17,6 +16,7 @@ export default function TabsUnderlinePlacement({
         <Tabs
           value={selectedTab}
           onChange={handleChange}
+          onClick={()=>setMyprojectClick(false)}
           aria-label="Tabs with underline"
           textColor="primary"
           TabIndicatorProps={{

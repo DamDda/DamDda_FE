@@ -52,6 +52,8 @@ const Mypage = () => {
     setProfileData(updateData); // 업데이트 된 데이터를 저장
   };
 
+  const [myprojectClick, setMyprojectClick] = useState(false);
+
   // 데이터를 로딩 중일 때 표시할 화면
   if (isLoading) {
     return <p>로딩 중...</p>;
@@ -82,7 +84,11 @@ const Mypage = () => {
       case 1:
         return <SupportedProjects />;
       case 2:
-        return <Myproject />;
+        if (myprojectClick){
+            return <MyProjectDetail setMyprojectClick={setMyprojectClick}/>;
+        } else{
+          return <Myproject setMyprojectClick={setMyprojectClick}/>;
+        }       
       case 3:
         return <LikeProject />;
       case 4:
@@ -110,6 +116,7 @@ const Mypage = () => {
           <TabsUnderlinePlacement
             selectedTab={selectedTab}
             setSelectedTab={setSelectedTab}
+            setMyprojectClick={setMyprojectClick}
           />
           {/* 각 탭에 맞는 콘텐츠를 조건부 렌더링 */}
           {renderSelectedTabContent()}

@@ -10,9 +10,7 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { styled } from "@mui/system";
 
-import '../../styles/style.css'
-import { Header } from "../../layout/Header";
-import { Footer } from "../../layout/Footer";
+import "../../styles/style.css";
 
 const VisuallyHiddenInput = styled("input")({
   display: "none",
@@ -31,27 +29,34 @@ const FileItem = styled("div")({
   position: "relative",
 });
 
-const ProjectDocument = ({reqDocsUrl, certDocsUrl, setReqDocs, setCertDocs, saveProject, projectId}) => {
+const ProjectDocument = ({
+  reqDocsUrl,
+  certDocsUrl,
+  setReqDocs,
+  setCertDocs,
+  saveProject,
+  projectId,
+}) => {
   const [requiredDocs, setRequiredDocs] = useState([]); // 필수 서류
   const [certificationDocs, setCertificationDocs] = useState([]); // 인증 서류
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
-  useEffect(()=>{
+  useEffect(() => {
     setRequiredDocs(reqDocsUrl);
     setCertificationDocs(certDocsUrl);
-  }, [reqDocsUrl, certDocsUrl])
+  }, [reqDocsUrl, certDocsUrl]);
 
   const handleFileUpload = (event, setFileList, setDocList, type) => {
     const files = Array.from(event.target.files);
-      // 새로운 파일 객체 생성 시 파일명에 [type] 추가
-  const newFilesWithType = files.map((file) => {
-    const newFileName = `[${type}] ${file.name}`;
-    return new File([file], newFileName, { type: file.type });
-  });
+    // 새로운 파일 객체 생성 시 파일명에 [type] 추가
+    const newFilesWithType = files.map((file) => {
+      const newFileName = `[${type}] ${file.name}`;
+      return new File([file], newFileName, { type: file.type });
+    });
     const newFileNames = files.map((file) => file.name);
     // const newFileNames = files.map((file) => `[${type}] ${file.name}`);
     setFileList((prev) => [...prev, ...newFileNames]);
-    setDocList((prev) => [...prev, ...newFilesWithType])
+    setDocList((prev) => [...prev, ...newFilesWithType]);
     // setDocList에 [type]이 포함된 파일명으로 저장
     // setDocList((prev) => [
     //   ...prev,
@@ -86,7 +91,7 @@ const ProjectDocument = ({reqDocsUrl, certDocsUrl, setReqDocs, setCertDocs, save
     if (window.confirm("정말로 제출하시겠습니까?")) {
       console.log("Submitting Required Docs:", requiredDocs);
       console.log("Submitting Certification Docs:", certificationDocs);
-      saveProject(projectId, "제출")
+      saveProject(projectId, "제출");
       setSnackbarMessage("제출되었습니다.");
       setSnackbarOpen(true);
     }
@@ -97,10 +102,6 @@ const ProjectDocument = ({reqDocsUrl, certDocsUrl, setReqDocs, setCertDocs, save
   };
 
   return (
-    <>
-    {/* <Header /> */}
-     	 <div className="container">
-
     <div style={{ marginTop: "40px" }}>
       <Typography variant="h6">진행자 서류 제출</Typography>
       <p>
@@ -112,6 +113,7 @@ const ProjectDocument = ({reqDocsUrl, certDocsUrl, setReqDocs, setCertDocs, save
 
       {/* 필수 서류 업로드 섹션 */}
       <Button
+        className="primary-button"
         component="label"
         variant="contained"
         style={{ marginTop: "10px" }}
@@ -119,7 +121,9 @@ const ProjectDocument = ({reqDocsUrl, certDocsUrl, setReqDocs, setCertDocs, save
         📁 필수 서류 파일 업로드
         <VisuallyHiddenInput
           type="file"
-          onChange={(event) => handleFileUpload(event, setRequiredDocs, setReqDocs, "진행자")}
+          onChange={(event) =>
+            handleFileUpload(event, setRequiredDocs, setReqDocs, "진행자")
+          }
           multiple
         />
       </Button>
@@ -137,7 +141,12 @@ const ProjectDocument = ({reqDocsUrl, certDocsUrl, setReqDocs, setCertDocs, save
               {fileName}
               <IconButton
                 onClick={() =>
-                  handleFileDelete(index, requiredDocs, setRequiredDocs, setReqDocs)
+                  handleFileDelete(
+                    index,
+                    requiredDocs,
+                    setRequiredDocs,
+                    setReqDocs
+                  )
                 }
                 style={{ marginLeft: "5px" }}
               >
@@ -158,6 +167,7 @@ const ProjectDocument = ({reqDocsUrl, certDocsUrl, setReqDocs, setCertDocs, save
         필수서류를 제출하지 않으면 프로젝트가 반려될 수 있습니다.
       </p>
       <Button
+        className="primary-button"
         component="label"
         variant="contained"
         style={{ marginTop: "10px" }}
@@ -165,7 +175,9 @@ const ProjectDocument = ({reqDocsUrl, certDocsUrl, setReqDocs, setCertDocs, save
         📁 인증서류 파일 업로드
         <VisuallyHiddenInput
           type="file"
-          onChange={(event) => handleFileUpload(event, setCertificationDocs, setCertDocs, "인증")}
+          onChange={(event) =>
+            handleFileUpload(event, setCertificationDocs, setCertDocs, "인증")
+          }
           multiple
         />
       </Button>
@@ -186,7 +198,7 @@ const ProjectDocument = ({reqDocsUrl, certDocsUrl, setReqDocs, setCertDocs, save
                   handleFileDelete(
                     index,
                     certificationDocs,
-                    setCertificationDocs, 
+                    setCertificationDocs,
                     setCertDocs
                   )
                 }
@@ -200,10 +212,15 @@ const ProjectDocument = ({reqDocsUrl, certDocsUrl, setReqDocs, setCertDocs, save
       </Paper>
 
       <div style={{ marginTop: "20px" }}>
-        <Button variant="contained" onClick={handlePreview}>
+        <Button
+          className="primary-button"
+          variant="contained"
+          onClick={handlePreview}
+        >
           미리보기
         </Button>
         <Button
+          className="primary-button"
           variant="contained"
           color="primary"
           onClick={handleSubmit}
@@ -223,10 +240,6 @@ const ProjectDocument = ({reqDocsUrl, certDocsUrl, setReqDocs, setCertDocs, save
         </Alert>
       </Snackbar>
     </div>
-    </div>
-    {/* <Footer /> */}
-    </>
-
   );
 };
 

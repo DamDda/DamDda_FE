@@ -21,7 +21,7 @@ import { useNavigate } from "react-router-dom";
 
 
 // 프로젝트 카드 컴포넌트
-export const ProductCard = ({ product }) => {
+export const ProductCard = ({ product,  setMyprojectClick}) => {
   console.log(product.approval);
   console.log(product);
   const navigate = useNavigate(); // 페이지 이동을 위한 훅
@@ -33,7 +33,8 @@ export const ProductCard = ({ product }) => {
     // index값이 유효한 숫자인지 체크하고 url로 전달
     if (typeof product.id == "number" && !isNaN(product.id)) {
       // 페이지 이동
-      navigate(`/myproject/${product.id}`); // 올바른 url로 navigate
+      setMyprojectClick(true);
+      // navigate(`/myproject/${product.id}`); // 올바른 url로 navigate
     } else {
       console.log("인덱스 번호 없음");
     }
@@ -183,7 +184,7 @@ export const ProductCard = ({ product }) => {
 };
 
 // Myproject 컴포넌트
-export const Myproject = () => {
+export const Myproject = ({setMyprojectClick}) => {
 
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
 
@@ -341,7 +342,7 @@ const pageNumbers = generatePageNumbers(currentPage, totalPages);
             display="flex"
             justifyContent="center"
           >
-            <ProductCard product={product} />
+            <ProductCard product={product} setMyprojectClick={setMyprojectClick}/>
           </Grid>
         ))}
       </Grid>

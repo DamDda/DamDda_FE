@@ -10,7 +10,7 @@ export function CarouselComponent() {
   const fetchImage = async () => {
     const response = await axios({
       method: "GET",
-      url: "http://223.130.156.95/admins/carousels",
+      url: "http://101.79.9.79:9000/files/carousels",
     })
       .then((response) => setImages(response.data))
       .catch((e) => console.error(e));
@@ -38,7 +38,7 @@ export function CarouselComponent() {
           {images.map((url) => (
             <Carousel.Item>
               <img
-                src={`http://223.130.156.95/${url}`}
+                src={`http://101.79.9.79:9000/${url}`}
                 alt={url}
                 style={{
                   width: "100%",

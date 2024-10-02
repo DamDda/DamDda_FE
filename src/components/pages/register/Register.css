@@ -1,0 +1,186 @@
+/* 페이지 제목 */
+.header-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative; /* 버튼을 절대 위치로 배치하기 위한 상대적 위치 */
+}
+
+/* 버튼을 오른쪽 끝에 배치 */
+.button-right {
+  position: absolute;
+  right: 0;
+}
+
+/* 기본 버튼 스타일 */
+.button {
+  background-color: #7a82ed !important;
+}
+
+.button:hover {
+  background-color: #33c2e2 !important;
+}
+
+/* 기본 버튼 스타일 (Contained) */
+.primary-button {
+  background-color: #7a82ed !important;
+  color: #fff !important;
+}
+
+.primary-button:hover {
+  background-color: #33c2e2 !important;
+}
+
+/* 외곽선 버튼 스타일 (Outlined) */
+.outlined-button {
+  border-color: #7a82ed !important;
+  color: #7a82ed !important;
+}
+
+.outlined-button:hover {
+  border-color: #33c2e2 !important;
+  color: #33c2e2 !important;
+}
+
+/* 인포 컨테이너 */
+.info-container {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+
+/* 카테고리 */
+.category {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.category_id {
+  font-size: 13px !important;
+  height: 30px !important;
+}
+
+/* 폼 컨테이너 */
+.form-container {
+  display: flex;
+  flex-direction: row;
+  padding: 8px;
+}
+
+/* 섹션 제목 */
+.section-container {
+  flex: 2 1 100%;
+  padding: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  display: flex;
+  position: relative;
+}
+
+/* 이미지 업로드 섹션 */
+.image-section {
+  display: flex;
+  flex-direction: column;
+  /* align-items: center; */
+}
+
+.image-preview {
+  width: 400px;
+  height: 400px;
+  background-color: #f0f0f0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.preview-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.preview-placeholder {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-upload {
+  margin-top: 16px;
+}
+
+.image-upload-button {
+  border-color: #7a82ed;
+  color: #7a82ed;
+}
+
+/* 입력 섹션 */
+.image-section {
+  flex: 1 1 100%;
+  padding: 8px;
+}
+
+/* 폼 아이템 */
+.form-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+/* 제목 인풋 */
+.form-div {
+  width: 150px;
+  text-align: right;
+  margin-right: 8px;
+}
+
+.form-div-sub {
+  margin-left: 8px;
+  align-self: flex-end;
+}
+
+/* 입력 필드 */
+.input-field {
+  flex: 1 !important;
+}
+
+/* 정보 아이콘 */
+.icon {
+  padding: 0;
+  margin-left: 8px;
+  align-self: flex-end;
+  opacity: 0.5;
+}
+
+/* 태그 */
+.tags-container {
+  margin-top: 10px;
+}
+
+.tag-chip {
+  margin: 5px;
+}
+
+/* 모달 스타일 */
+.modal-content {
+  padding: 20px;
+  background-color: #fff;
+  margin: auto;
+  width: 400px;
+  margin-top: 100px;
+}
+
+/* 탭 컨텐츠 */
+.tab-content {
+  margin-top: 10px;
+}
+
+/* 단위 */
+.unit {
+  margin-left: 8px;
+  align-self: flex-end;
+}

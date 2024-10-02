@@ -10,7 +10,7 @@ import {
   Box,
   TextField,
 } from "@mui/material";
-import { styled } from "@mui/system";
+import { margin, styled, width } from "@mui/system";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ProjectDetail from "./ProjectDetail";
@@ -18,15 +18,18 @@ import Notice from "./notices";
 import Qna from "./qna";
 
 import "../../styles/style.css";
+import "./Detail.css";
+
 import { Header } from "../../layout/Header";
 import { Footer } from "../../layout/Footer";
 import { useLocation } from "react-router-dom";
-
+import Carousel from 'react-bootstrap/Carousel';
+import 'bootstrap/dist/css/bootstrap.min.css'; // 부트스트랩 CSS 로드
 import axios from "axios"; // axios를 사용하여 REST API 호출
 
 const ProductContainer = styled("div")({
   position: "relative",
-  width: "500px",
+  width: "750px",
   height: "500px",
   backgroundColor: "#f0f0f0",
   display: "flex",
@@ -34,6 +37,8 @@ const ProductContainer = styled("div")({
   justifyContent: "center",
   borderRadius: "8px",
   overflow: "hidden",
+  marginTop:"20px"
+
 });
 
 const ProductImage = styled("img")({
@@ -62,20 +67,21 @@ const ModalBox = styled(Box)({
 });
 
 const projectData = {
-  category: "💄@@@@@@@@@@@@@",
-  organizer_id: "@@@@@@@@@@@@@",
-  title: "@@@@@@@@@@@@@@@@@",
+  category: "뷰티 & 패션",
+  organizer_id: "beauty_lovers",
+  title: "혁신적인 립스틱 컬렉션 출시",
   description:
-    "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
-  currentAmount: 99999999999999999,
-  target_funding: 999999999999999,
-  start_date: "@@@@@@@@@@@@@",
-  end_date: "@@@@@@@@@@@@@",
-  delivery_date: 9999999999,
-  liked_count: 99999,
-  supporterCount: 9999999,
-  product_url: "data:image/png;",
+    "고급스러운 컬러와 지속력을 자랑하는 새로운 립스틱 컬렉션을 선보입니다. 이번 프로젝트를 통해 뷰티 트렌드를 선도하는 제품을 만나보세요.",
+  currentAmount: 85000000,
+  target_funding: 100000000,
+  start_date: "2024-10-01",
+  end_date: "2024-12-01",
+  delivery_date: 1714593600, // Example UNIX timestamp for delivery date
+  liked_count: 3421,
+  supporterCount: 1567,
+  product_url: "https://example.com/product_image.png",
 };
+
 
 const Detail = () => {
   const {
@@ -402,15 +408,70 @@ const formatDate = (dateString) => {
   });
   // return dateString;
 };
-
+const ProductCarousel = ({ productDetail }) => {
+  return (
+    <div style={{marginTop:'200px', maxWidth: "1500px", margin: "0 auto" ,backgroundColor:"gray",}}> {/* 캐러셀의 최대 너비를 1000px로 설정 */}
+      <Carousel fade interval={3000} indicators={true} controls={true}> {/* 3초마다 자동 전환 */}
+        {productDetail && productDetail.productImages && productDetail.productImages.length > 0 ? (
+          productDetail.productImages.map((image, index) => (
+            <Carousel.Item key={index}>
+              <img
+                src={`http://localhost:9000/${image}`}
+                alt={`Product image ${index}`}
+                style={{ 
+                  width: '850px', 
+                  height: '500px', 
+                  objectFit: 'cover', 
+                  borderRadius: '8px' ,
+                  marginTop:'20px',
+                  }} // 스타일 적용
+              />
+              <Carousel.Caption>
+                <h3>Slide {index + 1}</h3>
+                <p>이 슬라이드는 {index + 1}번째 이미지입니다.</p>
+              </Carousel.Caption>
+            </Carousel.Item>
+          ))
+        ) : (
+          <Carousel.Item>
+            <div style={{ width:'850px',height:'500px',padding: "200px",marginTop:'20px', textAlign: "center" }}>
+              <Typography variant="body2" color="textSecondary">
+                이미지가 없습니다.
+              </Typography>
+            </div>
+          </Carousel.Item>
+        )}
+      </Carousel>
+    </div>
+  );
+};
 
   return (
     <>
       <Header />
+      <div className="container">
+         <div style={{ paddingTop: "20px",textAlign:"center" }}>
+         <div className="project-info">
+              <div className="category">{projectData.category}</div>
+              <div className="presenter">{projectData.organizer_id}</div>
+
+              <h1 className="project-title">{projectData.title}</h1>
+              <p className="project-description">
+                {projectData.description.split('\n').map((line, index) => (
+                  <span key={index}>
+                    {line}
+                    <br />
+                  </span>
+                ))}
+      </p>
+      </div>
+        </div>
+
+      </div>
 
       <div className="container">
-        <div style={{ padding: "20px" }}>
-          <div style={{ marginBottom: "20px" }}>
+        <div style={{ padding: "5px" }}>
+          <div style={{ marginBottom: "10px" }}>
             <Typography variant="category">{productDetail.category}</Typography>
             <br />
             <Typography variant="organizer">
@@ -444,9 +505,10 @@ const formatDate = (dateString) => {
                 </Grid>
               ))} */}
 
-          <div style={{ display: "flex", width: "7500px" }}>
-            <ProductContainer>
-              {productDetail.productImages &&
+      <div style={{ display: "flex", width: "1500px",justifyContent:"center" }}>
+      <ProductContainer>
+             <ProductCarousel></ProductCarousel>
+              {/* {productDetail.productImages &&
               productDetail.productImages.length > 0 ? (
                 productDetail.productImages.map((image, index) => (
                   <ProductImage
@@ -459,7 +521,7 @@ const formatDate = (dateString) => {
                 <Typography variant="body2" color="textSecondary">
                   이미지가 없습니다.
                 </Typography>
-              )}
+              )} */}
 
               {/* {product_url ? (
                 <ProductImage src={product_url} alt="Project Product" />
@@ -478,12 +540,12 @@ const formatDate = (dateString) => {
                   gap: "5px",
                 }}
               >
-                <Button>
+                {/* <Button>
                   <ArrowBackIcon />
                 </Button>
                 <Button>
                   <ArrowForwardIcon />
-                </Button>
+                </Button> */}
               </div>
               <Indicator>
                 <div
@@ -504,57 +566,92 @@ const formatDate = (dateString) => {
               </Indicator>
             </ProductContainer>
 
-            <div style={{ marginLeft: "20px", flex: 1, width: "5000px" }}>
-              <Typography variant="h5" style={{ marginTop: "20px" }}>
-                후원금액 (진행률)
-                <br />
-                {productDetail.fundsReceive}원 ({achievementRate.toFixed(2)}%)
-              </Typography>
-              <LinearProgress
-                variant="determinate"
-                value={progress}
-                style={{ margin: "10px 0", width: "300px" }}
-              />
-              <Typography variant="h5">남은 기간: {daysLeft}일</Typography>
-              <Typography variant="h5">
-                후원자 수: {productDetail.supporterCnt}명
-              </Typography>
-              <Divider style={{ margin: "20px 0", width: "700px" }} />
-              <Typography variant="body2">
-                목표금액: {productDetail.targetFunding}원
-              </Typography>
-              <Typography variant="body2">
-                펀딩 기간: {formatDate(productDetail.startDate)} ~ {formatDate(productDetail.endDate)}
-              </Typography>
-              <Typography variant="body2">
-                예상 전달일: 프로젝트 종료일로부터 30일
-                {/* {projectData.delivery_date}일 */}
-                이내
-              </Typography>
-              <div style={{ marginTop: "20px" }}>
-                <Button variant="contained" onClick={handleSponsorClick}>
-                  이 프로젝트에 후원하기
-                </Button>
-                <p>
-                  <Button
-                    variant="outlined"
-                    onClick={() => handleHeartClick(isHearted)}
-                    style={{ marginLeft: "10px" }}
-                  >
-                    {isHearted ? "♥" : "♡"} <br /> {liked_count}명
-                  </Button>
-                  <Button
-                    variant="outlined"
-                    onClick={handleCollabClick}
-                    style={{ marginLeft: "10px" }}
-                  >
-                    협업하기
-                  </Button>
-                </p>
-              </div>
-            </div>
+            <div style={{ flex: 1, width: "1200px" }}>
+           
+           <div className="container" style={{ marginLeft: "50px" }}>
+           <h5>
+               후원금액 (진행률) 
+               <div className="goal-price">
+                 <span>{productDetail.fundsReceive}원</span>
+                 <span className="percentage">{achievementRate.toFixed(2)}%</span>
+               </div>
+             </h5>
+
+           <LinearProgress
+             variant="determinate"
+             value={progress}
+             className="progress-bar"
+           />
+
+
+         <div className="stats-container">
+           <div className="stats-item">
+             남은 기간: <span className="stats-value">{daysLeft}일</span>
+           </div>
+           <div className="stats-item">
+             후원자 수: <span className="stats-value">{productDetail.supporterCnt}명</span>
+           </div>
+         </div>
+
+
+ <Divider className="divider" />
+ <div className="info-text">        
+   목표금액: {productDetail.targetFunding}원</div>
+ <div className="info-text">
+   펀딩 기간: {formatDate(productDetail.startDate)} ~ {formatDate(productDetail.endDate)}
+ </div>
+ <div className="info-text">
+   예상 전달일: 프로젝트 종료일로부터 30일 이내
+ </div>
+ <div className="button-container">
+ <Button className="contained-button" onClick={handleSponsorClick}>
+   이 프로젝트에 후원하기
+ </Button>
+ <div className="secondary-buttons">
+   <Button
+     variant="outlined"
+     onClick={() => handleHeartClick(isHearted)}
+     className="heart-button"
+   >
+     {isHearted ? "♥" : "♡"}  {liked_count}명
+   </Button>
+   <Button
+     variant="outlined"
+     onClick={handleCollabClick}
+     className="heart-button"
+   >
+     협업하기
+   </Button>
+ </div>
+</div>
+
           </div>
 
+           {/*  */}
+               {/* <Button variant="contained" onClick={handleSponsorClick}>
+                 이 프로젝트에 후원하기
+               </Button>
+               <p>
+                 <Button
+                   variant="outlined"
+                   onClick={() => handleHeartClick(isHearted)}
+                   style={{ marginLeft: "10px" }}
+                 >
+                   {isHearted ? "♥" : "♡"} <br /> {liked_count}명
+                 </Button>
+                 <Button
+                   variant="outlined"
+                   onClick={handleCollabClick}
+                   style={{ marginLeft: "10px" }}
+                 >
+                   협업하기
+                 </Button>
+               </p> */}
+           </div>
+          </div>
+
+
+          {/* 상세설명 */}
           <Divider style={{ margin: "20px 0", width: "1220px" }} />
 
           <div id="details">
@@ -574,8 +671,8 @@ const formatDate = (dateString) => {
             </Typography>
           </div>
 
+          {/* Notice */}
           <Divider style={{ margin: "20px 0" }} />
-
           <div id="notices">
             <Tabs value={1} indicatorColor="primary" textColor="primary">
               <Tab
@@ -591,8 +688,9 @@ const formatDate = (dateString) => {
             <Notice />
           </div>
 
-          <Divider style={{ margin: "20px 0" }} />
 
+          {/* QNA */}
+          <Divider style={{ margin: "20px 0" }} />
           <div id="qna">
             <Tabs value={2} indicatorColor="primary" textColor="primary">
               <Tab

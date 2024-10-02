@@ -9,6 +9,16 @@ import {
   Tooltip,
   Tab,
   Tabs,
+  Collapse,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  KeyboardArrowDownIcon,
+  KeyboardArrowUpIcon,
 } from "@mui/material";
 import { styled } from "@mui/system";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -100,7 +110,7 @@ const DashboardSection = styled("div")({
   boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
 });
 
-const MyProjectDetail = () => {
+const MyProjectDetail = ({setMyprojectClick}) => {
   const { projectId } = useParams(); // URL에서 projectId 추출
   const [projectData, setProjectData] = useState(null); // 프로젝트 정보 상태
   const [supportStat, setSupportStat] = useState(null); // 후원 통계 상태
@@ -141,11 +151,12 @@ const MyProjectDetail = () => {
   //   return <div>데이터를 가져오는 중 오류가 발생</div>;
   // }
 
-   // 백엔드가 준비되지 않았을 때 가짜 데이터 사용
-   useEffect(() => {
+  // 백엔드가 준비되지 않았을 때 가짜 데이터 사용
+  useEffect(() => {
     const fetchData = async () => {
       try {
-        const projectResponse = mockProjectData[projectId] || mockProjectData[1];
+        const projectResponse =
+          mockProjectData[projectId] || mockProjectData[1];
         const supportStatResponse = mockSupportStat;
 
         setProjectData(projectResponse); // 프로젝트 데이터 저장
@@ -153,12 +164,12 @@ const MyProjectDetail = () => {
         setLoading(false); // 로딩 상태 완료
       } catch (error) {
         console.log("데이터를 불러오는 중 오류 발생:", error);
-        setLoading(false); 
+        setLoading(false);
       }
     };
 
     fetchData();
-  }, [projectId]); 
+  }, [projectId]);
 
   if (loading) {
     return <div>로딩 중...</div>;
@@ -211,19 +222,18 @@ const MyProjectDetail = () => {
     <DetailContainer>
       {/* 뒤로 가기 버튼 */}
       <IconButton
-        onClick={() => navigate("/myproject")}
+        // onClick={() => navigate("/myproject")}
+        onClick={() => setMyprojectClick(false)}
         style={{ position: "absolute", top: "330px", left: "700px" }}
       >
         <ArrowBackIcon fontSize="large" />
       </IconButton>
-
       <Typography
         variant="h4"
         sx={{ fontWeight: "bold", marginBottom: "20px" }}
       >
         프로젝트 진행률 확인
       </Typography>
-
       <div style={{ padding: "20px" }}>
         <div style={{ marginBottom: "20px" }}>
           <Typography variant="category">{category}</Typography>
@@ -233,7 +243,6 @@ const MyProjectDetail = () => {
           <Typography variant="body2">{description}</Typography>
         </div>
       </div>
-
       <InfoSection>
         {/* 이미지 섹션 */}
         <ThumbnailContainer>
@@ -345,41 +354,93 @@ const MyProjectDetail = () => {
           </Box>
         </ProgressSection>
       </InfoSection>
-
       {/* 탭 섹션 */}
       <Tabs
         value={tabIndex}
         onChange={handleTabChange}
         aria-label="후원통계 및 후원자 조회 탭"
-        sx={{ marginTop: "60px", marginBottom: "20px",
-          '& .MuiTab-root' : {
+        sx={{
+          marginTop: "60px",
+          marginBottom: "20px",
+          "& .MuiTab-root": {
             fontSize: "20px",
-            
-          }
+          },
         }}
       >
         <Tab label="후원 통계" />
         <Tab label="후원자 조회" />
       </Tabs>
-
+      <br />
+      <div style={{ fontSize: "20px" }}>
+        시작일:{startDate} | 마감일:{endDate}
+      </div>
       {/* 후원 통계 정보 */}
       {tabIndex === 0 && (
-        <DashboardSection>
+        <DashboardSection
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            padding: "20px",
+            borderRadius: "10px",
+            backgroundColor: "white",
+            width: "1000px",
+            marginTop: "20px",
+          }}
+        >
           <Typography
             variant="h5"
-            sx={{ marginBottom: "20px", fontWeight: "bold" }}
+            sx={{
+              marginBottom: "20px",
+              fontWeight: "bold",
+              marginRight: "-150px",
+            }}
           >
             {/* 후원 통계 */}
           </Typography>
           <Typography>
-            총 후원금액: {supportStat.totalAmount.toLocaleString()}원
+            <span style={{ color: "red", fontSize: "18px" }}>
+              {" "}
+              총 후원금액{" "}
+            </span>{" "}
+            <br />
+            <span style={{ color: "black", fontSize: "24px" }}>
+              {" "}
+              {supportStat.totalAmount.toLocaleString()}원{" "}
+            </span>{" "}
+            <br />
           </Typography>
-          <Typography>달성률: {supportStat.percentage}%</Typography>
-          <Typography>후원자 수: {supportStat.supporters}명</Typography>
-          <Typography>남은 기간: {remainingDays}일</Typography>
+          <Typography>
+            <span style={{ color: "red", fontSize: "18px" }}> 달성률 </span>{" "}
+            <br />
+            <span style={{ color: "black", fontSize: "24px" }}>
+              {" "}
+              {supportStat.percentage}%{" "}
+            </span>{" "}
+            <br />
+          </Typography>
+
+          <Typography>
+            <span style={{ color: "red", fontSize: "18px" }}> 후원자 수 </span>{" "}
+            <br />
+            <span style={{ color: "black", fontSize: "24px" }}>
+              {" "}
+              {supportStat.supporters}명{" "}
+            </span>{" "}
+            <br />
+          </Typography>
+
+          <Typography>
+            <span style={{ color: "red", fontSize: "18px" }}> 남은 기간 </span>{" "}
+            <br />
+            <span style={{ color: "black", fontSize: "24px" }}>
+              {" "}
+              {remainingDays}일{" "}
+            </span>{" "}
+            <br />
+          </Typography>
         </DashboardSection>
       )}
-
       {/* 후원자 조회 */}
       {tabIndex === 1 && (
         <DashboardSection>

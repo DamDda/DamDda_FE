@@ -38,7 +38,7 @@ export function CarouselComponent() {
           {images.map((url) => (
             <Carousel.Item>
               <img
-                src={url}
+                src={`http://223.130.156.95/${url}`}
                 alt={url}
                 style={{
                   width: "100%",

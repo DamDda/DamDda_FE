@@ -79,12 +79,24 @@ const Register = () => {
 //url을 파일로 수정하는 코드
 
   // const fileLikeObjects = descriptionImages.map(createFileLikeObjectFromUrl);
+
+  writeData.productImages && setProductImages(writeData.productImages);
+  writeData.descriptionImages && setDescriptionImages(writeData.descriptionImages);
+  writeData.reqDocs && setReqDocs(writeData.reqDocs);
+  writeData.certDocs && setCertDocs(writeData.certDocs);
+
+
+  console.log(writeData.productImages + " : productImages : " + productImages);
+  console.log("descriptionImages : " + descriptionImages);
+  console.log("reqDocs : " + reqDocs);
+  console.log("certDocs : " + certDocs);
+
   // setProductImages((productImages || []).map(createFileLikeObjectFromUrl));
   // setDescriptionImages((descriptionImages || []).map(createFileLikeObjectFromUrl));
   // setReqDocs((reqDocs || []).map(createFileLikeObjectFromUrl));
   // setCertDocs((certDocs || []).map(createFileLikeObjectFromUrl));
   
-  // convertUrlsToFileObjects();
+  convertUrlsToFileObjects();
 
    writeData.tags && setTags(writeData.tags);
 
@@ -94,24 +106,25 @@ const Register = () => {
     // 비동기 파일 변환 작업 처리
     async function convertUrlsToFileObjects() {
 
-    console.log("productImagesUrl" + productImagesUrl);
+    console.log("productImages : " + productImages);
+
       const productFileObjects = await Promise.all(
-        (productImagesUrl || []).map(createFileLikeObjectFromUrl)
+        (productImages || []).map(createFileLikeObjectFromUrl)
       );
 
-      console.log("descriptionImagesUrl" + descriptionImagesUrl);
+      console.log("descriptionImages : " + descriptionImages);
       const descriptionFileObjects = await Promise.all(
-        (descriptionImagesUrl || []).map(createFileLikeObjectFromUrl)
+        (descriptionImages || []).map(createFileLikeObjectFromUrl)
       );
 
-      console.log("reqDocsUrl" + reqDocsUrl);
+      console.log("reqDocs : " + reqDocs);
       const reqDocFileObjects = await Promise.all(
-        (reqDocsUrl || []).map(createFileLikeObjectFromUrl)
+        (reqDocs || []).map(createFileLikeObjectFromUrl)
       );
       
-    console.log("certDocsUrl" + certDocsUrl);
+    console.log("certDocs : " + certDocs);
       const certDocFileObjects = await Promise.all(
-        (certDocsUrl || []).map(createFileLikeObjectFromUrl)
+        (certDocs || []).map(createFileLikeObjectFromUrl)
       );
   
       // 상태 업데이트

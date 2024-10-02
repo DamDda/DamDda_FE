@@ -84,8 +84,8 @@ const Register = () => {
   // setReqDocs((reqDocs || []).map(createFileLikeObjectFromUrl));
   // setCertDocs((certDocs || []).map(createFileLikeObjectFromUrl));
   
-  convertUrlsToFileObjects();
-  
+  // convertUrlsToFileObjects();
+
    writeData.tags && setTags(writeData.tags);
 
   }, [writeData])
@@ -93,17 +93,25 @@ const Register = () => {
 
     // 비동기 파일 변환 작업 처리
     async function convertUrlsToFileObjects() {
+
+    console.log("productImagesUrl" + productImagesUrl);
       const productFileObjects = await Promise.all(
-        (productImages || []).map(createFileLikeObjectFromUrl)
+        (productImagesUrl || []).map(createFileLikeObjectFromUrl)
       );
+
+      console.log("descriptionImagesUrl" + descriptionImagesUrl);
       const descriptionFileObjects = await Promise.all(
-        (descriptionImages || []).map(createFileLikeObjectFromUrl)
+        (descriptionImagesUrl || []).map(createFileLikeObjectFromUrl)
       );
+
+      console.log("reqDocsUrl" + reqDocsUrl);
       const reqDocFileObjects = await Promise.all(
-        (reqDocs || []).map(createFileLikeObjectFromUrl)
+        (reqDocsUrl || []).map(createFileLikeObjectFromUrl)
       );
+      
+    console.log("certDocsUrl" + certDocsUrl);
       const certDocFileObjects = await Promise.all(
-        (certDocs || []).map(createFileLikeObjectFromUrl)
+        (certDocsUrl || []).map(createFileLikeObjectFromUrl)
       );
   
       // 상태 업데이트

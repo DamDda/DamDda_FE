@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   TextField,
   Button,
@@ -18,15 +18,26 @@ import '../../styles/style.css'
 import { Header } from "../../layout/Header";
 import { Footer } from "../../layout/Footer";
 
-const DetailPage = ({setDescriptionDetail, setDescriptionImages}) => {
+const DetailPage = ({descriptionImagesUrl, descriptionDetail, setDescriptionDetail, setDescriptionImages}) => {
   const [formData, setFormData] = useState({
     description: "",
   });
+  useEffect(()=> {
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      description: descriptionDetail // description 필드를 업데이트
+    }));
+    setImagePreviews(descriptionImagesUrl);
+  }, [descriptionDetail])
   const [aiModalOpen, setAiModalOpen] = useState(false);
   const [confirmationOpen, setConfirmationOpen] = useState(false);
   const [imagePreviews, setImagePreviews] = useState([]);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [aiText, setAiText] = useState("AI가 생성한 설명 내용");
+
+  console.log(imagePreviews);
+  console.log(formData.description, "1 ",descriptionDetail)
+
 
   const inputRef = useRef(null);
 
@@ -69,6 +80,7 @@ const DetailPage = ({setDescriptionDetail, setDescriptionImages}) => {
 
     setDescriptionImages((prevImages) => [...prevImages, ...files])
     setImagePreviews((prevImages) => [...prevImages, ...filePreviews]);
+    console.log(imagePreviews)
   };
 
   const VisuallyHiddenInput = styled("input")({
@@ -94,7 +106,7 @@ const DetailPage = ({setDescriptionDetail, setDescriptionImages}) => {
       newImages.splice(index, 1);
       return newImages;
     });
-  };
+  }; 
 
   return (
     <>

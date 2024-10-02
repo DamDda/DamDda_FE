@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Typography,
   Paper,
@@ -31,11 +31,15 @@ const FileItem = styled("div")({
   position: "relative",
 });
 
-const ProjectDocument = ({setReqDocs, setCertDocs, saveProject, projectId}) => {
+const ProjectDocument = ({reqDocsUrl, certDocsUrl, setReqDocs, setCertDocs, saveProject, projectId}) => {
   const [requiredDocs, setRequiredDocs] = useState([]); // 필수 서류
   const [certificationDocs, setCertificationDocs] = useState([]); // 인증 서류
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+  useEffect(()=>{
+    setRequiredDocs(reqDocsUrl);
+    setCertificationDocs(certDocsUrl);
+  }, [reqDocsUrl, certDocsUrl])
 
   const handleFileUpload = (event, setFileList, setDocList, type) => {
     const files = Array.from(event.target.files);

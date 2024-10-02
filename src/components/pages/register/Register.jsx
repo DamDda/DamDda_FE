@@ -48,7 +48,106 @@ const Register = () => {
     delivery_date: null,
     tags: "",
   });
+
+  const [writeData, setWriteData] = useState([]);
   
+  useEffect(() => {
+    fetchWriteData();
+    console.log(writeData);
+  }, []);
+
+  useEffect(()=>{
+    setFormData({
+      category_id: writeData.category,
+      subcategory: "",
+      title: writeData.title,
+      description: writeData.description,
+      target_funding: writeData.targetFunding,
+      // start_date: new Date(writeData.startDate),
+      // end_date: new Date(writeData.endDate),
+      delivery_date: null,
+      // tags: writeData.tags,
+    })
+        
+    writeData.descriptionDetail && setDescriptionDetail(writeData.descriptionDetail);
+
+    writeData.productImages && setProductImagesUrl(writeData.productImages);
+    writeData.descriptionImages && setDescriptionImagesUrl(writeData.descriptionImages);
+    writeData.reqDocs && setReqDocsUrl(writeData.reqDocs);
+    writeData.certDocs && setCertDocsUrl(writeData.certDocs);
+
+//url을 파일로 수정하는 코드
+
+  // const fileLikeObjects = descriptionImages.map(createFileLikeObjectFromUrl);
+  // setProductImages((productImages || []).map(createFileLikeObjectFromUrl));
+  // setDescriptionImages((descriptionImages || []).map(createFileLikeObjectFromUrl));
+  // setReqDocs((reqDocs || []).map(createFileLikeObjectFromUrl));
+  // setCertDocs((certDocs || []).map(createFileLikeObjectFromUrl));
+  
+  convertUrlsToFileObjects();
+   writeData.tags && setTags(writeData.tags);
+
+  }, [writeData])
+
+
+    // 비동기 파일 변환 작업 처리
+    async function convertUrlsToFileObjects() {
+      const productFileObjects = await Promise.all(
+        (productImages || []).map(createFileLikeObjectFromUrl)
+      );
+      const descriptionFileObjects = await Promise.all(
+        (descriptionImages || []).map(createFileLikeObjectFromUrl)
+      );
+      const reqDocFileObjects = await Promise.all(
+        (reqDocs || []).map(createFileLikeObjectFromUrl)
+      );
+      const certDocFileObjects = await Promise.all(
+        (certDocs || []).map(createFileLikeObjectFromUrl)
+      );
+  
+      // 상태 업데이트
+      setProductImages(productFileObjects);
+      setDescriptionImages(descriptionFileObjects);
+      setReqDocs(reqDocFileObjects);
+      setCertDocs(certDocFileObjects);
+    }
+
+  async function createFileLikeObjectFromUrl(url) {
+    const fileName = url.split('/').pop(); // URL에서 파일 이름 추출
+    console.log("이거이거이거이거")
+    console.log(fileName);
+
+    const response = await fetch(url);
+    const blob = await response.blob();
+    return new File([blob], fileName, { type: blob.type });
+  }
+
+
+  // URL을 File 객체와 유사한 객체로 변환하는 함수
+  // function createFileLikeObjectFromUrl(url) {
+  //   const fileName = url.split('/').pop(); // URL에서 파일 이름 추출
+  //   return {
+  //     name: fileName,         // 파일명
+  //     url: url,               // 실제 URL
+  //     size: 0,                // 크기는 알 수 없으므로 0으로 설정
+  //     lastModified: new Date() // 임의로 현재 시간을 lastModified로 설정
+  //   };
+  // }
+
+
+  const fetchWriteData = async () => {
+    try {
+      const response = await axios.get(`http://localhost:9000/api/projects/write/${projectId}`);
+      
+      setWriteData(response.data || []);
+      console.log(response.data)
+    } catch (error) {
+      console.error("프로젝트 데이터를 가져오는 중 오류 발생:", error);
+    }
+  };
+
+
+
   const [productImages, setProductImages] = useState([]); // 태그 목록
   const [descriptionImages, setDescriptionImages] = useState([]); // 태그 목록
   const [reqDocs, setReqDocs] = useState([]); // 필수 서류
@@ -56,7 +155,9 @@ const Register = () => {
   const [docs, setDocs] = useState([]); // 태그 목록
 
   const [productImagesUrl, setProductImagesUrl] = useState([]); // 태그 목록
-  // const [descriptionImagesUrl, setDescriptionImagesUrl] = useState([]); // 태그 목록
+  const [descriptionImagesUrl, setDescriptionImagesUrl] = useState([]); // 태그 목록
+  const [reqDocsUrl, setReqDocsUrl] = useState([]); // 필수 서류
+  const [certDocsUrl, setCertDocsUrl] = useState([]); // 인증 서류
   // const [docsUrl, setDocsUrl] = useState([]); // 태그 목록
 
   const [tags, setTags] = useState([]); // 태그 목록
@@ -267,9 +368,13 @@ const Register = () => {
                 value={formData.category_id}
                 onChange={handleChange}
               >
-                <MenuItem value={"카테고리1"}>카테고리1</MenuItem>
-                <MenuItem value={"카테고리2"}>카테고리2</MenuItem>
-                <MenuItem value={"카테고리3"}>카테고리3</MenuItem>
+                <MenuItem value={"K-POP"}>K-POP</MenuItem>
+                <MenuItem value={"K-콘텐츠"}>K-콘텐츠</MenuItem>
+                <MenuItem value={"게임"}>게임</MenuItem>
+                <MenuItem value={"문화재"}>문화재</MenuItem>
+                <MenuItem value={"뷰티"}>뷰티</MenuItem>
+                <MenuItem value={"음식"}>음식</MenuItem>
+                <MenuItem value={"패션"}>패션</MenuItem>
               </Select>
             </FormControl>
           </div>
@@ -552,7 +657,7 @@ const Register = () => {
           <Tab label="서류제출" onClick={() => scrollToSection("document")} />
         </Tabs>
         <Typography variant="body1" style={{ marginTop: "10px" }}>
-          <DetailPage setDescriptionDetail={setDescriptionDetail} setDescriptionImages={setDescriptionImages}/>
+          <DetailPage descriptionDetail={descriptionDetail} descriptionImagesUrl={descriptionImagesUrl} setDescriptionDetail={setDescriptionDetail} setDescriptionImages={setDescriptionImages}/>
         </Typography>
       </div>
 
@@ -586,7 +691,7 @@ const Register = () => {
           <Tab label="서류제출" onClick={() => scrollToSection("document")} />
         </Tabs>
         <Typography variant="body1" style={{ marginTop: "10px" }}>
-          <ProjectDocument setReqDocs={setReqDocs} setCertDocs={setCertDocs} saveProject={saveProject} projectId={projectId}/>
+          <ProjectDocument reqDocsUrl={reqDocsUrl} certDocsUrl={certDocsUrl} setReqDocs={setReqDocs} setCertDocs={setCertDocs} saveProject={saveProject} projectId={projectId}/>
         </Typography>
       </div>
     </LocalizationProvider>

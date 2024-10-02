@@ -18,6 +18,7 @@ import CloseIcon from "@mui/icons-material/Close"; // 프로젝트 삭제 버튼
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import logo from "../assets/logo.png"; // 로고 파일
 import { SearchBar } from "./SearchBar";
+import axios from "axios"; // axios를 사용하여 REST API 호출
 
 // const pages = ['카테고리'];
 
@@ -33,6 +34,8 @@ export function Header({ search, setSearch }) {
   const location = useLocation();
 
   const [isLoggedIn, setIsLoggedIn] = React.useState(false); // 로그인 상태 관리
+
+  const memberId = 1;
 
   useEffect(() => {
     if (location.state?.id) {
@@ -69,6 +72,39 @@ export function Header({ search, setSearch }) {
   };
 
   const navigate = useNavigate(); //새로운 프로젝트 눌렀을 때 이동하는 네비게이트
+
+  const navigateRegister = async () => {
+    navigate("/register");
+    // const formData = new FormData();
+    
+    // // 텍스트 데이터 추가
+    // formData.append("memberId", memberId);
+    // formData.append("submit", "저장");
+    
+    // // 파일 데이터 추가 (productImages, descriptionImages, docs)
+    // // 예시로서 파일을 직접 추가하는 경우:
+    // // formData.append("productImages", productImageFile); // productImageFile는 파일 객체
+    // // formData.append("descriptionImages", descriptionImageFile); // descriptionImageFile도 파일 객체
+    // // formData.append("docs", docFile); // docFile도 파일 객체
+  
+    // try {
+    //   const response = await axios.post(
+    //     'http://localhost:9000/api/projects/register',
+    //     formData, // FormData 객체를 전송
+    //     {
+    //       headers: {
+    //         'Content-Type': 'multipart/form-data', // 헤더 설정
+    //       },
+    //       withCredentials: true, // 인증 쿠키 전송
+    //     }
+    //   );
+      
+    //   console.log("프로젝트 등록 성공:", response.data);
+    // } catch (error) {
+    //   console.error("프로젝트 등록 중 오류 발생:", error);
+    // }
+  };
+
 
   return (
     <AppBar position="static" sx={{ bgcolor: "white", color: "black" }}>
@@ -208,7 +244,7 @@ export function Header({ search, setSearch }) {
                   <Typography
                     variant="subtitle1"
                     sx={{ fontWeight: "bold", marginBottom: "10px" }}
-                    onClick={() => navigate("/register")} // 클릭 시 이동
+                    onClick={navigateRegister} //() => navigate("/register")} // 클릭 시 이동
                     style={{ cursor: "pointer" }} // 클릭 가능한 텍스트로 설정
                   >
                     + 새로운 프로젝트

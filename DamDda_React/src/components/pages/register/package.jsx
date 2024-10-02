@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./package.css";
-
+import { useLocation } from "react-router-dom";
 const Package = () => {
   const [reward_name, setReward_name] = useState("");
   const [optionType, setOptionType] = useState("none");
@@ -20,11 +20,23 @@ const Package = () => {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [currentPackageId, setCurrentPackageId] = useState(null);
 
+  const location = useLocation();
+  const query = new URLSearchParams(location.search);
+  const [projectId, setProjectId] = useState(query.get("projectId") || 1);
+
   useEffect(() => {
     fetchGifts();
     fetchPackage();
+    getProjectId();
   }, []);
 
+  const getProjectId = async () => {
+    try {
+      const response = await axios.get();
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const closeSnackbar = () => {
     setTimeout(() => {
       setSnackbar(false);
@@ -36,9 +48,10 @@ const Package = () => {
   const fetchGifts = async () => {
     try {
       const response = await axios.get(
-        "/packages/rewards/project/1", //project_id를 넘겨받아야 함.
+        `/packages/rewards/project/${projectId}`, //project_id를 넘겨받아야 함.
         { withCredentials: true }
       );
+      console.log(response.data)
 
       const formattedGifts = response.data.map((gift) => ({
         id: gift.id,
@@ -57,7 +70,7 @@ const Package = () => {
   //패키지 가져오는 기능.
   const fetchPackage = async () => {
     try {
-      const response = await axios.get("/packages/project/1", {
+      const response = await axios.get(`/packages/project/${projectId}`, {
         //project_id를 넘겨받아야 함.
         withCredentials: true,
       });
@@ -98,7 +111,7 @@ const Package = () => {
 
     try {
       const response = await axios.post(
-        "/packages/rewards/register/1",
+        `/packages/rewards/register/${projectId}`,
         newGift,
         {
           withCredentials: true,
@@ -226,7 +239,7 @@ const Package = () => {
 
     if (isEditing) {
       try {
-        await axios.put(`/packages/modify?projectId=1`, newConfig, {
+        await axios.put(`/packages/modify?projectId=${projectId}`, newConfig, {
           withCredentials: true,
         });
 
@@ -242,7 +255,7 @@ const Package = () => {
       }
     } else {
       try {
-        await axios.post("/packages/register/1", newConfig, {
+        await axios.post(`/packages/register/${projectId}`, newConfig, {
           //projectId 받아와야 함
           withCredentials: true,
           headers: {

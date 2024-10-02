@@ -18,7 +18,7 @@ import '../../styles/style.css'
 import { Header } from "../../layout/Header";
 import { Footer } from "../../layout/Footer";
 
-const DetailPage = () => {
+const DetailPage = ({setDescriptionDetail}) => {
   const [formData, setFormData] = useState({
     description: "",
   });
@@ -112,8 +112,10 @@ const DetailPage = () => {
             multiline
             rows={4}
             value={formData.description}
-            onChange={(e) =>
+            onChange={(e) => {
+              setDescriptionDetail(e.target.value);
               setFormData({ ...formData, description: e.target.value })
+            }
             }
           />
         </div>

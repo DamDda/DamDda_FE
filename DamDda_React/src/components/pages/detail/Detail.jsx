@@ -125,6 +125,26 @@ const Detail = () => {
 
   useEffect(() => {
     fetchProducts();
+    
+     // HTML 요소에 대한 참조
+     const html = document.documentElement;
+
+     // 기존 scroll-behavior 값을 저장
+     const originalScrollBehavior = window.getComputedStyle(html).scrollBehavior;
+ 
+     // 부드러운 스크롤 비활성화
+     html.style.scrollBehavior = "auto";
+ 
+     // 부드러운 스크롤 비활성화가 적용된 후에 스크롤 이동을 실행하기 위해 약간의 지연을 추가
+     setTimeout(() => {
+       window.scrollTo(0, 0); // 즉시 스크롤을 맨 위로 이동
+ 
+       // 이후 원래 scroll-behavior 복원
+       setTimeout(() => {
+         html.style.scrollBehavior = originalScrollBehavior;
+       }, 100); // 스크롤 이동 후에 100ms 대기 후 복원
+     }, 0); // scrollTo를 실행하기 전에 CSS가 적용되도록 지연을 줌
+
   }, []);
 
   const [remainingDays, setRemainingDays] = useState(0);
@@ -550,7 +570,7 @@ const formatDate = (dateString) => {
               <Tab label="Q&A" onClick={() => scrollToSection("qna")} />
             </Tabs>
             <Typography variant="body1" style={{ marginTop: "10px" }}>
-              <ProjectDetail />
+              <ProjectDetail descriptionDetail={productDetail.descriptionDetail} descriptionImages={productDetail.descriptionImages}/>
             </Typography>
           </div>
 

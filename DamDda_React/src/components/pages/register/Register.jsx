@@ -23,8 +23,17 @@ import ProjectDocument from "./projectDocument";
 import '../../styles/style.css'
 import { Header } from "../../layout/Header";
 import { Footer } from "../../layout/Footer";
+import axios from "axios";
+import { useLocation } from "react-router-dom"
 
 const Register = () => {
+  const [descriptionDetail, setDescriptionDetail] = useState("");
+  
+  const location = useLocation();
+  const query = new URLSearchParams(location.search);
+  const [projectId, setProjectId] = useState(query.get("projectId") || 1);
+
+
   const [formData, setFormData] = useState({
     category_id: "",
     subcategory: "",
@@ -36,6 +45,7 @@ const Register = () => {
     delivery_date: null,
     tags: "",
   });
+  
 
   const [tags, setTags] = useState([]); // 태그 목록
   const [selectedImage, setSelectedImage] = useState(null);
@@ -102,6 +112,137 @@ const Register = () => {
     }
   };
 
+  const saveProject = async (projectId, submit) => {
+    console.log(formData);
+    console.log(tags);
+    
+    const projectFormData  = new FormData();
+
+  // ProjectDetailDTO 데이터
+  const projectDetailDTO = {
+    id: projectId, // 프로젝트 ID
+    title: formData.title, // formData에서 가져오는 값 예시
+    description: formData.description, // formData에서 가져오는 값 예시
+    descriptionDetail: descriptionDetail,
+    fundsReceive: 0,
+    targetFunding: formData.target_funding, // 목표 금액
+    nickName: "testNickName", // 진행자 닉네임
+    startDate: new Date(formData.start_date), // 시작 날짜 (적절하게 변환 필요)
+    endDate: new Date(formData.end_date), // 종료 날짜 (적절하게 변환 필요)
+    supporterCnt: 0,
+    likeCnt: 0,
+    category: formData.category_id,
+    tags: tags.map((tag) => ({name: tag, usageFrequency: -1, projectIds: [0],})),
+  };
+
+  // projectDetailDTO를 JSON 문자열로 변환하여 FormData에 추가
+  // projectFormData.append("projectDetailDTO", JSON.stringify(projectDetailDTO));
+  projectFormData.append("projectDetailDTO", new Blob([JSON.stringify(projectDetailDTO)], { type: 'application/json' }));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   // 파일 데이터 (예시로 formData에서 가져오는 경우)
+  const productImages = []; // 여기에 productImage 파일 객체를 넣어주세요
+  const descriptionImages = []; // 여기에 descriptionImage 파일 객체를 넣어주세요
+  const docs = []; // 여기에 docs 파일 객체를 넣어주세요
+
+  // productImages 파일 추가
+  productImages.forEach((file, index) => {
+    projectFormData.append(`productImages`, file);
+  });
+
+  // descriptionImages 파일 추가
+  descriptionImages.forEach((file, index) => {
+    projectFormData.append(`descriptionImages`, file);
+  });
+
+  // docs 파일 추가
+  docs.forEach((file, index) => {
+    projectFormData.append(`docs`, file);
+  });
+
+  // 추가적으로 필요한 텍스트 필드 데이터
+  projectFormData.append("submit", submit); // "저장" 혹은 "제출"
+
+  try {
+    const response = await axios.put(
+      `http://localhost:9000/api/projects/register/${projectId}`,
+      projectFormData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        withCredentials: true, // 쿠키 전송 (필요한 경우)
+      }
+    );
+    console.log("프로젝트 업데이트 성공:", response.data);
+  } catch (error) {
+    console.error("프로젝트 업데이트 중 오류 발생:", error);
+  }
+};
+
   return (
     <>
     <Header />
@@ -114,7 +255,7 @@ const Register = () => {
           fullWidth
           variant="contained"
           color="primary"
-          onClick={() => console.log(formData)}
+          onClick={() => saveProject(projectId, "저장")}
         >
           저장
         </Button>
@@ -352,7 +493,7 @@ const Register = () => {
           <Tab label="서류제출" onClick={() => scrollToSection("document")} />
         </Tabs>
         <Typography variant="body1" style={{ marginTop: "10px" }}>
-          <DetailPage />
+          <DetailPage setDescriptionDetail={setDescriptionDetail}/>
         </Typography>
       </div>
 

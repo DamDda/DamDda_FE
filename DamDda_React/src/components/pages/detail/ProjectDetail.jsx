@@ -16,6 +16,7 @@ import { styled } from "@mui/system";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
+import axios from "axios";
 
 const Container = styled("div")({
   padding: "20px",
@@ -78,7 +79,7 @@ const CountButton = styled(IconButton)({
   margin: "0 5px", // 숫자 사이 여백 설정
 });
 
-const ProjectDetail = () => {
+const ProjectDetail = ({descriptionDetail, descriptionImages}) => {
   const [rewardOption, setRewardOption] = useState([]);
   const [selectedPackages, setSelectedPackages] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
@@ -87,10 +88,12 @@ const ProjectDetail = () => {
   const [detailedDescription, setDetailedDescription] = useState([]);
   const [showMore, setShowMore] = useState(false); // 더보기 상태
   const detailRef = useRef(null);
-
+  const [project_package, setProject_package] = useState([]);
+  const [projectId, setProjectId] = useState(1);
   useEffect(() => {
     const fetchData = async () => {
       // Mock 데이터
+      fetchPackage();
       const packageData = [
         {
           id: 1,
@@ -139,27 +142,65 @@ const ProjectDetail = () => {
     setSelectedPackage(pkg);
   };
 
+  //패키지 가져오는 기능.
+  const fetchPackage = async () => {
+    try {
+      const response = await axios.get(`/packages/project/${projectId}`, {
+        //project id 받아줘야 함.
+        //project_id를 넘겨받아야 함.
+        withCredentials: true,
+      });
+
+      if (!Array.isArray(response.data)) {
+        console.error("API response is not an array:", response.data);
+        return;
+      }
+      const formattedPackages = response.data.map((pac) => ({
+        id: pac.id,
+        name: pac.name,
+        count: pac.count,
+        price: pac.price,
+        quantityLimited: pac.quantityLimited,
+        RewardList: Array.isArray(pac.RewardList) ? pac.RewardList : [],
+      }));
+      console.log(formattedPackages.map((reward) => reward.RewardList));
+      setProject_package(formattedPackages);
+    } catch (error) {
+      console.error("패키지 목록을 가져오는 중 오류 발생:", error);
+    }
+  };
   const handleSelectPackage = () => {
     if (selectedPackage) {
-      const selectedOption = selectedOptions[selectedPackage.id] || [];
+      const selectedOptionsList = Object.entries(selectedOptions) //"패키지ID-리워드인덱스": "선택된 옵션 값" 형태
+        .filter(([key]) => key.startsWith(`${selectedPackage.id}-`))
+        .map(([_, value]) => value);
+
       const exists = selectedPackages.some(
         (p) =>
           p.id === selectedPackage.id &&
-          JSON.stringify(p.selectedOption) === JSON.stringify(selectedOption)
+          JSON.stringify(p.selectedOption) ===
+            JSON.stringify(selectedOptionsList)
       );
+
       if (!exists) {
         setSelectedPackages([
           ...selectedPackages,
           {
             ...selectedPackage,
             count: 1,
-            selectedOption: selectedOption,
+            selectedOption: selectedOptionsList,
           },
         ]);
         setSelectedPackage(null);
-        setSelectedOptions({
-          ...selectedOptions,
-          [selectedPackage.id]: [],
+        // 선택된 패키지의 옵션들만 초기화
+        setSelectedOptions((prevOptions) => {
+          const newOptions = { ...prevOptions };
+          Object.keys(newOptions).forEach((key) => {
+            if (key.startsWith(`${selectedPackage.id}-`)) {
+              delete newOptions[key];
+            }
+          });
+          return newOptions;
         });
       } else {
         alert("이미 선택된 선물과 옵션 조합입니다.");
@@ -213,6 +254,31 @@ const ProjectDetail = () => {
         <Typography variant="h5" style={{ marginBottom: "10px" }}>
           상세 설명
         </Typography>
+
+        
+        <Typography variant="body1" style={{ marginTop: "10px" }}>
+                  {descriptionDetail}
+                </Typography>
+   
+{descriptionImages &&
+              descriptionImages.length > 0 ? (
+                descriptionImages.map((image, index) => (
+                  <ImageContainer
+                    key={index}
+                    src={`http://localhost:9000/${image}`}
+                    alt={`Product image ${index}`}
+                  />
+                ))
+              ) : (
+                <Typography variant="body2" color="textSecondary">
+                  이미지가 없습니다.
+                </Typography>
+              )}
+
+
+
+
+{/* 남희님 더보기 한번 보셔야 할 것 같아요
         {detailedDescription.map((detail, index) => (
           <div key={detail.id} style={{ marginBottom: "20px" }}>
             <Typography variant="body1" style={{ marginTop: "10px" }}>
@@ -223,16 +289,44 @@ const ProjectDetail = () => {
               alt={`Detail Image ${detail.id}`}
             />
           </div>
-        ))}
+        ))} */}
+
+
         {/* 더보기 버튼 표시 조건 수정 */}
         {detailRef.current &&
           detailRef.current.scrollHeight > 800 &&
           !showMore && (
             <Button onClick={() => setShowMore(true)}>▽ 더보기</Button>
           )}
+ {/* 상세 내용이 더보기 상태일 때 모든 내용 표시 */}
+        {showMore && (
+          <div>
+ <Typography variant="body1" style={{ marginTop: "10px" }}>
+                  {descriptionDetail}
+                </Typography>
+
+                {descriptionImages.map((image, index) => (
+                  <ImageContainer
+                    key={index}
+                    src={`http://localhost:9000/${image}`}
+                    alt={`Product image ${index}`}
+                  />
+                ))}
+          </div>
+        )}
+
+               
+
+
+
+                {/* <ImageContainer
+                  src={detail.image}
+                  alt={`Detail Image ${detail.id}`}
+                /> */}
+
 
         {/* 상세 내용이 더보기 상태일 때 모든 내용 표시 */}
-        {showMore && (
+        {/* {showMore && (
           <div>
             {detailedDescription.map((detail, index) => (
               <div key={detail.id} style={{ marginBottom: "20px" }}>
@@ -246,7 +340,7 @@ const ProjectDetail = () => {
               </div>
             ))}
           </div>
-        )}
+        )} */}
       </DetailSection>
 
       <Divider orientation="vertical" flexItem />
@@ -256,11 +350,10 @@ const ProjectDetail = () => {
         <Typography variant="h5" style={{ marginBottom: "10px" }}>
           선물 구성 선택
         </Typography>
-        {rewardOption.map((pkg) => (
+        {project_package.map((pkg) => (
           <PackageCard key={pkg.id} onClick={() => handleCardClick(pkg)}>
             <CardContent>
               <Typography variant="h6">{pkg.name}</Typography>
-              <Typography variant="body2">{pkg.description}</Typography>
               <Typography variant="body1">
                 {pkg.price.toLocaleString()}원
               </Typography>
@@ -269,44 +362,67 @@ const ProjectDetail = () => {
             {/* 옵션 드롭다운 */}
             {selectedPackage?.id === pkg.id && (
               <div>
-                {pkg.options && pkg.options.length > 0 ? (
-                  <FormControl fullWidth>
-                    <InputLabel id={`multiple-select-label-${pkg.id}`}>
-                      옵션 선택
-                    </InputLabel>
-                    <Select
-                      labelId={`multiple-select-label-${pkg.id}`}
-                      id={`multiple-select-${pkg.id}`}
-                      value={selectedOptions[pkg.id] || []}
-                      onChange={(event) => {
-                        const value = event.target.value;
-                        setSelectedOptions({
-                          ...selectedOptions,
-                          [pkg.id]: value,
-                        });
-                      }}
-                    >
-                      {pkg.options.map((option) => (
-                        <MenuItem
-                          key={option}
-                          value={option}
-                          disabled={selectedOptions[pkg.id] === option}
-                        >
-                          {option}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
+                {pkg.RewardList && pkg.RewardList.length > 0 ? (
+                  pkg.RewardList.map((reward, rewardIndex) => (
+                    <div key={rewardIndex}>
+                      <Typography variant="subtitle1">{reward.name}</Typography>
+                      {reward.OptionList && reward.OptionList.length > 0 ? (
+                        <FormControl fullWidth>
+                          <InputLabel
+                            id={`multiple-select-label-${pkg.id}-${rewardIndex}`}
+                          >
+                            옵션 선택
+                          </InputLabel>
+                          <Select
+                            labelId={`multiple-select-label-${pkg.id}-${rewardIndex}`}
+                            id={`multiple-select-${pkg.id}-${rewardIndex}`}
+                            value={
+                              selectedOptions[`${pkg.id}-${rewardIndex}`] || ""
+                            }
+                            onChange={(event) => {
+                              const value = event.target.value;
+                              setSelectedOptions({
+                                ...selectedOptions,
+                                [`${pkg.id}-${rewardIndex}`]: value,
+                              });
+                            }}
+                          >
+                            {reward.OptionList.map((option) => (
+                              <MenuItem
+                                key={option}
+                                value={option}
+                                disabled={
+                                  selectedOptions[
+                                    `${pkg.id}-${rewardIndex}`
+                                  ] === option
+                                }
+                              >
+                                {option}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                      ) : (
+                        <Typography variant="body2">
+                          이 리워드에는 옵션이 없습니다.
+                        </Typography>
+                      )}
+                    </div>
+                  ))
                 ) : (
-                  <Typography variant="body2">옵션이 없습니다.</Typography>
+                  <Typography variant="body2">리워드가 없습니다.</Typography>
                 )}
+
                 <Button
                   variant="contained"
                   onClick={handleSelectPackage}
                   disabled={
-                    (pkg.options &&
-                      pkg.options.length > 0 &&
-                      !selectedOptions[pkg.id]) ||
+                    pkg.RewardList.some(
+                      (reward, index) =>
+                        reward.OptionList &&
+                        reward.OptionList.length > 0 &&
+                        !selectedOptions[`${pkg.id}-${index}`]
+                    ) ||
                     selectedPackages.some(
                       (p) =>
                         p.id === pkg.id &&

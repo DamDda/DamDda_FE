@@ -361,7 +361,7 @@ const Register = () => {
                 <Button
                   className="primary-button"
                   variant="contained"
-                  onClick={() => console.log(formData)}
+                  onClick={() => saveProject(projectId, "저장")}
                 >
                   저장
                 </Button>

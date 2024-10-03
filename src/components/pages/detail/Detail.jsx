@@ -508,7 +508,7 @@ const ProductCarousel = ({ productDetail }) => {
       <div style={{ display: "flex", width: "1500px",justifyContent:"center" }}>
       <ProductContainer>
              <ProductCarousel></ProductCarousel>
-              {/* {productDetail.productImages &&
+               {productDetail.productImages &&
               productDetail.productImages.length > 0 ? (
                 productDetail.productImages.map((image, index) => (
                   <ProductImage
@@ -521,15 +521,15 @@ const ProductCarousel = ({ productDetail }) => {
                 <Typography variant="body2" color="textSecondary">
                   이미지가 없습니다.
                 </Typography>
-              )} */}
+              )} 
 
-              {/* {product_url ? (
+              {product_url ? (
                 <ProductImage src={product_url} alt="Project Product" />
               ) : (
                 <Typography variant="body2" color="textSecondary">
                   이미지가 없습니다.
                 </Typography>
-              )} */}
+              )} 
               <div
                 style={{
                   position: "absolute",
@@ -579,7 +579,7 @@ const ProductCarousel = ({ productDetail }) => {
 
            <LinearProgress
              variant="determinate"
-             value={progress}
+             value={productDetail.fundsReceive}
              className="progress-bar"
            />
 

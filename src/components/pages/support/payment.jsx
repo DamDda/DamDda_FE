@@ -8,7 +8,7 @@ import naverpay from '../../assets/naver.png'; // 로고 파일
 
 //완료//
 import axios from 'axios';
-import './payment.css';
+import './Payment.css';
 import '../../styles/style.css'
 import { Header } from "../../layout/Header";
 import { Footer } from "../../layout/Footer";

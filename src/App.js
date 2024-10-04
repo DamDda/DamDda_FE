@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 
 /////////////////////////////지영////////////////////////////////////
 import Home from './components/pages/mainpage/Main'; 
-import Payment from './components/pages/support/payment';
+import Payment from './components/pages/support/Payment';
 import OrderPage from './components/pages/support/OrderPage';
 import PaymentSuccess from "./components/pages/support/PaymentSuccess";
 import MyOrders from './components/pages/support/MyOrders';

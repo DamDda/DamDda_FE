@@ -4,7 +4,7 @@ import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 
 
-export default function TabsUnderlinePlacement( { selectedTab, setSelectedTab, setMyprojectClick }) {
+export default function TabsUnderlinePlacement( { selectedTab, setSelectedTab, setMyprojectClick, setCollabClick }) {
   const handleChange = (event, newValue) => {
     setSelectedTab(newValue);
     setMyprojectClick(false);
@@ -16,7 +16,11 @@ export default function TabsUnderlinePlacement( { selectedTab, setSelectedTab, s
         <Tabs
           value={selectedTab}
           onChange={handleChange}
-          onClick={()=>setMyprojectClick(false)}
+          onClick={() => {
+            setMyprojectClick(false);
+            setCollabClick(false);
+            console.log("Buttons were clicked, states set to false.");
+          }}
           aria-label="Tabs with underline"
           textColor="primary"
           TabIndicatorProps={{

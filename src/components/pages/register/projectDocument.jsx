@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import {
-  Typography,
   Paper,
   IconButton,
   Button,
   Snackbar,
   Alert,
+  Divider,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { styled } from "@mui/system";
@@ -102,125 +102,155 @@ const ProjectDocument = ({
   };
 
   return (
+    // <div className="image-section">
+    //               {/* 프로젝트 제목 */}
+    //               <div className="form-item">
+    //                 <span className="form-div">프로젝트 제목 :</span>
+    //                 <TextField
+    //                   className="input-field"
+    //                   label="프로젝트 제목"
+    //                   name="title"
+    //                   value={formData.title}
+    //                   onChange={handleChange}
+    //                 />
+    //                 <Tooltip
+    //                   title="프로젝트 제목을 입력하세요."
+    //                   placement="top"
+    //                 >
+    //                   <IconButton className="icon">
+    //                     <InfoOutlinedIcon fontSize="small" />
+    //                   </IconButton>
+    //                 </Tooltip>
+    //               </div>
+
     <div style={{ marginTop: "40px" }}>
-      <Typography variant="h6">진행자 서류 제출</Typography>
-      <p>
+      <h3>진행자 서류 제출</h3>
+      <span>
         필수서류를 꼭 확인해주세요!
         <br />
         진행자의 신분을 증명할 수 있는 서류, 통장사본, 사업자등록증 등 필요한
         서류를 제출하세요.
-      </p>
-
-      {/* 필수 서류 업로드 섹션 */}
-      <Button
-        className="primary-button"
-        component="label"
-        variant="contained"
-        style={{ marginTop: "10px" }}
-      >
-        📁 필수 서류 파일 업로드
-        <VisuallyHiddenInput
-          type="file"
-          onChange={(event) =>
-            handleFileUpload(event, setRequiredDocs, setReqDocs, "진행자")
-          }
-          multiple
-        />
-      </Button>
-      <Paper
-        style={{
-          padding: "20px",
-          minHeight: "100px",
-          position: "relative",
-          border: "1px dashed #ccc",
-        }}
-      >
-        <FileContainer>
-          {requiredDocs.map((fileName, index) => (
-            <FileItem key={index}>
-              {fileName}
-              <IconButton
-                onClick={() =>
-                  handleFileDelete(
-                    index,
-                    requiredDocs,
-                    setRequiredDocs,
-                    setReqDocs
-                  )
-                }
-                style={{ marginLeft: "5px" }}
-              >
-                <CloseIcon fontSize="small" />
-              </IconButton>
-            </FileItem>
-          ))}
-        </FileContainer>
-      </Paper>
+      </span>
+      <div>
+        {/* 필수 서류 업로드 섹션 */}
+        <Button
+          className="primary-button"
+          component="label"
+          variant="contained"
+        >
+          📁 필수 서류 파일 업로드
+          <VisuallyHiddenInput
+            type="file"
+            onChange={(event) =>
+              handleFileUpload(event, setRequiredDocs, setReqDocs, "진행자")
+            }
+            multiple
+          />
+        </Button>
+        <Paper
+          style={{
+            padding: "20px",
+            minHeight: "100px",
+            position: "relative",
+            border: "1px dashed #ccc",
+          }}
+        >
+          <FileContainer>
+            {requiredDocs.map((fileName, index) => (
+              <FileItem key={index}>
+                {fileName}
+                <IconButton
+                  onClick={() =>
+                    handleFileDelete(
+                      index,
+                      requiredDocs,
+                      setRequiredDocs,
+                      setReqDocs
+                    )
+                  }
+                  style={{ marginLeft: "5px" }}
+                >
+                  <CloseIcon fontSize="small" />
+                </IconButton>
+              </FileItem>
+            ))}
+          </FileContainer>
+        </Paper>
+      </div>
 
       {/* 인증 서류 업로드 섹션 */}
-      <Typography variant="h6" style={{ marginTop: "40px" }}>
-        인증 서류 제출
-      </Typography>
-      <p>
+      <h3 style={{ marginTop: "40px" }}>인증 서류 제출</h3>
+      <span>
         후원자에게 제공할 모든 선물의 인증서류가 필요합니다.
         <br />
         필수서류를 제출하지 않으면 프로젝트가 반려될 수 있습니다.
-      </p>
-      <Button
-        className="primary-button"
-        component="label"
-        variant="contained"
-        style={{ marginTop: "10px" }}
-      >
-        📁 인증서류 파일 업로드
-        <VisuallyHiddenInput
-          type="file"
-          onChange={(event) =>
-            handleFileUpload(event, setCertificationDocs, setCertDocs, "인증")
-          }
-          multiple
-        />
-      </Button>
-      <Paper
-        style={{
-          padding: "20px",
-          minHeight: "100px",
-          position: "relative",
-          border: "1px dashed #ccc",
-        }}
-      >
-        <FileContainer>
-          {certificationDocs.map((fileName, index) => (
-            <FileItem key={index}>
-              {fileName}
-              <IconButton
-                onClick={() =>
-                  handleFileDelete(
-                    index,
-                    certificationDocs,
-                    setCertificationDocs,
-                    setCertDocs
-                  )
-                }
-                style={{ marginLeft: "5px" }}
-              >
-                <CloseIcon fontSize="small" />
-              </IconButton>
-            </FileItem>
-          ))}
-        </FileContainer>
-      </Paper>
-
-      <div style={{ marginTop: "20px" }}>
+      </span>
+      <div>
         <Button
           className="primary-button"
+          component="label"
+          variant="contained"
+          style={{ marginTop: "10px" }}
+        >
+          📁 인증서류 파일 업로드
+          <VisuallyHiddenInput
+            type="file"
+            onChange={(event) =>
+              handleFileUpload(event, setCertificationDocs, setCertDocs, "인증")
+            }
+            multiple
+          />
+        </Button>
+        <Paper
+          style={{
+            padding: "20px",
+            minHeight: "100px",
+            position: "relative",
+            border: "1px dashed #ccc",
+          }}
+        >
+          <FileContainer>
+            {certificationDocs.map((fileName, index) => (
+              <FileItem key={index}>
+                {fileName}
+                <IconButton
+                  onClick={() =>
+                    handleFileDelete(
+                      index,
+                      certificationDocs,
+                      setCertificationDocs,
+                      setCertDocs
+                    )
+                  }
+                  style={{ marginLeft: "5px" }}
+                >
+                  <CloseIcon fontSize="small" />
+                </IconButton>
+              </FileItem>
+            ))}
+          </FileContainer>
+        </Paper>
+      </div>
+      <Divider style={{ margin: "20px 0", width: "0" }} />
+      <Divider style={{ margin: "20px 0", width: "0" }} />
+      {/* /////////////////////////Register로 옮기기////////////////////// */}
+      <div
+        style={{
+          marginTop: "20px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Button
+          className="primary-button-width"
           variant="contained"
           onClick={handlePreview}
         >
           미리보기
         </Button>
         <Button
-          className="primary-button"
+          className="primary-button-width"
           variant="contained"
           color="primary"
           onClick={handleSubmit}

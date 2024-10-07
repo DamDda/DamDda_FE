@@ -2,20 +2,22 @@ import React, { useState, useEffect } from "react";
 import ProjectCard from "./ProjectCard"; // ProjectCard 컴포넌트
 import "./css/SupportedProjects.css"; // CSS 파일 경로 수정
 import axios from "axios";
+import { useUser } from "../../../UserContext";
 
 export default function SupportedProjects() {
+  const {user} = useUser();
   const [projects, setProjects] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const[order,setOrder]=useState(true);
-  const memberId=1;
+  
 
 
   // 데이터 가져오기
   const fetchOrders = async () => {
     try {
-      const response = await axios.get(`http://localhost:9000/order/supportingprojects?userId=${memberId}`);
+      const response = await axios.get(`http://localhost:9000/order/supportingprojects?userId=${user.id}`);
       setProjects(response.data);
       setLoading(false);
     } catch (err) {
@@ -39,7 +41,7 @@ export default function SupportedProjects() {
   /*
   const fetchSupportedProjects = async () => {
     try {
-      const response = await axios.get(`/orders/list/${memberId}`, {
+      const response = await axios.get(`/orders/list/${user.id}`, {
         params: {
           page: 1,
           size: 2

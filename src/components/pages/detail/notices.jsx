@@ -66,14 +66,13 @@ const Notice = () => {
   return (
     <div style={{ padding: "20px", maxWidth: "1000px", margin: "0 auto" }}>
       {/* 공지사항 입력 영역 */}
-      <div
+      {/* <div
         style={{
           marginBottom: "50px", // 아래쪽에 여유 공간 추가
           maxWidth: "700px", // 입력 영역의 최대 너비 설정
           margin: "0 auto", // 가운데 정렬
         }}
       >
-        {/* 공지사항 입력하기 제목 */}
         <Typography
           variant="h6"
           style={{ fontWeight: "bold", marginBottom: "20px" }}
@@ -81,7 +80,6 @@ const Notice = () => {
           공지사항 입력하기
         </Typography>
 
-        {/* 제목 입력 필드 */}
         <TextField
           label="제목을 입력해주세요."
           fullWidth
@@ -89,7 +87,6 @@ const Notice = () => {
           onChange={(e) => setNewTitle(e.target.value)}
           style={{ marginBottom: "10px" }}
         />
-        {/* 내용 입력 필드 */}
         <TextField
           label="내용을 입력해주세요."
           fullWidth
@@ -99,7 +96,6 @@ const Notice = () => {
           onChange={(e) => setNewContent(e.target.value)}
           style={{ marginBottom: "10px" }}
         />
-        {/* 공지사항 등록 버튼 */}
         <Button
           variant="contained"
           onClick={handleAddNotice}
@@ -107,7 +103,7 @@ const Notice = () => {
         >
           등록하기
         </Button>
-      </div>
+      </div> */}
 
       {/* 등록된 공지사항 리스트 */}
       <div style={{ clear: "both" }}>

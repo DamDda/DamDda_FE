@@ -27,6 +27,10 @@ import { UserProvider } from "./UserContext";
 
 /////////////////////////////주현////////////////////////////////////
 import Entire from './components/pages/entire/Main';
+import CollaborationList from './components/pages/mypage/CollaborationList';
+import Collaboration from './components/pages/mypage/Collaboration';
+import CollaborationDetail from './components/pages/mypage/CollaborationDetail';
+
 function App() {
  
 
@@ -54,6 +58,9 @@ function App() {
       <Route path="/mypage" element={<MyPage />} />
       {/* /////////////////////////////주현/////////////////////////////////// */}
       <Route path="/entire" element={<Entire />} />
+      <Route path="/collab" element={<CollaborationList />} />
+      <Route path="/clb" element={<Collaboration />} />
+      <Route path="/collab/detail/:id" element={<CollaborationDetail />} />
         </Routes>
     </Router>
     </UserProvider>

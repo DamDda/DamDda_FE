@@ -13,6 +13,8 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import CloseIcon from "@mui/icons-material/Close";
 import Alert from "@mui/material/Alert";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 import styled from "styled-components";
 import "./Register.css";
@@ -112,23 +114,16 @@ const DetailPage = ({
     });
   };
 
+  const handleDescriptionChange = (value) => {
+    setFormData({ ...formData, description: value });
+  };
+
   return (
     <div>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
+        <div>
           {/* 페이지 제목과 버튼 */}
-          <div
-            style={{
-              width: "100%",
-              marginTop: "20px",
-            }}
-          >
+          <div className="header-container">
             <h1>상세설명</h1>
             <div className="button-right">
               <Button
@@ -150,17 +145,11 @@ const DetailPage = ({
               alignItems: "flex-end",
             }}
           >
-            <TextField
-              label="상세 설명"
-              name="description"
-              fullWidth
-              multiline
-              rows={4}
+            <ReactQuill
+              theme="snow"
               value={formData.description}
-              onChange={(e) => {
-                setDescriptionDetail(e.target.value);
-                setFormData({ ...formData, description: e.target.value });
-              }}
+              onChange={handleDescriptionChange}
+              style={{ height: "300px", width: "1200px" }}
             />
           </div>
 
@@ -171,29 +160,40 @@ const DetailPage = ({
                 padding: "20px",
                 backgroundColor: "#fff",
                 margin: "auto",
-                width: "400px",
+                width: "750px",
                 marginTop: "100px",
               }}
             >
-              <Typography variant="h6">AI 도움받기</Typography>
+              <h2>AI 도움받기</h2>
               <TextField
                 fullWidth
                 multiline
-                rows={4}
+                rows={30}
                 value={aiText}
                 InputProps={{
                   readOnly: true,
                 }}
-                style={{ marginTop: "20px" }}
+                style={{ marginTop: "20px", width: "700px" }}
               />
-              <Button onClick={closeAiModal}>닫기</Button>
-              <Button
-                variant="contained"
-                style={{ marginLeft: "10px" }}
-                onClick={handleRegisterDescription}
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  marginTop: "20px",
+                }}
               >
-                상세설명으로 등록
-              </Button>
+                <Button className="outlined-button" onClick={closeAiModal}>
+                  닫기
+                </Button>
+                <Button
+                  className="primary-button"
+                  variant="contained"
+                  style={{ marginLeft: "10px" }}
+                  onClick={handleRegisterDescription}
+                >
+                  상세설명으로 등록
+                </Button>
+              </div>
             </div>
           </Modal>
 
@@ -206,17 +206,23 @@ const DetailPage = ({
                 margin: "auto",
                 width: "400px",
                 marginTop: "100px",
+                borderRadius: "10px",
               }}
             >
-              <Typography>정말로 등록하시겠습니까?</Typography>
+              <h3>정말로 등록하시겠습니까?</h3>
               <Button
+                className="primary-button"
                 onClick={handleConfirmRegister}
                 variant="contained"
-                style={{ marginRight: "10px" }}
               >
                 확인
               </Button>
-              <Button onClick={handleCloseConfirmation}>취소</Button>
+              <Button
+                className="outlined-button"
+                onClick={handleCloseConfirmation}
+              >
+                취소
+              </Button>
             </div>
           </Modal>
 

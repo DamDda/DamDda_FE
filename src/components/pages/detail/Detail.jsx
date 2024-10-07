@@ -26,6 +26,7 @@ import { useLocation } from "react-router-dom";
 import Carousel from 'react-bootstrap/Carousel';
 import 'bootstrap/dist/css/bootstrap.min.css'; // 부트스트랩 CSS 로드
 import axios from "axios"; // axios를 사용하여 REST API 호출
+import { useUser } from "../../../UserContext";
 
 const ProductContainer = styled("div")({
   position: "relative",
@@ -84,6 +85,15 @@ const projectData = {
 
 
 const Detail = () => {
+  //const { user } = useUser();
+  
+  const { user } = useUser();
+  // if(!isLogin){
+  //   console.log(user);
+  //   //setUser(prevUser => ({ ...prevUser, key: 0 }));
+  // }
+
+
   const {
     category,
     organizer_id, //진행자 닉네임
@@ -102,12 +112,13 @@ const Detail = () => {
   
   // 페이지네이션 요청을 보내는 함수
   const fetchProducts = () => {
+    console.log("dddddddddddddddddddd" + user.key)
     axios
       .get(
-        `http://${window.location.hostname}:9000/api/projects/${projectId}`,
+        `http://localhost:9000/api/projects/${projectId}`,
         {
           params: {
-            memberId: 2,
+            memberId: user.key,
           },
         }
       )
@@ -190,7 +201,7 @@ const Detail = () => {
   //       `http://${window.location.hostname}:9000/api/projects/${projectId}`,
   //       {
   //         params: {
-  //           memberId: 1,
+  //           memberId: user.key,
   //         },
   //       }
   //     );
@@ -225,7 +236,7 @@ const Detail = () => {
   //       // liked가 true이면 DELETE 요청
   //       const response = await axios.delete(`http://localhost:9000/api/projects/like`, {
   //         params: {
-  //           memberId: memberId,
+  //           memberId: user.key,
   //           projectId: project.id,
   //         },
   //       });
@@ -234,7 +245,7 @@ const Detail = () => {
   //       // liked가 false이면 POST 요청
   //       const response = await axios.post(`http://localhost:9000/api/projects/like`, null, {
   //         params: {
-  //           memberId: memberId,
+  //           memberId: user.key,
   //           projectId: project.id,
   //         },
   //       });
@@ -255,9 +266,6 @@ const Detail = () => {
   //   }
   // };
 
-
-  const memberId = 2;
-
   const handleHeartClick = async (prev) => {
     const newHeartedStatus = !prev; // 하트 상태 반전
   
@@ -266,7 +274,7 @@ const Detail = () => {
         // 좋아요 취소 요청
         const response = await axios.delete(`http://localhost:9000/api/projects/like`, {
           params: {
-            memberId: memberId,
+            memberId: user.key,
             projectId: productDetail.id,
           },
         });
@@ -277,7 +285,7 @@ const Detail = () => {
         // 좋아요 추가 요청
         const response = await axios.post(`http://localhost:9000/api/projects/like`, null, {
           params: {
-            memberId: memberId,
+            memberId: user.key,
             projectId: productDetail.id,
           },
         });
@@ -452,17 +460,18 @@ const ProductCarousel = ({ productDetail }) => {
       <div className="container">
          <div style={{ paddingTop: "20px",textAlign:"center" }}>
          <div className="project-info">
-              <div className="category">{projectData.category}</div>
-              <div className="presenter">{projectData.organizer_id}</div>
+              <div className="category">{productDetail.category}</div>
+              <div className="presenter">{productDetail.nickName}</div>
 
-              <h1 className="project-title">{projectData.title}</h1>
+              <h1 className="project-title">{productDetail.title}</h1>
               <p className="project-description">
-                {projectData.description.split('\n').map((line, index) => (
+                {productDetail.description}
+                {/* .split('\n').map((line, index) => (
                   <span key={index}>
                     {line}
                     <br />
                   </span>
-                ))}
+                ))} */}
       </p>
       </div>
         </div>
@@ -472,13 +481,13 @@ const ProductCarousel = ({ productDetail }) => {
       <div className="container">
         <div style={{ padding: "5px" }}>
           <div style={{ marginBottom: "10px" }}>
-            <Typography variant="category">{productDetail.category}</Typography>
+            {/* <Typography variant="category">{productDetail.category}</Typography>
             <br />
             <Typography variant="organizer">
               {productDetail.nickName}
             </Typography>
             <Typography variant="h6">{productDetail.title}</Typography>
-            <Typography variant="body2">{productDetail.description}</Typography>
+            <Typography variant="body2">{productDetail.description}</Typography> */}
           </div>
 
           {/* 

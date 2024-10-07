@@ -65,6 +65,15 @@ export default function ProfileStatistics({ setIsEditing }) {
     }
   };
 
+  const UserAvatar = ({ profile, defaultImageUrl, ...props }) => {
+    return (
+      <Avatar
+        sx={{ width: 100, height: 100, marginTop: "20px" }}
+        src={profile.imageUrl || defaultImageUrl}
+        {...props}
+      />
+    );
+  };
   if (!profile) {
     return <div>로딩 중...</div>;
   }
@@ -104,9 +113,9 @@ export default function ProfileStatistics({ setIsEditing }) {
                     alignItems: "center",
                   }}
                 >
-                  <Avatar
-                    sx={{ width: 100, height: 100, marginTop: "20px" }}
-                    src={profile.imageUrl}
+                  <UserAvatar
+                    profile={profile}
+                    defaultImageUrl="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp"
                   />
                   <MDBTypography tag="h4" className="mt-3 mb-4">
                     {profile.nickname}

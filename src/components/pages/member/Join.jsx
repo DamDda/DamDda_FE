@@ -18,6 +18,7 @@ import styled from "styled-components";
 import "../../styles/style.css";
 import { Header } from "../../layout/Header";
 import { Footer } from "../../layout/Footer";
+import { height } from "@mui/system";
 const FormHelperTexts = styled(FormHelperText)`
   width: 100%;
   padding-left: 16px;
@@ -295,8 +296,8 @@ const Join = () => {
   return (
     <>
       <Header />
-      <div className="container">
-        <ThemeProvider theme={theme}>
+      <div className="container" style={{ height: '1200px' ,display:'flex', alignItems:'center'}}>
+      <ThemeProvider theme={theme}>
           <Container component="main" maxWidth="xs">
             <CssBaseline />
             <Typography component="h1" variant="h5">

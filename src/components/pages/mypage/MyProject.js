@@ -18,10 +18,10 @@ import Stack from "@mui/material/Stack";
 import StatusButton from "./StatusButton";
 import axios from "axios"; // 나중에 백엔드 연결 시 주석 해제
 import { useNavigate } from "react-router-dom";
-
+import { useUser } from "../../../UserContext";
 
 // 프로젝트 카드 컴포넌트
-export const ProductCard = ({ product,  setMyprojectClick}) => {
+export const ProductCard = ({ product, setMyprojectClick }) => {
   console.log(product.approval);
   console.log(product);
   const navigate = useNavigate(); // 페이지 이동을 위한 훅
@@ -56,7 +56,6 @@ export const ProductCard = ({ product,  setMyprojectClick}) => {
     }
   };
 
-  
   // 달성률 계산 (fundsReceive / targetFunding * 100)
   const achievementRate = Math.min(
     (product.fundsReceive / product.targetFunding) * 100,
@@ -72,7 +71,6 @@ export const ProductCard = ({ product,  setMyprojectClick}) => {
 
   // 밀리초를 일(day) 단위로 변환
   const daysLeft = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-  
 
   return (
     <Card
@@ -184,7 +182,13 @@ export const ProductCard = ({ product,  setMyprojectClick}) => {
 };
 
 // Myproject 컴포넌트
-export const Myproject = ({setMyprojectClick}) => {
+export const Myproject = ({ setMyprojectClick }) => {
+  //const {user} = useUser();
+  const { user } = useUser();
+  // if(!isLogin){
+  //   console.log(user);
+  //   //setUser(prevUser => ({ ...prevUser, key: 0 }));
+  // }
 
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
 
@@ -192,30 +196,33 @@ export const Myproject = ({setMyprojectClick}) => {
 
   const [totalProducts, setTotalProducts] = useState(0); // 서버에서 가져온 프로젝트 데이터
   const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수
-  
+
   const itemsPerPage = 10; // 페이지당 항목 수
 
-  const [page, setPage] = useState(1); // 현재 페이지 상태
+  //const [page, setPage] = useState(1); // 현재 페이지 상태
 
   const fetchProducts = async (page) => {
     try {
-      const response = await axios.get(`http://localhost:9000/api/projects/myproject`, {
-        params: {
-          memberId: 1,
-          page: page,
-          size: itemsPerPage,
-        },
-      });
-      
-      if(response.data.dtoList !== null){
+      const response = await axios.get(
+        `http://localhost:9000/api/projects/myproject`,
+        {
+          params: {
+            memberId: user.key,
+            page: page,
+            size: itemsPerPage,
+          },
+        }
+      );
+
+      if (response.data.dtoList !== null) {
         setProjectList(response.data.dtoList); // 서버에서 받은 프로젝트 리스트
       } else {
         setProjectList([]); // 서버에서 받은 프로젝트 리스트
       }
       setTotalPages(Math.ceil(response.data.total / itemsPerPage)); // 전체 페이지 수 업데이트
-      setTotalProducts(response.data.total)
-      console.log(response.data.total + "aaaaaaaaaaaaaaaaaaaaaaa")
-      console.log(totalPages + "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqq")
+      setTotalProducts(response.data.total);
+      console.log(response.data.total + "aaaaaaaaaaaaaaaaaaaaaaa");
+      console.log(totalPages + "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqq");
     } catch (error) {
       console.error("프로젝트 데이터를 가져오는 중 오류 발생:", error);
     }
@@ -223,18 +230,15 @@ export const Myproject = ({setMyprojectClick}) => {
 
   //const totalProducts = projectList.length; // 전체 프로젝트 개수
 
-  
-   // 처음 마운트되었을 때 및 페이지 변경 시 데이터 가져오기
-   useEffect(() => {
+  // 처음 마운트되었을 때 및 페이지 변경 시 데이터 가져오기
+  useEffect(() => {
     fetchProducts(currentPage);
-
   }, [currentPage]);
 
-
   // 페이지 변경 핸들러
-  const handlePageChange = (event, value) => {
-    setPage(value);
-  };
+  // const handlePageChange = (event, value) => {
+  //   setPage(value);
+  // };
 
   // 백엔드 구현 시 주석 해제
   /*
@@ -257,58 +261,51 @@ export const Myproject = ({setMyprojectClick}) => {
   //   page * itemsPerPage
   // );
 
-  const displayedProducts = projectList
+  const displayedProducts = projectList;
 
-  
-// 페이지 번호 배열 생성
-const generatePageNumbers = (currentPage, totalPages) => {
-  // 현재 페이지가 속한 10 단위의 시작 페이지와 끝 페이지 계산
-  const startPage = Math.floor((currentPage - 1) / 10) * 10 + 1;
-  const endPage = Math.min(startPage + 9, totalPages); // 마지막 페이지가 totalPages를 넘지 않게
+  // 페이지 번호 배열 생성
+  const generatePageNumbers = (currentPage, totalPages) => {
+    // 현재 페이지가 속한 10 단위의 시작 페이지와 끝 페이지 계산
+    const startPage = Math.floor((currentPage - 1) / 10) * 10 + 1;
+    const endPage = Math.min(startPage + 9, totalPages); // 마지막 페이지가 totalPages를 넘지 않게
 
-  // startPage부터 endPage까지 페이지 번호 배열 생성
-  return Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
-};
-const pageNumbers = generatePageNumbers(currentPage, totalPages);
+    // startPage부터 endPage까지 페이지 번호 배열 생성
+    return Array.from(
+      { length: endPage - startPage + 1 },
+      (_, i) => startPage + i
+    );
+  };
+  const pageNumbers = generatePageNumbers(currentPage, totalPages);
 
+  // 페이지 번호 배열 생성
+  // const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
 
+  console.log(totalPages + "ssssssssssssssssssssssss");
+  console.log(pageNumbers + "ddddddddddddddddddddddddddd");
 
+  // 처음 페이지로 이동
+  const handleFirstPage = () => {
+    setCurrentPage(1);
+  };
 
+  // 이전 페이지로 이동
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
 
+  // 다음 페이지로 이동
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
 
-  
-    // 페이지 번호 배열 생성
-    // const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
-  
-    console.log(totalPages + "ssssssssssssssssssssssss")
-    console.log(pageNumbers + "ddddddddddddddddddddddddddd")
-  
-    // 처음 페이지로 이동
-    const handleFirstPage = () => {
-      setCurrentPage(1);
-    };
-
-
-    // 이전 페이지로 이동
-    const handlePrevPage = () => {
-      if (currentPage > 1) {
-        setCurrentPage(currentPage - 1);
-      }
-    };
-  
-    // 다음 페이지로 이동
-    const handleNextPage = () => {
-      if (currentPage < totalPages) {
-        setCurrentPage(currentPage + 1);
-      }
-    };
-
-    // 끝 페이지로 이동
-    const handleEndPage = () => {
-      setCurrentPage(totalPages);
-    };
- 
-
+  // 끝 페이지로 이동
+  const handleEndPage = () => {
+    setCurrentPage(totalPages);
+  };
 
   return (
     <Box
@@ -320,7 +317,7 @@ const pageNumbers = generatePageNumbers(currentPage, totalPages);
         justifyContent: "center",
         alignItems: "center",
         maxWidth: "100%",
-        width: "1600px"
+        width: "1600px",
       }}
     >
       <Grid
@@ -342,7 +339,10 @@ const pageNumbers = generatePageNumbers(currentPage, totalPages);
             display="flex"
             justifyContent="center"
           >
-            <ProductCard product={product} setMyprojectClick={setMyprojectClick}/>
+            <ProductCard
+              product={product}
+              setMyprojectClick={setMyprojectClick}
+            />
           </Grid>
         ))}
       </Grid>
@@ -367,56 +367,48 @@ const pageNumbers = generatePageNumbers(currentPage, totalPages);
           marginTop: 2,
         }}
       >
-
-        <Button
-          onClick={handleFirstPage}
-          disabled={currentPage === 1}
-        >
+        <Button onClick={handleFirstPage} disabled={currentPage === 1}>
           처음으로
         </Button>
 
-        <Button
-          onClick={handlePrevPage}
-          disabled={currentPage === 1}
-        >
+        <Button onClick={handlePrevPage} disabled={currentPage === 1}>
           이전
         </Button>
-        
-        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: 0 }}>
-      {pageNumbers.map((pageNumber) => (
-        <Button
-          key={pageNumber}
-          onClick={() => setCurrentPage(pageNumber)} // 페이지 변경
-          variant={currentPage === pageNumber ? "contained" : "outlined"} // 현재 페이지 스타일
-          sx={{ mx: 1.0 ,
-            minWidth: 40,  // 최소 너비
-            minHeight: 40,  // 최소 높이
-            fontSize: "0.8rem",  // 폰트 크기 조절
-            }} // 좌우 간격
-          
-        >
-          {pageNumber}
-        </Button>
-      ))}
-    </Box>
 
-        <Button
-          onClick={handleNextPage}
-          disabled={currentPage === totalPages}
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            marginTop: 0,
+          }}
         >
+          {pageNumbers.map((pageNumber) => (
+            <Button
+              key={pageNumber}
+              onClick={() => setCurrentPage(pageNumber)} // 페이지 변경
+              variant={currentPage === pageNumber ? "contained" : "outlined"} // 현재 페이지 스타일
+              sx={{
+                mx: 1.0,
+                minWidth: 40, // 최소 너비
+                minHeight: 40, // 최소 높이
+                fontSize: "0.8rem", // 폰트 크기 조절
+              }} // 좌우 간격
+            >
+              {pageNumber}
+            </Button>
+          ))}
+        </Box>
+
+        <Button onClick={handleNextPage} disabled={currentPage === totalPages}>
           다음
         </Button>
-        
-        <Button
-          onClick={handleEndPage}
-          disabled={currentPage === totalPages}
-        >
+
+        <Button onClick={handleEndPage} disabled={currentPage === totalPages}>
           끝으로
         </Button>
-
       </Box>
-          </Box>
-
+    </Box>
   );
 };
 

@@ -104,7 +104,8 @@ const Register = () => {
 
     convertUrlsToFileObjects();
 
-    writeData.tags && setTags(writeData.tags);
+    writeData.tags &&
+      setTags(writeData.tags.slice(0, Math.ceil(writeData.tags.length / 2)));
   }, [writeData]);
 
   // 비동기 파일 변환 작업 처리
@@ -458,7 +459,7 @@ const Register = () => {
                 </div>
 
                 {/* 오른쪽: 입력 폼 */}
-                <div className="image-section">
+                <div className="input-section">
                   {/* 프로젝트 제목 */}
                   <div className="form-item">
                     <span className="form-div">프로젝트 제목 :</span>
@@ -671,7 +672,7 @@ const Register = () => {
             <Tabs value={0} indicatorColor="primary" textColor="primary">
               <Tab
                 label="상세설명"
-                onClick={() => scrollToSection("descriptionRef")}
+                onClick={() => scrollToSection("description")}
               />
               <Tab
                 label="선물구성"
@@ -699,7 +700,7 @@ const Register = () => {
             <Tabs value={1} indicatorColor="primary" textColor="primary">
               <Tab
                 label="상세설명"
-                onClick={() => scrollToSection("descriptionRef")}
+                onClick={() => scrollToSection("description")}
               />
               <Tab
                 label="선물구성"
@@ -723,7 +724,7 @@ const Register = () => {
             <Tabs value={2} indicatorColor="primary" textColor="primary">
               <Tab
                 label="상세설명"
-                onClick={() => scrollToSection("descriptionRef")}
+                onClick={() => scrollToSection("description")}
               />
               <Tab
                 label="선물구성"

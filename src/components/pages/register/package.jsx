@@ -1,7 +1,26 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-import "./package.css";
 import { useLocation } from "react-router-dom";
+import {
+  TextField,
+  Button,
+  Typography,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+  Modal,
+  Divider,
+  Tabs,
+  Tab,
+  Chip,
+  IconButton,
+} from "@mui/material";
+
+import axios from "axios";
+
+import "./Register.css";
+import "./package.css";
+
 const Package = () => {
   const [reward_name, setReward_name] = useState("");
   const [optionType, setOptionType] = useState("none");
@@ -51,7 +70,7 @@ const Package = () => {
         `/packages/rewards/project/${projectId}`, //project_id를 넘겨받아야 함.
         { withCredentials: true }
       );
-      console.log(response.data)
+      console.log(response.data);
 
       const formattedGifts = response.data.map((gift) => ({
         id: gift.id,
@@ -337,173 +356,351 @@ const Package = () => {
   return (
     <div className="package-page">
       <div className="package-section1">
-        <h2>선물 옵션</h2>
-        <div>
-          <label>선물 이름: </label>
-          <input
-            type="text"
-            value={reward_name}
-            onChange={(e) => setReward_name(e.target.value)}
-          />
-        </div>
+        <div className="input-section">
+          <h3>&lt;선물 옵션&gt;</h3>
 
-        <div>
-          <label>옵션 조건: </label>
-          <button onClick={() => setOptionType("none")}>없음</button>
-          <button onClick={() => setOptionType("select")}>선택식</button>
-        </div>
-
-        {optionType === "select" && (
-          <div>
+          <div className="form-item">
+            <label
+              style={{
+                fontWeight: "bold",
+              }}
+            >
+              선물 이름:{" "}
+            </label>
             <input
+              className="input-field"
               type="text"
-              value={OptionInput}
-              onChange={(e) => setOptionInput(e.target.value)}
-              placeholder="옵션을 입력해주세요"
+              placeholder="선물 이름을 적어주세요."
+              value={reward_name}
+              onChange={(e) => setReward_name(e.target.value)}
+              style={{
+                marginLeft: "15px",
+                height: "35px",
+                Top: "20px",
+                marginTop: "-5px",
+              }}
             />
-            <button onClick={handleOptionAdd}>추가</button>
           </div>
-        )}
 
-        <div className="options-list">
-          {Options != undefined &&
-            Options.map((option, index) => (
-              <div key={index}>
-                {option}{" "}
-                <button onClick={() => handleOptionDelete(index)}>삭제</button>
+          <div className="form-item">
+            <label
+              style={{
+                fontWeight: "bold",
+              }}
+            >
+              옵션 조건:{" "}
+            </label>
+            <Button
+              className={`outlined-button-width ${optionType === "none" ? "active" : ""}`}
+              variant="outlined"
+              onClick={() => setOptionType("none")}
+              style={{
+                marginLeft: "15px",
+                height: "35px",
+                Top: "20px",
+                marginTop: "-5px",
+                width: "140px",
+              }}
+            >
+              없음
+            </Button>
+            <Button
+              className={`outlined-button-width ${optionType === "select" ? "active" : ""}`}
+              variant="outlined"
+              onClick={() => setOptionType("select")}
+              style={{
+                marginLeft: "15px",
+                height: "35px",
+                Top: "20px",
+                marginTop: "-5px",
+                width: "140px",
+              }}
+            >
+              선택식
+            </Button>
+          </div>
+
+          {optionType === "select" && (
+            <div>
+              <div
+                className="form-item"
+                style={{
+                  padding: "10px",
+                  marginLeft: "-10px",
+                }}
+              >
+                <label
+                  style={{
+                    fontWeight: "bold",
+                    marginTop: "15px",
+                  }}
+                >
+                  옵션 항목:{" "}
+                </label>
+                <div
+                  style={{
+                    padding: "10px",
+                    marginLeft: "20px",
+                    display: "flex", // Flexbox 사용
+                    alignItems: "center", // 수직 정렬
+                    border: "1px solid #ccc", // 테두리 추가
+                    borderRadius: "4px", // 둥근 모서리
+                    // marginTop: "5px", // 레이블과 입력칸 간의 간격
+                    height: "50px",
+                    width: "300px",
+                  }}
+                >
+                  <input
+                    className="input-field"
+                    type="text"
+                    variant="outlined"
+                    // size="small"
+                    value={OptionInput}
+                    onChange={(e) => setOptionInput(e.target.value)}
+                    placeholder="옵션을 입력해주세요."
+                    style={{
+                      flexGrow: 1, // 입력창이 가능한 공간을 차지
+                      height: "35px",
+                      border: "none", // 테두리 제거
+                      // borderBottom: "1px solid #000", // 밑줄 추가
+                      // outline: "none", // 포커스 시 아웃라인 제거
+                      marginRight: "5px", // 입력창과 버튼 간격
+                    }}
+                  />
+                  <button className="outlined-button" onClick={handleOptionAdd}>
+                    +
+                  </button>
+                </div>
               </div>
-            ))}
-        </div>
+            </div>
+          )}
 
-        <button onClick={handleGiftAdd}>선물 추가</button>
+          <div className="options-list">
+            {Options != undefined &&
+              Options.map((option, index) => (
+                <div className="option-item" key={index}>
+                  {option}{" "}
+                  <button onClick={() => handleOptionDelete(index)}>X</button>
+                </div>
+              ))}
+          </div>
 
-        <div className="gift-list">
-          {reward_list.length > 0 &&
-            reward_list.map((gift, index) => (
-              <div key={gift.id}>
-                {gift.name}
-                {gift.OptionList && gift.OptionList.length > 0 && (
-                  <span> ({gift.OptionList.join(", ")})</span>
-                )}
-                <button onClick={() => handleGiftDelete(gift.id, index)}>
-                  삭제
-                </button>
-              </div>
-            ))}
-        </div>
+          <Button
+            className="primary-button"
+            variant="contained"
+            onClick={handleGiftAdd}
+          >
+            선물 추가
+          </Button>
 
-        <h2>선물 구성</h2>
-        <div>
-          <label>구성 이름: </label>
-          <input
-            type="text"
-            value={package_name}
-            onChange={(e) => setPackage_name(e.target.value)}
-          />
-        </div>
+          <div className="gift-list">
+            {reward_list.length > 0 &&
+              reward_list.map((gift, index) => (
+                <div key={gift.id}>
+                  {gift.name}
+                  {gift.OptionList && gift.OptionList.length > 0 && (
+                    <span> ({gift.OptionList.join(", ")})</span>
+                  )}
+                  <button onClick={() => handleGiftDelete(gift.id, index)}>
+                    X
+                  </button>
+                </div>
+              ))}
+          </div>
 
-        <label>선물 선택: </label>
-        <select value="" onChange={(e) => handleSelectReward(e.target.value)}>
-          <option value="">선물 선택</option>
-          {reward_list.map((gift, index) => (
-            <option key={index} value={gift.name}>
-              {gift.name}
-            </option>
-          ))}
-        </select>
+          <Divider style={{ margin: "20px 0", width: "500px" }} />
 
-        <div>
-          {selected_reward != undefined &&
-            selected_reward.map((reward, index) => (
-              <div key={index}>
-                <span>선택된 선물: {reward.name}</span>
+          <h3>&lt;선물 구성&gt;</h3>
+          <div className="form-item">
+            <label>구성 이름: </label>
+            <input
+              className="input-field"
+              type="text"
+              value={package_name}
+              onChange={(e) => setPackage_name(e.target.value)}
+            />
+          </div>
+
+          <div className="form-item">
+            <label>선물 선택: </label>
+            <select
+              value=""
+              onChange={(e) => handleSelectReward(e.target.value)}
+            >
+              <option value="">선물 선택</option>
+              {reward_list.map((gift, index) => (
+                <option key={index} value={gift.name}>
+                  {gift.name}
+                </option>
+              ))}
+            </select>
+
+            <div className="selected-rewards">
+              {selected_reward != undefined && (
+                <div>
+                  {selected_reward.map((reward, index) => (
+                    <div key={index} className="reward-item">
+                      <span>선택된 선물: </span>
+                      <span>{reward.name}</span>
+                      <div className="count-box">
+                        <button
+                          onClick={() => handleCount(reward.name, -1)}
+                          disabled={reward.count <= 1}
+                        >
+                          -
+                        </button>
+                        <span>{reward.count}</span>
+                        <button onClick={() => handleCount(reward.name, 1)}>
+                          +
+                        </button>
+                      </div>
+                      <button
+                        onClick={() => handleSelectedGiftDelete(reward.id)}
+                      >
+                        X
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="form-item">
+            <label>제한 수량: </label>
+            <Button
+              className={`outlined-button-width  ${!isLimitEnabled ? "active" : ""}`}
+              variant="outlined"
+              onClick={() => setIsLimitEnabled(false)}
+              style={{
+                marginLeft: "15px",
+                height: "35px",
+                Top: "20px",
+                marginTop: "-5px",
+                width: "140px",
+              }}
+            >
+              없음
+            </Button>
+            <Button
+              className={`outlined-button-width ${isLimitEnabled ? "active" : ""}`}
+              variant="outlined"
+              onClick={() => setIsLimitEnabled(true)}
+              style={{
+                marginLeft: "15px",
+                height: "35px",
+                Top: "20px",
+                marginTop: "-5px",
+                width: "140px",
+              }}
+            >
+              있음
+            </Button>
+
+            {isLimitEnabled && (
+              <div className="count-box">
                 <button
-                  onClick={() => handleCount(reward.name, -1)}
-                  disabled={reward.count <= 1}
+                  onClick={() => handleCountChange(-1)}
+                  disabled={package_limit <= 0}
                 >
                   -
                 </button>
-                <span>{reward.count}</span>
-                <button onClick={() => handleCount(reward.name, 1)}>+</button>
-                <button onClick={() => handleSelectedGiftDelete(reward.id)}>
-                  삭제
-                </button>
+                <span>{package_limit}</span>
+                <button onClick={() => handleCountChange(1)}>+</button>
               </div>
-            ))}
+            )}
+          </div>
+
+          <div className="form-item">
+            <label>가격: </label>
+            <input
+              className="input-field"
+              type="text"
+              value={package_price}
+              onChange={(e) =>
+                setPackage_price(
+                  e.target.value
+                    .replace(/[^\d]/g, "") //이전 상태에 쉼표가 포함됨 -> 쉼표 제거
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                )
+              }
+            />
+            <span className="form-div-sub"> 원</span>
+          </div>
+
+          <Button
+            className="primary-button"
+            variant="primary"
+            onClick={handleConfigAdd}
+          >
+            {isEditing ? "구성 수정" : "구성 추가"}
+          </Button>
+
+          {Snackbar && <div className="snackbar">{snackbarMessage}</div>}
         </div>
-
-        <div>
-          <label>제한 수량: </label>
-          <button onClick={() => setIsLimitEnabled(false)}>없음</button>
-          <button onClick={() => setIsLimitEnabled(true)}>있음</button>
-          {isLimitEnabled && (
-            <div>
-              <button
-                onClick={() => handleCountChange(-1)}
-                disabled={package_limit <= 0}
-              >
-                -
-              </button>
-              <span>{package_limit}</span>
-              <button onClick={() => handleCountChange(1)}>+</button>
-            </div>
-          )}
-        </div>
-
-        <div>
-          <label>가격: </label>
-          <input
-            type="text"
-            value={package_price}
-            onChange={(e) =>
-              setPackage_price(
-                e.target.value
-                  .replace(/[^\d]/g, "") //이전 상태에 쉼표가 포함됨 -> 쉼표 제거
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-              )
-            }
-          />
-          <span> 원</span>
-        </div>
-
-        <button onClick={handleConfigAdd}>
-          {isEditing ? "구성 수정" : "구성 추가"}
-        </button>
-
-        {Snackbar && <div className="snackbar">{snackbarMessage}</div>}
       </div>
 
       <div className="package-section2">
-        <h3>내가 만든 선물구성</h3>
-        {project_package.length > 0 ? (
-          project_package.map((config, index) => (
-            <div key={index} className="package-card">
-              <p>{formatQunatity(config.quantityLimited)}</p>
-              <h3>{config.price.toLocaleString()}원</h3>
-              {config.name}
-              <ul>
-                {config.RewardList.map((reward, rewardIndex) => (
-                  <div key={rewardIndex}>
-                    <h3>{reward.name}</h3>
-                    <p>{reward.count}개</p>
-                    <ul>
-                      {reward.OptionList.map((opt, optIndex) => (
-                        <li key={optIndex}>{opt}</li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </ul>
-
-              <button onClick={() => handleEdit(index)}>수정</button>
-              <button onClick={() => handleConfigDelete(config.id, index)}>
-                삭제
-              </button>
-            </div>
-          ))
-        ) : (
-          <p>추가된 선물 구성이 없습니다.</p>
-        )}
+        <div className="package-section">
+          <h3>내가 만든 선물구성</h3>
+          {project_package.length > 0 ? (
+            project_package.map((config, index) => (
+              <div key={index} className="package-card">
+                <div className="quantity-box">
+                  {formatQunatity(config.quantityLimited)}
+                </div>
+                <h3>{config.price.toLocaleString()}원</h3>
+                {/* {config.name}
+                <ul>
+                  {config.RewardList.map((reward, rewardIndex) => (
+                    <div key={rewardIndex}>
+                      <h3>{reward.name}</h3>
+                      <p>{reward.count}개</p>
+                      <ul>
+                        {reward.OptionList.map((opt, optIndex) => (
+                          <li key={optIndex}>{opt}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </ul> */}
+                <div className="reward-list">
+                  {config.RewardList.map((reward, rewardIndex) => (
+                    <div key={rewardIndex}>
+                      <div className="reward-info">
+                        <h3>{reward.name}</h3>
+                        <p className="quantity-box">{reward.count}개</p>
+                      </div>
+                      <ul>
+                        {reward.OptionList.map((opt, optIndex) => (
+                          <li key={optIndex}>{opt}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+                <div className="action-buttons">
+                  <Button
+                    className="outlined-button"
+                    variant="outlined"
+                    onClick={() => handleEdit(index)}
+                  >
+                    수정
+                  </Button>
+                  <Button
+                    className="outlined-button"
+                    variant="outlined"
+                    onClick={() => handleConfigDelete(config.id, index)}
+                  >
+                    삭제
+                  </Button>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p>추가된 선물 구성이 없습니다.</p>
+          )}
+        </div>
       </div>
     </div>
   );

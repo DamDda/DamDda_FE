@@ -181,7 +181,7 @@ const CollaborationDetail = ({ collabId, filter, setCollabClick }) => {
               InputProps={{
                 readOnly: true, // 입력 불가능 설정
               }}
-              defaultValue={projectDetail.title} // 기본 내용 추가
+              defaultValue={projectDetail.collaborationDTO.title} // 기본 내용 추가
               fullWidth
             />
           </Box>

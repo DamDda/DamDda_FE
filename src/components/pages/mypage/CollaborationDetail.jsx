@@ -49,34 +49,35 @@ const CollaborationDetail = ({ collabId, filter, setCollabClick }) => {
 
 
 
+
+
   const handleDownload = async fileName => {
-    console.log(fileName) //4604642e-2515-466e-aa78-a18afebf9a3b_성공성공오예.txt
+    console.log(fileName); // 파일명 확인용 로그
+  
     try {
       const response = await axios.get(`/collab/download`, {
         params: { fileName },
         responseType: 'blob',
         withCredentials: true,
-      })
-
-      // 파일 다운로드 처리
-      const contentDisposition = response.headers['content-disposition']
-      const downloadFileName = contentDisposition
-        ? contentDisposition.split('filename=')[1].replace(/['"]/g, '')
-        : fileName
-
-      const url = window.URL.createObjectURL(new Blob([response.data]))
-      const link = document.createElement('a')
-      link.href = url
-      link.setAttribute('download', downloadFileName)
-      document.body.appendChild(link)
-      link.click()
-      link.remove()
-      window.URL.revokeObjectURL(url)
+      });
+  
+      // Content-Disposition 헤더에서 파일명 추출
+      const contentDisposition = response.headers['content-disposition'];
+  
+      // Blob URL 생성 및 다운로드 처리
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', fileName.substring(43)); // 다운로드 파일명 설정 //이거 수정
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('파일 다운로드 중 에러 발생:', error)
-      alert('파일 다운로드에 실패했습니다.')
+      console.error('파일 다운로드 중 에러 발생:', error);
+      alert('파일 다운로드에 실패했습니다.');
     }
-  }
+  };
 
 
 
@@ -368,39 +369,61 @@ const CollaborationDetail = ({ collabId, filter, setCollabClick }) => {
                 </h3>
                 {/* 파일 아이콘과 파일명을 표시하는 입력 필드 */}
 
-                <Box>
-                  {projectDetail.collabDocList.map((fileName, index) => (
-                    <TextField
-                      sx={{
-                        margin: "30px",
-                        width: "600px",
-                      }}
-                      label="File"
-                      variant="outlined"
-                      fullWidth
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <IconButton
-                              onClick={() => handleDownload(fileName)}
-                            >
-                              <FilePresentIcon />
-                            </IconButton>
-                          </InputAdornment>
-                        ),
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <span
-                              onClick={() => handleDownload(fileName)}
-                              style={{ cursor: "pointer" }}
-                            >
-                              {fileName}
-                            </span>
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
-                  ))}
+                <Box
+                sx={{
+                  display: "flex",
+                  flexFlow: "row wrap",
+                  justifyContent: "flex-start",
+                  alignItems: "flex-start",
+                  margin: "0px auto",
+                  width: "80%",
+                  maxWidth: "800px",
+                }}
+                >
+                  {projectDetail.collabDocList.map((fileName, index) => {
+                    // 파일 이름에서 첫 번째 언더바 이후의 진짜 파일 이름만 추출
+                    // const firstUnderscoreIndex = fileName.indexOf("_");
+                    // const displayFileName =
+                    //   firstUnderscoreIndex !== -1
+                    //     ? fileName.substring(firstUnderscoreIndex + 1)
+                    //     : fileName;
+                    // 이거 수정
+                    const displayFileName = fileName.substring(43);
+
+                    return (
+                      <TextField
+                        key={index} // 각 컴포넌트에 고유한 key 추가
+                        sx={{
+                          margin: "30px",
+                          width: "350px",
+                        }}
+                        label="File"
+                        variant="outlined"
+                        fullWidth
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <IconButton
+                                onClick={() => handleDownload(fileName)}
+                              >
+                                <FilePresentIcon />
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <span
+                                onClick={() => handleDownload(fileName)}
+                                style={{ cursor: "pointer" }}
+                              >
+                                {displayFileName} {/* 수정된 파일 이름 표시 */}
+                              </span>
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                    );
+                  })}
                 </Box>
               </Box>
             )}

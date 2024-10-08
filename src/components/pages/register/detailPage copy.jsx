@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import {
   TextField,
   Button,
@@ -15,9 +15,11 @@ import CloseIcon from "@mui/icons-material/Close";
 import Alert from "@mui/material/Alert";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 import styled from "styled-components";
-import Write from "./write";
 import "./Register.css";
 import "../../styles/style.css";
 
@@ -40,7 +42,7 @@ const DetailPage = ({
       description: descriptionDetail, // description 필드를 업데이트
     }));
     setImagePreviews(descriptionImagesUrl); // 이미지 미리보기 업데이트
-  }, [descriptionDetail]);
+  }, [descriptionDetail, descriptionImagesUrl]);
 
   const [aiModalOpen, setAiModalOpen] = useState(false); // AI 도움받기 모달 상태
   const [confirmationOpen, setConfirmationOpen] = useState(false); // 설명 등록 확인 모달 상태
@@ -54,15 +56,9 @@ const DetailPage = ({
   // 입력 파일을 참조할 ref
   const inputRef = useRef(null);
 
-  // AI 도움받기 모달 열기
-  const openAiModal = () => {
-    setAiModalOpen(true);
-  };
-
-  // AI 도움받기 모달 닫기
-  const closeAiModal = () => {
-    setAiModalOpen(false);
-  };
+  // AI 도움받기 모달 열기 및 닫기
+  const openAiModal = () => setAiModalOpen(true);
+  const closeAiModal = () => setAiModalOpen(false);
 
   // AI 도움받기 설명 등록 요청
   const handleRegisterDescription = () => {
@@ -163,14 +159,44 @@ const DetailPage = ({
               alignItems: "center",
             }}
           >
-            <ReactQuill
+            {/* <ReactQuill
               theme="snow"
               value={formData.description}
               onChange={handleDescriptionChange}
               style={{ height: "300px", width: "1200px" }}
-            />
+            /> */}
 
-            {/* <Write /> */}
+            <ReactQuill
+              theme="snow"
+              value={formData.description}
+              onChange={handleDescriptionChange}
+              style={{ height: "600px", width: "100%" }}
+              modules={{
+                toolbar: {
+                  container: [
+                    [{ header: [1, 2, false] }],
+                    ["bold", "italic", "underline"],
+                    ["image"], // 이미지 버튼 추가
+                    ["clean"], // 클리어 버튼 추가
+                  ],
+                  handlers: {
+                    image: () => {
+                      const input = document.createElement("input");
+                      input.setAttribute("type", "file");
+                      input.setAttribute("accept", "image/*");
+                      input.click();
+
+                      input.onchange = () => {
+                        const file = input.files[0];
+                        if (file) {
+                          handleImageUpload({ target: { files: [file] } }); // 파일 업로드 핸들러 호출
+                        }
+                      };
+                    },
+                  },
+                },
+              }}
+            />
           </div>
 
           {/* AI 도움받기 모달 */}

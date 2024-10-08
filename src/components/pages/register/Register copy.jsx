@@ -43,10 +43,6 @@ import DetailPage from "./detailPage";
 import Package from "./package";
 import ProjectDocument from "./projectDocument";
 
-
-
-
-
 // 드래그 앤 드롭 가능한 개별 이미지 아이템
 function SortableItem({ url, index, title, onRemove }) {
   const { attributes, listeners, setNodeRef, transform, transition } =
@@ -158,34 +154,6 @@ const Register = () => {
     writeData.descriptionDetail &&
       setDescriptionDetail(writeData.descriptionDetail);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     writeData.productImages && setProductImagesUrl(writeData.productImages);
     writeData.descriptionImages &&
       setDescriptionImagesUrl(writeData.descriptionImages);
@@ -271,51 +239,6 @@ const Register = () => {
   //   };
   // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   const fetchWriteData = async () => {
     try {
       const response = await axios.get(
@@ -328,7 +251,6 @@ const Register = () => {
       console.error("프로젝트 데이터를 가져오는 중 오류 발생:", error);
     }
   };
-
 
   const [productImages, setProductImages] = useState([]); // 상품이미지
   const [descriptionImages, setDescriptionImages] = useState([]); // 설명이미지
@@ -535,76 +457,6 @@ const Register = () => {
     }
   };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
   return (
     <>
       <Header />

@@ -40,7 +40,8 @@ const CollaborationList = ({setCollabClick, setCollabId, filter, setFilter}) => 
   const [totalPages, setTotalPages] = useState(0)
   const [totalElements, setTotalElements] = useState(0)
   const { user } = useUser()
-  const [selectionModel, setSelectionModel] = useState([]);
+  const [checkReset, setCheckReset] = useState(0)
+  // const [selectionModel, setSelectionModel] = useState([]);
 
 
   const [selectedRows, setSelectedRows] = useState([]); // 선택된 행의 ID를 저장
@@ -72,8 +73,9 @@ const CollaborationList = ({setCollabClick, setCollabId, filter, setFilter}) => 
     setCollaborations(dtoList)
     setTotalElements(total)
     setTotalPages(Math.ceil(total / size))
-    setSelectionModel([]);
+    // setSelectionModel([]);
     setSelectedRows([]); 
+    setCheckReset((checkReset + 1) % 50);
     //setPage(responsePage + 1);
   }
 
@@ -204,10 +206,10 @@ const CollaborationList = ({setCollabClick, setCollabId, filter, setFilter}) => 
     
 
   // 체크박스로 선택된 행의 ID를 업데이트
-  const handleSelectionChange = (ids) => {
-    setSelectedRows(ids); // 선택된 행의 ID들을 업데이트
-    console.log("선택된 행 ID:", ids);
-  };
+  // const handleSelectionChange = (ids) => {
+  //   setSelectedRows(ids); // 선택된 행의 ID들을 업데이트
+  //   console.log("선택된 행 ID:", ids);
+  // };
 
 
   const handleRowClick = (id) => {
@@ -251,16 +253,16 @@ const CollaborationList = ({setCollabClick, setCollabId, filter, setFilter}) => 
 
       <Paper sx={{ height: 400, width: '90%' }}>
       <DataGrid
+        key={checkReset} // 상태에 따라 리렌더링 강제
         rows={collaborations}
         columns={columns}
         // initialState={{ pagination: { paginationModel } }}
         // pageSizeOptions={[5, 10]}
         checkboxSelection
         disableColumnMenu // 컬럼 메뉴 비활성화
-        selectionModel={selectionModel}
+        selectionModel={selectedRows}
         onRowSelectionModelChange={(newSelection) => {
-            setSelectionModel(newSelection); // 새로운 선택 업데이트
-            handleSelectionChange(newSelection);
+            setSelectedRows(newSelection);
           }}
         onRowClick={(params) => handleRowClick(params.id)} // 행 클릭 시 상세 페이지 이동
         sx={{ border: 0 }}

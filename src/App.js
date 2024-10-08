@@ -30,8 +30,11 @@ import Entire from './components/pages/entire/Main';
 import CollaborationList from './components/pages/mypage/CollaborationList';
 import Collaboration from './components/pages/mypage/Collaboration';
 import CollaborationDetail from './components/pages/mypage/CollaborationDetail';
+// import { useUser } from './UserContext';
 
 function App() {
+
+  // const {user} = useUser()
  
 
   return (

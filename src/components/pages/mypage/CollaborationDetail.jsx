@@ -16,7 +16,8 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete'; // 올바른 경로로 임포트
 import axios from 'axios';
 import { useUser } from "../../../UserContext";
-
+import InputAdornment from '@mui/material/InputAdornment';
+import FilePresentIcon from '@mui/icons-material/FilePresent';
 
 
 const CollaborationDetail = ({ collabId, filter, setCollabClick }) => {
@@ -134,84 +135,274 @@ const CollaborationDetail = ({ collabId, filter, setCollabClick }) => {
   return (
     <>
       <Paper style={{ margin: "100px auto", padding: " 20px" }}>
-        <TextField
-          id="standard-basic"
-          label="Standard"
-          variant="standard"
-          InputProps={{
-            readOnly: true, // 입력 불가능 설정
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            margin: "0px auto",
+            width: "80%",
+            maxWidth: "800px",
           }}
-          defaultValue={projectDetail.title} // 기본 내용 추가
-          fullWidth
-        />
-
-<Box>
-
-<TextField
-          id="standard-basic"
-          label="Standard"
-          variant="standard"
-          InputProps={{
-            readOnly: true, // 입력 불가능 설정
-          }}
-          defaultValue={projectDetail.collaborationDTO.name} // 기본 내용 추가
-          fullWidth
-        />
-
-</Box>
-<Typography>이름: </Typography>
-<TextField
-          id="standard-basic"
-          label="Standard"
-          variant="standard"
-          InputProps={{
-            readOnly: true, // 입력 불가능 설정
-          }}
-          defaultValue={projectDetail.title} // 기본 내용 추가
-          fullWidth
-        />
-
-<TextField
-          id="standard-basic"
-          label="Standard"
-          variant="standard"
-          InputProps={{
-            readOnly: true, // 입력 불가능 설정
-          }}
-          defaultValue={projectDetail.title} // 기본 내용 추가
-          fullWidth
-        />
-
-<TextField
-          id="standard-basic"
-          label="Standard"
-          variant="standard"
-          InputProps={{
-            readOnly: true, // 입력 불가능 설정
-          }}
-          defaultValue={projectDetail.title} // 기본 내용 추가
-          fullWidth
-        />
-
-        <Typography variant="h5">{projectDetail.title}</Typography>
-        <Typography>이름: {projectDetail.collaborationDTO.name}</Typography>
-        <Typography>휴대폰 번호: {projectDetail.phoneNumber}</Typography>
-        <Typography>이메일: {projectDetail.email}</Typography>
-        <Typography>협업 제안 내용: {projectDetail.content}</Typography>
+        >
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              margin: "25px 15px",
+              width: "100%",
+            }}
+          >
+            <Typography
+              sx={{
+                marginRight: "20px",
+                width: "20%",
+                minWidth: "80px",
+                maxWidth: "100px",
+                display: "flex", // Flexbox로 변경
+                justifyContent: "space-between", // 좌우로 텍스트를 펼침
+              }}
+            >
+              <span>프</span>
+              <span>로</span>
+              <span>젝</span>
+              <span>트</span>
+              <span>:</span>
+            </Typography>
+            <TextField
+              sx={{
+                width: "80%",
+              }}
+              id="standard-basic"
+              variant="standard"
+              InputProps={{
+                readOnly: true, // 입력 불가능 설정
+              }}
+              defaultValue={projectDetail.title} // 기본 내용 추가
+              fullWidth
+            />
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              margin: "25px 15px",
+              width: "100%",
+            }}
+          >
+            <Typography
+              sx={{
+                marginRight: "20px",
+                width: "20%",
+                minWidth: "80px",
+                maxWidth: "100px",
+                display: "flex", // Flexbox로 변경
+                justifyContent: "space-between", // 좌우로 텍스트를 펼침
+              }}
+            >
+              <span>이</span>
+              <span>름</span>
+              <span>:</span>
+            </Typography>
+            <TextField
+              sx={{
+                width: "80%",
+              }}
+              id="standard-basic"
+              variant="standard"
+              InputProps={{
+                readOnly: true, // 입력 불가능 설정
+              }}
+              defaultValue={projectDetail.collaborationDTO.name} // 기본 내용 추가
+              fullWidth
+            />
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              margin: "25px 15px",
+              width: "100%",
+            }}
+          >
+            <Typography
+              sx={{
+                marginRight: "20px",
+                width: "20%",
+                minWidth: "80px",
+                maxWidth: "100px",
+                display: "flex", // Flexbox로 변경
+                justifyContent: "space-between", // 좌우로 텍스트를 펼침
+              }}
+            >
+              <span>연</span>
+              <span>락</span>
+              <span>처</span>
+              <span>:</span>
+            </Typography>
+            <TextField
+              sx={{
+                width: "80%",
+              }}
+              id="standard-basic"
+              variant="standard"
+              InputProps={{
+                readOnly: true, // 입력 불가능 설정
+              }}
+              defaultValue={projectDetail.phoneNumber} // 기본 내용 추가
+              fullWidth
+            />
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              margin: "25px 15px",
+              width: "100%",
+            }}
+          >
+            <Typography
+              sx={{
+                marginRight: "20px",
+                width: "20%",
+                minWidth: "80px",
+                maxWidth: "100px",
+                display: "flex", // Flexbox로 변경
+                justifyContent: "space-between", // 좌우로 텍스트를 펼침
+              }}
+            >
+              <span>이</span>
+              <span>메</span>
+              <span>일</span>
+              <span>:</span>
+            </Typography>
+            <TextField
+              sx={{
+                width: "80%",
+              }}
+              id="standard-basic"
+              variant="standard"
+              InputProps={{
+                readOnly: true, // 입력 불가능 설정
+              }}
+              defaultValue={projectDetail.email} // 기본 내용 추가
+              fullWidth
+            />
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "flex-start",
+              margin: "25px 15px",
+              width: "100%",
+            }}
+          >
+            <Typography
+              sx={{
+                marginRight: "20px",
+                width: "20%",
+                minWidth: "80px",
+                maxWidth: "100px",
+                display: "flex", // Flexbox로 변경
+                justifyContent: "space-between", // 좌우로 텍스트를 펼침
+              }}
+            >
+              <span>제</span>
+              <span>안</span>
+              <span>내</span>
+              <span>용</span>
+              <span>:</span>
+            </Typography>
+            <TextField
+              sx={{
+                width: "80%",
+              }}
+              id="standard-basic"
+              variant="outlined"
+              InputProps={{
+                readOnly: true, // 입력 불가능 설정
+              }}
+              defaultValue={projectDetail.content} // 기본 내용 추가
+              // defaultValue = "아아ㅏ앙ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ"
+              multiline // 여러 줄 입력 가능
+              rows={10} // 기본 높이 설정
+              maxRows={100} // 최대 4줄까지 자동 조절
+              fullWidth
+            />
+          </Box>
+        </Box>
 
         <Box mt={2}>
           {projectDetail.collabDocList &&
             projectDetail.collabDocList.length > 0 && (
-              <div>
-                <h3>첨부 파일:</h3>
-                <ul>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  margin: "0px auto",
+                  width: "80%",
+                  maxWidth: "800px",
+                }}
+              >
+                <h3
+                  style={{
+                    width: "100%", // 너비를 100%로 설정
+                    textAlign: "left", // 텍스트를 왼쪽 정렬
+                    margin: "0", // 필요에 따라 상하좌우 여백 설정
+                  }}
+                >
+                  첨부 파일:
+                </h3>
+                {/* 파일 아이콘과 파일명을 표시하는 입력 필드 */}
+
+                <Box>
                   {projectDetail.collabDocList.map((fileName, index) => (
-                    <li onClick={() => handleDownload(fileName)} key={index}>
-                      {fileName}
-                    </li>
+                    <TextField
+                      sx={{
+                        margin: "30px",
+                        width: "600px",
+                      }}
+                      label="File"
+                      variant="outlined"
+                      fullWidth
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <IconButton
+                              onClick={() => handleDownload(fileName)}
+                            >
+                              <FilePresentIcon />
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <span
+                              onClick={() => handleDownload(fileName)}
+                              style={{ cursor: "pointer" }}
+                            >
+                              {fileName}
+                            </span>
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
                   ))}
-                </ul>
-              </div>
+                </Box>
+              </Box>
             )}
         </Box>
 

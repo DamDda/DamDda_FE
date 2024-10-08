@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import ProfileEditPage from "./ProfileEditPage";
 import Myproject from "./MyProject";
 import Headers from "./MypageHeader";
-import MyProjectDetail from "./MyProjectDetail";
+import MyProjectDetails from "./MyProjectDetail";
 import ProfileStatistics from "./ProfileStatistics";
 import SupportedProjects from "./SupportedProjects";
 import TabsUnderlinePlacement from "./TabsUnderlinePlacement";
@@ -95,7 +95,7 @@ const Mypage = () => {
         return <SupportedProjects />;
       case 2:
         if (myprojectClick){
-            return <MyProjectDetail setMyprojectClick={setMyprojectClick}/>;
+            return <MyProjectDetails setMyprojectClick={setMyprojectClick}/>;
         } else{
           return <Myproject setMyprojectClick={setMyprojectClick}/>;
         }       

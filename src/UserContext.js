@@ -6,8 +6,8 @@ export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
     // localStorage에서 사용자 정보를 가져옵니다.
     const savedUser = localStorage.getItem("user");
-    return savedUser ? JSON.parse(savedUser) : null;
-    // return savedUser ? JSON.parse(savedUser) : { key: 0 };
+    // return savedUser ? JSON.parse(savedUser) : null;
+    return savedUser ? JSON.parse(savedUser) : { key: 0 };
   });
 
   const [isLogin, setIsLogin] = useState(0);

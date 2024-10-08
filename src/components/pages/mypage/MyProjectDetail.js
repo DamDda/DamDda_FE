@@ -6,7 +6,6 @@ import {
   Divider,
   IconButton,
   Box,
-  Tooltip,
   Tab,
   Tabs,
   Collapse,
@@ -17,11 +16,11 @@ import {
   TableHead,
   TableRow,
   Paper,
-  KeyboardArrowDownIcon,
-  KeyboardArrowUpIcon,
 } from "@mui/material";
-import { styled } from "@mui/system";
+import { border, borderBottom, styled } from "@mui/system";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import StatusButton from "./StatusButton";
 import axios from "axios";
 
@@ -45,12 +44,51 @@ const mockProjectData = {
   },
 };
 
+// 후원 통계
 const mockSupportStat = {
   totalAmount: 80771500,
   percentage: 161.54,
   supporters: 708,
   remainingDays: 0,
 };
+
+// 후원자 조회
+const mockSupporterData = [
+  {
+    deliveryId: "123456",
+    deliveryName: "홍길동",
+    supportedAt: "2024.09.07 - 오전 11:30",
+    item_name: "눌림 플레이트 2세트 + 미니 보냉백 1개",
+    deliveryPhoneNumber: "010-1234-5678",
+    deliveryAddress: "경기도 광명시",
+    deliveryDetailedAddress: "oo동",
+    deliveryMessage: "배송 전 연락 주세요.",
+    history: [
+      {
+        date: "2024-09-01",
+        customerId: "11091700",
+        amount: 3,
+      },
+    ],
+  },
+  {
+    deliveryId: "123457",
+    deliveryName: "김철수",
+    supportedAt: "2024.09.07 - 오후 2:30",
+    item_name: "세트 상품 1개",
+    deliveryPhoneNumber: "010-9876-5432",
+    deliveryAddress: "서울특별시 강남구",
+    deliveryDetailedAddress: "xx동",
+    deliveryMessage: "배송 전에 전화 부탁드립니다.",
+    history: [
+      {
+        date: "2024-09-03",
+        customerId: "11091701",
+        amount: 2,
+      },
+    ],
+  },
+];
 
 const ThumbnailContainer = styled("div")({
   position: "relative",
@@ -110,7 +148,163 @@ const DashboardSection = styled("div")({
   boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
 });
 
-const MyProjectDetail = ({setMyprojectClick}) => {
+const MyProjectDetail = () =>
+  // 행(Row) 컴포넌트
+  function Row(props) {
+    const { row } = props;
+    const [open, setOpen] = useState(false);
+
+    return (
+      <React.Fragment>
+        <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
+          <TableCell>
+            <IconButton
+              aria-label="expand row"
+              size="small"
+              onClick={() => setOpen(!open)}
+            >
+              {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+            </IconButton>
+          </TableCell>
+          <TableCell
+            style={{
+              textAlign: "center",
+            }}
+          >
+            {row.deliveryId}
+          </TableCell>
+          <TableCell
+            style={{
+              textAlign: "center",
+            }}
+          >
+            {row.deliveryName}
+          </TableCell>
+          <TableCell
+            style={{
+              textAlign: "center",
+            }}
+          >
+            {row.supportedAt}
+          </TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+            <Collapse in={open} timeout="auto" unmountOnExit>
+              <Box
+                sx={{
+                  margin: 3,
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 3,
+                }}
+              >
+                <Typography variant="body1">
+                  <strong
+                    style={{
+                      fontSize: "18px",
+                      padding: "25px",
+                    }}
+                  >
+                    선물 정보
+                  </strong>
+                  {row.item_name}
+                </Typography>
+
+                <Typography variant="body1">
+                  <strong
+                    style={{
+                      fontSize: "18px",
+                      padding: "25px",
+                    }}
+                  >
+                    연락처
+                  </strong>
+                  {row.deliveryPhoneNumber}
+                </Typography>
+                <Typography variant="body1">
+                  <strong
+                    style={{
+                      fontSize: "18px",
+                      padding: "25px",
+                    }}
+                  >
+                    배송지 정보
+                  </strong>
+                  {row.deliveryAddress} {row.deliveryDetailedAddress}
+                </Typography>
+                <Typography variant="body1">
+                  <strong
+                    style={{
+                      fontSize: "18px",
+                      padding: "25px",
+                    }}
+                  >
+                    배송 요청 사항
+                  </strong>
+                  {row.deliveryMessage}
+                </Typography>
+              </Box>
+            </Collapse>
+          </TableCell>
+        </TableRow>
+      </React.Fragment>
+    );
+  };
+
+// 후원자 정보 테이블 컴포넌트
+function SupporterTable() {
+  return (
+    <TableContainer component={Paper}>
+      <Table aria-label="collapsible table">
+        <TableHead>
+          <TableRow>
+            <TableCell />
+            <TableCell
+              style={{
+                textAlign: "center",
+                fontWeight: "bold",
+                fontSize: "16px",
+              }}
+            >
+              후원번호
+            </TableCell>
+            <TableCell
+              style={{
+                textAlign: "center",
+                fontWeight: "bold",
+                fontSize: "16px",
+              }}
+            >
+              주문자 이름
+            </TableCell>
+            <TableCell
+              style={{
+                textAlign: "center",
+                fontWeight: "bold",
+                fontSize: "16px",
+              }}
+            >
+              후원 날짜
+            </TableCell>
+
+            {/* <TableCell>선물 정보</TableCell>
+            <TableCell>연락처</TableCell>
+            <TableCell>배송지 정보</TableCell>
+            <TableCell>배송 요청 사항</TableCell> */}
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {mockSupporterData.map((row) => (
+            <Row key={row.deliveryId} row={row} />
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
+}
+
+export default function MyProjectDetails({setMyprojectClick}) {
   const { projectId } = useParams(); // URL에서 projectId 추출
   const [projectData, setProjectData] = useState(null); // 프로젝트 정보 상태
   const [supportStat, setSupportStat] = useState(null); // 후원 통계 상태
@@ -228,12 +422,14 @@ const MyProjectDetail = ({setMyprojectClick}) => {
       >
         <ArrowBackIcon fontSize="large" />
       </IconButton>
+
       <Typography
         variant="h4"
         sx={{ fontWeight: "bold", marginBottom: "20px" }}
       >
         프로젝트 진행률 확인
       </Typography>
+
       <div style={{ padding: "20px" }}>
         <div style={{ marginBottom: "20px" }}>
           <Typography variant="category">{category}</Typography>
@@ -243,6 +439,7 @@ const MyProjectDetail = ({setMyprojectClick}) => {
           <Typography variant="body2">{description}</Typography>
         </div>
       </div>
+
       <InfoSection>
         {/* 이미지 섹션 */}
         <ThumbnailContainer>
@@ -354,7 +551,8 @@ const MyProjectDetail = ({setMyprojectClick}) => {
           </Box>
         </ProgressSection>
       </InfoSection>
-      {/* 탭 섹션 */}
+
+      {/* Tabs Section */}
       <Tabs
         value={tabIndex}
         onChange={handleTabChange}
@@ -371,91 +569,78 @@ const MyProjectDetail = ({setMyprojectClick}) => {
         <Tab label="후원자 조회" />
       </Tabs>
       <br />
-      <div style={{ fontSize: "20px" }}>
-        시작일:{startDate} | 마감일:{endDate}
-      </div>
-      {/* 후원 통계 정보 */}
+
+      {/* 후원 통계 */}
       {tabIndex === 0 && (
-        <DashboardSection
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            padding: "20px",
-            borderRadius: "10px",
-            backgroundColor: "white",
-            width: "1000px",
-            marginTop: "20px",
-          }}
-        >
-          <Typography
-            variant="h5"
-            sx={{
-              marginBottom: "20px",
-              fontWeight: "bold",
-              marginRight: "-150px",
+        <>
+          <div style={{ fontSize: "20px" }}>
+            시작일: {startDate} | 마감일: {endDate}
+          </div>
+
+          <DashboardSection
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              padding: "20px",
+              borderRadius: "10px",
+              backgroundColor: "white",
+              width: "1000px",
+              marginTop: "20px",
             }}
           >
-            {/* 후원 통계 */}
-          </Typography>
-          <Typography>
-            <span style={{ color: "red", fontSize: "18px" }}>
-              {" "}
-              총 후원금액{" "}
-            </span>{" "}
-            <br />
-            <span style={{ color: "black", fontSize: "24px" }}>
-              {" "}
-              {supportStat.totalAmount.toLocaleString()}원{" "}
-            </span>{" "}
-            <br />
-          </Typography>
-          <Typography>
-            <span style={{ color: "red", fontSize: "18px" }}> 달성률 </span>{" "}
-            <br />
-            <span style={{ color: "black", fontSize: "24px" }}>
-              {" "}
-              {supportStat.percentage}%{" "}
-            </span>{" "}
-            <br />
-          </Typography>
+            <Typography
+              variant="h5"
+              sx={{
+                marginBottom: "20px",
+                fontWeight: "bold",
+                marginRight: "-150px",
+              }}
+            >
+              {/* 후원 통계 */}
+            </Typography>
+            <Typography>
+              <span style={{ color: "red", fontSize: "18px" }}>
+                총 후원금액
+              </span>
+              <br />
+              <span style={{ color: "black", fontSize: "24px" }}>
+                {supportStat.totalAmount.toLocaleString()}원
+              </span>
+              <br />
+            </Typography>
+            <Typography>
+              <span style={{ color: "red", fontSize: "18px" }}>달성률</span>
+              <br />
+              <span style={{ color: "black", fontSize: "24px" }}>
+                {supportStat.percentage}%
+              </span>
+              <br />
+            </Typography>
 
-          <Typography>
-            <span style={{ color: "red", fontSize: "18px" }}> 후원자 수 </span>{" "}
-            <br />
-            <span style={{ color: "black", fontSize: "24px" }}>
-              {" "}
-              {supportStat.supporters}명{" "}
-            </span>{" "}
-            <br />
-          </Typography>
+            <Typography>
+              <span style={{ color: "red", fontSize: "18px" }}>후원자 수</span>
+              <br />
+              <span style={{ color: "black", fontSize: "24px" }}>
+                {supportStat.supporters}명
+              </span>
+              <br />
+            </Typography>
 
-          <Typography>
-            <span style={{ color: "red", fontSize: "18px" }}> 남은 기간 </span>{" "}
-            <br />
-            <span style={{ color: "black", fontSize: "24px" }}>
-              {" "}
-              {remainingDays}일{" "}
-            </span>{" "}
-            <br />
-          </Typography>
-        </DashboardSection>
+            <Typography>
+              <span style={{ color: "red", fontSize: "18px" }}>남은 기간</span>
+              <br />
+              <span style={{ color: "black", fontSize: "24px" }}>
+                {supportStat.remainingDays}일
+              </span>
+              <br />
+            </Typography>
+          </DashboardSection>
+        </>
       )}
-      {/* 후원자 조회 */}
-      {tabIndex === 1 && (
-        <DashboardSection>
-          <Typography
-            variant="h5"
-            sx={{ marginBottom: "20px", fontWeight: "bold" }}
-          >
-            후원자 조회
-          </Typography>
-          {/* 후원자 조회 관련 데이터 표시 */}
-          <Typography>후원자 데이터가 여기에 표시됩니다.</Typography>
-        </DashboardSection>
-      )}
+
+      {/* 후원자 조회 정보 */}
+      {tabIndex === 1 && <SupporterTable />}
     </DetailContainer>
   );
-};
-
-export default MyProjectDetail;
+}

@@ -134,6 +134,65 @@ const CollaborationDetail = ({ collabId, filter, setCollabClick }) => {
   return (
     <>
       <Paper style={{ margin: "100px auto", padding: " 20px" }}>
+        <TextField
+          id="standard-basic"
+          label="Standard"
+          variant="standard"
+          InputProps={{
+            readOnly: true, // 입력 불가능 설정
+          }}
+          defaultValue={projectDetail.title} // 기본 내용 추가
+          fullWidth
+        />
+
+<Box>
+
+<TextField
+          id="standard-basic"
+          label="Standard"
+          variant="standard"
+          InputProps={{
+            readOnly: true, // 입력 불가능 설정
+          }}
+          defaultValue={projectDetail.collaborationDTO.name} // 기본 내용 추가
+          fullWidth
+        />
+
+</Box>
+<Typography>이름: </Typography>
+<TextField
+          id="standard-basic"
+          label="Standard"
+          variant="standard"
+          InputProps={{
+            readOnly: true, // 입력 불가능 설정
+          }}
+          defaultValue={projectDetail.title} // 기본 내용 추가
+          fullWidth
+        />
+
+<TextField
+          id="standard-basic"
+          label="Standard"
+          variant="standard"
+          InputProps={{
+            readOnly: true, // 입력 불가능 설정
+          }}
+          defaultValue={projectDetail.title} // 기본 내용 추가
+          fullWidth
+        />
+
+<TextField
+          id="standard-basic"
+          label="Standard"
+          variant="standard"
+          InputProps={{
+            readOnly: true, // 입력 불가능 설정
+          }}
+          defaultValue={projectDetail.title} // 기본 내용 추가
+          fullWidth
+        />
+
         <Typography variant="h5">{projectDetail.title}</Typography>
         <Typography>이름: {projectDetail.collaborationDTO.name}</Typography>
         <Typography>휴대폰 번호: {projectDetail.phoneNumber}</Typography>
@@ -154,8 +213,7 @@ const CollaborationDetail = ({ collabId, filter, setCollabClick }) => {
                 </ul>
               </div>
             )}
-
-          </Box>
+        </Box>
 
         <Box
           marginTop="20px"
@@ -196,23 +254,12 @@ const CollaborationDetail = ({ collabId, filter, setCollabClick }) => {
         </Box>
       </Paper>
 
-
-
-
-
-
-
-
-
-
-
       {/* 모달 (Dialog) */}
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>정말로 {currentAction}하시겠습니까?</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            확인을 누르면 {currentAction}됩니다. 
-            정말로 {currentAction}{" "}
+            확인을 누르면 {currentAction}됩니다. 정말로 {currentAction}{" "}
             하시겠습니까?
           </DialogContentText>
         </DialogContent>

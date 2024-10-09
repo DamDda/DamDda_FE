@@ -35,6 +35,7 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
+import Preview from "./preview/Preview";
 import "./Register.css";
 import "../../styles/style.css";
 import { Header } from "../../layout/Header";
@@ -265,6 +266,11 @@ const Register = () => {
   const [reqDocsUrl, setReqDocsUrl] = useState([]); // 필수 서류
   const [certDocsUrl, setCertDocsUrl] = useState([]); // 인증 서류
   // const [docsUrl, setDocsUrl] = useState([]); // 태그 목록
+
+  const [openPreview, setOpenPreview] = useState(false);
+
+  const handleOpen = () => setOpenPreview(true);
+  const handleClose = () => setOpenPreview(false);
 
   const [tags, setTags] = useState([]); // 태그 목록
   //const [selectedImage, setSelectedImage] = useState([]);
@@ -845,11 +851,33 @@ const Register = () => {
                     <Button
                       className="button"
                       variant="contained"
+                      onClick={handleOpen}
                       style={{ backgroundColor: "#7a82ed" }}
                     >
                       미리보기
                     </Button>
                   </div>
+
+                  {/* 미리보기 모달 창 */}
+                  <Modal open={openPreview} onClose={handleClose}>
+                    <div
+                      style={{
+                        padding: "20px",
+                        background: "white",
+                        margin: "auto",
+                        width: "80%",
+                        maxWidth: "600px",
+                        borderRadius: "10px",
+                        top: "20%",
+                        position: "absolute",
+                      }}
+                    >
+                      <Preview />
+                      <Button variant="contained" onClick={handleClose}>
+                        닫기
+                      </Button>
+                    </div>
+                  </Modal>
                 </div>
               </div>
             </div>

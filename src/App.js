@@ -16,7 +16,6 @@ import Join from "./components/pages/member/Join";
 import Detail from "./components/pages/detail/Detail";
 import Register from "./components/pages/register/Register";
 import ErrorPage from "./components/pages/error/ErrorPage";
-import Preview from "./components/pages/preview/Preview";
 
 /////////////////////////////혜원////////////////////////////////////
 import MyPage from "./components/pages/mypage/Mypage";
@@ -47,7 +46,6 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/error" element={<ErrorPage />} />
           <Route path="/projectDetail" element={<ProjectDetail />} />
-          <Route path="/preview" element={<Preview />} />
           {/* /////////////////////////////혜원/////////////////////////////////// */}
           <Route path="/mypage" element={<MyPage />} />
           {/* /////////////////////////////주현/////////////////////////////////// */}

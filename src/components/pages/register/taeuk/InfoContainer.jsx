@@ -12,7 +12,7 @@ import Tooltip from "@mui/material/Tooltip";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
 import { DesktopDatePicker } from "@mui/x-date-pickers";
-import { DndContext, closestCenter } from "@dnd-kit/core";
+import { DndContext, DragOverlay, closestCenter } from "@dnd-kit/core";
 import {
   arrayMove,
   SortableContext,
@@ -21,6 +21,10 @@ import {
 import "../Register.css";
 import "../../../styles/style.css";
 import SortableItem from "./SortableItem";
+
+import { CSS } from "@dnd-kit/utilities";
+import { useSortable } from "@dnd-kit/sortable";
+import { Close as CloseIcon } from "@mui/icons-material";
 
 const InfoContainer = (props) => {
   const {
@@ -33,7 +37,7 @@ const InfoContainer = (props) => {
   } = props;
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [imageTitles, setImageTitles] = useState([]);
+  const [activeId, setActiveId] = useState(null);
 
   const handleChange = (event) => {
     setFormData({
@@ -54,22 +58,12 @@ const InfoContainer = (props) => {
       prev === productImages.length - 1 ? 0 : prev + 1
     );
   };
-  // 이미지 순서 변경 처리 함수
-  const handleDragEnd = (event) => {
-    const { active, over } = event;
-    if (active.id !== over.id) {
-      const oldIndex = productImages.indexOf(active.id);
-      const newIndex = productImages.indexOf(over.id);
-      setProductImages((items) => arrayMove(items, oldIndex, newIndex));
-      setImageTitles((titles) => arrayMove(titles, oldIndex, newIndex));
-    }
-  };
+
   // 이미지 삭제 함수
   const handleRemoveImage = (index) => {
+    console.log("DELETE HERE ! ", index);
     const newImages = productImages.filter((_, i) => i !== index); // 클릭된 이미지 제거
-    const newTitles = imageTitles.filter((_, i) => i !== index); // 해당 이미지의 제목도 제거
     setProductImages(newImages); // 이미지 배열 업데이트
-    setImageTitles(newTitles); // 제목 배열 업데이트
     if (currentImageIndex >= index && currentImageIndex > 0) {
       setCurrentImageIndex((prev) => prev - 1); // 삭제된 이미지가 미리보기 중이면 인덱스 조정
     }
@@ -87,14 +81,8 @@ const InfoContainer = (props) => {
         },
       ])
     );
-
-    // deprecated
-    // const url = files.map((file) => URL.createObjectURL(file));
-    // const title = files.map((file) => file.name); // 파일 이름을 제목으로 사용
-
-    // setProductImagesUrl([...productImagesUrl, ...urls]);
-    // setImageTitles([...imageTitles, ...titles]);
   };
+
   const handleKeyDown = (event) => {
     if (event.key === "Enter" && formData.tags.trim() !== "") {
       event.preventDefault(); // 기본 Enter 동작 방지
@@ -105,6 +93,27 @@ const InfoContainer = (props) => {
         setTags([...tags, formData.tags.trim()]); // 새로운 태그 추가
         setFormData({ ...formData, tags: "" }); // 태그 입력창 초기화
       }
+    }
+  };
+
+  const handleDragStart = (event) => {
+    setActiveId(event.active.id); // 드래그 시작 시 activeId 설정
+  };
+
+  // 이미지 순서 변경 처리 함수
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+    setActiveId(null); // 드래그 종료 시 activeId 초기화
+    if (active.id !== over.id) {
+      // const oldIndex = productImages.indexOf(active.id);
+      // const newIndex = productImages.indexOf(over.id);
+
+      const oldIndex = productImages.findIndex(
+        (item) => item.url === active.id
+      );
+      const newIndex = productImages.findIndex((item) => item.url === over.id);
+
+      setProductImages((items) => arrayMove(items, oldIndex, newIndex));
     }
   };
 
@@ -160,7 +169,11 @@ const InfoContainer = (props) => {
               {productImages.length > 0 && (
                 <>
                   <img
-                    src={productImages[currentImageIndex].url}
+                    src={
+                      productImages[currentImageIndex].file === null
+                        ? `http://localhost:9000/${productImages[currentImageIndex].url}`
+                        : productImages[currentImageIndex].url
+                    }
                     alt={`미리보기 ${currentImageIndex}`}
                     style={{
                       width: "400px",
@@ -206,6 +219,7 @@ const InfoContainer = (props) => {
                 }}
               >
                 <DndContext
+                  onDragStart={handleDragStart}
                   collisionDetection={closestCenter}
                   onDragEnd={handleDragEnd}
                 >
@@ -225,11 +239,31 @@ const InfoContainer = (props) => {
                           key={image.url}
                           url={image.url}
                           index={index}
-                          title={imageTitles[index]}
+                          title={image.title}
                           onRemove={handleRemoveImage}
                           onClick={() => setCurrentImageIndex(index)} // 목록에서 클릭한 이미지로 변경
                         />
                       ))}
+                      {/* DragOverlay로 잔상 처리 */}
+                      <DragOverlay>
+                        {activeId ? (
+                          <div style={{ width: "60px", height: "60px" }}>
+                            <img
+                              src={
+                                productImages.find(
+                                  (item) => item.url === activeId
+                                ).url
+                              }
+                              alt="Drag Image"
+                              style={{
+                                width: "100%",
+                                height: "100%",
+                                objectFit: "cover",
+                              }}
+                            />
+                          </div>
+                        ) : null}
+                      </DragOverlay>
                     </div>
                   </SortableContext>
                 </DndContext>

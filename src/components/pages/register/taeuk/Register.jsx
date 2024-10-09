@@ -9,13 +9,13 @@ import "../Register.css";
 import "../../../styles/style.css";
 import { Header } from "../../../layout/Header";
 import { Footer } from "../../../layout/Footer";
-import DetailPage from "../detailPage";
 import Package from "../package";
-import ProjectDocument from "../projectDocument";
 
 // taeuk
 import InfoContainer from "./InfoContainer";
 import AIModal from "./AIModal";
+import DetailPage from "./DetailPage";
+import ProjectDocument from "./ProjectDocument";
 
 const Register = () => {
   ////////////////////////////
@@ -42,16 +42,8 @@ const Register = () => {
   const [descriptionDetail, setDescriptionDetail] = useState(""); // 상세설명
 
   const [productImages, setProductImages] = useState([]); // 상품이미지
-  const [productImagesUrl, setProductImagesUrl] = useState([]); // 상품이미지
   const [descriptionImages, setDescriptionImages] = useState([]); // 설명이미지
-  const [descriptionImagesUrl, setDescriptionImagesUrl] = useState([]); // 설명이미지
-
   const [docs, setDocs] = useState([]);
-  const [reqDocs, setReqDocs] = useState([]); // 필수 서류
-  const [reqDocsUrl, setReqDocsUrl] = useState([]); // 필수 서류
-  const [certDocs, setCertDocs] = useState([]); // 인증 서류
-  const [certDocsUrl, setCertDocsUrl] = useState([]); // 인증 서류
-
   const [aiModalOpen, setAiModalOpen] = useState(false);
 
   //////////////////////
@@ -60,20 +52,21 @@ const Register = () => {
 
   // fetch writing data from server
   const fetchWriteData = async () => {
-    try {
-      const response = await axios.get(
-        `http://localhost:9000/api/projects/write/${projectId}`
+    const response = await axios
+      .get(`http://localhost:9000/api/projects/write/${projectId}`)
+      .then((response) => response)
+      .catch((error) =>
+        console.error("프로젝트 데이터를 가져오는 중 오류 발생:", error)
       );
-
-      setWriteData(response.data || []);
-      console.log(response.data);
-    } catch (error) {
-      console.error("프로젝트 데이터를 가져오는 중 오류 발생:", error);
-    }
+    setWriteData(response.data || []);
+    console.log("WRITE DATA : ", response.data);
   };
 
   useEffect(() => {
     fetchWriteData();
+  }, []);
+
+  useEffect(() => {
     setFormData({
       category_id: writeData.category,
       subcategory: "",
@@ -85,32 +78,39 @@ const Register = () => {
       delivery_date: null,
       // tags: writeData.tags,
     });
-
+    writeData.tags && setTags(writeData.tags);
     writeData.descriptionDetail &&
       setDescriptionDetail(writeData.descriptionDetail);
-    writeData.productImages && setProductImagesUrl(writeData.productImages);
+    writeData.productImages &&
+      setProductImages([
+        ...writeData.productImages.map((_url) => ({
+          file: null,
+          url: _url,
+          title: _url.split("/").pop(),
+        })),
+      ]);
     writeData.descriptionImages &&
-      setDescriptionImagesUrl(writeData.descriptionImages);
-    writeData.reqDocs && setReqDocsUrl(writeData.reqDocs);
-    writeData.certDocs && setCertDocsUrl(writeData.certDocs);
-
-    writeData.productImages && setProductImages(writeData.productImages);
-    writeData.descriptionImages &&
-      setDescriptionImages(writeData.descriptionImages);
-    writeData.reqDocs && setReqDocs(writeData.reqDocs);
-    writeData.certDocs && setCertDocs(writeData.certDocs);
-    writeData.tags &&
-      setTags(writeData.tags.slice(0, Math.ceil(writeData.tags.length / 2)));
-  }, []);
+      setDescriptionImages([
+        ...writeData.descriptionImages.map((_url) => ({
+          file: null,
+          url: _url,
+          title: _url.split("/").pop(),
+        })),
+      ]);
+    writeData.docs &&
+      setDocs([
+        ...writeData.docs.map((_url) => ({
+          file: null,
+          url: _url,
+          title: _url.split("/").pop().split("_").pop(),
+        })),
+      ]);
+  }, [writeData]);
 
   const scrollToSection = (id) => {
     const target = document.getElementById(id);
     target.scrollIntoView({ behavior: "smooth" });
   };
-
-  useEffect(() => {
-    setDocs([...reqDocs, ...certDocs]);
-  }, [reqDocs, certDocs]);
 
   /////////////////////////////
   // Request of project save //
@@ -149,38 +149,97 @@ const Register = () => {
     );
 
     // productImages 파일 추가
-    const productMetaDatas = [];
+    const productImagesMeta = [];
+    const updateProductImages = [];
     productImages.forEach((image, index) => {
-      projectFormData.append(`productImages`, image.file);
-      productMetaDatas.push({
-        url: "",
-        ord: index + 1,
-      });
+      if (image.file !== null) {
+        projectFormData.append(`productImages`, image.file);
+        productImagesMeta.push({
+          url: "",
+          ord: index + 1,
+        });
+      } else {
+        updateProductImages.push({
+          url: image.url,
+          ord: index + 1,
+        });
+      }
     });
-    console.log(productMetaDatas);
     projectFormData.append(
       `productImagesMeta`,
-      new Blob([JSON.stringify(productMetaDatas)], {
+      new Blob([JSON.stringify(productImagesMeta)], {
+        type: "application/json",
+      })
+    );
+    projectFormData.append(
+      `updateProductImages`,
+      new Blob([JSON.stringify(updateProductImages)], {
+        type: "application/json",
+      })
+    );
+
+    // descriptionImages 파일 추가
+    const descriptionImagesMeta = [];
+    const updateDescriptionImages = [];
+    descriptionImages.forEach((image, index) => {
+      if (image.file !== null) {
+        projectFormData.append(`descriptionImages`, image.file);
+        descriptionImagesMeta.push({
+          url: "",
+          ord: index + 1,
+        });
+      } else {
+        updateDescriptionImages.push({
+          url: image.url,
+          ord: index + 1,
+        });
+      }
+    });
+    projectFormData.append(
+      `descriptionImagesMeta`,
+      new Blob([JSON.stringify(descriptionImagesMeta)], {
+        type: "application/json",
+      })
+    );
+    projectFormData.append(
+      `updateDescriptionImages`,
+      new Blob([JSON.stringify(updateDescriptionImages)], {
+        type: "application/json",
+      })
+    );
+
+    // descriptionImages 파일 추가
+    const docsMeta = [];
+    const updateDocs = [];
+    docs.forEach((doc, index) => {
+      if (doc.file !== null) {
+        projectFormData.append(`docs`, doc.file);
+        docsMeta.push({
+          url: "",
+          ord: index + 1,
+        });
+      } else {
+        updateDocs.push({
+          url: doc.url,
+          ord: index + 1,
+        });
+      }
+    });
+    projectFormData.append(
+      `docsMeta`,
+      new Blob([JSON.stringify(docsMeta)], {
+        type: "application/json",
+      })
+    );
+    projectFormData.append(
+      `updateDocs`,
+      new Blob([JSON.stringify(updateDocs)], {
         type: "application/json",
       })
     );
 
     // checking
-    for (let [key, value] of projectFormData.entries()) {
-      console.log(`${key} : ${value}`);
-    }
-
-    /*
-    // descriptionImages 파일 추가
-    descriptionImages.forEach((file, index) => {
-      projectFormData.append(`descriptionImages`, file);
-    });
-
-    // docs 파일 추가
-    docs.forEach((file, index) => {
-      projectFormData.append(`docs`, file);
-    });
-    */
+    console.log(docs);
     // 추가적으로 필요한 텍스트 필드 데이터
     projectFormData.append("submit", submit); // "저장" 혹은 "제출"
 
@@ -226,21 +285,25 @@ const Register = () => {
               </div>
             </div>
 
-            <InfoContainer
-              tags={tags}
-              setTags={setTags}
-              formData={formData}
-              setFormData={setFormData}
-              productImages={productImages}
-              setProductImages={setProductImages}
-            />
+            {writeData ? (
+              <InfoContainer
+                tags={tags}
+                setTags={setTags}
+                formData={formData}
+                setFormData={setFormData}
+                productImages={productImages}
+                setProductImages={setProductImages}
+              />
+            ) : (
+              <div>Now Loading...</div>
+            )}
 
-            <AIModal
+            {/*<AIModal
               aiModalOpen={aiModalOpen}
               closeAiModal={closeAiModal}
               formData={formData}
               setFormData={setFormData}
-            />
+            />*/}
           </div>
           <hr />
 
@@ -263,8 +326,8 @@ const Register = () => {
             <Typography variant="body1" style={{ marginTop: "10px" }}>
               <DetailPage
                 descriptionDetail={descriptionDetail}
-                descriptionImagesUrl={descriptionImagesUrl}
                 setDescriptionDetail={setDescriptionDetail}
+                descriptionImages={descriptionImages}
                 setDescriptionImages={setDescriptionImages}
               />
             </Typography>
@@ -315,10 +378,8 @@ const Register = () => {
             <hr />
             <Typography variant="body1" style={{ marginTop: "10px" }}>
               <ProjectDocument
-                reqDocsUrl={reqDocsUrl}
-                certDocsUrl={certDocsUrl}
-                setReqDocs={setReqDocs}
-                setCertDocs={setCertDocs}
+                docs={docs}
+                setDocs={setDocs}
                 saveProject={saveProject}
                 projectId={projectId}
               />

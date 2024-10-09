@@ -3,8 +3,14 @@ import { useSortable } from "@dnd-kit/sortable";
 import { IconButton } from "@mui/material";
 import { Close as CloseIcon } from "@mui/icons-material";
 
+// base import
+
+import "../Register.css";
+import "../../../styles/style.css";
+
 // 드래그 앤 드롭 가능한 개별 이미지 아이템
-function SortableItem({ url, index, title, onRemove }) {
+const SortableItem = (props) => {
+  const { url, index, title, onRemove } = props;
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: url });
 
@@ -21,16 +27,19 @@ function SortableItem({ url, index, title, onRemove }) {
   };
 
   return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      <img
-        src={url}
-        alt={`썸네일 ${index}`}
-        style={{
-          width: "100%",
-          height: "100%",
-        }}
-        onClick={() => alert(`이미지 ${index + 1} 클릭`)}
-      />
+    <div ref={setNodeRef} style={style}>
+      <div {...attributes} {...listeners}>
+        <img
+          src={url}
+          alt={`썸네일 ${index}`}
+          style={{
+            width: "100%",
+            height: "100%",
+          }}
+          onClick={() => alert(`이미지 ${index + 1} 클릭`)}
+        />
+      </div>
+
       {index === 0 && (
         <div
           className="representative-tag"
@@ -52,6 +61,9 @@ function SortableItem({ url, index, title, onRemove }) {
       <div style={{ fontSize: "10px", textAlign: "center" }}>
         {title}
         <IconButton
+          // onMouseDown={(e) => {
+          //   e.preventDefault();
+          // }}
           onClick={(e) => {
             e.stopPropagation(); // 클릭 이벤트 버블링 방지
             onRemove(index); // 삭제 버튼 클릭 시 이미지 삭제
@@ -69,6 +81,6 @@ function SortableItem({ url, index, title, onRemove }) {
       </div>
     </div>
   );
-}
+};
 
 export default SortableItem;

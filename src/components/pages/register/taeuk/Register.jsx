@@ -188,13 +188,20 @@ const Register = () => {
       new Blob([JSON.stringify(projectDetailDTO)], { type: "application/json" })
     );
 
-    console.log("Product Images : ", productImages);
-
     // productImages 파일 추가
     productImages.forEach((image, index) => {
-      projectFormData.append(`productImages`, { ...image, ord: index + 1 });
+      projectFormData.append(`productImages[${index}].file`, image.file);
+      projectFormData.append(`productImages[${index}].ord`, index + 1);
     });
 
+    // checking
+    console.log("project info   : ", formData);
+    console.log("Product Images : ", productImages);
+    for (let [key, value] of projectFormData.entries()) {
+      console.log(`${key} : ${value}`);
+    }
+
+    /*
     // descriptionImages 파일 추가
     descriptionImages.forEach((file, index) => {
       projectFormData.append(`descriptionImages`, file);
@@ -204,7 +211,7 @@ const Register = () => {
     docs.forEach((file, index) => {
       projectFormData.append(`docs`, file);
     });
-
+    */
     // 추가적으로 필요한 텍스트 필드 데이터
     projectFormData.append("submit", submit); // "저장" 혹은 "제출"
 

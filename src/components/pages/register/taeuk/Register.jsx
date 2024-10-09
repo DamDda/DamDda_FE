@@ -99,49 +99,9 @@ const Register = () => {
       setDescriptionImages(writeData.descriptionImages);
     writeData.reqDocs && setReqDocs(writeData.reqDocs);
     writeData.certDocs && setCertDocs(writeData.certDocs);
-
-    convertUrlsToFileObjects();
-
     writeData.tags &&
       setTags(writeData.tags.slice(0, Math.ceil(writeData.tags.length / 2)));
   }, []);
-
-  // 비동기 파일 변환 작업 처리
-  const convertUrlsToFileObjects = async () => {
-    console.log("productImages : " + productImages);
-
-    const productFileObjects = await Promise.all(
-      (productImages || []).map(createFileLikeObjectFromUrl)
-    );
-
-    console.log("descriptionImages : " + descriptionImages);
-    const descriptionFileObjects = await Promise.all(
-      (descriptionImages || []).map(createFileLikeObjectFromUrl)
-    );
-
-    console.log("reqDocs : " + reqDocs);
-    const reqDocFileObjects = await Promise.all(
-      (reqDocs || []).map(createFileLikeObjectFromUrl)
-    );
-
-    console.log("certDocs : " + certDocs);
-    const certDocFileObjects = await Promise.all(
-      (certDocs || []).map(createFileLikeObjectFromUrl)
-    );
-
-    // 상태 업데이트
-    setProductImages(productFileObjects);
-    setDescriptionImages(descriptionFileObjects);
-    setReqDocs(reqDocFileObjects);
-    setCertDocs(certDocFileObjects);
-  };
-
-  const createFileLikeObjectFromUrl = async (url) => {
-    const fileName = url.split("/").pop();
-    const response = await fetch(url);
-    const blob = await response.blob();
-    return new File([blob], fileName, { type: blob.type });
-  };
 
   const scrollToSection = (id) => {
     const target = document.getElementById(id);
@@ -189,14 +149,23 @@ const Register = () => {
     );
 
     // productImages 파일 추가
+    const productMetaDatas = [];
     productImages.forEach((image, index) => {
-      projectFormData.append(`productImages[${index}].file`, image.file);
-      projectFormData.append(`productImages[${index}].ord`, index + 1);
+      projectFormData.append(`productImages`, image.file);
+      productMetaDatas.push({
+        url: "",
+        ord: index + 1,
+      });
     });
+    console.log(productMetaDatas);
+    projectFormData.append(
+      `productImagesMeta`,
+      new Blob([JSON.stringify(productMetaDatas)], {
+        type: "application/json",
+      })
+    );
 
     // checking
-    console.log("project info   : ", formData);
-    console.log("Product Images : ", productImages);
     for (let [key, value] of projectFormData.entries()) {
       console.log(`${key} : ${value}`);
     }
@@ -216,16 +185,14 @@ const Register = () => {
     projectFormData.append("submit", submit); // "저장" 혹은 "제출"
 
     try {
-      const response = await axios.put(
-        `http://localhost:9000/api/projects/register/${projectId}`,
-        projectFormData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-          withCredentials: true, // 쿠키 전송 (필요한 경우)
-        }
-      );
+      const response = await axios({
+        method: "PUT",
+        url: `http://localhost:9000/api/projects/register/${projectId}`,
+        data: projectFormData,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       console.log("프로젝트 업데이트 성공:", response.data);
       alert("저장이 완료되었습니다."); // 저장 완료 메시지
     } catch (error) {

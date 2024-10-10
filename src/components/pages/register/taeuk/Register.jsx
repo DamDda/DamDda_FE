@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Button, Typography, Tabs, Tab } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -22,6 +22,7 @@ const Register = () => {
   // DEFINE STATE VARIABLES //
   ////////////////////////////
   const location = useLocation();
+  const navigate = useNavigate();
   const query = new URLSearchParams(location.search);
   const [projectId, setProjectId] = useState(query.get("projectId") || 1);
   const [writeData, setWriteData] = useState([]);
@@ -48,7 +49,31 @@ const Register = () => {
   //////////////////////
   // DEFINE CALLBACKS //
   //////////////////////
+  // --------AI용 요청 정보 저장 및 동기화 시작--------
 
+  // AI 요청에 필요한 데이터를 저장하는 상태 변수
+  const [aiRequestData, setAiRequestData] = useState({
+    title: formData.title || "", // formData에서 제목 가져오기
+    description: formData.description || "", // formData에서 설명 가져오기
+    tags: tags || [], // 태그 목록 가져오기
+    category: formData.category_id || "", // 카테고리 ID 가져오기
+  });
+
+  /**
+   * formData와 tags가 변경될 때마다 AI 요청 데이터를 최신 상태로 동기화
+   * 의존성 배열에 포함된 값이 변경될 때마다 useEffect가 호출됨
+   */
+  useEffect(() => {
+    setAiRequestData({
+      title: formData.title, // 최신 제목
+      description: formData.description, // 최신 설명
+      tags: tags, // 최신 태그 목록
+      category: formData.category_id, // 최신 카테고리 ID
+    });
+  }, [formData.title, formData.description, formData.category_id, tags]);
+  // formData의 title, description, category_id 또는 tags가 변경될 때마다 실행
+
+  // --------AI용 요청 정보 저장 및 동기화 종료--------
   // fetch writing data from server
   const fetchWriteData = async () => {
     const response = await axios
@@ -257,7 +282,12 @@ const Register = () => {
       console.error("프로젝트 업데이트 중 오류 발생:", error);
       alert("저장을 성공하지 못했습니다."); // 저장 오류 메시지
     }
+
+    if (submit === "제출") {
+      navigate("/");
+    }
   };
+
   return (
     <>
       <Header />
@@ -314,6 +344,7 @@ const Register = () => {
                 setDescriptionDetail={setDescriptionDetail}
                 descriptionImages={descriptionImages}
                 setDescriptionImages={setDescriptionImages}
+                aiRequestData={aiRequestData} // AI용 정보 전달 송신
               />
             </Typography>
           </div>

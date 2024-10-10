@@ -20,6 +20,7 @@ import styled from "styled-components";
 import Write from "../write";
 import "../Register.css";
 import "../../../styles/style.css";
+import AiModal from "../AiModal/AiModal";
 
 //상세설명 페이지
 const DetailPage = (props) => {
@@ -28,44 +29,52 @@ const DetailPage = (props) => {
     descriptionDetail,
     setDescriptionDetail,
     setDescriptionImages,
+    aiRequestData,
   } = props;
-  const [aiModalOpen, setAiModalOpen] = useState(false); // AI 도움받기 모달 상태
   const [confirmationOpen, setConfirmationOpen] = useState(false); // 설명 등록 확인 모달 상태
-  const [imagePreviews, setImagePreviews] = useState([]); // 이미지 미리보기 상태
   const [snackbarOpen, setSnackbarOpen] = useState(false); // 스낵바 상태 (알림)
   const [aiText, setAiText] = useState("AI가 생성한 설명 내용"); // AI 도움받기 내용
+
+  // --------생성형 AI 모달 관련 상태 및 함수 시작--------
+
+  const [aiModalOpen, setAiModalOpen] = useState(false);
+  // AI 모달의 열림/닫힘 상태를 관리하는 상태 변수
+
+  /**
+   * AI 모달을 닫는 함수
+   * 모달을 닫는 작업을 수행할 때 호출됩니다.
+   */
+  const closeAiModal = () => {
+    setAiModalOpen(false); // 모달을 닫기 위해 상태를 false로 변경
+  };
+
+  /**
+   * AI가 생성한 설명을 formData에 저장하고 모달을 닫는 함수
+   * @param {string} aiGeneratedDescriptionDetail - AI가 생성한 프로젝트 설명
+   */
+  const confirmAiDescriptionDetailRegistration = (
+    aiGeneratedDescriptionDetail
+  ) => {
+    // formData의 description 필드를 AI가 생성한 설명으로 업데이트
+    setDescriptionDetail(aiGeneratedDescriptionDetail);
+
+    // 설명 등록 후 모달을 닫음
+    closeAiModal();
+  };
+
+  // --------생성형 AI 모달 관련 상태 및 함수 종료--------
 
   // 입력 파일을 참조할 ref
   const inputRef = useRef(null);
 
-  // AI 도움받기 모달 열기
-  const openAiModal = () => {
-    setAiModalOpen(true);
-  };
-
-  // AI 도움받기 모달 닫기
-  const closeAiModal = () => {
-    setAiModalOpen(false);
-  };
-
-  // AI 도움받기 설명 등록 요청
-  const handleRegisterDescription = () => {
-    setConfirmationOpen(true);
-    closeAiModal();
-  };
-
-  // 설명을 AI에서 받은 텍스트로 설정
   const handleConfirmRegister = () => {
-    setDescriptionDetail(aiText);
     setConfirmationOpen(false);
     setSnackbarOpen(true);
   };
 
-  // 설명 등록 확인 모달 닫기
   const handleCloseConfirmation = () => {
     setConfirmationOpen(false);
   };
-
   // 스낵바 닫기
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
@@ -121,7 +130,7 @@ const DetailPage = (props) => {
               <Button
                 className="outlined-button"
                 variant="outlined"
-                onClick={openAiModal}
+                onClick={() => setAiModalOpen(true)}
               >
                 AI 도움받기
               </Button>
@@ -224,49 +233,15 @@ const DetailPage = (props) => {
         </div>
       </LocalizationProvider>
 
-      {/* AI 도움받기 모달 */}
-      <Modal open={aiModalOpen} onClose={closeAiModal}>
-        <div
-          style={{
-            padding: "20px",
-            backgroundColor: "#fff",
-            margin: "auto",
-            width: "750px",
-            marginTop: "100px",
-          }}
-        >
-          <h2>AI 도움받기</h2>
-          <TextField
-            fullWidth
-            multiline
-            rows={30}
-            value={aiText}
-            InputProps={{
-              readOnly: true,
-            }}
-            style={{ marginTop: "20px", width: "700px" }}
-          />
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              marginTop: "20px",
-            }}
-          >
-            <Button className="outlined-button" onClick={closeAiModal}>
-              닫기
-            </Button>
-            <Button
-              className="primary-button"
-              variant="contained"
-              style={{ marginLeft: "10px" }}
-              onClick={handleRegisterDescription}
-            >
-              상세설명으로 등록
-            </Button>
-          </div>
-        </div>
-      </Modal>
+      {/* 생성형 AI 도움받기 모달 */}
+      <AiModal
+        aiModalOpen={aiModalOpen}
+        closeAiModal={closeAiModal}
+        aiRequestData={aiRequestData}
+        confirmAiDescriptionDetailRegistration={
+          confirmAiDescriptionDetailRegistration
+        }
+      />
 
       {/* 등록 확인 모달 */}
       <Modal open={confirmationOpen} onClose={handleCloseConfirmation}>

@@ -14,7 +14,7 @@ import FindID from "./components/pages/member/FindID";
 import ResetPassword from "./components/pages/member/ResetPassword";
 import Join from "./components/pages/member/Join";
 import Detail from "./components/pages/detail/Detail";
-import Register from "./components/pages/register/taeuk/Register";
+import Register from "./components/pages/register/info/Register";
 import ErrorPage from "./components/pages/error/ErrorPage";
 
 /////////////////////////////혜원////////////////////////////////////

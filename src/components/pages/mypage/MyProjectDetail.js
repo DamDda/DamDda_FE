@@ -39,7 +39,7 @@ const mockProjectData = {
     delivery_date: 30,
     supporterCnt: 500,
     supporter_count: 100,
-    approval: -1,
+    approval: 1,
     rejectMessage: "내용부족",
     thumbnail_url: "https://via.placeholder.com/500",
   },

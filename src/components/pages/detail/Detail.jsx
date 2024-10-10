@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+
 import {
   Typography,
   LinearProgress,
@@ -668,7 +670,11 @@ const ProductCarousel = ({ productDetail }) => {
               <Tab label="Q&A" onClick={() => scrollToSection("qna")} />
             </Tabs>
             <Typography variant="body1" style={{ marginTop: "10px" }}>
-              <ProjectDetail descriptionDetail={productDetail.descriptionDetail} descriptionImages={productDetail.descriptionImages}/>
+              <ProjectDetail 
+              descriptionDetail={productDetail.descriptionDetail} 
+              descriptionImages={productDetail.descriptionImages}
+              projectId={productDetail.projectId}
+              projectTitle={productDetail.title}/>
             </Typography>
           </div>
 

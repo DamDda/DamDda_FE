@@ -7,8 +7,13 @@ import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import Home from './components/pages/mainpage/Main'; 
 import Payment from './components/pages/support/Payment';
 import OrderPage from './components/pages/support/OrderPage';
+import TossReady from './components/pages/support/TossReady';
+import TossResult from './components/pages/support/TossResult';
 import PaymentSuccess from "./components/pages/support/PaymentSuccess";
 import MyOrders from './components/pages/support/MyOrders';
+import PaymentFail from './components/pages/support/PaymentFail';
+import SupportingSearch from './components/pages/support/SupportingSearch';
+import ProjectStatistics from './components/pages/support/ProjectStatistics';
 /////////////////////////////남희////////////////////////////////////
 import YourPage from './components/layout/YourPage';
 import Login from './components/pages/member/Login';
@@ -41,6 +46,15 @@ function App() {
         <Route path="/yourpage" element={<YourPage />} />
         <Route path="/payment" element={<Payment />} />
         <Route path="/payment/success" element={<PaymentSuccess />} />
+        <Route path="/payment/fail" element={<PaymentFail />} />
+
+        <Route path="/TossReady" element={<TossReady />} />
+        <Route path="/TossResult" element={<TossResult />} />
+
+        <Route path="/SupportingSearch" element={<SupportingSearch />} />
+        <Route path="/ProjectStatistics" element={<ProjectStatistics />} />
+
+
       {/* /////////////////////////////남희/////////////////////////////////// */}
         <Route path="/login" element={<Login />} />
         <Route path="/find-id" element={<FindID />} />

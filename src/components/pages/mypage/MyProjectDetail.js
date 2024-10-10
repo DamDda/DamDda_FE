@@ -24,6 +24,7 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import StatusButton from "./StatusButton";
 // import { Row } from "react-bootstrap";
 import axios from "axios";
+
 import { useUser } from "../../../UserContext";
 
 // // 가짜 데이터 (실제 백엔드 구현 전까지 사용)
@@ -702,4 +703,7 @@ export default function MyProjectDetails({ projectId, setMyprojectClick }) {
       {tabIndex === 1 && <SupporterTable />}
     </DetailContainer>
   );
-}
+};
+
+export default MyProjectDetail;
+

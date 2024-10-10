@@ -705,5 +705,4 @@ export default function MyProjectDetails({ projectId, setMyprojectClick }) {
   );
 };
 
-export default MyProjectDetail;
 

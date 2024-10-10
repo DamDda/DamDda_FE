@@ -41,9 +41,7 @@ function App() {
       <Routes>
       {/* /////////////////////////////지영//////////////////////////////////// */}
         <Route path="/" element={<Home />} />  
-        <Route path="/order" element={<OrderPage />} />
         <Route path="/user/myorders/:userId" element={<MyOrders />} />
-        <Route path="/yourpage" element={<YourPage />} />
         <Route path="/payment" element={<Payment />} />
         <Route path="/payment/success" element={<PaymentSuccess />} />
         <Route path="/payment/fail" element={<PaymentFail />} />

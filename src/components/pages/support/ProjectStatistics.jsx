@@ -38,7 +38,7 @@ const fetchProjectStatistics = async (projectId) => {
 };
 
 useEffect(() => {
-  const memberId = 30 // JWT로 변경
+  const memberId = 8 // JWT로 변경
   fetchUserProjectId(memberId); // 사용자 프로젝트 ID 가져오기
 }, []); // 빈 배열을 전달하여 컴포넌트가 처음 렌더링될 때만 호출
 

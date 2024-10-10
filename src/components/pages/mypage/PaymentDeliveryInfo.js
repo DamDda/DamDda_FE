@@ -13,7 +13,7 @@ const PaymentDeliveryInfo = ({ project }) => {
   // 결제 취소 로직
   const handleCancelPayment = async () => {
     const supportingProject = project.supportingProject; // supportingProject 객체를 가져옴
-    alert("supportingProject ID: " + supportingProject.id); // 객체의 ID를 확인하기 위한 알림
+    alert("supportingProject ID: " + supportingProject.payment.paymentId); // 객체의 ID를 확인하기 위한 알림
 
     const updatedPaymentStatus = {
       supportingProject: supportingProject, // 해당 supportingProject 객체 전달
@@ -21,7 +21,7 @@ const PaymentDeliveryInfo = ({ project }) => {
     };
 
     try {
-      const response = await axios.put(`http://localhost:9000/order/${supportingProject.id}/cancel`, updatedPaymentStatus); // 객체를 JSON 바디로 전달
+      const response = await axios.put(`http://localhost:9000/order/${supportingProject.payment.paymentId}/cancel`, updatedPaymentStatus); // 객체를 JSON 바디로 전달
       if (response.status === 200) {
         // 성공적으로 결제가 취소됨
         alert("결제가 취소되었습니다.");

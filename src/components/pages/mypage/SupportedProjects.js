@@ -10,7 +10,7 @@ export default function SupportedProjects() {
   const [error, setError] = useState(null);
   const[order,setOrder]=useState(true);
   
-  const userId=1;// jwt 적용후에 바꿔야함
+  const userId=3;// jwt 적용후에 바꿔야함
 
 
   // 백엔드에서 후원한 프로젝트 목록을 가져오는 함수 (주석 처리)
@@ -35,6 +35,7 @@ export default function SupportedProjects() {
     <div className="supported-projects-container">
       <div className="projects-list">
         {projects.map((project, index) => (
+           console.log(project), // project 값을 콘솔에 출력
           <ProjectCard key={index} project={project} />
         ))}
       </div>

@@ -28,6 +28,7 @@ import { useLocation,useNavigate } from "react-router-dom";
 import Carousel from 'react-bootstrap/Carousel';
 import 'bootstrap/dist/css/bootstrap.min.css'; // 부트스트랩 CSS 로드
 import axios from "axios"; // axios를 사용하여 REST API 호출
+import { useUser } from "../../../UserContext";
 
 const ProductContainer = styled("div")({
   position: "relative",
@@ -86,7 +87,17 @@ const projectData = {
 
 
 const Detail = () => {
+
+  //const { user } = useUser();
   
+  const { user } = useUser();
+  // if(!isLogin){
+  //   console.log(user);
+  //   //setUser(prevUser => ({ ...prevUser, key: 0 }));
+  // }
+
+
+
   const {
     category,
     organizer_id, //진행자 닉네임
@@ -105,12 +116,13 @@ const Detail = () => {
 
   // 페이지네이션 요청을 보내는 함수
   const fetchProducts = () => {
+    console.log("dddddddddddddddddddd" + user.key)
     axios
       .get(
-        `http://${window.location.hostname}:9000/api/projects/${projectId}`,
+        `http://localhost:9000/api/projects/${projectId}`,
         {
           params: {
-            memberId:memberId,
+            memberId: user.key,
           },
         }
       )
@@ -193,7 +205,7 @@ const Detail = () => {
   //       `http://${window.location.hostname}:9000/api/projects/${projectId}`,
   //       {
   //         params: {
-  //           memberId: 1,
+  //           memberId: user.key,
   //         },
   //       }
   //     );
@@ -228,7 +240,7 @@ const Detail = () => {
   //       // liked가 true이면 DELETE 요청
   //       const response = await axios.delete(`http://localhost:9000/api/projects/like`, {
   //         params: {
-  //           memberId: memberId,
+  //           memberId: user.key,
   //           projectId: project.id,
   //         },
   //       });
@@ -237,7 +249,7 @@ const Detail = () => {
   //       // liked가 false이면 POST 요청
   //       const response = await axios.post(`http://localhost:9000/api/projects/like`, null, {
   //         params: {
-  //           memberId: memberId,
+  //           memberId: user.key,
   //           projectId: project.id,
   //         },
   //       });
@@ -258,9 +270,6 @@ const Detail = () => {
   //   }
   // };
 
-
-  const memberId = 3;//jwt 적용 후 바꿔야함
-
   const handleHeartClick = async (prev) => {
     const newHeartedStatus = !prev; // 하트 상태 반전
   
@@ -269,7 +278,7 @@ const Detail = () => {
         // 좋아요 취소 요청
         const response = await axios.delete(`http://localhost:9000/api/projects/like`, {
           params: {
-            memberId: memberId,
+            memberId: user.key,
             projectId: productDetail.id,
           },
         });
@@ -280,7 +289,7 @@ const Detail = () => {
         // 좋아요 추가 요청
         const response = await axios.post(`http://localhost:9000/api/projects/like`, null, {
           params: {
-            memberId: memberId,
+            memberId: user.key,
             projectId: productDetail.id,
           },
         });

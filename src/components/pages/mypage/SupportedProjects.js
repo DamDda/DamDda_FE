@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import ProjectCard from "./ProjectCard"; // ProjectCard 컴포넌트
 import "./css/SupportedProjects.css"; // CSS 파일 경로 수정
 import axios from "axios";
+import { useUser } from "../../../UserContext";
 
 export default function SupportedProjects() {
+  const {user} = useUser();
   const [projects, setProjects] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [loading, setLoading] = useState(true);
@@ -13,10 +15,12 @@ export default function SupportedProjects() {
   const userId=3;// jwt 적용후에 바꿔야함
 
 
+
   // 백엔드에서 후원한 프로젝트 목록을 가져오는 함수 (주석 처리)
   const fetchOrders = async () => {
     try {
       const response = await axios.get(`http://localhost:9000/order/supportingprojects?userId=${userId}`);
+
       setProjects(response.data);
       setLoading(false);
     } catch (err) {
@@ -28,7 +32,6 @@ export default function SupportedProjects() {
    useEffect(() => {
     fetchOrders();
   }, [userId]);
-
 
 
   return (

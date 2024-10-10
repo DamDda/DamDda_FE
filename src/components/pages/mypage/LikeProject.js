@@ -4,7 +4,7 @@ import { Box, Grid2 } from "@mui/material";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import axios from "axios";
-import { useUser } from "../../../UserContext"
+import { useUser } from "../../../UserContext";
 
 // Likeproject 컴포넌트
 const Likeproject = () => {
@@ -12,7 +12,7 @@ const Likeproject = () => {
   const [page, setPage] = useState(1); // 현재 페이지 상태
   const [total, setTotal] = useState(0); // 전체 프로젝트 개수
   const [projects, setProjects] = useState([]);
-  const {user} = useUser();
+  const { user } = useUser();
 
   // 페이지 변경 핸들러
   const handlePageChange = (event, value) => {
@@ -90,16 +90,18 @@ const Likeproject = () => {
         container
         justifyContent="center"
         alignItems="center"
-        spacing={4}
+        // spacing={1}
         sx={{ flexGrow: 1 }}
+        columns={{ xs: 3, md: 6, lg: 12 }}
       >
         {projects.map((product) => (
           <Grid2
             item
             key={product.id}
-            xs={12}
-            sm={6}
-            md={2.4}
+            size={{ xs: 3, md: 3, lg: 2.4 }}
+            // xs={12}
+            // sm={6}
+            // md={2.4}
             display="flex"
             justifyContent="center"
           >

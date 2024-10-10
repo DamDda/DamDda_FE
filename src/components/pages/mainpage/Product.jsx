@@ -17,6 +17,7 @@ import axios from "axios"; // axios를 사용하여 REST API 호출
 import { BorderClear } from "@mui/icons-material";
 import { padding } from "@mui/system";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../../../UserContext";
 
 // Individual product card component
 export const ProductCard = ({ product, handleLike }) => {
@@ -200,19 +201,33 @@ export const ProductCard = ({ product, handleLike }) => {
 
 // Product recommendations section
 export const ProductRecommendations = ({ sortCondition, title, subTitle }) => {
+  //const {user, isLogin, setUser} = useUser();
+  // if(!isLogin){
+  //   setUser(prevUser => ({ ...prevUser, key: 0 }));
+  // }
+  //const {isLogin} = useUser();
+
+  const { user } = useUser();
+  // if(!isLogin){
+  //   console.log(user);
+  //   //setUser(prevUser => ({ ...prevUser, key: 0 }));
+  // }
+
+
+
   const [products, setProducts] = useState([]); // 서버에서 가져온 프로젝트 데이터
-  const memberId = 1;
 
   const itemsPerPage = 10; // 페이지당 항목 수
 
   // 페이지네이션 요청을 보내는 함수
   const fetchProducts = async () => {
+    console.log("dddddddddddddddddddd" + user.key)
     try {
       const response = await axios.get(
-        `http://${window.location.hostname}:9000/api/projects/projects`,
+        `http://localhost:9000/api/projects/projects`,
         {
           params: {
-            memberId: memberId,
+            memberId: user.key,
             page: 1,
             sort: sortCondition,
             size: itemsPerPage,
@@ -242,10 +257,10 @@ export const ProductRecommendations = ({ sortCondition, title, subTitle }) => {
       if (project.liked) {
         // liked가 true이면 DELETE 요청
         const response = await axios.delete(
-          `http://${window.location.hostname}:9000/api/projects/like`,
+          `http://localhost:9000/api/projects/like`,
           {
             params: {
-              memberId: memberId,
+              memberId: user.key,
               projectId: project.id,
             },
           }
@@ -254,11 +269,11 @@ export const ProductRecommendations = ({ sortCondition, title, subTitle }) => {
       } else {
         // liked가 false이면 POST 요청
         const response = await axios.post(
-          `http://${window.location.hostname}:9000/api/projects/like`,
+          `http://localhost:9000/api/projects/like`,
           null,
           {
             params: {
-              memberId: memberId,
+              memberId: user.key,
               projectId: project.id,
             },
           }

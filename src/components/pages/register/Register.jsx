@@ -16,12 +16,24 @@ import {
 } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import CloseIcon from "@mui/icons-material/Close"; // CloseIcon은 MUI의 아이콘 컴포넌트
+import {
+  Close as CloseIcon,
+  ArrowBack,
+  ArrowForward,
+} from "@mui/icons-material";
 import { DesktopDatePicker } from "@mui/x-date-pickers";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
+import { DndContext, closestCenter } from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  useSortable,
+  rectSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 import "./Register.css";
 import "../../styles/style.css";
@@ -30,6 +42,78 @@ import { Footer } from "../../layout/Footer";
 import DetailPage from "./detailPage";
 import Package from "./package";
 import ProjectDocument from "./projectDocument";
+
+
+
+
+
+// 드래그 앤 드롭 가능한 개별 이미지 아이템
+function SortableItem({ url, index, title, onRemove }) {
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id: url });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    margin: "0 8px",
+    cursor: "pointer",
+    width: "60px",
+    height: "60px",
+    objectFit: "cover",
+    position: "relative",
+    display: "inline-block",
+  };
+
+  return (
+    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+      <img
+        src={url}
+        alt={`썸네일 ${index}`}
+        style={{
+          width: "100%",
+          height: "100%",
+        }}
+        onClick={() => alert(`이미지 ${index + 1} 클릭`)}
+      />
+      {index === 0 && (
+        <div
+          className="representative-tag"
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            backgroundColor: "rgba(255, 0, 0, 0.5)",
+            color: "white",
+            padding: "2px 5px",
+            borderRadius: "10px",
+          }}
+        >
+          대표
+        </div>
+      )}
+      {/* 이미지 이름과 삭제 버튼 */}
+
+      <div style={{ fontSize: "10px", textAlign: "center" }}>
+        {title}
+        <IconButton
+          onClick={(e) => {
+            e.stopPropagation(); // 클릭 이벤트 버블링 방지
+            onRemove(index); // 삭제 버튼 클릭 시 이미지 삭제
+          }}
+          style={{
+            position: "relative",
+            top: "-5px",
+            left: "5px",
+            backgroundColor: "white",
+            padding: "2px",
+          }}
+        >
+          <CloseIcon fontSize="small" />
+        </IconButton>
+      </div>
+    </div>
+  );
+}
 
 //작성ㄹㄹㄹ중
 const Register = () => {
@@ -73,6 +157,34 @@ const Register = () => {
 
     writeData.descriptionDetail &&
       setDescriptionDetail(writeData.descriptionDetail);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     writeData.productImages && setProductImagesUrl(writeData.productImages);
     writeData.descriptionImages &&
@@ -159,6 +271,51 @@ const Register = () => {
   //   };
   // }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   const fetchWriteData = async () => {
     try {
       const response = await axios.get(
@@ -172,14 +329,17 @@ const Register = () => {
     }
   };
 
-  const [productImages, setProductImages] = useState([]); // 태그 목록
-  const [descriptionImages, setDescriptionImages] = useState([]); // 태그 목록
+
+  const [productImages, setProductImages] = useState([]); // 상품이미지
+  const [descriptionImages, setDescriptionImages] = useState([]); // 설명이미지
   const [reqDocs, setReqDocs] = useState([]); // 필수 서류
   const [certDocs, setCertDocs] = useState([]); // 인증 서류
   const [docs, setDocs] = useState([]); // 태그 목록
 
-  const [productImagesUrl, setProductImagesUrl] = useState([]); // 태그 목록
-  const [descriptionImagesUrl, setDescriptionImagesUrl] = useState([]); // 태그 목록
+  const [imageTitles, setImageTitles] = useState([]);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [productImagesUrl, setProductImagesUrl] = useState([]); // 상품이미지
+  const [descriptionImagesUrl, setDescriptionImagesUrl] = useState([]); // 설명이미지
   const [reqDocsUrl, setReqDocsUrl] = useState([]); // 필수 서류
   const [certDocsUrl, setCertDocsUrl] = useState([]); // 인증 서류
   // const [docsUrl, setDocsUrl] = useState([]); // 태그 목록
@@ -193,6 +353,18 @@ const Register = () => {
   const scrollToSection = (id) => {
     const target = document.getElementById(id);
     target.scrollIntoView({ behavior: "smooth" });
+  };
+
+  // 이미지
+  // 이미지 순서 변경 처리 함수
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+    if (active.id !== over.id) {
+      const oldIndex = productImagesUrl.indexOf(active.id);
+      const newIndex = productImagesUrl.indexOf(over.id);
+      setProductImagesUrl((items) => arrayMove(items, oldIndex, newIndex));
+      setImageTitles((titles) => arrayMove(titles, oldIndex, newIndex));
+    }
   };
 
   const handleChange = (event) => {
@@ -225,30 +397,37 @@ const Register = () => {
     setFormData({ ...formData, [name]: date });
   };
 
+  // 이미지 업로드 함수
   const handleProductImageChange = (e) => {
-    // e.preventDefault(); // 기본 폼 제출 동작 방지
-
-    const files = e.target.files; // 모든 파일을 가져옴
-    const selectedFiles = []; // 선택된 파일들을 저장할 배열
-    const imageUrls = []; // 새로 추가할 이미지 URL 배열
-
-    for (let i = 0; i < files.length; i++) {
-      if (files[i]) {
-        const imageUrl = URL.createObjectURL(files[i]);
-        imageUrls.push(imageUrl); // 각 파일의 URL을 배열에 추가
-        selectedFiles.push(files[i]); // File 객체를 배열에 추가
-      }
-    }
-    setProductImagesUrl((prevImages) => [...prevImages, ...imageUrls]);
-    setProductImages((prevImages) => [...prevImages, ...selectedFiles]);
+    const files = Array.from(e.target.files);
+    const urls = files.map((file) => URL.createObjectURL(file));
+    const titles = files.map((file) => file.name); // 파일 이름을 제목으로 사용
+    setProductImagesUrl([...productImagesUrl, ...urls]);
+    setImageTitles([...imageTitles, ...titles]);
   };
 
+  // 이미지 삭제 함수
   const handleRemoveImage = (index) => {
-    setProductImages(
-      (prevs) => prevs.filter((_, i) => i !== index) // 클릭된 이미지 제거
+    const newImages = productImagesUrl.filter((_, i) => i !== index); // 클릭된 이미지 제거
+    const newTitles = imageTitles.filter((_, i) => i !== index); // 해당 이미지의 제목도 제거
+    setProductImagesUrl(newImages); // 이미지 배열 업데이트
+    setImageTitles(newTitles); // 제목 배열 업데이트
+    if (currentImageIndex >= index && currentImageIndex > 0) {
+      setCurrentImageIndex((prev) => prev - 1); // 삭제된 이미지가 미리보기 중이면 인덱스 조정
+    }
+  };
+
+  // 미리보기에서 이전 이미지로 이동
+  const handlePrevImage = () => {
+    setCurrentImageIndex((prev) =>
+      prev === 0 ? productImagesUrl.length - 1 : prev - 1
     );
-    setProductImagesUrl(
-      (prevUrls) => prevUrls.filter((_, i) => i !== index) // 클릭된 이미지 제거
+  };
+
+  // 미리보기에서 다음 이미지로 이동
+  const handleNextImage = () => {
+    setCurrentImageIndex((prev) =>
+      prev === productImagesUrl.length - 1 ? 0 : prev + 1
     );
   };
 
@@ -273,6 +452,10 @@ const Register = () => {
   };
 
   const saveProject = async (projectId, submit) => {
+    if (!window.confirm("저장하시겠습니까?")) {
+      return; // 사용자가 "취소"를 선택하면 함수 종료
+    }
+
     console.log(formData);
     console.log(tags);
 
@@ -345,11 +528,83 @@ const Register = () => {
         }
       );
       console.log("프로젝트 업데이트 성공:", response.data);
+      alert("저장이 완료되었습니다."); // 저장 완료 메시지
     } catch (error) {
       console.error("프로젝트 업데이트 중 오류 발생:", error);
+      alert("저장을 성공하지 못했습니다."); // 저장 오류 메시지
     }
   };
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
   return (
     <>
       <Header />
@@ -379,6 +634,15 @@ const Register = () => {
                     value={formData.category_id}
                     onChange={handleChange}
                     displayEmpty // 빈값일 때 기본 텍스트 표시
+                    renderValue={(selected) => {
+                      // 선택된 값이 없을 때 기본 텍스트 표시
+                      return selected ? (
+                        selected
+                      ) : (
+                        <em>카테고리를 선택하세요</em>
+                      );
+                    }}
+                    size="small"
                   >
                     <MenuItem value="" disabled>
                       <em>카테고리를 선택하세요</em>
@@ -396,9 +660,9 @@ const Register = () => {
 
               <div className="form-container">
                 {/* 왼쪽: 이미지 미리보기 및 업로드 */}
-                <div className="section-container">
+                {/*<div className="section-container">
                   <div className="image-section">
-                    <div className="image-preview">
+                     <div className="image-preview" >
                       {productImagesUrl.length > 0 ? (
                         productImagesUrl.map((url, index) => (
                           <div
@@ -437,9 +701,10 @@ const Register = () => {
                           이미지 미리보기
                         </div>
                       )}
-                    </div>
-                    {/* ////////////////////////////////이미지 업로드/////////////////////////// */}
-                    <div style={{ marginTop: "16px" }}>
+                    </div> */}
+
+                {/* ////////////////////////////////이미지 업로드/////////////////////////// */}
+                {/* <div style={{ marginTop: "16px" }}>
                       <Button
                         className="outlined-button"
                         variant="outlined"
@@ -452,7 +717,109 @@ const Register = () => {
                           multiple
                           onChange={handleProductImageChange}
                         />{" "}
-                        {/* multiple */}
+                      </Button>
+                    </div>
+                  </div>
+                </div> */}
+
+                {/* 미리보기 영역 */}
+                <div className="section-container">
+                  <div className="image-section">
+                    <div
+                      className="image-preview"
+                      style={{ position: "relative", marginBottom: "20px" }}
+                    >
+                      {productImagesUrl.length > 0 && (
+                        <>
+                          <img
+                            src={productImagesUrl[currentImageIndex]}
+                            alt={`미리보기 ${currentImageIndex}`}
+                            style={{
+                              width: "400px",
+                              height: "400px",
+                              objectFit: "cover",
+                            }}
+                          />
+                          <IconButton
+                            onClick={handlePrevImage}
+                            style={{
+                              position: "absolute",
+                              top: "50%",
+                              left: "10px",
+                              transform: "translateY(-50%)",
+                            }}
+                          >
+                            <ArrowBack />
+                          </IconButton>
+                          <IconButton
+                            onClick={handleNextImage}
+                            style={{
+                              position: "absolute",
+                              top: "50%",
+                              right: "10px",
+                              transform: "translateY(-50%)",
+                            }}
+                          >
+                            <ArrowForward />
+                          </IconButton>
+                        </>
+                      )}
+                    </div>
+
+                    {/* 이미지 목록 */}
+                    {productImagesUrl.length > 0 && (
+                      <div
+                        style={{
+                          overflowX: "auto",
+                          whiteSpace: "nowrap",
+                          maxHeight: "80px",
+                          maxWidth: "320px",
+                          display: "flex",
+                        }}
+                      >
+                        <DndContext
+                          collisionDetection={closestCenter}
+                          onDragEnd={handleDragEnd}
+                        >
+                          <SortableContext
+                            items={productImagesUrl}
+                            strategy={rectSortingStrategy}
+                          >
+                            <div
+                              style={{
+                                display: "flex",
+                                overflowX: "auto",
+                                maxWidth: "320px",
+                              }}
+                            >
+                              {productImagesUrl
+                                .slice(0, 5)
+                                .map((url, index) => (
+                                  <SortableItem
+                                    key={url}
+                                    url={url}
+                                    index={index}
+                                    title={imageTitles[index]}
+                                    onRemove={handleRemoveImage}
+                                    onClick={() => setCurrentImageIndex(index)} // 목록에서 클릭한 이미지로 변경
+                                  />
+                                ))}
+                            </div>
+                          </SortableContext>
+                        </DndContext>
+                      </div>
+                    )}
+
+                    {/* 이미지 업로드 버튼 */}
+                    <div style={{ marginTop: "16px" }}>
+                      <Button variant="outlined" component="label">
+                        이미지 업로드
+                        <input
+                          type="file"
+                          hidden
+                          multiple
+                          onChange={handleProductImageChange}
+                        />
                       </Button>
                     </div>
                   </div>

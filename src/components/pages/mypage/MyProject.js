@@ -18,6 +18,7 @@ import Stack from "@mui/material/Stack";
 import StatusButton from "./StatusButton";
 import axios from "axios"; // 나중에 백엔드 연결 시 주석 해제
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../../../UserContext";
 
 // 프로젝트 카드 컴포넌트
 export const ProductCard = ({ product, setMyprojectClick }) => {
@@ -182,6 +183,13 @@ export const ProductCard = ({ product, setMyprojectClick }) => {
 
 // Myproject 컴포넌트
 export const Myproject = ({ setMyprojectClick }) => {
+  //const {user} = useUser();
+  const { user } = useUser();
+  // if(!isLogin){
+  //   console.log(user);
+  //   //setUser(prevUser => ({ ...prevUser, key: 0 }));
+  // }
+
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
 
   const [projectList, setProjectList] = useState([]);
@@ -199,7 +207,7 @@ export const Myproject = ({ setMyprojectClick }) => {
         `http://localhost:9000/api/projects/myproject`,
         {
           params: {
-            memberId: 1,
+            memberId: user.key,
             page: page,
             size: itemsPerPage,
           },

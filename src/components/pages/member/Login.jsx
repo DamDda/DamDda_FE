@@ -49,9 +49,11 @@ const Login = () => {
       // 모든 필드가 입력되었을 때만 검증 진행
       if (valid) {
         console.log(response.data.split(" ")[1]);
+        console.log(response.data);
         const userData = {
           id: response.data.split(" ")[1],
           nickname: response.data.split(" ")[0],
+          key: response.data.split(" ")[2],
         };
         login(userData);
         navigate("/", { state: { id: formData.id } });

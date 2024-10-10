@@ -18,6 +18,7 @@ import CoverImage from "../../assets/coverImage.png";
 import axios from "axios"; // axios를 사용하여 REST API 호출
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useUser } from "../../../UserContext";
 
 
 // Individual product card component
@@ -341,6 +342,13 @@ export const ProductCard = ({ product, handleLike }) => {
 
 // Product recommendations section
 export const ProductRecommendations = ({search, cartegory}) => {
+  // const { user } = useUser();
+
+  const { user } = useUser();
+  // if(!isLogin){
+  //   console.log(user);
+  //   //setUser(prevUser => ({ ...prevUser, key: 0 }));
+  // }
 
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
 
@@ -368,7 +376,7 @@ export const ProductRecommendations = ({search, cartegory}) => {
           search: search, 
           category: cartegory,
           sort: sortCondition,
-          memberId: 1,
+          memberId: user.key,
           page: page,
           size: itemsPerPage,
           progress: progress, // 진행 상태 필터 적용
@@ -392,7 +400,8 @@ export const ProductRecommendations = ({search, cartegory}) => {
       const response = await axios.get(`http://localhost:9000/api/projects/projects`, {
         params: {
           page: page,
-          memberId: 1,
+          sort: "recommend",
+          memberId: user.key,
           size: recommendedItemPerPage,
           progress: progress, // 진행 상태 필터 적용
         },
@@ -462,8 +471,6 @@ export const ProductRecommendations = ({search, cartegory}) => {
     }
  
 
-    const memberId = 1;  
-
     // 좋아요 요청을 처리하는 함수
   const handleLike = async (project) => {
     try {
@@ -471,7 +478,7 @@ export const ProductRecommendations = ({search, cartegory}) => {
         // liked가 true이면 DELETE 요청
         const response = await axios.delete(`http://localhost:9000/api/projects/like`, {
           params: {
-            memberId: memberId,
+            memberId: user.key,
             projectId: project.id,
           },
         });
@@ -480,7 +487,7 @@ export const ProductRecommendations = ({search, cartegory}) => {
         // liked가 false이면 POST 요청
         const response = await axios.post(`http://localhost:9000/api/projects/like`, null, {
           params: {
-            memberId: memberId,
+            memberId: user.key,
             projectId: project.id,
           },
         });

@@ -23,6 +23,7 @@ import axios from "axios"; // axios를 사용하여 REST API 호출
 import { useUser } from "../../UserContext";
 
 export function Header({ search, setSearch }) {
+
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [showProfileCard, setShowProfileCard] = useState(false); // 프로필 카드 표시 여부
@@ -31,8 +32,13 @@ export function Header({ search, setSearch }) {
   const location = useLocation();
   const [profile, setProfile] = useState("");
 
-  const memberId = 1;
-  const { logout, user } = useUser();
+  //const { logout, user } = useUser();
+  const {logout, isLogin, user, setUser} = useUser();
+  // if(!isLogin){
+  //   console.log(user);
+  //   // setUser({ ...user, key: 0 });
+  // }
+  console.log("여기역이겨이겨익여깅겨ㅣㅇ겨이겨"+user.key+"111 "+isLogin);
 
   // useEffect(() => {
   //   if (location.state?.id) {
@@ -61,7 +67,7 @@ export function Header({ search, setSearch }) {
       method: "GET",
       url: "http://localhost:9000/api/projects/write",
       params: {
-        memberId: memberId,
+        memberId: user.key,
       },
     })
       .then((response) => {
@@ -139,7 +145,7 @@ export function Header({ search, setSearch }) {
       },
       data: formData,
       params: {
-        memberId: memberId,
+        memberId: user.key,
         submit: "저장",
       },
     })
@@ -337,7 +343,7 @@ export function Header({ search, setSearch }) {
 
             {/* 프로필 카드 부분 */}
             <Box sx={{ position: "relative" }}>
-              {user ? (
+              {user.id ? (
                 // 로그인 후 프로필 카드
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -368,7 +374,7 @@ export function Header({ search, setSearch }) {
                 </Button>
               )}
 
-              {showProfileCard && user && (
+              {showProfileCard && user.id && (
                 <Box
                   sx={{
                     position: "absolute",

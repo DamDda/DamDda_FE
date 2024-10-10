@@ -94,10 +94,10 @@ const PreviewDetail = ({ projectDescription, projectImages }) => {
 // Preview 컴포넌트
 const Preview = ({ formData, tags, productImages }) => {
   const sampleProject = {
-    category: "Beauty & Fashion",
-    title: "Innovative Lipstick Collection Launch",
+    category: "뷰티 & 패션",
+    title: "혁신적인 립스틱 컬렉션 출시",
     description:
-      "Introducing a luxurious collection of lipsticks that boast vibrant colors and lasting power. Join this project to be part of the beauty trendsetters.",
+      "활기찬 색상과 지속력을 자랑하는 고급 립스틱 컬렉션을 소개합니다. 이 프로젝트에 참여해 뷰티 트렌드세터의 일원이 되세요.",
     currentAmount: 85000000,
     targetAmount: 100000000,
     productImage: "https://example.com/product_image.png",
@@ -110,7 +110,7 @@ const Preview = ({ formData, tags, productImages }) => {
     (currentAmount / targetAmount) * 100
   );
   const [isLiked, setIsLiked] = useState(false); // 좋아요 상태
-  const [likeCount, setLikeCount] = useState(3421); // 좋아요 카운트
+  const [likeCount, setLikeCount] = useState(""); // 좋아요 카운트
 
   const handleLikeClick = () => {
     setLikeCount((prevCount) => (isLiked ? prevCount - 1 : prevCount + 1));
@@ -124,7 +124,7 @@ const Preview = ({ formData, tags, productImages }) => {
 
   return (
     <>
-      <div className="container">
+      <div className="container3">
         <div style={{ paddingTop: "20px", textAlign: "center" }}>
           <div className="project-info">
             <div className="category">{formData.category || "선택안함"}</div>
@@ -135,81 +135,128 @@ const Preview = ({ formData, tags, productImages }) => {
           </div>
         </div>
 
-        <div style={{ padding: "5px", marginBottom: "10px" }}>
-          <div
-            style={{
-              display: "flex",
-              width: "100%",
-              justifyContent: "center",
-            }}
-          >
-            <div className="carousel-section">
-              <Carousel>
+        <div style={{ display: "flex", paddingTop: "20px" }}>
+          {/* 왼쪽 - 이미지 캐러셀 */}
+
+          <div style={{ flex: 1, paddingRight: "20px" }}>
+            <Carousel>
+              {productImages.length > 0 ? (
+                productImages.map((image, index) => (
+                  <Carousel.Item key={index}>
+                    <img
+                      className="d-block w-100"
+                      src={image.url}
+                      alt={`product-image-${index}`}
+                      style={{
+                        width: "100%",
+                        height: "400px",
+                        objectFit: "cover",
+                      }}
+                    />
+                  </Carousel.Item>
+                ))
+              ) : (
                 <Carousel.Item>
-                  <img
-                    className="d-block w-100"
-                    src={formData.productImage || "이미지 없음"}
-                    alt="First slide"
-                  />
-                </Carousel.Item>
-              </Carousel>
-            </div>
+                  <div
+                    style={{
+                      width: "100%",
 
-            <div style={{ flex: 1, marginLeft: "50px" }}>
-              <h5>
-                후원금액 (진행률)
-                <div className="goal-price">
-                  <span>{currentAmount.toLocaleString()} 원</span>
-                  <span className="percentage">
-                    {progressPercentage.toFixed(2)}%
-                  </span>
-                </div>
-              </h5>
+                      height: "400px",
 
-              <LinearProgress
-                variant="determinate"
-                value={progressPercentage}
-                className="progress-bar"
-              />
+                      display: "flex",
 
-              <Divider className="divider" />
-              <div className="info-text">
-                목표금액:{" "}
-                {formData?.target_funding
-                  ? formData.target_funding.toLocaleString()
-                  : "0"}{" "}
-                원
-              </div>
-              <div className="info-text">
-                펀딩기간: {formData.start_date} ~ {formData.end_date}
-              </div>
-              <div className="info-text">
-                예상전달일: 프로젝트 종료 후 30일이내
-              </div>
-              <div className="button-container">
-                <Button
-                  className="contained-button"
-                  onClick={() => alert("프로젝트를 후원하시겠습니까?")}
-                >
-                  이 프로젝트 후원하기
-                </Button>
-                <div className="secondary-buttons">
-                  <Button
-                    variant="outlined"
-                    onClick={handleLikeClick}
-                    className="heart-button"
+                      justifyContent: "center",
+
+                      alignItems: "center",
+
+                      backgroundColor: "#ccc",
+                    }}
                   >
-                    {isLiked ? "♥" : "♡"} {likeCount} 명
+                    이미지가 없습니다.
+                  </div>
+                </Carousel.Item>
+              )}
+            </Carousel>
+          </div>
+
+          {/* 오른쪽 - 프로젝트 정보 및 진행률 */}
+          <div style={{ padding: "5px", marginBottom: "10px", flex: 1 }}>
+            <div
+              style={{
+                display: "flex",
+                width: "100%",
+                justifyContent: "center",
+              }}
+            >
+              <div className="carousel-section">
+                <Carousel>
+                  <Carousel.Item>
+                    <img
+                      className="d-block w-100"
+                      src={formData.productImage || "이미지 없음"}
+                      alt="First slide"
+                    />
+                  </Carousel.Item>
+                </Carousel>
+              </div>
+
+              <div style={{ flex: 1, marginLeft: "50px" }}>
+                <h5>
+                  후원금액 (진행률)
+                  <div className="goal-price">
+                    <span>{currentAmount.toLocaleString()} 원</span>
+                    <span className="percentage">
+                      {progressPercentage.toFixed(2)}%
+                    </span>
+                  </div>
+                </h5>
+
+                <LinearProgress
+                  variant="determinate"
+                  value={progressPercentage}
+                  className="progress-bar"
+                />
+
+                <Divider className="divider" />
+                <div className="info-text">
+                  목표금액:{" "}
+                  {formData?.target_funding
+                    ? formData.target_funding.toLocaleString()
+                    : "0"}{" "}
+                  원
+                </div>
+                <div className="info-text">
+                  펀딩기간: {formData.start_date} ~ {formData.end_date}
+                </div>
+                <div className="info-text">
+                  예상전달일: 프로젝트 종료 후 30일이내
+                </div>
+                <div className="button-container">
+                  <Button className="contained-button">
+                    이 프로젝트 후원하기
                   </Button>
+                  <div className="secondary-buttons">
+                    <Button
+                      variant="outlined"
+                      onClick={handleLikeClick}
+                      className="heart-button"
+                    >
+                      {isLiked ? "♥" : "♡"} {likeCount} 명
+                    </Button>
+                    <Button variant="outlined" className="heart-button">
+                      협업하기
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+        </div>
 
-          <Divider style={{ margin: "20px 0", width: "100%" }} />
+        <Divider style={{ margin: "20px 0", width: "100%" }} />
 
-          <div id="details">
-            {/* <Tabs value={0} indicatorColor="primary" textColor="primary">
+        <div id="details">
+          {/* <Tabs value={0} indicatorColor="primary" textColor="primary">
               <Tab label="Details" onClick={() => alert("Scroll to details")} />
               <Tab label="Notices" onClick={() => alert("Scroll to notices")} />
               <Tab label="Q&A" onClick={() => alert("Scroll to Q&A")} />
@@ -221,28 +268,20 @@ const Preview = ({ formData, tags, productImages }) => {
               />
             </Typography> */}
 
-            <div id="description">
-              <Tabs value={0} indicatorColor="primary" textColor="primary">
-                <Tab
-                  label="상세설명"
-                  onClick={() => scrollToSection("description")}
-                />
-                <Tab
-                  label="선물구성"
-                  onClick={() => scrollToSection("package")}
-                />
-                <Tab
-                  label="서류제출"
-                  onClick={() => scrollToSection("document")}
-                />
-              </Tabs>
-              <Typography variant="body1" style={{ marginTop: "10px" }}>
-                <PreviewDetail
-                  projectDescription={description}
-                  projectImages={[productImage]}
-                />
-              </Typography>
-            </div>
+          {/* 상세 설명 영역 */}
+
+          <div id="details" style={{ marginTop: "30px" }}>
+            <Tabs value={0} indicatorColor="primary" textColor="primary">
+              <Tab label="상세설명" />
+
+              <Tab label="선물구성" />
+
+              <Tab label="서류제출" />
+            </Tabs>
+
+            <Typography variant="body1" style={{ marginTop: "10px" }}>
+              {formData.descriptionDetail || "상세설명이 없습니다."}
+            </Typography>
           </div>
         </div>
       </div>

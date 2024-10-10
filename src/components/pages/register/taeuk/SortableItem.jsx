@@ -59,24 +59,23 @@ const SortableItem = (props) => {
       {/* 이미지 이름과 삭제 버튼 */}
 
       <div style={{ fontSize: "10px", textAlign: "center" }}>
-        {title}
+        {/* {title.length > 10
+          ? title.slice(title.length - 10, title.length)
+          : title} */}
         <IconButton
-          // onMouseDown={(e) => {
-          //   e.preventDefault();
-          // }}
           onClick={(e) => {
             e.stopPropagation(); // 클릭 이벤트 버블링 방지
             onRemove(index); // 삭제 버튼 클릭 시 이미지 삭제
           }}
           style={{
-            position: "relative",
-            top: "-5px",
-            left: "5px",
-            backgroundColor: "white",
-            padding: "2px",
+            position: "absolute",
+            top: "-1px",
+            right: "-5px",
+            backgroundColor: "#EDEDED",
+            padding: "0px",
           }}
         >
-          <CloseIcon fontSize="small" />
+          <CloseIcon fontSize={"small"} />
         </IconButton>
       </div>
     </div>

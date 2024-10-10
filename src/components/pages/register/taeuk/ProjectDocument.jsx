@@ -40,21 +40,23 @@ const ProjectDocument = (props) => {
     setDocs(newDocs); // 이미지 배열 업데이트
   };
   const handleDownloadFile = async (doc) => {
-    const response = await axios
-      .get(`http://localhost:9000/${doc.url}`, {
-        responseType: "blob",
-        withCredentials: true,
+    const splitted = doc.url.split("/");
+    axios({
+      method: "GET",
+      url: `http://localhost:9000/${splitted[0]}/${splitted[1]}/${splitted[2]}/${encodeURIComponent(splitted[3])}`,
+      responseType: "blob",
+      withCredentials: true,
+    })
+      .then((response) => {
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", doc.title);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
       })
-      .then((res) => res)
       .catch((e) => console.error(e));
-    console.log(response);
-    const url = window.URL.createObjectURL(new Blob([response.data]));
-    const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download", doc.title);
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
   };
 
   const handleUploadFile = (e, prefix) => {
@@ -121,7 +123,7 @@ const ProjectDocument = (props) => {
             {docs
               .filter((doc) => doc.title.startsWith("[진행자]"))
               .map((doc, index) => (
-                <FileItem key={index}>
+                <FileItem key={index} sx={{ cursor: "pointer" }}>
                   <div onClick={() => handleDownloadFile(doc)}>{doc.title}</div>
                   <IconButton
                     onClick={() => handleRemoveFile(index)}
@@ -168,7 +170,7 @@ const ProjectDocument = (props) => {
             {docs
               .filter((doc) => doc.title.startsWith("[인증]"))
               .map((doc, index) => (
-                <FileItem key={index}>
+                <FileItem key={index} sx={{ cursor: "pointer" }}>
                   <div onClick={() => handleDownloadFile(doc)}>{doc.title}</div>
                   <IconButton
                     onClick={() => handleRemoveFile(index)}

@@ -21,10 +21,7 @@ import {
 import "../Register.css";
 import "../../../styles/style.css";
 import SortableItem from "./SortableItem";
-
-import { CSS } from "@dnd-kit/utilities";
-import { useSortable } from "@dnd-kit/sortable";
-import { Close as CloseIcon } from "@mui/icons-material";
+import datejs from "dayjs";
 
 const InfoContainer = (props) => {
   const {
@@ -70,6 +67,11 @@ const InfoContainer = (props) => {
   };
   // 이미지 업로드 함수
   const handleProductImageChange = (e) => {
+    if (productImages.length > 4) {
+      window.alert(
+        "제품 이미지는 최대 5장 까지 추가할 수 있습니다!\n\n더 추가하고 싶은 이미지는 상세 설명에서 추가하세요."
+      );
+    }
     const files = Array.from(e.target.files);
     files.forEach((_file) =>
       setProductImages([
@@ -234,7 +236,7 @@ const InfoContainer = (props) => {
                         maxWidth: "320px",
                       }}
                     >
-                      {productImages.slice(0, 5).map((image, index) => (
+                      {productImages.map((image, index) => (
                         <SortableItem
                           key={image.url}
                           url={image.url}
@@ -330,6 +332,7 @@ const InfoContainer = (props) => {
           <div className="form-item">
             <span className="form-div">목표금액 :</span>
             <TextField
+              type="number"
               className="input-field"
               label="목표 금액"
               name="target_funding"
@@ -353,7 +356,8 @@ const InfoContainer = (props) => {
             <div style={{ display: "flex", flex: 1 }}>
               <DesktopDatePicker
                 label="시작일"
-                value={formData.start_date}
+                value={datejs(formData.start_date)}
+                format="YYYY-MM-DD"
                 onChange={(date) => handleDateChange(date, "start_date")}
                 renderInput={(params) => (
                   <TextField
@@ -365,7 +369,8 @@ const InfoContainer = (props) => {
               <span>~</span>
               <DesktopDatePicker
                 label="종료일"
-                value={formData.end_date}
+                value={datejs(formData.end_date)}
+                format="YYYY-MM-DD"
                 onChange={(date) => handleDateChange(date, "end_date")}
                 renderInput={(params) => (
                   <TextField

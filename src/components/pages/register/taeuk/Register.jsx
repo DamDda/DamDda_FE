@@ -13,9 +13,9 @@ import Package from "../package";
 
 // taeuk
 import InfoContainer from "./InfoContainer";
-import AIModal from "./AIModal";
 import DetailPage from "./DetailPage";
 import ProjectDocument from "./ProjectDocument";
+import dayjs from "dayjs";
 
 const Register = () => {
   ////////////////////////////
@@ -44,7 +44,6 @@ const Register = () => {
   const [productImages, setProductImages] = useState([]); // 상품이미지
   const [descriptionImages, setDescriptionImages] = useState([]); // 설명이미지
   const [docs, setDocs] = useState([]);
-  const [aiModalOpen, setAiModalOpen] = useState(false);
 
   //////////////////////
   // DEFINE CALLBACKS //
@@ -67,16 +66,16 @@ const Register = () => {
   }, []);
 
   useEffect(() => {
+    console.log(dayjs(writeData.startDate).format("yyyy-MM-dd"));
     setFormData({
       category_id: writeData.category,
       subcategory: "",
       title: writeData.title,
       description: writeData.description,
       target_funding: writeData.targetFunding,
-      // start_date: new Date(writeData.startDate),
-      // end_date: new Date(writeData.endDate),
+      start_date: dayjs(writeData.startDate).format("yyyy-MM-dd"),
+      end_date: dayjs(writeData.endDate).format("yyyy-MM-dd"),
       delivery_date: null,
-      // tags: writeData.tags,
     });
     writeData.tags && setTags(writeData.tags);
     writeData.descriptionDetail &&
@@ -259,13 +258,6 @@ const Register = () => {
       alert("저장을 성공하지 못했습니다."); // 저장 오류 메시지
     }
   };
-  const openAiModal = () => {
-    setAiModalOpen(true);
-  };
-
-  const closeAiModal = () => {
-    setAiModalOpen(false);
-  };
   return (
     <>
       <Header />
@@ -297,13 +289,6 @@ const Register = () => {
             ) : (
               <div>Now Loading...</div>
             )}
-
-            {/*<AIModal
-              aiModalOpen={aiModalOpen}
-              closeAiModal={closeAiModal}
-              formData={formData}
-              setFormData={setFormData}
-            />*/}
           </div>
           <hr />
 

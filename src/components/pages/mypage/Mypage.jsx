@@ -6,7 +6,7 @@ import MyProjectDetails from "./MyProjectDetail";
 import ProfileStatistics from "./ProfileStatistics";
 import SupportedProjects from "./SupportedProjects";
 import TabsUnderlinePlacement from "./TabsUnderlinePlacement";
-import CollaborationList from "./CollaborationList"
+import CollaborationList from "./CollaborationList";
 import LikeProject from "./LikeProject";
 import "../../styles/style.css";
 import { Header } from "../../layout/Header";
@@ -24,10 +24,9 @@ const Mypage = () => {
 
   const { user } = useUser();
 
-
   const fetchProfileData = async () => {
     try {
-      console.log('User state:', user);
+      console.log("User state:", user);
       const response = await axios.get(`/members/profile?loginId=${user.id}`, {
         withCredentials: true,
       });
@@ -62,7 +61,7 @@ const Mypage = () => {
   const [myprojectId, setMyprojectId] = useState(0);
   const [collabClick, setCollabClick] = useState(false);
   const [collabId, setCollabId] = useState(0);
-  const [collabFilter, setCollabFilter] =  useState("제안 받은 협업");
+  const [collabFilter, setCollabFilter] = useState("제안 받은 협업");
 
   // 데이터를 로딩 중일 때 표시할 화면
   if (isLoading) {
@@ -94,18 +93,41 @@ const Mypage = () => {
       case 1:
         return <SupportedProjects />;
       case 2:
-        if (myprojectClick){
-            return <MyProjectDetails setMyprojectClick={setMyprojectClick}/>;
-        } else{
-          return <Myproject setMyprojectClick={setMyprojectClick}/>;
-        }       
+        if (myprojectClick) {
+          return (
+            <MyProjectDetails
+              projectId={myprojectId}
+              setMyprojectClick={setMyprojectClick}
+            />
+          );
+        } else {
+          return (
+            <Myproject
+              setMyprojectId={setMyprojectId}
+              setMyprojectClick={setMyprojectClick}
+            />
+          );
+        }
       case 3:
         return <LikeProject />;
       case 4:
-        if (collabClick){
-          return <CollaborationDetail filter={collabFilter} collabId={collabId} setCollabClick={setCollabClick}/>;
-        } else{
-          return <CollaborationList filter={collabFilter} setFilter={setCollabFilter} setCollabId={setCollabId} setCollabClick={setCollabClick}/>;
+        if (collabClick) {
+          return (
+            <CollaborationDetail
+              filter={collabFilter}
+              collabId={collabId}
+              setCollabClick={setCollabClick}
+            />
+          );
+        } else {
+          return (
+            <CollaborationList
+              filter={collabFilter}
+              setFilter={setCollabFilter}
+              setCollabId={setCollabId}
+              setCollabClick={setCollabClick}
+            />
+          );
         }
       default:
         return (

@@ -22,27 +22,30 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import StatusButton from "./StatusButton";
+// import { Row } from "react-bootstrap";
 import axios from "axios";
 
-// 가짜 데이터 (실제 백엔드 구현 전까지 사용)
-const mockProjectData = {
-  1: {
-    category: "💄뷰티",
-    organizer_id: "홍길동",
-    title: "세상에 단 하나뿐인 멋진 프로젝트",
-    description: "세상에 단 하나뿐인 아주아주 멋진 예술품을 만들었습니다.",
-    fundsReceive: 500000,
-    targetFunding: 1000000,
-    startDate: "2024.01.01",
-    endDate: "2024.06.30",
-    delivery_date: 30,
-    supporterCnt: 500,
-    supporter_count: 100,
-    approval: -1,
-    rejectMessage: "내용부족",
-    thumbnail_url: "https://via.placeholder.com/500",
-  },
-};
+import { useUser } from "../../../UserContext";
+
+// // 가짜 데이터 (실제 백엔드 구현 전까지 사용)
+// const mockProjectData = {
+//   1: {
+//     category: "💄뷰티",
+//     organizer_id: "홍길동",
+//     title: "세상에 단 하나뿐인 멋진 프로젝트",
+//     description: "세상에 단 하나뿐인 아주아주 멋진 예술품을 만들었습니다.",
+//     fundsReceive: 500000,
+//     targetFunding: 1000000,
+//     startDate: "2024.01.01",
+//     endDate: "2024.06.30",
+//     delivery_date: 30,
+//     supporterCnt: 500,
+//     supporter_count: 100,
+//     approval: -1,
+//     rejectMessage: "내용부족",
+//     thumbnail_url: "https://via.placeholder.com/500",
+//   },
+// };
 
 // 후원 통계
 const mockSupportStat = {
@@ -63,13 +66,13 @@ const mockSupporterData = [
     deliveryAddress: "경기도 광명시",
     deliveryDetailedAddress: "oo동",
     deliveryMessage: "배송 전 연락 주세요.",
-    history: [
-      {
-        date: "2024-09-01",
-        customerId: "11091700",
-        amount: 3,
-      },
-    ],
+    // history: [
+    //   {
+    //     date: "2024-09-01",
+    //     customerId: "11091700",
+    //     amount: 3,
+    //   },
+    // ],
   },
   {
     deliveryId: "123457",
@@ -80,13 +83,13 @@ const mockSupporterData = [
     deliveryAddress: "서울특별시 강남구",
     deliveryDetailedAddress: "xx동",
     deliveryMessage: "배송 전에 전화 부탁드립니다.",
-    history: [
-      {
-        date: "2024-09-03",
-        customerId: "11091701",
-        amount: 2,
-      },
-    ],
+    // history: [
+    //   {
+    //     date: "2024-09-03",
+    //     customerId: "11091701",
+    //     amount: 2,
+    //   },
+    // ],
   },
 ];
 
@@ -148,112 +151,92 @@ const DashboardSection = styled("div")({
   boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
 });
 
-const MyProjectDetail = () =>
-  // 행(Row) 컴포넌트
-  function Row(props) {
-    const { row } = props;
-    const [open, setOpen] = useState(false);
+function CustomTableRow(props) {
+  const { row } = props;
+  const [open, setOpen] = useState(false);
 
-    return (
-      <React.Fragment>
-        <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
-          <TableCell>
-            <IconButton
-              aria-label="expand row"
-              size="small"
-              onClick={() => setOpen(!open)}
+  return (
+    <React.Fragment>
+      <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
+        <TableCell>
+          <IconButton
+            aria-label="expand row"
+            size="small"
+            onClick={() => setOpen(!open)}
+          >
+            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
+        </TableCell>
+        <TableCell style={{ textAlign: "center" }}>{row.deliveryId}</TableCell>
+        <TableCell style={{ textAlign: "center" }}>
+          {row.deliveryName}
+        </TableCell>
+        <TableCell style={{ textAlign: "center" }}>{row.supportedAt}</TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+          <Collapse in={open} timeout="auto" unmountOnExit>
+            <Box
+              sx={{
+                margin: 3,
+                display: "flex",
+                flexDirection: "column",
+                gap: 3,
+              }}
             >
-              {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-            </IconButton>
-          </TableCell>
-          <TableCell
-            style={{
-              textAlign: "center",
-            }}
-          >
-            {row.deliveryId}
-          </TableCell>
-          <TableCell
-            style={{
-              textAlign: "center",
-            }}
-          >
-            {row.deliveryName}
-          </TableCell>
-          <TableCell
-            style={{
-              textAlign: "center",
-            }}
-          >
-            {row.supportedAt}
-          </TableCell>
-        </TableRow>
-        <TableRow>
-          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-            <Collapse in={open} timeout="auto" unmountOnExit>
-              <Box
-                sx={{
-                  margin: 3,
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 3,
-                }}
-              >
-                <Typography variant="body1">
-                  <strong
-                    style={{
-                      fontSize: "18px",
-                      padding: "25px",
-                    }}
-                  >
-                    선물 정보
-                  </strong>
-                  {row.item_name}
-                </Typography>
-
-                <Typography variant="body1">
-                  <strong
-                    style={{
-                      fontSize: "18px",
-                      padding: "25px",
-                    }}
-                  >
-                    연락처
-                  </strong>
-                  {row.deliveryPhoneNumber}
-                </Typography>
-                <Typography variant="body1">
-                  <strong
-                    style={{
-                      fontSize: "18px",
-                      padding: "25px",
-                    }}
-                  >
-                    배송지 정보
-                  </strong>
-                  {row.deliveryAddress} {row.deliveryDetailedAddress}
-                </Typography>
-                <Typography variant="body1">
-                  <strong
-                    style={{
-                      fontSize: "18px",
-                      padding: "25px",
-                    }}
-                  >
-                    배송 요청 사항
-                  </strong>
-                  {row.deliveryMessage}
-                </Typography>
-              </Box>
-            </Collapse>
-          </TableCell>
-        </TableRow>
-      </React.Fragment>
-    );
-  };
+              <Typography variant="body1">
+                <strong style={{ fontSize: "18px", padding: "25px" }}>
+                  선물 정보
+                </strong>
+                {row.item_name}
+              </Typography>
+              <Typography variant="body1">
+                <strong style={{ fontSize: "18px", padding: "25px" }}>
+                  연락처
+                </strong>
+                {row.deliveryPhoneNumber}
+              </Typography>
+              <Typography variant="body1">
+                <strong style={{ fontSize: "18px", padding: "25px" }}>
+                  배송지 정보
+                </strong>
+                {row.deliveryAddress} {row.deliveryDetailedAddress}
+              </Typography>
+              <Typography variant="body1">
+                <strong style={{ fontSize: "18px", padding: "25px" }}>
+                  배송 요청 사항
+                </strong>
+                {row.deliveryMessage}
+              </Typography>
+            </Box>
+          </Collapse>
+        </TableCell>
+      </TableRow>
+    </React.Fragment>
+  );
+}
 
 // 후원자 정보 테이블 컴포넌트
 function SupporterTable() {
+  const [orders, setOrders] = useState([]); // 모든 주문 정보를 저장할 상태
+  const [error, setError] = useState(null); // 에러 상태 관리
+  const [loading, setLoading] = useState(true); // 로딩 상태 관리
+  // 주문 정보를 가져오는 함수
+  const fetchOrders = async () => {
+    try {
+      const response = await axios.get("http://localhost:9000/order/all");
+      setOrders(response.data); // 가져온 주문 정보를 상태에 저장
+      setLoading(false); // 로딩 완료
+    } catch (err) {
+      setError("주문 정보를 가져오는 중 오류가 발생했습니다.");
+      setLoading(false); // 로딩 완료
+    }
+  };
+
+  // 컴포넌트가 마운트될 때 주문 정보 가져오기
+  useEffect(() => {
+    fetchOrders();
+  }, []);
   return (
     <TableContainer component={Paper}>
       <Table aria-label="collapsible table">
@@ -295,8 +278,20 @@ function SupporterTable() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {mockSupporterData.map((row) => (
-            <Row key={row.deliveryId} row={row} />
+          {orders.map((order, index) => (
+            <TableRow key={index}>
+              <TableCell>
+                {order.supportingProject.supportingProjectId}
+              </TableCell>
+              <TableCell>{order.delivery.deliveryName}</TableCell>
+              <TableCell>
+                {new Date(order.supportingProject.supportedAt).toLocaleString()}
+              </TableCell>
+              <TableCell>{order.supportingPackage.packageName}</TableCell>
+              <TableCell>{order.delivery.deliveryPhoneNumber}</TableCell>
+              <TableCell>{order.delivery.deliveryAddress}</TableCell>
+              <TableCell>{order.delivery.deliveryMessage}</TableCell>
+            </TableRow>
           ))}
         </TableBody>
       </Table>
@@ -304,57 +299,41 @@ function SupporterTable() {
   );
 }
 
-export default function MyProjectDetails({setMyprojectClick}) {
-  const { projectId } = useParams(); // URL에서 projectId 추출
+export default function MyProjectDetails({ projectId, setMyprojectClick }) {
+  // const { projectId } = useParams(); // URL에서 projectId 추출
   const [projectData, setProjectData] = useState(null); // 프로젝트 정보 상태
   const [supportStat, setSupportStat] = useState(null); // 후원 통계 상태
+
   const [loading, setLoading] = useState(true);
   const [tabIndex, setTabIndex] = useState(0);
+  const { user } = useUser();
   const navigate = useNavigate();
 
-  // // 두 API를 병렬로 호출하여 데이터를 가져옴
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       // 프로젝트 상세 정보 api 호출
-  //       const projectResponse = await axios.get(
-  //         `/projects/myproject/${projectId}`
-  //       );
-  //       // 후원 통계 api 호출
-  //       const supportStatResponse = await axios.get(
-  //         `/projects/myproject/sptstat/${projectId}`
-  //       );
-
-  //       setProjectData(projectResponse.data); // 프로젝트 데이터 저장
-  //       setSupportStat(supportStatResponse.data); // 후원통계 데이터 저장
-  //       setLoding(false); // 로딩 상태 완료
-  //     } catch (error) {
-  //       console.log("데이터를 불러오는 중 오류 발생:", error);
-  //       setLoding(false);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, [projectId]);
-
-  // if (loading) {
-  //   return <div>로딩중..</div>;
-  // }
-
-  // if (!projectData || supportStat) {
-  //   return <div>데이터를 가져오는 중 오류가 발생</div>;
-  // }
-
-  // 백엔드가 준비되지 않았을 때 가짜 데이터 사용
+  // 두 API를 병렬로 호출하여 데이터를 가져옴
   useEffect(() => {
     const fetchData = async () => {
+      console.log(projectId);
+      console.log(user.key);
       try {
-        const projectResponse =
-          mockProjectData[projectId] || mockProjectData[1];
-        const supportStatResponse = mockSupportStat;
+        // 프로젝트 상세 정보 api 호출
+        const projectResponse = await axios({
+          method: "GET",
+          url: `http://localhost:9000/api/projects/myproject/${projectId}`,
+          params: {
+            memberId: user.key,
+          },
+        }).then((response) => response);
+        console.log(projectResponse);
 
-        setProjectData(projectResponse); // 프로젝트 데이터 저장
-        setSupportStat(supportStatResponse); // 후원 통계 데이터 저장
+        // 후원 통계 api 호출
+        // const supportStatResponse = await axios.get(
+        //   `/projects/myproject/sptstat/${projectId}`
+        // );
+        setSupportStat(mockSupportStat);
+
+        setProjectData(projectResponse.data); // 프로젝트 데이터 저장
+        // setSupportStat(supportStatResponse.data); // 후원통계 데이터 저장
+
         setLoading(false); // 로딩 상태 완료
       } catch (error) {
         console.log("데이터를 불러오는 중 오류 발생:", error);
@@ -363,17 +342,94 @@ export default function MyProjectDetails({setMyprojectClick}) {
     };
 
     fetchData();
-  }, [projectId]);
+  }, []);
+
+  // const [projectId, setProjectId] = useState(null);
+  const [statistics, setStatistics] = useState(null);
+  const [error, setError] = useState(null);
+
+  // 프로젝트 ID 가져오기
+  // const fetchUserProjectId = async (memberId) => {
+  //   try {
+  //     console.log("API 요청 중..."); // 요청 전에 로그 출력
+  //     const response = await axios.get(
+  //       `http://localhost:9000/order/user/project?memberId=${memberId}`
+  //     );
+  //     console.log("응답 데이터:", response.data); // 응답 로그 출력
+
+  //     // 응답에서 projectId를 추출
+  //     const userProjectId = response.data; // 단순히 ID를 반환하므로, 아래와 같이 수정
+  //     setProjectId(userProjectId); // 상태에 저장
+  //   } catch (error) {
+  //     console.error("프로젝트 ID를 가져오는 중 오류 발생:", error);
+  //   }
+  // };
+
+  // 프로젝트 통계 정보를 가져오는 함수
+  // const fetchProjectStatistics = async (projectId) => {
+  //   if (!projectId) return; // projectId가 없으면 함수 종료
+  //   try {
+  //     console.log("projectId:", projectId); // projectId 확인
+  //     const response = await axios.get(
+  //       `http://localhost:9000/order/statistics/${projectId}`
+  //     );
+  //     setStatistics(response.data); // 통계 정보를 상태에 저장
+  //     setLoading(false); // 로딩 완료
+  //   } catch (err) {
+  //     setError("프로젝트 통계 정보를 가져오는 중 오류가 발생했습니다.");
+  //     setLoading(false); // 로딩 완료
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   const memberId = 8; // JWT로 변경
+  //   fetchUserProjectId(memberId); // 사용자 프로젝트 ID 가져오기
+  // }, []); // 빈 배열을 전달하여 컴포넌트가 처음 렌더링될 때만 호출
+
+  // useEffect(() => {
+  //   if (projectId) {
+  //     fetchProjectStatistics(projectId); // projectId가 설정되면 통계 가져오기
+  //   }
+  // }, [projectId]); // projectId가 변경될 때마다 호출
 
   if (loading) {
-    return <div>로딩 중...</div>;
+    return <div>로딩중..</div>;
   }
 
-  if (!projectData || !supportStat) {
-    return <div>데이터를 가져오는 중 오류가 발생했습니다.</div>;
+  if (!projectData && !supportStat) {
+    return <div>데이터를 가져오는 중 오류가 발생</div>;
   }
+
+  // 백엔드가 준비되지 않았을 때 가짜 데이터 사용
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const projectResponse =
+  //         mockProjectData[projectId] || mockProjectData[1];
+  //       const supportStatResponse = mockSupportStat;
+
+  //       setProjectData(projectResponse); // 프로젝트 데이터 저장
+  //       setSupportStat(supportStatResponse); // 후원 통계 데이터 저장
+  //       setLoading(false); // 로딩 상태 완료
+  //     } catch (error) {
+  //       console.log("데이터를 불러오는 중 오류 발생:", error);
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, [projectId]);
+
+  // if (loading) {
+  //   return <div>로딩 중...</div>;
+  // }
+
+  // if (!projectData || !supportStat) {
+  //   return <div>데이터를 가져오는 중 오류가 발생했습니다.</div>;
+  // }
 
   const {
+    approval,
     category, // 카테고리
     organizer_id, // 진행자
     title, // 제목
@@ -383,7 +439,7 @@ export default function MyProjectDetails({setMyprojectClick}) {
     startDate, // 시작일
     endDate, // 마감일
     supporterCnt, // 후원자수
-    thumbnail_url, // 썸네일 주소
+    productImages, // 썸네일 주소
     rejectMessage, // 거절 메세지
   } = projectData;
 
@@ -400,7 +456,7 @@ export default function MyProjectDetails({setMyprojectClick}) {
         return "승인완료";
       case 0:
         return "승인대기";
-      case -1:
+      case 2:
         return "승인거절";
       default:
         return "미정";
@@ -443,8 +499,8 @@ export default function MyProjectDetails({setMyprojectClick}) {
       <InfoSection>
         {/* 이미지 섹션 */}
         <ThumbnailContainer>
-          {thumbnail_url ? (
-            <ThumbnailImage src={thumbnail_url} alt="Project Thumbnail" />
+          {productImages ? (
+            <ThumbnailImage src={productImages[0]} alt="Project Thumbnail" />
           ) : (
             <Typography variant="body2" color="textSecondary">
               이미지가 없습니다.
@@ -455,14 +511,14 @@ export default function MyProjectDetails({setMyprojectClick}) {
         {/* 관리자 승인 상태에 따른 StatusButton */}
         <Box>
           <StatusButton
-            status={getApprovalStatus(projectData.approval)}
-            label={getApprovalStatus(projectData.approval)}
-            showRejectReason={true} // 이 페이지에서만 Tooltip이 작동하도록 설정
+            status={getApprovalStatus(approval)}
+            label={getApprovalStatus(approval)}
+            showRejectReason={approval === 2 ? true : false} // 이 페이지에서만 Tooltip이 작동하도록 설정
             rejectMessage={rejectMessage} // 거절 사유 전달
             sx={{
               marginTop: "-50px",
               marginRight: "-1150px",
-              backgroundColor: projectData.approval === -1 ? "red" : "#4caf50", // 거절일 때는 버튼 색을 다르게
+              backgroundColor: projectData.approval === 2 ? "red" : "#4caf50", // 거절일 때는 버튼 색을 다르게
               borderRadius: "50px",
               padding: "10px 20px",
               zIndex: 2, // Tooltip이 정상적으로 표시되도록 zIndex 추가
@@ -546,7 +602,8 @@ export default function MyProjectDetails({setMyprojectClick}) {
           >
             <Typography style={{ fontSize: "14px" }}>펀딩기간</Typography>
             <Typography style={{ fontSize: "14px", marginLeft: "50px" }}>
-              {startDate}~{endDate}
+              {startDate}~ {endDate}
+              {/* {new Date(statistics.startDate).toLocaleDateString()}~{new Date(statistics.endDate).toLocaleDateString()} */}
             </Typography>
           </Box>
         </ProgressSection>
@@ -574,7 +631,8 @@ export default function MyProjectDetails({setMyprojectClick}) {
       {tabIndex === 0 && (
         <>
           <div style={{ fontSize: "20px" }}>
-            시작일: {startDate} | 마감일: {endDate}
+            {/* 시작일: {new Date(statistics.startDate).toLocaleDateString()} |
+            마감일: {new Date(statistics.endDate).toLocaleDateString()} */}
           </div>
 
           <DashboardSection
@@ -605,7 +663,7 @@ export default function MyProjectDetails({setMyprojectClick}) {
               </span>
               <br />
               <span style={{ color: "black", fontSize: "24px" }}>
-                {supportStat.totalAmount.toLocaleString()}원
+                {/* {statistics.totalSupportAmount.toLocaleString()}원 */}
               </span>
               <br />
             </Typography>
@@ -613,7 +671,9 @@ export default function MyProjectDetails({setMyprojectClick}) {
               <span style={{ color: "red", fontSize: "18px" }}>달성률</span>
               <br />
               <span style={{ color: "black", fontSize: "24px" }}>
-                {supportStat.percentage}%
+                {/* {(statistics.totalSupportAmount / statistics.targetFunding) *
+                  100} */}
+                %
               </span>
               <br />
             </Typography>
@@ -622,7 +682,7 @@ export default function MyProjectDetails({setMyprojectClick}) {
               <span style={{ color: "red", fontSize: "18px" }}>후원자 수</span>
               <br />
               <span style={{ color: "black", fontSize: "24px" }}>
-                {supportStat.supporters}명
+                {/* {statistics.totalSupporters}명 */}
               </span>
               <br />
             </Typography>
@@ -631,7 +691,7 @@ export default function MyProjectDetails({setMyprojectClick}) {
               <span style={{ color: "red", fontSize: "18px" }}>남은 기간</span>
               <br />
               <span style={{ color: "black", fontSize: "24px" }}>
-                {supportStat.remainingDays}일
+                {/* {statistics.remainingDays}일 */}
               </span>
               <br />
             </Typography>
@@ -643,4 +703,6 @@ export default function MyProjectDetails({setMyprojectClick}) {
       {tabIndex === 1 && <SupporterTable />}
     </DetailContainer>
   );
-}
+};
+
+

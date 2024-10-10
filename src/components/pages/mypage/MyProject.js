@@ -21,7 +21,7 @@ import { useNavigate } from "react-router-dom";
 import { useUser } from "../../../UserContext";
 
 // 프로젝트 카드 컴포넌트
-export const ProductCard = ({ product, setMyprojectClick }) => {
+export const ProductCard = ({ product, setMyprojectClick, setMyprojectId }) => {
   console.log(product.approval);
   console.log(product);
   const navigate = useNavigate(); // 페이지 이동을 위한 훅
@@ -29,6 +29,7 @@ export const ProductCard = ({ product, setMyprojectClick }) => {
   // 카드 클릭 시 상세 페이지로 이동 (지금은 index +1 사용할거임)
   const handleCardClick = () => {
     console.log("누락된 인덱스:", product.id); // index값 확인
+    setMyprojectId(product.id);
 
     // index값이 유효한 숫자인지 체크하고 url로 전달
     if (typeof product.id == "number" && !isNaN(product.id)) {
@@ -182,7 +183,7 @@ export const ProductCard = ({ product, setMyprojectClick }) => {
 };
 
 // Myproject 컴포넌트
-export const Myproject = ({ setMyprojectClick }) => {
+export const Myproject = ({ setMyprojectClick, setMyprojectId }) => {
   //const {user} = useUser();
   const { user } = useUser();
   // if(!isLogin){
@@ -341,6 +342,7 @@ export const Myproject = ({ setMyprojectClick }) => {
           >
             <ProductCard
               product={product}
+              setMyprojectId={setMyprojectId}
               setMyprojectClick={setMyprojectClick}
             />
           </Grid>

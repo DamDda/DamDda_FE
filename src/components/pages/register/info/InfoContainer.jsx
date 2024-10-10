@@ -7,6 +7,7 @@ import {
   FormControl,
   Chip,
   IconButton,
+  Modal,
 } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
@@ -22,6 +23,7 @@ import "../Register.css";
 import "../../../styles/style.css";
 import SortableItem from "./SortableItem";
 import datejs from "dayjs";
+import Preview from "../preview/Preview";
 
 const InfoContainer = (props) => {
   const {
@@ -35,6 +37,7 @@ const InfoContainer = (props) => {
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [activeId, setActiveId] = useState(null);
+  const [openPreview, setOpenPreview] = useState(false);
 
   const handleChange = (event) => {
     setFormData({
@@ -128,6 +131,9 @@ const InfoContainer = (props) => {
   const handleDateChange = (date, name) => {
     setFormData({ ...formData, [name]: date });
   };
+
+  const handleOpen = () => setOpenPreview(true);
+  const handleClose = () => setOpenPreview(false);
 
   return (
     <div className="info-container">
@@ -453,10 +459,39 @@ const InfoContainer = (props) => {
             <Button
               className="button"
               variant="contained"
+              onClick={handleOpen}
               style={{ backgroundColor: "#7a82ed" }}
             >
               미리보기
             </Button>
+
+            {/* 미리보기 모달 창 */}
+            <Modal open={openPreview} onClose={handleClose}>
+              <div
+                style={{
+                  padding: "20px",
+                  background: "white",
+                  margin: "auto",
+                  width: "80%",
+                  maxWidth: "600px",
+                  borderRadius: "10px",
+                  top: "20%",
+                  position: "absolute",
+                }}
+              >
+                {/* 입력한 값들을 미리보기로 전달 */}
+
+                <Preview
+                  formData={formData}
+                  tags={tags}
+                  productImages={productImages}
+                />
+
+                <Button variant="contained" onClick={handleClose}>
+                  닫기
+                </Button>
+              </div>
+            </Modal>
           </div>
         </div>
       </div>

@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+
 import {
   Typography,
   LinearProgress,
@@ -22,7 +24,7 @@ import "./Detail.css";
 
 import { Header } from "../../layout/Header";
 import { Footer } from "../../layout/Footer";
-import { useLocation } from "react-router-dom";
+import { useLocation,useNavigate } from "react-router-dom";
 import Carousel from 'react-bootstrap/Carousel';
 import 'bootstrap/dist/css/bootstrap.min.css'; // 부트스트랩 CSS 로드
 import axios from "axios"; // axios를 사용하여 REST API 호출
@@ -85,6 +87,7 @@ const projectData = {
 
 
 const Detail = () => {
+
   //const { user } = useUser();
   
   const { user } = useUser();
@@ -92,6 +95,7 @@ const Detail = () => {
   //   console.log(user);
   //   //setUser(prevUser => ({ ...prevUser, key: 0 }));
   // }
+
 
 
   const {
@@ -109,7 +113,7 @@ const Detail = () => {
     product_url,
   } = projectData;
 
-  
+
   // 페이지네이션 요청을 보내는 함수
   const fetchProducts = () => {
     console.log("dddddddddddddddddddd" + user.key)
@@ -676,7 +680,11 @@ const ProductCarousel = ({ productDetail }) => {
               <Tab label="Q&A" onClick={() => scrollToSection("qna")} />
             </Tabs>
             <Typography variant="body1" style={{ marginTop: "10px" }}>
-              <ProjectDetail descriptionDetail={productDetail.descriptionDetail} descriptionImages={productDetail.descriptionImages}/>
+              <ProjectDetail 
+              descriptionDetail={productDetail.descriptionDetail} 
+              descriptionImages={productDetail.descriptionImages}
+              projectId={projectId}
+              projectTitle={productDetail.title}/>
             </Typography>
           </div>
 

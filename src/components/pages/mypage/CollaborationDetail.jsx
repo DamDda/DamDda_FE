@@ -1,27 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { 
-    Paper, 
-    Typography, 
-    Button, 
-    TextField, 
-    Box,
-    Dialog, 
-    DialogTitle, 
-    DialogContent, 
-    IconButton,
-    DialogContentText, 
-    CircularProgress,
-    DialogActions} from '@mui/material';    
-import DeleteIcon from '@mui/icons-material/Delete'; // 올바른 경로로 임포트
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import {
+  Paper,
+  Typography,
+  Button,
+  TextField,
+  Box,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  IconButton,
+  DialogContentText,
+  CircularProgress,
+  DialogActions,
+} from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete"; // 올바른 경로로 임포트
+import axios from "axios";
 import { useUser } from "../../../UserContext";
-import InputAdornment from '@mui/material/InputAdornment';
-import FilePresentIcon from '@mui/icons-material/FilePresent';
-
+import InputAdornment from "@mui/material/InputAdornment";
+import FilePresentIcon from "@mui/icons-material/FilePresent";
 
 const CollaborationDetail = ({ collabId, filter, setCollabClick }) => {
-    
   const { user } = useUser();
   //const { id } = useParams();
   const [projectDetail, setProjectDetail] = useState(null);
@@ -33,53 +32,47 @@ const CollaborationDetail = ({ collabId, filter, setCollabClick }) => {
     try {
       const response = await axios.get(`/collab/readDetail/${collabId}`, {
         withCredentials: true,
-      })
-      console.log(response.data)
-      setProjectDetail(response.data)
+      });
+      console.log(response.data);
+      setProjectDetail(response.data);
     } catch (error) {
-      console.log('handleReadDetail에서 에러 발생 ' + error)
+      console.log("handleReadDetail에서 에러 발생 " + error);
     }
-  }
+  };
 
   useEffect(() => {
     handleReadDetail();
   }, []);
 
-  if (!projectDetail) return <CircularProgress />;  // 로딩 상태 표시
+  if (!projectDetail) return <CircularProgress />; // 로딩 상태 표시
 
-
-
-
-
-  const handleDownload = async fileName => {
+  const handleDownload = async (fileName) => {
     console.log(fileName); // 파일명 확인용 로그
-  
+
     try {
       const response = await axios.get(`/collab/download`, {
         params: { fileName },
-        responseType: 'blob',
+        responseType: "blob",
         withCredentials: true,
       });
-  
+
       // Content-Disposition 헤더에서 파일명 추출
-      const contentDisposition = response.headers['content-disposition'];
-  
+      const contentDisposition = response.headers["content-disposition"];
+
       // Blob URL 생성 및 다운로드 처리
       const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = url;
-      link.setAttribute('download', fileName.substring(43)); // 다운로드 파일명 설정 //이거 수정
+      link.setAttribute("download", fileName.substring(43)); // 다운로드 파일명 설정 //이거 수정
       document.body.appendChild(link);
       link.click();
       link.remove();
       window.URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('파일 다운로드 중 에러 발생:', error);
-      alert('파일 다운로드에 실패했습니다.');
+      console.error("파일 다운로드 중 에러 발생:", error);
+      alert("파일 다운로드에 실패했습니다.");
     }
   };
-
-
 
   // 모달 열기
   const handleClickOpen = (action) => {
@@ -104,34 +97,31 @@ const CollaborationDetail = ({ collabId, filter, setCollabClick }) => {
   /*협업받은 제안자일 때만 approval, reject 가능하도록 설정 */
   const handleApproval = async (status) => {
     let approvalPath;
-    if(status === "승인"){
-        approvalPath = `/collab/approval`
-    } else if(status === "거절"){
-        approvalPath = `/collab/reject`
+    if (status === "승인") {
+      approvalPath = `/collab/approval`;
+    } else if (status === "거절") {
+      approvalPath = `/collab/reject`;
     }
     try {
       await axios.put(approvalPath, [collabId], {
         withCredentials: true,
-      })
+      });
       alert(`선택된 협업들이 ${status}되었습니다.`);
       setCollabClick(false);
     } catch (error) {
-        console.error(`${status} 처리 중 에러 발생:`, error);
-        alert(`${status} 처리에 실패했습니다.`);
+      console.error(`${status} 처리 중 에러 발생:`, error);
+      alert(`${status} 처리에 실패했습니다.`);
     }
-  }
+  };
 
   const handleDelete = async (status) => {
     await axios.delete(`/collab/delete`, {
-        params: { user_id: user.id }, 
-        data: [collabId]  // 바로 배열을 전송
-      });
-    alert(`선택된 협업이 ${status}되었습니다.`)
+      params: { user_id: user.id },
+      data: [collabId], // 바로 배열을 전송
+    });
+    alert(`선택된 협업이 ${status}되었습니다.`);
     setCollabClick(false);
-  }
-
-
-
+  };
 
   return (
     <>
@@ -370,15 +360,15 @@ const CollaborationDetail = ({ collabId, filter, setCollabClick }) => {
                 {/* 파일 아이콘과 파일명을 표시하는 입력 필드 */}
 
                 <Box
-                sx={{
-                  display: "flex",
-                  flexFlow: "row wrap",
-                  justifyContent: "flex-start",
-                  alignItems: "flex-start",
-                  margin: "0px auto",
-                  width: "80%",
-                  maxWidth: "800px",
-                }}
+                  sx={{
+                    display: "flex",
+                    flexFlow: "row wrap",
+                    justifyContent: "flex-start",
+                    alignItems: "flex-start",
+                    margin: "0px auto",
+                    width: "80%",
+                    maxWidth: "800px",
+                  }}
                 >
                   {projectDetail.collabDocList.map((fileName, index) => {
                     // 파일 이름에서 첫 번째 언더바 이후의 진짜 파일 이름만 추출

@@ -24,7 +24,7 @@ import "./Detail.css";
 
 import { Header } from "../../layout/Header";
 import { Footer } from "../../layout/Footer";
-import { useLocation } from "react-router-dom";
+import { useLocation,useNavigate } from "react-router-dom";
 import Carousel from 'react-bootstrap/Carousel';
 import 'bootstrap/dist/css/bootstrap.min.css'; // 부트스트랩 CSS 로드
 import axios from "axios"; // axios를 사용하여 REST API 호출
@@ -86,6 +86,7 @@ const projectData = {
 
 
 const Detail = () => {
+  
   const {
     category,
     organizer_id, //진행자 닉네임
@@ -101,7 +102,7 @@ const Detail = () => {
     product_url,
   } = projectData;
 
-  
+
   // 페이지네이션 요청을 보내는 함수
   const fetchProducts = () => {
     axios
@@ -109,7 +110,7 @@ const Detail = () => {
         `http://${window.location.hostname}:9000/api/projects/${projectId}`,
         {
           params: {
-            memberId: 2,
+            memberId:memberId,
           },
         }
       )
@@ -258,7 +259,7 @@ const Detail = () => {
   // };
 
 
-  const memberId = 2;
+  const memberId = 3;//jwt 적용 후 바꿔야함
 
   const handleHeartClick = async (prev) => {
     const newHeartedStatus = !prev; // 하트 상태 반전
@@ -673,7 +674,7 @@ const ProductCarousel = ({ productDetail }) => {
               <ProjectDetail 
               descriptionDetail={productDetail.descriptionDetail} 
               descriptionImages={productDetail.descriptionImages}
-              projectId={productDetail.projectId}
+              projectId={projectId}
               projectTitle={productDetail.title}/>
             </Typography>
           </div>

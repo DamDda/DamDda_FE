@@ -49,8 +49,8 @@ function Payment() {
   };
 
   // 임의로 정해놓은 값
-  const userId = 1;
-  const projectId = 2;
+  // const userId = 1;
+  // const projectId = 2;
 
   useEffect(() => {
     console.log("OrderInfo updated: ", orderInfo);
@@ -159,16 +159,16 @@ useEffect(() => {
       },
       supportingProject: {
         user: {
-          id: userId  // 사용자 ID
+          id: orderInfo.memberId  // 사용자 ID
         },
         project: {
-          id: projectId  // 프로젝트 ID
+          id: orderInfo.projectId  // 프로젝트 ID
         },
         supportedAt: new Date() // 후원 날짜
       },
       supportingPackage: {
         packageName: orderInfo.selectedPackages[0].packageName, // 패키지 이름
-        packagePrice: orderInfo.totalAmount, // 결제 금액
+        packagePrice: orderInfo.totalAmount+3000, // 결제 금액
         packageCount: orderInfo.selectedPackages[0].quantity, // 패키지 수량 추가
       },
     };

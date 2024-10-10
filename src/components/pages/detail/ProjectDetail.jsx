@@ -121,8 +121,8 @@ const ProjectDetail = ({descriptionDetail, descriptionImages,projectId,projectTi
   const [showMore, setShowMore] = useState(false); // 더보기 상태
   const detailRef = useRef(null);
   const [project_package, setProject_package] = useState([]);
-  // const [projectId, setProjectId] = useState(1);
-  // 컴포넌트 내에서
+
+
   const navigate = useNavigate();
 
   // 버튼 클릭 시 호출될 함수  
@@ -139,7 +139,9 @@ const ProjectDetail = ({descriptionDetail, descriptionImages,projectId,projectTi
         quantity: pkg.count,  // 수량
       })),
       totalAmount: totalAmount,  // 총 금액
-      // projectId: projectId, // projectId 추가
+      projectId: projectId, // projectId 추가
+      memberId:3,// jwt로 바꿔야함
+    
 
     };
 

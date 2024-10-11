@@ -3,6 +3,10 @@ import ProjectCard from "./ProjectCard"; // ProjectCard 컴포넌트
 import "./css/SupportedProjects.css"; // CSS 파일 경로 수정
 import axios from "axios";
 import { useUser } from "../../../UserContext";
+import Cookies from "js-cookie";
+import { SERVER_URL } from "../../../constants/URLs";
+
+
 
 export default function SupportedProjects() {
   const {user} = useUser();
@@ -19,7 +23,12 @@ export default function SupportedProjects() {
   // 백엔드에서 후원한 프로젝트 목록을 가져오는 함수 (주석 처리)
   const fetchOrders = async () => {
     try {
-      const response = await axios.get(`http://localhost:9000/order/supportingprojects?userId=${userId}`);
+      // const response = await axios.get(`${SERVER_URL}/order/supportingprojects?userId=${userId}`);
+      const response = await axios.get(`${SERVER_URL}/order/supportingprojects`, {
+        headers: {
+          ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+        },
+      });
 
       setProjects(response.data);
       setLoading(false);

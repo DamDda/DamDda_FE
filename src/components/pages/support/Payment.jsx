@@ -5,6 +5,9 @@ import { Radio, RadioGroup, FormControlLabel, FormControl } from '@mui/material'
 import kakaopay from '../../assets/kakao.png'; // 로고 파일
 import tosspay from '../../assets/toss.png'; // 로고 파일
 import naverpay from '../../assets/naver.png'; // 로고 파일
+import Cookies from "js-cookie";
+import { SERVER_URL } from "../../../constants/URLs";
+
 
 import axios from 'axios';
 import './Payment.css';
@@ -176,7 +179,7 @@ useEffect(() => {
     try {
       // 주문 정보 생성 POST 요청 (결제 대기중 상태로 먼저 저장)
       console.log('Order Data:', orderData); // 서버로 전송 전에 데이터 확인
-      const response = await axios.post('http://localhost:9000/order/create', orderData);
+      const response = await axios.post(`${SERVER_URL}/order/create`, orderData);
       console.log('주문생성 완료 :', response);
 
       // 서버에서 반환된 orderId 가져오기
@@ -195,7 +198,7 @@ useEffect(() => {
       } else if (paymentMethod === 'kakaoPay') {
         // 카카오페이 결제창 호출
         axios
-          .post("http://localhost:9000/payment/kakao/ready", { orderId: createdOrderId })
+          .post(`${SERVER_URL}/payment/kakao/ready`, { orderId: createdOrderId })
           .then((res) => {
             window.location.href = res.data.next_redirect_pc_url; // 카카오페이 결제 페이지로 리디렉션
           })

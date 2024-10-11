@@ -28,6 +28,9 @@ import axios from "axios";
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { useUser } from "../../../UserContext";
 import { SafetyDivider, SsidChartOutlined } from '@mui/icons-material';
+import Cookies from "js-cookie";
+import { SERVER_URL } from "../../../constants/URLs";
+
 
 
 const CollaborationList = ({setCollabClick, setCollabId, filter, setFilter}) => {
@@ -62,12 +65,19 @@ const CollaborationList = ({setCollabClick, setCollabId, filter, setFilter}) => 
     console.log('user_id' + user.id)
     console.log(path);
     const response = await axios.get(
-      `/collab/${path}`,
-      { params: { page, size, userId: user.id } },
+      `${SERVER_URL}/collab/${path}`,
       {
+        params: { 
+          page, 
+          size, 
+          // userId: user.id 
+        },
         withCredentials: true,
+        headers: {
+          ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+         },
       }
-    )
+    );
     const { dtoList, total, page: responsePage } = response.data
     console.log('dtoList:', dtoList)
     setCollaborations(dtoList)
@@ -104,8 +114,14 @@ const CollaborationList = ({setCollabClick, setCollabId, filter, setFilter}) => 
 
   const handleDelete = async () => {
     console.log(selectedRows)
-    await axios.delete(`/collab/delete`, {
-        params: { user_id: user.id }, 
+    await axios.delete(`${SERVER_URL}/collab/delete`, {
+        params: { 
+          // user_id: user.id 
+        }, 
+        headers: {
+          ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+      },
+   
         data: selectedRows  // 바로 배열을 전송
       });
     alert('선택된 협업이 삭제되었습니다.')
@@ -122,9 +138,9 @@ const CollaborationList = ({setCollabClick, setCollabId, filter, setFilter}) => 
   const handleApproval = async (status) => {
     let approvalPath;
     if(status === "승인"){
-        approvalPath = `/collab/approval`
+        approvalPath = `${SERVER_URL}/collab/approval`
     } else if(status === "거절"){
-        approvalPath = `/collab/reject`
+        approvalPath = `${SERVER_URL}/collab/reject`
     }
     try {
       await axios.put(approvalPath, selectedRows, {

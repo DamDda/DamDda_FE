@@ -15,6 +15,9 @@ import MypageHeader from "./MypageHeader";
 import axios from "axios";
 import { useUser } from "../../../UserContext";
 import CollaborationDetail from "./CollaborationDetail";
+import Cookies from "js-cookie";
+import { SERVER_URL } from "../../../constants/URLs";
+
 
 const Mypage = () => {
   const [profileData, setProfileData] = useState(null); // 프로필 데이터 상태
@@ -27,7 +30,11 @@ const Mypage = () => {
   const fetchProfileData = async () => {
     try {
       console.log("User state:", user);
-      const response = await axios.get(`/members/profile?loginId=${user.id}`, {
+      // const response = await axios.get(`${SERVER_URL}/members/profile?loginId=${user.id}`, {
+      const response = await axios.get(`${SERVER_URL}/members/profile`, {
+        headers: {
+          ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+        },
         withCredentials: true,
       });
       console.log(response.data);

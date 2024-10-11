@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { South } from '@mui/icons-material';
+import Cookies from "js-cookie";
+import { SERVER_URL } from "../../../constants/URLs";
 
 function ProjectStatistics() {
   const [projectId, setProjectId] = useState(null);
@@ -12,7 +14,13 @@ function ProjectStatistics() {
 const fetchUserProjectId = async (memberId) => {
   try {
     console.log('API 요청 중...'); // 요청 전에 로그 출력
-    const response = await axios.get(`http://localhost:9000/order/user/project?memberId=${memberId}`);
+    // const response = await axios.get(`${SERVER_URL}/order/user/project?memberId=${memberId}`, {
+      const response = await axios.get(`${SERVER_URL}/order/user/project`, {
+      headers: {
+        ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+       },
+
+    });
     console.log('응답 데이터:', response.data); // 응답 로그 출력
 
     // 응답에서 projectId를 추출
@@ -28,7 +36,7 @@ const fetchProjectStatistics = async (projectId) => {
   if (!projectId) return; // projectId가 없으면 함수 종료
   try {
     console.log('projectId:', projectId); // projectId 확인
-    const response = await axios.get(`http://localhost:9000/order/statistics/${projectId}`);
+    const response = await axios.get(`${SERVER_URL}/order/statistics/${projectId}`);
     setStatistics(response.data); // 통계 정보를 상태에 저장
     setLoading(false); // 로딩 완료
   } catch (err) {

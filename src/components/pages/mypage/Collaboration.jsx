@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useUser } from '../../../UserContext'
+import { SERVER_URL } from "../../../constants/URLs";
+
 const Collab = () => {
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
@@ -31,7 +33,7 @@ const Collab = () => {
   const handleDownload = async fileName => {
     console.log(fileName) //4604642e-2515-466e-aa78-a18afebf9a3b_성공성공오예.txt
     try {
-      const response = await axios.get(`/collab/download`, {
+      const response = await axios.get(`${SERVER_URL}/collab/download`, {
         params: { fileName },
         responseType: 'blob',
         withCredentials: true,
@@ -87,7 +89,7 @@ const Collab = () => {
     console.log('handleAddCollab' + CollaborateDate)
 
     try {
-      await axios.post('/collab/register/1', formData, {
+      await axios.post(`${SERVER_URL}/collab/register/1`, formData, {
         //projectId 받아오기
         withCredentials: true,
         headers: {

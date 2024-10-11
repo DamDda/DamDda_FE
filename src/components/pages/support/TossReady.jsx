@@ -117,6 +117,9 @@ import { useEffect, useState } from "react";
 import { loadTossPayments, ANONYMOUS } from "@tosspayments/tosspayments-sdk";
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Cookies from "js-cookie";
+import { SERVER_URL } from "../../../constants/URLs";
+
 
 const generateRandomString = () => window.btoa(Math.random()).slice(0, 20);
 const clientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
@@ -221,7 +224,7 @@ export default function TossReady() {
 
         console.log('반환완료');
        // 결제 결과 확인을 위해 successUrl에 리다이렉트된 후 결제 상태를 가져옴
-      const response = await axios.get('http://localhost:9000/payment/toss/success/getOrder', {
+      const response = await axios.get(`${SERVER_URL}/payment/toss/success/getOrder`, {
         params: {
           orderId: createdOrderId.toString(),
         },

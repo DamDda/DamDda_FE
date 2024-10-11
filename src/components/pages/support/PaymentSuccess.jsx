@@ -3,6 +3,8 @@ import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import styles from './PaymentSuccess.module.css';  // CSS Modules import
 import { useNavigate } from 'react-router-dom'; // useNavigate를 import
+import Cookies from "js-cookie";
+import { SERVER_URL } from "../../../constants/URLs";
 
 import '../../styles/style.css'
 import { Header } from "../../layout/Header";
@@ -28,7 +30,7 @@ const PaymentSuccess = () => {
       paymentStatus: '결제 완료',
     };
 
-    await axios.put(`http://localhost:9000/order/${orderId}/status`, updatedPaymentStatus); // JSON body로 전송
+    await axios.put(`${SERVER_URL}/order/${orderId}/status`, updatedPaymentStatus); // JSON body로 전송
     console.log('결제 완료:', updatedPaymentStatus);
   } catch (error) {
     console.error('결제 상태 변경 중 오류 발생:', error);
@@ -45,7 +47,7 @@ const PaymentSuccess = () => {
       // orderId로 주문 정보 요청
       // const response = await axios.get(`http://localhost:9000/order/details/${orderId}`);
 
-      const response = await axios.get(`http://localhost:9000/order/details/${orderId}`);
+      const response = await axios.get(`${SERVER_URL}/order/details/${orderId}`);
       setOrderData(response.data);
       setLoading(false); // 데이터를 가져왔으므로 로딩 완료
       handlePaymentCompletion(orderId);

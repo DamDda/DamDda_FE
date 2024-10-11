@@ -24,6 +24,9 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import StatusButton from "./StatusButton";
 // import { Row } from "react-bootstrap";
 import axios from "axios";
+import Cookies from "js-cookie";
+import { SERVER_URL } from "../../../constants/URLs";
+
 
 import { useUser } from "../../../UserContext";
 
@@ -224,7 +227,7 @@ function SupporterTable() {
   // 주문 정보를 가져오는 함수
   const fetchOrders = async () => {
     try {
-      const response = await axios.get("http://localhost:9000/order/all");
+      const response = await axios.get(`${SERVER_URL}/order/all`);
       setOrders(response.data); // 가져온 주문 정보를 상태에 저장
       setLoading(false); // 로딩 완료
     } catch (err) {
@@ -318,10 +321,14 @@ export default function MyProjectDetails({ projectId, setMyprojectClick }) {
         // 프로젝트 상세 정보 api 호출
         const projectResponse = await axios({
           method: "GET",
-          url: `http://localhost:9000/api/projects/myproject/${projectId}`,
+          url: `${SERVER_URL}/api/projects/myproject/${projectId}`,
           params: {
-            memberId: user.key,
+            // memberId: user.key,
           },
+          headers: {
+            ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+         },
+
         }).then((response) => response);
         console.log(projectResponse);
 

@@ -6,6 +6,9 @@ import styles from './PaymentSuccess.module.css';  // CSS Modules import
 import '../../styles/style.css'
 import { Header } from "../../layout/Header";
 import { Footer } from "../../layout/Footer";
+import Cookies from "js-cookie";
+import { SERVER_URL } from "../../../constants/URLs";
+
 
 import cart from '../../assets/cart.png'
 const PaymentFail = () => {
@@ -26,7 +29,7 @@ const PaymentFail = () => {
       // orderId로 주문 정보 요청
       // const response = await axios.get(`http://localhost:9000/order/details/${orderId}`);
 
-      const response = await axios.get(`http://localhost:9000/order/details/${orderId}`);
+      const response = await axios.get(`${SERVER_URL}/order/details/${orderId}`);
       setOrderData(response.data);
       setLoading(false); // 데이터를 가져왔으므로 로딩 완료
     } catch (err) {

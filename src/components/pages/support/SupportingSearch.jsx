@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import Cookies from "js-cookie";
+import { SERVER_URL } from "../../../constants/URLs";
 
 function SupportingSearch() {
   const [orders, setOrders] = useState([]); // 모든 주문 정보를 저장할 상태
@@ -9,7 +11,7 @@ function SupportingSearch() {
   // 주문 정보를 가져오는 함수
   const fetchOrders = async () => {
     try {
-      const response = await axios.get('http://localhost:9000/order/all');
+      const response = await axios.get(`${SERVER_URL}/order/all`);
       setOrders(response.data); // 가져온 주문 정보를 상태에 저장
       setLoading(false); // 로딩 완료
     } catch (err) {

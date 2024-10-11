@@ -19,6 +19,9 @@ import axios from "axios";
 import { useUser } from "../../../UserContext";
 import InputAdornment from "@mui/material/InputAdornment";
 import FilePresentIcon from "@mui/icons-material/FilePresent";
+import Cookies from "js-cookie";
+import { SERVER_URL } from "../../../constants/URLs";
+
 
 const CollaborationDetail = ({ collabId, filter, setCollabClick }) => {
   const { user } = useUser();
@@ -30,7 +33,7 @@ const CollaborationDetail = ({ collabId, filter, setCollabClick }) => {
 
   const handleReadDetail = async () => {
     try {
-      const response = await axios.get(`/collab/readDetail/${collabId}`, {
+      const response = await axios.get(`${SERVER_URL}/collab/readDetail/${collabId}`, {
         withCredentials: true,
       });
       console.log(response.data);
@@ -50,7 +53,7 @@ const CollaborationDetail = ({ collabId, filter, setCollabClick }) => {
     console.log(fileName); // 파일명 확인용 로그
 
     try {
-      const response = await axios.get(`/collab/download`, {
+      const response = await axios.get(`${SERVER_URL}/collab/download`, {
         params: { fileName },
         responseType: "blob",
         withCredentials: true,
@@ -98,9 +101,9 @@ const CollaborationDetail = ({ collabId, filter, setCollabClick }) => {
   const handleApproval = async (status) => {
     let approvalPath;
     if (status === "승인") {
-      approvalPath = `/collab/approval`;
+      approvalPath = ` ${SERVER_URL}/collab/approval`;
     } else if (status === "거절") {
-      approvalPath = `/collab/reject`;
+      approvalPath = ` ${SERVER_URL}/collab/reject`;
     }
     try {
       await axios.put(approvalPath, [collabId], {
@@ -115,8 +118,14 @@ const CollaborationDetail = ({ collabId, filter, setCollabClick }) => {
   };
 
   const handleDelete = async (status) => {
-    await axios.delete(`/collab/delete`, {
-      params: { user_id: user.id },
+    await axios.delete(`${SERVER_URL}/collab/delete`, {
+      params: { 
+        // user_id: user.id 
+      },
+      headers: {
+        ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+      },
+
       data: [collabId], // 바로 배열을 전송
     });
     alert(`선택된 협업이 ${status}되었습니다.`);

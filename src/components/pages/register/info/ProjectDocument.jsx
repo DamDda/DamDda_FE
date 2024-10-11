@@ -10,6 +10,8 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { styled } from "@mui/system";
 import axios from "axios";
+import Cookies from "js-cookie";
+import { SERVER_URL } from "../../../../constants/URLs";
 
 import "../../../styles/style.css";
 
@@ -43,7 +45,7 @@ const ProjectDocument = (props) => {
     const splitted = doc.url.split("/");
     axios({
       method: "GET",
-      url: `http://localhost:9000/${splitted[0]}/${splitted[1]}/${splitted[2]}/${encodeURIComponent(splitted[3])}`,
+      url: `${SERVER_URL}/${splitted[0]}/${splitted[1]}/${splitted[2]}/${encodeURIComponent(splitted[3])}`,
       responseType: "blob",
       withCredentials: true,
     })

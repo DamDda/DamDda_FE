@@ -4,6 +4,9 @@ import { Button, Typography, Tabs, Tab } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import axios from "axios";
+import Cookies from "js-cookie";
+import { SERVER_URL } from "../../../../constants/URLs";
+
 
 import "../Register.css";
 import "../../../styles/style.css";
@@ -77,7 +80,7 @@ const Register = () => {
   // fetch writing data from server
   const fetchWriteData = async () => {
     const response = await axios
-      .get(`http://localhost:9000/api/projects/write/${projectId}`)
+      .get(`${SERVER_URL}/api/projects/write/${projectId}`)
       .then((response) => response)
       .catch((error) =>
         console.error("프로젝트 데이터를 가져오는 중 오류 발생:", error)
@@ -270,7 +273,7 @@ const Register = () => {
     try {
       const response = await axios({
         method: "PUT",
-        url: `http://localhost:9000/api/projects/register/${projectId}`,
+        url: `${SERVER_URL}/api/projects/register/${projectId}`,
         data: projectFormData,
         headers: {
           "Content-Type": "multipart/form-data",

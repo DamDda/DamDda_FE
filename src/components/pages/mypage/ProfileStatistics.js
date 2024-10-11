@@ -13,6 +13,8 @@ import TextField from "@mui/material/TextField";
 import Avatar from "@mui/joy/Avatar";
 import Modal from "./EditModal"; // 비밀번호 모달 컴포넌트
 import axios from "axios"; // API 호출을 위해 axios를 import
+import Cookies from "js-cookie";
+import { SERVER_URL } from "../../../constants/URLs";
 import { useUser } from "../../../UserContext";
 
 // *************
@@ -29,7 +31,11 @@ export default function ProfileStatistics({ setIsEditing }) {
   // }, []);
   const fetchProfileData = async () => {
     try {
-      const response = await axios.get(`/members/profile?loginId=${user.id}`, {
+      // const response = await axios.get(`${SERVER_URL}/members/profile?loginId=${user.id}`, {
+      const response = await axios.get(`${SERVER_URL}/members/profile`, {
+        headers: {
+          ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+        },
         withCredentials: true,
       });
       console.log(response.data);

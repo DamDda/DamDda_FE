@@ -19,6 +19,9 @@ import StatusButton from "./StatusButton";
 import axios from "axios"; // 나중에 백엔드 연결 시 주석 해제
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../../UserContext";
+import Cookies from "js-cookie";
+import { SERVER_URL } from "../../../constants/URLs";
+
 
 // 프로젝트 카드 컴포넌트
 export const ProductCard = ({ product, setMyprojectClick, setMyprojectId }) => {
@@ -205,13 +208,16 @@ export const Myproject = ({ setMyprojectClick, setMyprojectId }) => {
   const fetchProducts = async (page) => {
     try {
       const response = await axios.get(
-        `http://localhost:9000/api/projects/myproject`,
+        `${SERVER_URL}/api/projects/myproject`,
         {
           params: {
-            memberId: user.key,
+            // memberId: user.key,
             page: page,
             size: itemsPerPage,
           },
+          headers: {
+            ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+           },
         }
       );
 

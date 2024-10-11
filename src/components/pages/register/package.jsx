@@ -17,6 +17,8 @@ import {
 } from "@mui/material";
 
 import axios from "axios";
+import Cookies from "js-cookie";
+import { SERVER_URL } from "../../../constants/URLs";
 
 import "./Register.css";
 import "./package.css";
@@ -67,7 +69,7 @@ const Package = () => {
   const fetchGifts = async () => {
     try {
       const response = await axios.get(
-        `/packages/rewards/project/${projectId}`, //project_id를 넘겨받아야 함.
+        `${SERVER_URL}/packages/rewards/project/${projectId}`, //project_id를 넘겨받아야 함.
         { withCredentials: true }
       );
       console.log(response.data);
@@ -89,7 +91,7 @@ const Package = () => {
   //패키지 가져오는 기능.
   const fetchPackage = async () => {
     try {
-      const response = await axios.get(`/packages/project/${projectId}`, {
+      const response = await axios.get(`${SERVER_URL}/packages/project/${projectId}`, {
         //project_id를 넘겨받아야 함.
         withCredentials: true,
       });
@@ -130,7 +132,7 @@ const Package = () => {
 
     try {
       const response = await axios.post(
-        `/packages/rewards/register/${projectId}`,
+        `${SERVER_URL}/packages/rewards/register/${projectId}`,
         newGift,
         {
           withCredentials: true,
@@ -157,7 +159,7 @@ const Package = () => {
   const handleGiftDelete = async (giftId, index) => {
     if (window.confirm("정말로 삭제하시겠습니까?")) {
       try {
-        await axios.delete(`/packages/rewards/delete/${giftId}`, {
+        await axios.delete(`${SERVER_URL}/packages/rewards/delete/${giftId}`, {
           withCredentials: true,
         });
         const updatedGifts = [...reward_list];
@@ -258,7 +260,7 @@ const Package = () => {
 
     if (isEditing) {
       try {
-        await axios.put(`/packages/modify?projectId=${projectId}`, newConfig, {
+        await axios.put(`${SERVER_URL}/packages/modify?projectId=${projectId}`, newConfig, {
           withCredentials: true,
         });
 
@@ -274,7 +276,7 @@ const Package = () => {
       }
     } else {
       try {
-        await axios.post(`/packages/register/${projectId}`, newConfig, {
+        await axios.post(`${SERVER_URL}/packages/register/${projectId}`, newConfig, {
           //projectId 받아와야 함
           withCredentials: true,
           headers: {
@@ -325,7 +327,7 @@ const Package = () => {
   const handleConfigDelete = async (packageId, index) => {
     if (window.confirm("정말로 삭제하시겠습니까?")) {
       try {
-        await axios.delete(`/packages/delete/${packageId}`, {
+        await axios.delete(`${SERVER_URL}/packages/delete/${packageId}`, {
           withCredentials: true,
         });
         const updatedPackages = [...project_package];

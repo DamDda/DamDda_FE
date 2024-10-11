@@ -21,6 +21,8 @@ import logo from "../assets/logo.png"; // 로고 파일
 import { SearchBar } from "./SearchBar";
 import axios from "axios"; // axios를 사용하여 REST API 호출
 import { useUser } from "../../UserContext";
+import Cookies from "js-cookie";
+import { SERVER_URL } from "../../constants/URLs";
 
 export function Header({ search, setSearch }) {
 
@@ -65,10 +67,15 @@ export function Header({ search, setSearch }) {
   const fetchWritingProject = async () => {
     const writings = await axios({
       method: "GET",
-      url: "http://localhost:9000/api/projects/write",
+      url: `${SERVER_URL}/api/projects/write`,
       params: {
-        memberId: user.key,
+        // memberId: user.key,
       },
+      headers: {
+        ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+      },
+      
+
     })
       .then((response) => {
         setProjects(response.data);
@@ -98,7 +105,10 @@ export function Header({ search, setSearch }) {
     ) {
       const responseCode = await axios({
         method: "DELETE",
-        url: `http://localhost:9000/api/projects/${id}`,
+        url: ` ${SERVER_URL}/api/projects/${id}`,
+        headers: {
+          ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+        },
       })
         .then((response) => response.status)
         .catch((e) => console.error(e));
@@ -139,13 +149,14 @@ export function Header({ search, setSearch }) {
     );
     const projectId = await axios({
       method: "POST",
-      url: `http://localhost:9000/api/projects/register`,
+      url: ` ${SERVER_URL}/api/projects/register`,
       headers: {
         "Content-Type": "multipart/form-data",
+        ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
       },
       data: formData,
       params: {
-        memberId: user.key,
+        // memberId: user.key,
         submit: "저장",
       },
     })

@@ -29,6 +29,9 @@ import Carousel from 'react-bootstrap/Carousel';
 import 'bootstrap/dist/css/bootstrap.min.css'; // 부트스트랩 CSS 로드
 import axios from "axios"; // axios를 사용하여 REST API 호출
 import { useUser } from "../../../UserContext";
+import Cookies from "js-cookie";
+import { SERVER_URL } from "../../../constants/URLs";
+
 
 const ProductContainer = styled("div")({
   position: "relative",
@@ -119,11 +122,15 @@ const Detail = () => {
     console.log("dddddddddddddddddddd" + user.key)
     axios
       .get(
-        `http://localhost:9000/api/projects/${projectId}`,
+        ` ${SERVER_URL}/api/projects/${projectId}`,
         {
           params: {
-            memberId: user.key,
+            // memberId: user.key,
           },
+          headers: {
+            ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+     },
+
         }
       )
       .then((response) => {
@@ -276,22 +283,30 @@ const Detail = () => {
     try {
       if (prev) {
         // 좋아요 취소 요청
-        const response = await axios.delete(`http://localhost:9000/api/projects/like`, {
+        const response = await axios.delete(` ${SERVER_URL}/api/projects/like`, {
           params: {
-            memberId: user.key,
+            // memberId: user.key,
             projectId: productDetail.id,
           },
+          headers: {
+            ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+     },
+
         });
         console.log("좋아요 취소 성공:", response.data);
         setLiked_count(liked_count - 1);
         // setLiked_count((prevCount) => prevCount - 1); // 함수형 업데이트로 좋아요 수 감소
       } else {
         // 좋아요 추가 요청
-        const response = await axios.post(`http://localhost:9000/api/projects/like`, null, {
+        const response = await axios.post(` ${SERVER_URL}/api/projects/like`, null, {
           params: {
-            memberId: user.key,
+            // memberId: user.key,
             projectId: productDetail.id,
           },
+          headers: {
+            ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+     },
+
         });
         console.log("좋아요 성공:", response.data);
         setLiked_count((prevCount) => prevCount + 1); // 함수형 업데이트로 좋아요 수 증가

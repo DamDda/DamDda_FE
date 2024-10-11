@@ -5,13 +5,18 @@ import { useUser } from "../../../UserContext";
 import "../../styles/style.css";
 import { Header } from "../../layout/Header";
 import { Footer } from "../../layout/Footer";
+import Cookies from "js-cookie";
 import axios from "axios";
+import { SERVER_URL } from "../../../constants/URLs";
+
+
 const Login = () => {
   const [formData, setFormData] = useState({ id: "", password: "" });
   const [idError, setIdError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [loginError, setLoginError] = useState(""); // 로그인 오류 메시지 추가
   const { login } = useUser();
+
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -20,6 +25,21 @@ const Login = () => {
     setLoginError(""); // 입력할 때마다 로그인 오류 메시지 초기화
   };
 
+  const fetchUserInfo = async (accessToken) => {
+    const response = await axios.get(`${SERVER_URL}/member/userinfo`, {
+      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    const contextInfo = {
+      id: response.data.id,
+      key: response.data.key,
+      profile: response.data.imageUrl,
+      nickname: response.data.nickname,
+    };
+    login(contextInfo);
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -28,9 +48,6 @@ const Login = () => {
       password: formData.password,
     };
     try {
-      const response = await axios.post("/members/login", formatLogin, {
-        withCredentials: true,
-      });
       let valid = true;
       if (!formData.id) {
         setIdError("아이디를 입력해주세요.");
@@ -48,14 +65,19 @@ const Login = () => {
 
       // 모든 필드가 입력되었을 때만 검증 진행
       if (valid) {
-        console.log(response.data.split(" ")[1]);
-        console.log(response.data);
-        const userData = {
-          id: response.data.split(" ")[1],
-          nickname: response.data.split(" ")[0],
-          key: response.data.split(" ")[2],
-        };
-        login(userData);
+        const response = await axios.post(`${SERVER_URL}/member/login`, formatLogin, {
+          withCredentials: true,
+          headers: { "Content-Type": "application/json" },
+        });
+
+        const accessToken = response.headers["authorization"].split(" ")[1];
+        if (accessToken) {
+          // 토큰을 제대로 저장
+          Cookies.set("accessToken", accessToken);
+        }
+        fetchUserInfo(accessToken); // 토큰을 제대로 전달
+
+        // login(userData);
         navigate("/", { state: { id: formData.id } });
       }
     } catch (error) {

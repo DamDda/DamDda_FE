@@ -3,6 +3,7 @@ import Carousel from "react-bootstrap/Carousel";
 import ExampleCarouselImage from "../../assets/fresh-sale.png";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
+import { ADMIN_SERVER_URL } from "../../../constants/URLs";
 
 export function CarouselComponent() {
   const [images, setImages] = useState([]);
@@ -10,7 +11,7 @@ export function CarouselComponent() {
   const fetchImage = async () => {
     const response = await axios({
       method: "GET",
-      url: "http://101.79.9.79:9000/files/carousels",
+      url: `${ADMIN_SERVER_URL}/files/carousels`,
     })
       .then((response) => setImages(response.data))
       .catch((e) => console.error(e));
@@ -38,7 +39,7 @@ export function CarouselComponent() {
           {images.map((url) => (
             <Carousel.Item>
               <img
-                src={`http://101.79.9.79:9000/${url}`}
+                src={`${ADMIN_SERVER_URL}/${url}`}
                 alt={url}
                 style={{
                   width: "100%",

@@ -4,6 +4,8 @@ import StatusButton from "./StatusButton";
 import Typography from "@mui/joy/Typography";
 import axios from "axios";
 import { South } from "@mui/icons-material";
+import Cookies from "js-cookie";
+import { SERVER_URL } from "../../../constants/URLs";
 
 
 
@@ -21,7 +23,7 @@ const PaymentDeliveryInfo = ({ project }) => {
     };
 
     try {
-      const response = await axios.put(`http://localhost:9000/order/${supportingProject.payment.paymentId}/cancel`, updatedPaymentStatus); // 객체를 JSON 바디로 전달
+      const response = await axios.put(`${SERVER_URL}/order/${supportingProject.payment.paymentId}/cancel`, updatedPaymentStatus); // 객체를 JSON 바디로 전달
       if (response.status === 200) {
         // 성공적으로 결제가 취소됨
         alert("결제가 취소되었습니다.");

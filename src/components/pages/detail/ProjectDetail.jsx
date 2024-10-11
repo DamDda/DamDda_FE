@@ -19,6 +19,9 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from 'react-router-dom'
+import Cookies from "js-cookie";
+import { SERVER_URL } from "../../../constants/URLs";
+
 const Container = styled('div')({
   padding: '20px',
   backgroundColor: '#f0f0f0',
@@ -262,7 +265,7 @@ const ProjectDetail = ({descriptionDetail, descriptionImages,projectId,projectTi
   //패키지 가져오는 기능.
   const fetchPackage = async () => {
     try {
-      const response = await axios.get(`/packages/project/${projectId}`, {
+      const response = await axios.get(`${SERVER_URL}/packages/project/${projectId}`, {
         //project id 받아줘야 함.
         //project_id를 넘겨받아야 함.
         withCredentials: true,

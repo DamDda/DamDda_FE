@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Modal from "@mui/material/Modal"; // Modal 컴포넌트 import
 import { useUser } from "../../../UserContext";
+import { SERVER_URL } from "../../../constants/URLs";
 
 export default function ProfileEditPage({
   profile,
@@ -126,7 +127,7 @@ export default function ProfileEditPage({
     const { nickname } = formData;
     try {
       const response = await axios.get(
-        `/members/profile/nickname?nickname=${nickname}`
+        `${SERVER_URL}/members/profile/nickname?nickname=${nickname}`
       );
       console.log(response.data);
       setNicknameError(

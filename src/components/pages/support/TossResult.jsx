@@ -1,6 +1,9 @@
 import { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
+import Cookies from "js-cookie";
+import { SERVER_URL } from "../../../constants/URLs";
+
 
 const TossResult = () => {
   const navigate = useNavigate();
@@ -12,7 +15,7 @@ const TossResult = () => {
         const searchParams = new URLSearchParams(location.search);
         const orderId = searchParams.get('orderId');  // 쿼리 파라미터로 orderId를 가져옴
 
-        const response = await axios.get('http://localhost:9000/payment/toss/success/getOrder', {
+        const response = await axios.get(`${SERVER_URL}/payment/toss/success/getOrder`, {
           params: {
             orderId: orderId
           }

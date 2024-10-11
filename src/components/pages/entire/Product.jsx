@@ -19,6 +19,9 @@ import axios from "axios"; // axios를 사용하여 REST API 호출
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useUser } from "../../../UserContext";
+import Cookies from "js-cookie";
+import { SERVER_URL } from "../../../constants/URLs";
+
 
 
 // Individual product card component
@@ -371,12 +374,16 @@ export const ProductRecommendations = ({search, cartegory}) => {
   // 페이지네이션 요청을 보내는 함수
   const fetchProducts = async (page, progress, sortCondition, cartegory, search) => {
     try {
-      const response = await axios.get(`http://localhost:9000/api/projects/projects`, {
+      const response = await axios.get(` ${SERVER_URL}/api/projects/projects`, {
+        headers: {
+          ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+   },
+
         params: {
           search: search, 
           category: cartegory,
           sort: sortCondition,
-          memberId: user.key,
+          // memberId: user.key,
           page: page,
           size: itemsPerPage,
           progress: progress, // 진행 상태 필터 적용
@@ -397,11 +404,15 @@ export const ProductRecommendations = ({search, cartegory}) => {
   
   const fetchRecommendedProducts = async (page, progress) => {
     try {
-      const response = await axios.get(`http://localhost:9000/api/projects/projects`, {
+      const response = await axios.get(` ${SERVER_URL}/api/projects/projects`, {
+        headers: {
+          ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+   },
+
         params: {
           page: page,
           sort: "recommend",
-          memberId: user.key,
+          // memberId: user.key,
           size: recommendedItemPerPage,
           progress: progress, // 진행 상태 필터 적용
         },
@@ -476,18 +487,24 @@ export const ProductRecommendations = ({search, cartegory}) => {
     try {
       if (project.liked) {
         // liked가 true이면 DELETE 요청
-        const response = await axios.delete(`http://localhost:9000/api/projects/like`, {
-          params: {
-            memberId: user.key,
+        const response = await axios.delete(` ${SERVER_URL}/api/projects/like`, {
+          headers: {
+            ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+     },
+    params: {
+            // memberId: user.key,
             projectId: project.id,
           },
         });
         console.log("좋아요 취소 성공:", response.data);
       } else {
         // liked가 false이면 POST 요청
-        const response = await axios.post(`http://localhost:9000/api/projects/like`, null, {
+        const response = await axios.post(` ${SERVER_URL}/api/projects/like`, null, {
+          headers: {
+            ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+     },
           params: {
-            memberId: user.key,
+            // memberId: user.key,
             projectId: project.id,
           },
         });

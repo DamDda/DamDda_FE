@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import Cookies from "js-cookie";
+import { SERVER_URL } from "../../../constants/URLs";
+
 
 function MyOrders() {
   const { userId } = useParams();  // URL 경로에서 userId를 추출
@@ -9,9 +12,11 @@ function MyOrders() {
   useEffect(() => {
     if (userId) {
       // API를 통해 사용자 주문 목록을 가져옵니다.
-      axios.get(`http://localhost:9000/order/myOrders/${userId}`, {
+      // axios.get(`${SERVER_URL}/order/myOrders/${userId}`, {
+        axios.get(`${SERVER_URL}/order/myOrders`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`  // JWT 토큰을 헤더에 추가
+          // Authorization: `Bearer ${localStorage.getItem("token")}`  // JWT 토큰을 헤더에 추가
+          ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
         }
       })
         .then(response => {

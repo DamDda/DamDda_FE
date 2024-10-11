@@ -5,6 +5,9 @@ import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import axios from "axios";
 import { useUser } from "../../../UserContext";
+import Cookies from "js-cookie";
+import { SERVER_URL } from "../../../constants/URLs";
+
 
 // Likeproject 컴포넌트
 const Likeproject = () => {
@@ -24,11 +27,15 @@ const Likeproject = () => {
     // liked가 true이면 DELETE 요청
     const response = await axios({
       method: project.liked ? "DELETE" : "POST",
-      url: `http://localhost:9000/api/projects/like`,
+      url: `${SERVER_URL}/api/projects/like`,
       params: {
-        memberId: user.key, // ==========================>> user.key 로 수정해야해요
+        // memberId: user.key, // ==========================>> user.key 로 수정해야해요
         projectId: project.id,
       },
+      headers: {
+        ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+      },
+
     })
       .then((response) => response.status)
       .catch((e) => console.error(e));

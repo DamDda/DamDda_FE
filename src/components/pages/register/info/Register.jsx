@@ -7,7 +7,6 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { SERVER_URL } from "../../../../constants/URLs";
 
-
 import "../Register.css";
 import "../../../styles/style.css";
 import { Header } from "../../../layout/Header";
@@ -79,16 +78,24 @@ const Register = () => {
   // --------AI용 요청 정보 저장 및 동기화 종료--------
   // fetch writing data from server
   const fetchWriteData = async () => {
-    const response = await axios
-      .get(`${SERVER_URL}/api/projects/write/${projectId}`)
-      .then((response) => response)
-      .catch((error) =>
-        console.error("프로젝트 데이터를 가져오는 중 오류 발생:", error)
-      );
-    setWriteData(response.data || []);
-    console.log("WRITE DATA : ", response.data);
+    try {
+      const accessToken = Cookies.get("accessToken");
+      const response = await axios
+        .get(`${SERVER_URL}/api/projects/write/${projectId}`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        })
+        .then((response) => response)
+        .catch((error) =>
+          console.error("프로젝트 데이터를 가져오는 중 오류 발생:", error)
+        );
+      setWriteData(response.data || []);
+      console.log("WRITE DATA : ", response.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
-
   useEffect(() => {
     fetchWriteData();
   }, []);
@@ -271,12 +278,15 @@ const Register = () => {
     projectFormData.append("submit", submit); // "저장" 혹은 "제출"
 
     try {
+      const accessToken = Cookies.get("accessToken");
+      console.log(accessToken);
       const response = await axios({
         method: "PUT",
         url: `${SERVER_URL}/api/projects/register/${projectId}`,
         data: projectFormData,
         headers: {
           "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${accessToken}`,
         },
       });
       console.log("프로젝트 업데이트 성공:", response.data);

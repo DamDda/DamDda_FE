@@ -21,20 +21,27 @@ const PaymentSuccess = () => {
   const [orderData, setOrderData] = useState([]); // 주문 데이터를 저장할 상태
   const [loading, setLoading] = useState(true); // 로딩 상태 관리
   const [error, setError] = useState(null); // 에러 상태 관리
+  const accessToken = Cookies.get("accessToken")
 
 
- // 결제 완료로 변경하는 로직
- const handlePaymentCompletion = async (orderId) => {
-  try {
-    const updatedPaymentStatus = {
-      paymentStatus: '결제 완료',
-    };
+  // 결제 완료로 변경하는 로직
+  const handlePaymentCompletion = async (orderId) => {
+    try {
+      const updatedPaymentStatus = {
+        paymentStatus: '결제 완료',
+      };
 
-    await axios.put(`${SERVER_URL}/order/${orderId}/status`, updatedPaymentStatus); // JSON body로 전송
-    console.log('결제 완료:', updatedPaymentStatus);
-  } catch (error) {
-    console.error('결제 상태 변경 중 오류 발생:', error);
-  }
+      await axios.put(`${SERVER_URL}/order/${orderId}/status`,updatedPaymentStatus,{
+        
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+
+      } ); // JSON body로 전송
+      console.log('결제 완료:', updatedPaymentStatus);
+    } catch (error) {
+      console.error('결제 상태 변경 중 오류 발생:', error);
+    }
 };
 
 
@@ -47,7 +54,12 @@ const PaymentSuccess = () => {
       // orderId로 주문 정보 요청
       // const response = await axios.get(`http://localhost:9000/order/details/${orderId}`);
 
-      const response = await axios.get(`${SERVER_URL}/order/details/${orderId}`);
+      const response = await axios.get(`${SERVER_URL}/order/details/${orderId}`,{
+        headers: {
+          ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+       },
+
+      });
       setOrderData(response.data);
       setLoading(false); // 데이터를 가져왔으므로 로딩 완료
       handlePaymentCompletion(orderId);

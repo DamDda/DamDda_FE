@@ -44,7 +44,7 @@ const Package = () => {
   const location = useLocation();
   const query = new URLSearchParams(location.search);
   const [projectId, setProjectId] = useState(query.get("projectId") || 1);
-
+  const accessToken = Cookies.get("accessToken");
   useEffect(() => {
     fetchGifts();
     fetchPackage();
@@ -70,7 +70,12 @@ const Package = () => {
     try {
       const response = await axios.get(
         `${SERVER_URL}/packages/rewards/project/${projectId}`, //project_id를 넘겨받아야 함.
-        { withCredentials: true }
+        {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
       );
       console.log(response.data);
 
@@ -91,10 +96,13 @@ const Package = () => {
   //패키지 가져오는 기능.
   const fetchPackage = async () => {
     try {
-      const response = await axios.get(`${SERVER_URL}/packages/project/${projectId}`, {
-        //project_id를 넘겨받아야 함.
-        withCredentials: true,
-      });
+      const response = await axios.get(
+        `${SERVER_URL}/packages/project/${projectId}`,
+        {
+          //project_id를 넘겨받아야 함.
+          withCredentials: true,
+        }
+      );
 
       if (!Array.isArray(response.data)) {
         console.error("API response is not an array:", response.data);
@@ -136,6 +144,9 @@ const Package = () => {
         newGift,
         {
           withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
         }
       );
 
@@ -161,6 +172,9 @@ const Package = () => {
       try {
         await axios.delete(`${SERVER_URL}/packages/rewards/delete/${giftId}`, {
           withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
         });
         const updatedGifts = [...reward_list];
         updatedGifts.splice(index, 1);
@@ -260,9 +274,17 @@ const Package = () => {
 
     if (isEditing) {
       try {
-        await axios.put(`${SERVER_URL}/packages/modify?projectId=${projectId}`, newConfig, {
-          withCredentials: true,
-        });
+        console.log("남이님" + accessToken);
+        await axios.put(
+          `${SERVER_URL}/packages/modify?projectId=${projectId}`,
+          newConfig,
+          {
+            withCredentials: true,
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
 
         const updatedPackages = [...project_package];
         updatedPackages[editingIndex] = newConfig;
@@ -276,13 +298,19 @@ const Package = () => {
       }
     } else {
       try {
-        await axios.post(`${SERVER_URL}/packages/register/${projectId}`, newConfig, {
-          //projectId 받아와야 함
-          withCredentials: true,
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        console.log("남이님2" + accessToken);
+        await axios.post(
+          `${SERVER_URL}/packages/register/${projectId}`,
+          newConfig,
+          {
+            //projectId 받아와야 함
+            withCredentials: true,
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
 
         await fetchPackage();
 
@@ -329,6 +357,9 @@ const Package = () => {
       try {
         await axios.delete(`${SERVER_URL}/packages/delete/${packageId}`, {
           withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
         });
         const updatedPackages = [...project_package];
         updatedPackages.splice(index, 1);

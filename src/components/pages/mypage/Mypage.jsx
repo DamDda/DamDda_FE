@@ -31,7 +31,7 @@ const Mypage = () => {
     try {
       console.log("User state:", user);
       // const response = await axios.get(`${SERVER_URL}/members/profile?loginId=${user.id}`, {
-      const response = await axios.get(`${SERVER_URL}/members/profile`, {
+      const response = await axios.get(`${SERVER_URL}/member/profile`, {
         headers: {
           ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
         },

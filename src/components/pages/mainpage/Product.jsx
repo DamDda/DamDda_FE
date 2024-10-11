@@ -224,10 +224,10 @@ export const ProductRecommendations = ({ sortCondition, title, subTitle }) => {
   // 페이지네이션 요청을 보내는 함수
   const fetchProducts = async () => {
     console.log("user.id : " + user.id)
-    console.log("user.id : " + user.key)
-    console.log("user.id : " + user.profile)
-    console.log("user.id : " + user.nickname)
-    console.log("dddddddddddddddddddd" + Cookies.get("accessToken"))
+    console.log("user.key : " + user.key)
+    console.log("user.profile : " + user.profile)
+    console.log("user.nickname : " + user.nickname)
+    console.log("Cookies.get(accessToken)" + Cookies.get("accessToken"))
     try {
       const response = await axios.get(
         ` ${SERVER_URL}/api/projects/projects`,

@@ -202,7 +202,11 @@ useEffect(() => {
       } else if (paymentMethod === 'kakaoPay') {
         // 카카오페이 결제창 호출
         axios
-          .post(`${SERVER_URL}/payment/kakao/ready`, { orderId: createdOrderId })
+          .post(`${SERVER_URL}/payment/kakao/ready`, { orderId: createdOrderId },
+            {headers: {
+              ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+             },}
+          )
           .then((res) => {
             window.location.href = res.data.next_redirect_pc_url; // 카카오페이 결제 페이지로 리디렉션
           })

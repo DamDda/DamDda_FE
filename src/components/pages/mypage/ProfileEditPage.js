@@ -105,7 +105,7 @@ export default function ProfileEditPage({
 
     try {
       // 백엔드에 데이터를 저장하는 로직 (주석 처리)
-      // await axios.put('/members/profile', updatedFormData,);
+      // await axios.put('/member/profile', updatedFormData,);
 
       // 모의 로컬 스토리지 저장
       localStorage.setItem("profileData", JSON.stringify(updatedFormData));
@@ -127,7 +127,7 @@ export default function ProfileEditPage({
     const { nickname } = formData;
     try {
       const response = await axios.get(
-        `${SERVER_URL}/members/profile/nickname?nickname=${nickname}`
+        `${SERVER_URL}/member/profile/nickname?nickname=${nickname}`
       );
       console.log(response.data);
       setNicknameError(

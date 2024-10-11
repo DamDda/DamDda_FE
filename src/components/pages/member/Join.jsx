@@ -16,7 +16,6 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import styled from "styled-components";
 import { SERVER_URL } from "../../../constants/URLs";
 
-
 import "../../styles/style.css";
 import { Header } from "../../layout/Header";
 import { Footer } from "../../layout/Footer";
@@ -93,7 +92,7 @@ const Join = () => {
 
     try {
       const response = await axios.get(
-        ` ${SERVER_URL}/members/profile/idcheck?loginId=${id}`
+        ` ${SERVER_URL}/member/check/id?loginId=${id}`
       );
       const available = response.data;
       setStatusMessages((prev) => ({
@@ -119,7 +118,7 @@ const Join = () => {
     const { nickname } = formData;
     try {
       const response = await axios.get(
-        `${SERVER_URL}/members/profile/nickname?nickname=${nickname}`
+        `${SERVER_URL}/member/check/nickname?nickname=${nickname}`
       );
       console.log(response.data);
       setStatusMessages((prev) => ({
@@ -210,9 +209,12 @@ const Join = () => {
           ? ""
           : "올바른 이름을 입력해주세요.",
       nickname: nickname.length >= 1 ? "" : "닉네임을 입력해주세요.",
-      email: /^[A-Za-z0-9._-]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]{2,6}$/.test(email)
-        ? ""
-        : "올바른 이메일 형식이 아닙니다.",
+      email:
+        /^[A-Za-z0-9._-]+@[a-zA-Z0-9-]+(.[a-zA-Z0-9-]+)*(.[a-zA-Z]{1,})$/.test(
+          email
+        )
+          ? ""
+          : "올바른 이메일 형식이 아닙니다.",
       phone_number: /^([0-9]{2,4})-([0-9]{3,4})-([0-9]{4})$/.test(phone_number)
         ? ""
         : "올바른 연락처를 입력해주세요.",
@@ -280,9 +282,13 @@ const Join = () => {
     };
 
     try {
-      const response = await axios.post(`${SERVER_URL}/members/profile`, formattedJoin, {
-        withCredentials: true,
-      });
+      const response = await axios.post(
+        `${SERVER_URL}/member/profile`,
+        formattedJoin,
+        {
+          withCredentials: true,
+        }
+      );
 
       console.log(response + "성공");
       navigate("/login");
@@ -298,8 +304,11 @@ const Join = () => {
   return (
     <>
       <Header />
-      <div className="container" style={{ height: '1200px' ,display:'flex', alignItems:'center'}}>
-      <ThemeProvider theme={theme}>
+      <div
+        className="container"
+        style={{ height: "1200px", display: "flex", alignItems: "center" }}
+      >
+        <ThemeProvider theme={theme}>
           <Container component="main" maxWidth="xs">
             <CssBaseline />
             <Typography component="h1" variant="h5">

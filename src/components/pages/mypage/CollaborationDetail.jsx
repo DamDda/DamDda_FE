@@ -101,14 +101,19 @@ const CollaborationDetail = ({ collabId, filter, setCollabClick }) => {
   const handleApproval = async (status) => {
     let approvalPath;
     if (status === "승인") {
-      approvalPath = ` ${SERVER_URL}/collab/approval`;
+      approvalPath = `${SERVER_URL}/collab/approval`;
     } else if (status === "거절") {
-      approvalPath = ` ${SERVER_URL}/collab/reject`;
+      approvalPath = `${SERVER_URL}/collab/reject`;
     }
     try {
       await axios.put(approvalPath, [collabId], {
+        headers: {
+          ...(Cookies.get("accessToken") && { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+        },
         withCredentials: true,
       });
+      
+    
       alert(`선택된 협업들이 ${status}되었습니다.`);
       setCollabClick(false);
     } catch (error) {

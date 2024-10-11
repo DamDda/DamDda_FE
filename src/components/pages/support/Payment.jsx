@@ -179,7 +179,11 @@ useEffect(() => {
     try {
       // 주문 정보 생성 POST 요청 (결제 대기중 상태로 먼저 저장)
       console.log('Order Data:', orderData); // 서버로 전송 전에 데이터 확인
-      const response = await axios.post(`${SERVER_URL}/order/create`, orderData);
+      const response = await axios.post(`${SERVER_URL}/order/create`, orderData, {        
+        headers: {
+          ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+         },
+      });
       console.log('주문생성 완료 :', response);
 
       // 서버에서 반환된 orderId 가져오기

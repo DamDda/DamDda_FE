@@ -17,6 +17,8 @@ import {
 } from "@mui/material";
 
 import axios from "axios";
+import Cookies from "js-cookie";
+import { SERVER_URL } from "../../../constants/URLs";
 
 import "./Register.css";
 import "./package.css";
@@ -67,7 +69,7 @@ const Package = () => {
   const fetchGifts = async () => {
     try {
       const response = await axios.get(
-        `/packages/rewards/project/${projectId}`, //project_id를 넘겨받아야 함.
+        `${SERVER_URL}/packages/rewards/project/${projectId}`, //project_id를 넘겨받아야 함.
         { withCredentials: true }
       );
       console.log(response.data);
@@ -89,7 +91,7 @@ const Package = () => {
   //패키지 가져오는 기능.
   const fetchPackage = async () => {
     try {
-      const response = await axios.get(`/packages/project/${projectId}`, {
+      const response = await axios.get(`${SERVER_URL}/packages/project/${projectId}`, {
         //project_id를 넘겨받아야 함.
         withCredentials: true,
       });
@@ -130,7 +132,7 @@ const Package = () => {
 
     try {
       const response = await axios.post(
-        `/packages/rewards/register/${projectId}`,
+        `${SERVER_URL}/packages/rewards/register/${projectId}`,
         newGift,
         {
           withCredentials: true,
@@ -157,7 +159,7 @@ const Package = () => {
   const handleGiftDelete = async (giftId, index) => {
     if (window.confirm("정말로 삭제하시겠습니까?")) {
       try {
-        await axios.delete(`/packages/rewards/delete/${giftId}`, {
+        await axios.delete(`${SERVER_URL}/packages/rewards/delete/${giftId}`, {
           withCredentials: true,
         });
         const updatedGifts = [...reward_list];
@@ -258,7 +260,7 @@ const Package = () => {
 
     if (isEditing) {
       try {
-        await axios.put(`/packages/modify?projectId=${projectId}`, newConfig, {
+        await axios.put(`${SERVER_URL}/packages/modify?projectId=${projectId}`, newConfig, {
           withCredentials: true,
         });
 
@@ -274,7 +276,7 @@ const Package = () => {
       }
     } else {
       try {
-        await axios.post(`/packages/register/${projectId}`, newConfig, {
+        await axios.post(`${SERVER_URL}/packages/register/${projectId}`, newConfig, {
           //projectId 받아와야 함
           withCredentials: true,
           headers: {
@@ -325,12 +327,18 @@ const Package = () => {
   const handleConfigDelete = async (packageId, index) => {
     if (window.confirm("정말로 삭제하시겠습니까?")) {
       try {
-        await axios.delete(`/packages/delete/${packageId}`, {
+        await axios.delete(`${SERVER_URL}/packages/delete/${packageId}`, {
           withCredentials: true,
         });
         const updatedPackages = [...project_package];
         updatedPackages.splice(index, 1);
-        setProject_package(updatedPackages);
+
+        if (updatedPackages.length > 0) {
+          setProject_package(updatedPackages);
+        } else {
+          setProject_package([]); // 패키지가 없으면 빈 배열로 설정
+        }
+
         setSnackbarMessage("구성이 삭제되었습니다.");
         setSnackbar(true);
         closeSnackbar();
@@ -441,49 +449,60 @@ const Package = () => {
                   style={{
                     padding: "10px",
                     marginLeft: "20px",
-                    display: "flex", // Flexbox 사용
-                    alignItems: "center", // 수직 정렬
-                    border: "1px solid #ccc", // 테두리 추가
-                    borderRadius: "4px", // 둥근 모서리
-                    // marginTop: "5px", // 레이블과 입력칸 간의 간격
-                    height: "50px",
+                    display: "flex",
+                    flexDirection: "column", // 열 방향으로 정렬
+                    alignItems: "flex-start",
+                    border: "1px solid #ccc",
+                    borderRadius: "4px",
+                    height: "auto",
                     width: "300px",
                   }}
                 >
-                  <input
-                    className="input-field"
-                    type="text"
-                    variant="outlined"
-                    // size="small"
-                    value={OptionInput}
-                    onChange={(e) => setOptionInput(e.target.value)}
-                    placeholder="옵션을 입력해주세요."
+                  <div
                     style={{
-                      flexGrow: 1, // 입력창이 가능한 공간을 차지
-                      height: "35px",
-                      border: "none", // 테두리 제거
-                      // borderBottom: "1px solid #000", // 밑줄 추가
-                      // outline: "none", // 포커스 시 아웃라인 제거
-                      marginRight: "5px", // 입력창과 버튼 간격
+                      display: "flex",
+                      alignItems: "center",
+                      width: "100%",
                     }}
-                  />
-                  <button className="outlined-button" onClick={handleOptionAdd}>
-                    +
-                  </button>
+                  >
+                    <input
+                      className="input-field"
+                      type="text"
+                      variant="outlined"
+                      value={OptionInput}
+                      onChange={(e) => setOptionInput(e.target.value)}
+                      placeholder="옵션을 입력해주세요."
+                      style={{
+                        flexGrow: 1,
+                        height: "35px",
+                        border: "none",
+                        marginRight: "5px",
+                      }}
+                    />
+                    <button
+                      className="outlined-button"
+                      onClick={handleOptionAdd}
+                    >
+                      +
+                    </button>
+                  </div>
+                  <Divider style={{ margin: "10px 0", width: "100%" }} />
+                  {/* 옵션 리스트 위에 구분선 추가 */}
+                  <div className="options-list" style={{ width: "100%" }}>
+                    {Options !== undefined &&
+                      Options.map((option, index) => (
+                        <div className="option-item" key={index}>
+                          {option}{" "}
+                          <button onClick={() => handleOptionDelete(index)}>
+                            X
+                          </button>
+                        </div>
+                      ))}
+                  </div>
                 </div>
               </div>
             </div>
           )}
-
-          <div className="options-list">
-            {Options != undefined &&
-              Options.map((option, index) => (
-                <div className="option-item" key={index}>
-                  {option}{" "}
-                  <button onClick={() => handleOptionDelete(index)}>X</button>
-                </div>
-              ))}
-          </div>
 
           <Button
             className="primary-button"
@@ -521,11 +540,20 @@ const Package = () => {
             />
           </div>
 
-          <div className="form-item">
+          <div
+            className="form-item"
+            style={{ display: "flex", flexDirection: "column" }}
+          >
             <label>선물 선택: </label>
             <select
               value=""
               onChange={(e) => handleSelectReward(e.target.value)}
+              style={{
+                marginLeft: "15px",
+                height: "35px",
+                marginTop: "5px",
+                width: "300px",
+              }}
             >
               <option value="">선물 선택</option>
               {reward_list.map((gift, index) => (
@@ -535,27 +563,56 @@ const Package = () => {
               ))}
             </select>
 
-            <div className="selected-rewards">
+            <div className="selected-rewards" style={{ marginTop: "10px" }}>
               {selected_reward != undefined && (
                 <div>
                   {selected_reward.map((reward, index) => (
-                    <div key={index} className="reward-item">
+                    <div
+                      key={index}
+                      className="reward-item"
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        marginBottom: "5px",
+                      }}
+                    >
                       <span>선택된 선물: </span>
-                      <span>{reward.name}</span>
-                      <div className="count-box">
+                      <span style={{ marginLeft: "5px" }}>{reward.name}</span>
+                      <div
+                        className="count-box"
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          marginLeft: "10px",
+                        }}
+                      >
                         <button
                           onClick={() => handleCount(reward.name, -1)}
                           disabled={reward.count <= 1}
                         >
                           -
                         </button>
-                        <span>{reward.count}</span>
+                        {/* <span style={{ margin: "0 5px" }}>{reward.count}</span> */}
+                        <input
+                          value={reward.count}
+                          onChange={(e) => {
+                            const value = Math.max(1, Number(e.target.value)); // 최소 1로 제한
+                            handleCount(reward.name, value - reward.count); // 카운트 차이를 반영
+                          }}
+                          style={{
+                            width: "50px",
+                            textAlign: "center",
+                            margin: "0 5px",
+                            border: "0",
+                          }}
+                        />
                         <button onClick={() => handleCount(reward.name, 1)}>
                           +
                         </button>
                       </div>
                       <button
                         onClick={() => handleSelectedGiftDelete(reward.id)}
+                        style={{ marginLeft: "10px" }}
                       >
                         X
                       </button>
@@ -605,7 +662,20 @@ const Package = () => {
                 >
                   -
                 </button>
-                <span>{package_limit}</span>
+                {/* <span>{package_limit}</span> */}
+                <input
+                  value={package_limit}
+                  onChange={(e) => {
+                    const value = Math.max(0, Number(e.target.value)); // 최소 0으로 제한
+                    handleCountChange(value - package_limit); // 카운트 차이를 반영
+                  }}
+                  style={{
+                    width: "50px",
+                    textAlign: "center",
+                    margin: "0 5px",
+                    border: "0",
+                  }}
+                />
                 <button onClick={() => handleCountChange(1)}>+</button>
               </div>
             )}
@@ -649,9 +719,10 @@ const Package = () => {
                 <div className="quantity-box">
                   {formatQunatity(config.quantityLimited)}
                 </div>
-                <h3>{config.price.toLocaleString()}원</h3>
-                {/* {config.name}
-                <ul>
+                <h3>{config.name} </h3>
+                <h3> {config.price.toLocaleString()}원</h3>
+
+                {/*<ul>
                   {config.RewardList.map((reward, rewardIndex) => (
                     <div key={rewardIndex}>
                       <h3>{reward.name}</h3>
@@ -668,7 +739,7 @@ const Package = () => {
                   {config.RewardList.map((reward, rewardIndex) => (
                     <div key={rewardIndex}>
                       <div className="reward-info">
-                        <h3>{reward.name}</h3>
+                        {reward.name}
                         <p className="quantity-box">{reward.count}개</p>
                       </div>
                       <ul>

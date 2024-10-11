@@ -21,8 +21,11 @@ import logo from "../assets/logo.png"; // 로고 파일
 import { SearchBar } from "./SearchBar";
 import axios from "axios"; // axios를 사용하여 REST API 호출
 import { useUser } from "../../UserContext";
+import Cookies from "js-cookie";
+import { SERVER_URL } from "../../constants/URLs";
 
 export function Header({ search, setSearch }) {
+
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [showProfileCard, setShowProfileCard] = useState(false); // 프로필 카드 표시 여부
@@ -31,8 +34,13 @@ export function Header({ search, setSearch }) {
   const location = useLocation();
   const [profile, setProfile] = useState("");
 
-  const memberId = 1;
-  const { logout, user } = useUser();
+  //const { logout, user } = useUser();
+  const {logout, isLogin, user, setUser} = useUser();
+  // if(!isLogin){
+  //   console.log(user);
+  //   // setUser({ ...user, key: 0 });
+  // }
+  console.log("여기역이겨이겨익여깅겨ㅣㅇ겨이겨"+user.key+"111 "+isLogin);
 
   // useEffect(() => {
   //   if (location.state?.id) {
@@ -59,10 +67,15 @@ export function Header({ search, setSearch }) {
   const fetchWritingProject = async () => {
     const writings = await axios({
       method: "GET",
-      url: "http://localhost:9000/api/projects/write",
+      url: `${SERVER_URL}/api/projects/write`,
       params: {
-        memberId: memberId,
+        // memberId: user.key,
       },
+      headers: {
+        ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+      },
+      
+
     })
       .then((response) => {
         setProjects(response.data);
@@ -92,7 +105,10 @@ export function Header({ search, setSearch }) {
     ) {
       const responseCode = await axios({
         method: "DELETE",
-        url: `http://localhost:9000/api/projects/${id}`,
+        url: ` ${SERVER_URL}/api/projects/${id}`,
+        headers: {
+          ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+        },
       })
         .then((response) => response.status)
         .catch((e) => console.error(e));
@@ -133,13 +149,14 @@ export function Header({ search, setSearch }) {
     );
     const projectId = await axios({
       method: "POST",
-      url: `http://localhost:9000/api/projects/register`,
+      url: ` ${SERVER_URL}/api/projects/register`,
       headers: {
         "Content-Type": "multipart/form-data",
+        ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
       },
       data: formData,
       params: {
-        memberId: memberId,
+        // memberId: user.key,
         submit: "저장",
       },
     })
@@ -337,7 +354,7 @@ export function Header({ search, setSearch }) {
 
             {/* 프로필 카드 부분 */}
             <Box sx={{ position: "relative" }}>
-              {user ? (
+              {user.id ? (
                 // 로그인 후 프로필 카드
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -368,7 +385,7 @@ export function Header({ search, setSearch }) {
                 </Button>
               )}
 
-              {showProfileCard && user && (
+              {showProfileCard && user.id && (
                 <Box
                   sx={{
                     position: "absolute",

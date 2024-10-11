@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import {
   MDBCol,
@@ -12,21 +13,29 @@ import TextField from "@mui/material/TextField";
 import Avatar from "@mui/joy/Avatar";
 import Modal from "./EditModal"; // 비밀번호 모달 컴포넌트
 import axios from "axios"; // API 호출을 위해 axios를 import
+import Cookies from "js-cookie";
+import { SERVER_URL } from "../../../constants/URLs";
 import { useUser } from "../../../UserContext";
+
+// *************
 export default function ProfileStatistics({ setIsEditing }) {
   const [profile, setProfile] = useState(null); // 사용자 프로필 정보 상태
   const [isModalOpen, setIsModalOpen] = useState(false); // 비밀번호 모달 상태
   const [passwordError, setPasswordError] = useState(""); // 비밀번호 에러 메시지
-  const [password, setPassword] = useState("1234"); // 초기 비밀번호
+  const [password, setPassword] = useState(""); // 초기 비밀번호
   const [passwordDisplay, setPasswordDisplay] = useState(""); // 비밀번호 표시 상태
   const { user } = useUser();
 
-  useEffect(() => {
-    fetchProfileData(); // 프로필 데이터 로드
-  }, []);
+  // useEffect(() => {
+  //   fetchProfileData(); // 프로필 데이터 로드
+  // }, []);
   const fetchProfileData = async () => {
     try {
-      const response = await axios.get(`/members/profile?loginId=${user.id}`, {
+      // const response = await axios.get(`${SERVER_URL}/members/profile?loginId=${user.id}`, {
+      const response = await axios.get(`${SERVER_URL}/members/profile`, {
+        headers: {
+          ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+        },
         withCredentials: true,
       });
       console.log(response.data);
@@ -49,8 +58,13 @@ export default function ProfileStatistics({ setIsEditing }) {
     }
   };
 
+  useEffect(() => {
+    fetchProfileData(); // 프로필 데이터 로드
+  }, []);
+
   // 프로필 수정 버튼 클릭 시 모달 열기
   const handleProfileEdit = () => {
+    // setPassword("1234"); // 모달 열때마다 비밀번호 초기화
     setIsModalOpen(true); // 모달 열기
   };
 
@@ -113,9 +127,9 @@ export default function ProfileStatistics({ setIsEditing }) {
                     alignItems: "center",
                   }}
                 >
-                  <UserAvatar
-                    profile={profile}
-                    defaultImageUrl="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp"
+                  <Avatar
+                    sx={{ width: 100, height: 100, marginTop: "20px" }}
+                    src={profile.imageUrl}
                   />
                   <MDBTypography tag="h4" className="mt-3 mb-4">
                     {profile.nickname}
@@ -131,7 +145,7 @@ export default function ProfileStatistics({ setIsEditing }) {
                     marginLeft: "10px",
                   }}
                   noValidate
-                  autoComplete="off"
+                  autoComplete="off" // 자동 완성 끄기
                 >
                   <TextField
                     label="아이디"

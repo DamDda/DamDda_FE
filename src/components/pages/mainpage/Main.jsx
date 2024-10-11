@@ -82,7 +82,7 @@ function Main() {
               className="banner-image2"
             />
           </div>
-      <ProductRecommendations sortCondition={"all"} title={"사용자 추천 프로젝트"} subTitle={"나에게 딱 맞는 프로젝트."}></ProductRecommendations>
+      <ProductRecommendations sortCondition={"recommend"} title={"사용자 추천 프로젝트"} subTitle={"나에게 딱 맞는 프로젝트."}></ProductRecommendations>
       <ProductRecommendations sortCondition={"viewCnt"} title={"최다 조회 프로젝트"} subTitle={"많은 사람들이 구경한 프로젝트"}></ProductRecommendations>
 
       <ProductRecommendations sortCondition={"targetFunding"} title={"최다 후원 프로젝트"} subTitle={"많은 사람들의 이유있는 후원! 후원금이 가장 많은 프로젝트!"}></ProductRecommendations>

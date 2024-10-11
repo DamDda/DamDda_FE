@@ -17,6 +17,9 @@ import axios from "axios"; // axios를 사용하여 REST API 호출
 import { BorderClear } from "@mui/icons-material";
 import { padding } from "@mui/system";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../../../UserContext";
+import Cookies from "js-cookie";
+import { SERVER_URL } from "../../../constants/URLs";
 
 // Individual product card component
 export const ProductCard = ({ product, handleLike }) => {
@@ -200,22 +203,43 @@ export const ProductCard = ({ product, handleLike }) => {
 
 // Product recommendations section
 export const ProductRecommendations = ({ sortCondition, title, subTitle }) => {
+  //const {user, isLogin, setUser} = useUser();
+  // if(!isLogin){
+  //   setUser(prevUser => ({ ...prevUser, key: 0 }));
+  // }
+  //const {isLogin} = useUser();
+
+  const { user } = useUser();
+  // if(!isLogin){
+  //   console.log(user);
+  //   //setUser(prevUser => ({ ...prevUser, key: 0 }));
+  // }
+
+
+
   const [products, setProducts] = useState([]); // 서버에서 가져온 프로젝트 데이터
-  const memberId = 1;
 
   const itemsPerPage = 10; // 페이지당 항목 수
 
   // 페이지네이션 요청을 보내는 함수
   const fetchProducts = async () => {
+    console.log("user.id : " + user.id)
+    console.log("user.id : " + user.key)
+    console.log("user.id : " + user.profile)
+    console.log("user.id : " + user.nickname)
+    console.log("dddddddddddddddddddd" + Cookies.get("accessToken"))
     try {
       const response = await axios.get(
-        `http://${window.location.hostname}:9000/api/projects/projects`,
+        ` ${SERVER_URL}/api/projects/projects`,
         {
           params: {
-            memberId: memberId,
+            // memberId: user.key,
             page: 1,
             sort: sortCondition,
             size: itemsPerPage,
+          },
+          headers: {
+            ...(Cookies.get("accessToken") && { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
           },
         }
       );
@@ -242,10 +266,14 @@ export const ProductRecommendations = ({ sortCondition, title, subTitle }) => {
       if (project.liked) {
         // liked가 true이면 DELETE 요청
         const response = await axios.delete(
-          `http://${window.location.hostname}:9000/api/projects/like`,
+          ` ${SERVER_URL}/api/projects/like`,
           {
+            headers: {
+              ...(Cookies.get("accessToken") && { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+            },
+  
             params: {
-              memberId: memberId,
+              // memberId: user.key,
               projectId: project.id,
             },
           }
@@ -254,11 +282,14 @@ export const ProductRecommendations = ({ sortCondition, title, subTitle }) => {
       } else {
         // liked가 false이면 POST 요청
         const response = await axios.post(
-          `http://${window.location.hostname}:9000/api/projects/like`,
+          ` ${SERVER_URL}/api/projects/like`,
           null,
           {
+            headers: {
+              ...(Cookies.get("accessToken") && { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+            },
             params: {
-              memberId: memberId,
+              // memberId: user.key,
               projectId: project.id,
             },
           }

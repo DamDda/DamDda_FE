@@ -14,6 +14,8 @@ import {
 } from "@mui/material/";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import styled from "styled-components";
+import { SERVER_URL } from "../../../constants/URLs";
+
 
 import "../../styles/style.css";
 import { Header } from "../../layout/Header";
@@ -91,7 +93,7 @@ const Join = () => {
 
     try {
       const response = await axios.get(
-        `/members/profile/idcheck?loginId=${id}`
+        ` ${SERVER_URL}/members/profile/idcheck?loginId=${id}`
       );
       const available = response.data;
       setStatusMessages((prev) => ({
@@ -117,7 +119,7 @@ const Join = () => {
     const { nickname } = formData;
     try {
       const response = await axios.get(
-        `/members/profile/nickname?nickname=${nickname}`
+        `${SERVER_URL}/members/profile/nickname?nickname=${nickname}`
       );
       console.log(response.data);
       setStatusMessages((prev) => ({
@@ -278,7 +280,7 @@ const Join = () => {
     };
 
     try {
-      const response = await axios.post("/members/profile", formattedJoin, {
+      const response = await axios.post(`${SERVER_URL}/members/profile`, formattedJoin, {
         withCredentials: true,
       });
 

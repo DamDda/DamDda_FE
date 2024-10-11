@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import ProfileEditPage from "./ProfileEditPage";
 import Myproject from "./MyProject";
 import Headers from "./MypageHeader";
-import MyProjectDetail from "./MyProjectDetail";
+import MyProjectDetails from "./MyProjectDetail";
 import ProfileStatistics from "./ProfileStatistics";
 import SupportedProjects from "./SupportedProjects";
 import TabsUnderlinePlacement from "./TabsUnderlinePlacement";
+import CollaborationList from "./CollaborationList";
 import LikeProject from "./LikeProject";
 import "../../styles/style.css";
 import { Header } from "../../layout/Header";
@@ -13,16 +14,27 @@ import { Footer } from "../../layout/Footer";
 import MypageHeader from "./MypageHeader";
 import axios from "axios";
 import { useUser } from "../../../UserContext";
+import CollaborationDetail from "./CollaborationDetail";
+import Cookies from "js-cookie";
+import { SERVER_URL } from "../../../constants/URLs";
+
+
 const Mypage = () => {
   const [profileData, setProfileData] = useState(null); // 프로필 데이터 상태
   const [isLoading, setIsLoading] = useState(true); // 로딩 상태
   const [selectedTab, setSelectedTab] = useState(0); // 현재 선택된 탭 상태
   const [isEditing, setIsEditing] = useState(false); // 프로필 수정 상태
+
   const { user } = useUser();
 
   const fetchProfileData = async () => {
     try {
-      const response = await axios.get(`/members/profile?loginId=${user.id}`, {
+      console.log("User state:", user);
+      // const response = await axios.get(`${SERVER_URL}/members/profile?loginId=${user.id}`, {
+      const response = await axios.get(`${SERVER_URL}/members/profile`, {
+        headers: {
+          ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+        },
         withCredentials: true,
       });
       console.log(response.data);
@@ -53,6 +65,10 @@ const Mypage = () => {
   };
 
   const [myprojectClick, setMyprojectClick] = useState(false);
+  const [myprojectId, setMyprojectId] = useState(0);
+  const [collabClick, setCollabClick] = useState(false);
+  const [collabId, setCollabId] = useState(0);
+  const [collabFilter, setCollabFilter] = useState("제안 받은 협업");
 
   // 데이터를 로딩 중일 때 표시할 화면
   if (isLoading) {
@@ -84,15 +100,42 @@ const Mypage = () => {
       case 1:
         return <SupportedProjects />;
       case 2:
-        if (myprojectClick){
-            return <MyProjectDetail setMyprojectClick={setMyprojectClick}/>;
-        } else{
-          return <Myproject setMyprojectClick={setMyprojectClick}/>;
-        }       
+        if (myprojectClick) {
+          return (
+            <MyProjectDetails
+              projectId={myprojectId}
+              setMyprojectClick={setMyprojectClick}
+            />
+          );
+        } else {
+          return (
+            <Myproject
+              setMyprojectId={setMyprojectId}
+              setMyprojectClick={setMyprojectClick}
+            />
+          );
+        }
       case 3:
         return <LikeProject />;
       case 4:
-        return <MyProjectDetail />;
+        if (collabClick) {
+          return (
+            <CollaborationDetail
+              filter={collabFilter}
+              collabId={collabId}
+              setCollabClick={setCollabClick}
+            />
+          );
+        } else {
+          return (
+            <CollaborationList
+              filter={collabFilter}
+              setFilter={setCollabFilter}
+              setCollabId={setCollabId}
+              setCollabClick={setCollabClick}
+            />
+          );
+        }
       default:
         return (
           <ProfileStatistics
@@ -117,6 +160,7 @@ const Mypage = () => {
             selectedTab={selectedTab}
             setSelectedTab={setSelectedTab}
             setMyprojectClick={setMyprojectClick}
+            setCollabClick={setCollabClick}
           />
           {/* 각 탭에 맞는 콘텐츠를 조건부 렌더링 */}
           {renderSelectedTabContent()}

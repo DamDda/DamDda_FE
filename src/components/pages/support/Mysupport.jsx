@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'; // axios를 import
+import Cookies from "js-cookie";
+import { SERVER_URL } from "../../../constants/URLs";
+
 
 const MySupport = ({ deliveryId }) => {
   const [order, setOrder] = useState(null); // 단일 주문 데이터를 저장할 state
@@ -8,7 +11,7 @@ const MySupport = ({ deliveryId }) => {
   // 주문 데이터를 가져오는 함수
   const fetchOrder = async (deliveryId) => {
     try {
-      const response = await axios.get("http://localhost:9000/order/myOrders/${deliveryId}");
+      const response = await axios.get(`${SERVER_URL}/order/myOrders/${deliveryId}`);
       setOrder(response.data); // 주문 데이터를 state에 저장
     } catch (error) {
       setError(error.message); // 에러 메시지를 저장

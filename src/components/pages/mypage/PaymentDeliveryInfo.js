@@ -3,6 +3,9 @@ import Box from "@mui/joy/Box";
 import StatusButton from "./StatusButton";
 import Typography from "@mui/joy/Typography";
 import axios from "axios";
+import { South } from "@mui/icons-material";
+import Cookies from "js-cookie";
+import { SERVER_URL } from "../../../constants/URLs";
 
 
 
@@ -11,13 +14,17 @@ const PaymentDeliveryInfo = ({ project }) => {
 
   // 결제 취소 로직
   const handleCancelPayment = async () => {
-    const orderId = 5; // 임의로 설정한 orderId
-    const status = '결제 취소'; // 예시로 '취소' 상태 설정
+    const supportingProject = project.supportingProject; // supportingProject 객체를 가져옴
+    alert("supportingProject ID: " + supportingProject.payment.paymentId); // 객체의 ID를 확인하기 위한 알림
+
+    const updatedPaymentStatus = {
+      supportingProject: supportingProject, // 해당 supportingProject 객체 전달
+      paymentStatus: '결제 취소' // '결제 취소' 상태 설정
+    };
+
     try {
-      const response = await axios.put(`http://localhost:9000/order/${orderId}/cancel`, null, {
-        params: { status } // 요청 파라미터로 상태 전달
-      });
-        if (response.status === 200) {
+      const response = await axios.put(`${SERVER_URL}/order/${supportingProject.payment.paymentId}/cancel`, updatedPaymentStatus); // 객체를 JSON 바디로 전달
+      if (response.status === 200) {
         // 성공적으로 결제가 취소됨
         alert("결제가 취소되었습니다.");
         // 필요한 경우 UI를 업데이트하거나 상태를 새로 고침하는 로직 추가
@@ -27,6 +34,7 @@ const PaymentDeliveryInfo = ({ project }) => {
       alert("결제 취소에 실패했습니다.");
     }
   };
+
 
   return (
     <Box sx={{ padding: "20px" }}>
@@ -146,7 +154,7 @@ const PaymentDeliveryInfo = ({ project }) => {
         <StatusButton
           status="결제 취소"
           label="결제 취소"
-          onClick={() => handleCancelPayment(3)} // orderId를 3으로 고정
+          onClick={() => handleCancelPayment()} 
           // onClick={() => handleCancelPayment(3)} // orderId 전달
 
           sx={{

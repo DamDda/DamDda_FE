@@ -2,41 +2,23 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import styles from './PaymentSuccess.module.css';  // CSS Modules import
-import { useNavigate } from 'react-router-dom'; // useNavigate를 import
-import Cookies from "js-cookie";
-import { SERVER_URL } from "../../../constants/URLs";
 
 import '../../styles/style.css'
 import { Header } from "../../layout/Header";
 import { Footer } from "../../layout/Footer";
+import Cookies from "js-cookie";
+import { SERVER_URL } from "../../../constants/URLs";
+
 
 import cart from '../../assets/cart.png'
-
-const PaymentSuccess = () => {
+const PaymentFail = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const orderId = queryParams.get('orderId');  // URL 쿼리에서 orderId 가져옴
-  console.log(orderId+"!!!!!!!!!!");
 
   const [orderData, setOrderData] = useState([]); // 주문 데이터를 저장할 상태
   const [loading, setLoading] = useState(true); // 로딩 상태 관리
   const [error, setError] = useState(null); // 에러 상태 관리
-
-
- // 결제 완료로 변경하는 로직
- const handlePaymentCompletion = async (orderId) => {
-  try {
-    const updatedPaymentStatus = {
-      paymentStatus: '결제 완료',
-    };
-
-    await axios.put(`${SERVER_URL}/order/${orderId}/status`, updatedPaymentStatus); // JSON body로 전송
-    console.log('결제 완료:', updatedPaymentStatus);
-  } catch (error) {
-    console.error('결제 상태 변경 중 오류 발생:', error);
-  }
-};
-
 
   // 주문 정보를 가져오는 함수
   const fetchOrderData = async () => {
@@ -50,18 +32,14 @@ const PaymentSuccess = () => {
       const response = await axios.get(`${SERVER_URL}/order/details/${orderId}`);
       setOrderData(response.data);
       setLoading(false); // 데이터를 가져왔으므로 로딩 완료
-      handlePaymentCompletion(orderId);
-
     } catch (err) {
       setError(err.message);
       setLoading(false); // 에러가 발생해도 로딩 완료
-
     }
   };
 
   // 컴포넌트가 마운트될 때 주문 정보 가져오기
   useEffect(() => {
-    handlePaymentCompletion(orderId);
     fetchOrderData();
   }, []);
 
@@ -85,7 +63,7 @@ const PaymentSuccess = () => {
         <div className={styles['success-container']}>
           <div className={styles['success-header']}>
             <img src={cart} alt="Cart Icon" className={styles['success-image']} />
-            <h1>주문이 완료되었습니다!</h1>
+            <h1>주문이 실패!!</h1>
             <p>선물은 정상 접수 완료되었으며 배송을 시작합니다!</p>
             <div className={styles['success-buttons']}>
               <button className={styles['my-orders-btn']}>마이페이지</button>
@@ -104,42 +82,11 @@ const PaymentSuccess = () => {
                   <th>결제 금액</th>
                 </tr>
               </thead>
-              <tbody>
-                  {orderData.supportingPackage && orderData.supportingProject ? (
-                    <tr>
-                      <td>{orderData.supportingPackage.packageName}</td>
-                      <td>{new Date(orderData.supportingProject.supportedAt).toLocaleDateString()}</td>
-                      <td>{orderData.supportingPackage.packageCount}</td>
-                      <td>{parseInt(orderData.supportingPackage.packagePrice).toLocaleString()}원</td> {/* packagePrice로 수정 */}
-                    </tr>
-                  ) : (
-                    <tr>
-                      <td colSpan="4">주문 상품이 없습니다.</td>
-                    </tr>
-                  )}
-                </tbody>
+  
 
             </table>
           </div>
 
-          <div className={styles['details-section']}>
-            <div className={styles['shipping-info']}>
-              <div className={styles['order-title']}>배송지 정보</div>
-              <div className={styles['detail-section-content']}>
-                <p>이름: {orderData.delivery.deliveryName}</p>
-                <p>전화번호: {orderData.delivery.deliveryPhoneNumber}</p>
-                <p>배송지 주소: {orderData.delivery.deliveryAddress+"  ("+orderData.delivery.deliveryDetailedAddress+")"}</p>
-              </div>
-            </div>
-
-            <div className={styles['payment-info']}>
-              <div className={styles['order-title']}>결제 정보</div>
-              <div className={styles['detail-section-content']}>
-                <p>결제 수단: {orderData.payment.paymentMethod}</p>
-                <p>결제 금액: {parseInt(orderData.supportingPackage.packagePrice).toLocaleString()}원</p>
-                </div>
-            </div>
-          </div>
         </div>
       </div>
       <Footer />
@@ -147,4 +94,4 @@ const PaymentSuccess = () => {
   );
 };
 
-export default PaymentSuccess;
+export default PaymentFail;

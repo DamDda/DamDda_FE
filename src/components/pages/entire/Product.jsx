@@ -21,6 +21,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useUser } from "../../../UserContext";
 import Cookies from "js-cookie";
 import { SERVER_URL } from "../../../constants/URLs";
+import "../../../App.css"
 
 
 

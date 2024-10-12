@@ -23,6 +23,7 @@ import Cookies from "js-cookie";
 import { SERVER_URL } from "../../../constants/URLs";
 
 const Container = styled('div')({
+  
   padding: '20px',
   backgroundColor: '#f0f0f0',
   display: 'flex',
@@ -30,6 +31,7 @@ const Container = styled('div')({
 
 // 상세 설명 섹션 스타일
 const DetailSection = styled('div')({
+
   display: 'flex',
   flexDirection: 'column',
   marginBottom: '20px',
@@ -84,6 +86,7 @@ const CountButton = styled(IconButton)({
 });
 
 const SelectPackageButton = styled(Button)({
+  
   backgroundColor: "#7a82ed", // 기본 배경색
   color: "white", // 기본 글자색
   padding: "10px 20px", // 패딩 추가

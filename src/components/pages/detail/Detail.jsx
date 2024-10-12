@@ -21,6 +21,7 @@ import Qna from "./qna";
 
 import "../../styles/style.css";
 import "./Detail.css";
+import "../../../App.css"
 
 import { Header } from "../../layout/Header";
 import { Footer } from "../../layout/Footer";

@@ -4,6 +4,7 @@ import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile'; // Placeh
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney'; // Placeholder for money icon
 import StarIcon from '@mui/icons-material/Star';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import "../../../App.css"
 
 const services = [
   {

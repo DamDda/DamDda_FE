@@ -165,7 +165,7 @@ export default function ProfileEditPage({
         sendData,
         config
       );
-      console.log("여기역이겨익" + response.data);
+
       // 모의 로컬 스토리지 저장
       localStorage.setItem("profileData", JSON.stringify(updatedFormData));
       setFormData(updatedFormData);

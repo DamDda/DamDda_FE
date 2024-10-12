@@ -230,8 +230,14 @@ export default function TossReady() {
           orderId: createdOrderId.toString(),
         },
         headers: {
-          ...(Cookies.get("accessToken")&& { "x-damdda-authorization": `Bearer ${Cookies.get("accessToken")}` }),
-         },
+          "x-damdda-authorization": Cookies.get("accessToken") 
+            ? `Bearer ${Cookies.get("accessToken")}`
+            : "" // 토큰이 없으면 빈 문자열 대신 에러 처리 필요
+        }
+        
+        // headers: {
+        //   ...(Cookies.get("accessToken")&& { "x-damdda-authorization": `Bearer ${Cookies.get("accessToken")}` }),
+        //  },
       });
       
       // 결제 상태 확인

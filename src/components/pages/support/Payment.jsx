@@ -179,43 +179,41 @@ useEffect(() => {
     try {
       // 주문 정보 생성 POST 요청 (결제 대기중 상태로 먼저 저장)
       console.log('Order Data:', orderData); // 서버로 전송 전에 데이터 확인
-      const response = await axios.post(`${SERVER_URL}/order/create`, orderData, {
+      const response = await axios.post(`${SERVER_URL}/order/create`, orderData, {        
         headers: {
-          "x-damdda-authorization": Cookies.get("accessToken")
-            ? `Bearer ${Cookies.get("accessToken")}`
-            : "" // 토큰이 없으면 빈 문자열 대신 에러를 발생시키는 것이 좋을 수 있습니다.
-        }
+          ...(Cookies.get("accessToken")&& { "x-damdda-authorization": `Bearer ${Cookies.get("accessToken")}` }),
+         },
       });
       console.log('주문생성 완료 :', response);
-    
+
       // 서버에서 반환된 orderId 가져오기
       const createdOrderId = response.data.orderId; // response.data에서 orderId 값만 추출
       console.log('주문 ID:', createdOrderId);
-    
-      // 카카오페이 결제 준비 요청
-      axios
-        .post(`${SERVER_URL}/payment/kakao/ready`, 
-          { orderId: createdOrderId }, 
-          {
-            headers: {
-              "x-damdda-authorization": Cookies.get("accessToken")
-                ? `Bearer ${Cookies.get("accessToken")}`
-                : "" // 토큰이 없으면 에러를 발생시키는 것이 좋습니다.
-            }
+
+      // 결제 수단에 따른 처리
+      if (paymentMethod === 'tossPay') {
+        // TossPay 결제 페이지로 리디렉션
+        navigate('/TossReady', {
+          state: {
+            createdOrderId: createdOrderId,
+            createdOrderData: orderInfo,
           }
-        )
-        .then((res) => {
-          if (res.data.next_redirect_pc_url) {
-            // 카카오페이 결제 페이지로 리디렉션
-            window.location.href = res.data.next_redirect_pc_url;
-          } else {
-            console.error("Invalid response from KakaoPay:", res.data);
-          }
-        })
-        .catch((error) => {
-          console.error("Error initiating payment:", error);
         });
-      
+      } else if (paymentMethod === 'kakaoPay') {
+        // 카카오페이 결제창 호출
+        axios
+          .post(`${SERVER_URL}/payment/kakao/ready`, { orderId: createdOrderId },
+            {headers: {
+              ...(Cookies.get("accessToken")&& { "x-damdda-authorization": `Bearer ${Cookies.get("accessToken")}` }),
+             },}
+          )
+          .then((res) => {
+            window.location.href = res.data.next_redirect_pc_url; // 카카오페이 결제 페이지로 리디렉션
+          })
+          .catch((error) => {
+            console.error("Error initiating payment:", error);
+          });
+      }
     } catch (error) {
       console.error("Error creating order:", error);
       alert("주문 생성 중 오류가 발생했습니다. 다시 시도해 주세요.");

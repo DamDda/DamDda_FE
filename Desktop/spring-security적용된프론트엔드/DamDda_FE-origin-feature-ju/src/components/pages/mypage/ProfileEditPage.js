@@ -15,6 +15,8 @@ import Modal from "@mui/material/Modal"; // Modal 컴포넌트 import
 import { useUser } from "../../../UserContext";
 import { SERVER_URL } from "../../../constants/URLs";
 import Cookies from "js-cookie";
+import { NewspaperRounded } from "@mui/icons-material";
+import { toHaveAccessibleErrorMessage } from "@testing-library/jest-dom/matchers";
 export default function ProfileEditPage({
   profile,
   setIsEditing,
@@ -202,19 +204,16 @@ export default function ProfileEditPage({
   };
 
   // 비밀번호 변경 모달을 열고 닫는 함수
-  const handleOpenModal = () => setModalOpen(true);
+  const handleOpenModal = () => {
+    setModalOpen(true);
+  };
   const handleCloseModal = () => setModalOpen(false);
 
   const handlePasswordChange = async () => {
     setErrorMessage((prevErrors) => ({ ...prevErrors, password: "" }));
 
-    if (currentPassword !== formData.password) {
-      setErrorMessage((prevErrors) => ({
-        ...prevErrors,
-        password: "현재 비밀번호가 틀립니다.",
-      }));
-      return;
-    }
+    console.log(currentPassword);
+    console.log(formData.password);
 
     if (newPassword.length < 8 || newPassword.length > 16) {
       setErrorMessage((prevErrors) => ({
@@ -238,6 +237,24 @@ export default function ProfileEditPage({
         ...prev,
         password: newPassword,
       }));
+      const passwordDTO = {
+        currentPassword: currentPassword,
+        password: newPassword,
+      };
+      const response = await axios.put(
+        `${SERVER_URL}/member/${user.key}/password`,
+        passwordDTO,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${Cookies.get("accessToken") || ""}`,
+          },
+        }
+      );
+      if (!response.data.success) {
+        alert("현재 비밀번호가 일치하지 않습니다.");
+        return;
+      }
       alert("비밀번호가 성공적으로 변경되었습니다.");
       handleCloseModal();
     } catch (error) {
@@ -491,9 +508,9 @@ export default function ProfileEditPage({
             onChange={(e) => setConfirmPassword(e.target.value)}
             margin="normal"
           />
-          {errorMessage && (
+          {errorMessage.password && (
             <Typography variant="body2" color="error" sx={{ mt: 2 }}>
-              {errorMessage}
+              {errorMessage.password}
             </Typography>
           )}
           <Button

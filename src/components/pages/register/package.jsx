@@ -73,7 +73,7 @@ const Package = () => {
         {
           withCredentials: true,
           headers: {
-            Authorization: `Bearer ${accessToken}`,
+            "x-damdda-authorization": `Bearer ${accessToken}`,
           },
         }
       );
@@ -145,7 +145,7 @@ const Package = () => {
         {
           withCredentials: true,
           headers: {
-            Authorization: `Bearer ${accessToken}`,
+            "x-damdda-authorization": `Bearer ${accessToken}`,
           },
         }
       );
@@ -173,7 +173,7 @@ const Package = () => {
         await axios.delete(`${SERVER_URL}/packages/rewards/delete/${giftId}`, {
           withCredentials: true,
           headers: {
-            Authorization: `Bearer ${accessToken}`,
+            "x-damdda-authorization": `Bearer ${accessToken}`,
           },
         });
         const updatedGifts = [...reward_list];
@@ -281,7 +281,7 @@ const Package = () => {
           {
             withCredentials: true,
             headers: {
-              Authorization: `Bearer ${accessToken}`,
+              "x-damdda-authorization": `Bearer ${accessToken}`,
             },
           }
         );
@@ -307,7 +307,7 @@ const Package = () => {
             withCredentials: true,
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${accessToken}`,
+              "x-damdda-authorization": `Bearer ${accessToken}`,
             },
           }
         );
@@ -358,7 +358,7 @@ const Package = () => {
         await axios.delete(`${SERVER_URL}/packages/delete/${packageId}`, {
           withCredentials: true,
           headers: {
-            Authorization: `Bearer ${accessToken}`,
+            "x-damdda-authorization": `Bearer ${accessToken}`,
           },
         });
         const updatedPackages = [...project_package];

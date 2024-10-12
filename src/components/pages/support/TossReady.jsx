@@ -230,7 +230,7 @@ export default function TossReady() {
           orderId: createdOrderId.toString(),
         },
         headers: {
-          ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+          ...(Cookies.get("accessToken")&& { "x-damdda-authorization": `Bearer ${Cookies.get("accessToken")}` }),
          },
       });
       

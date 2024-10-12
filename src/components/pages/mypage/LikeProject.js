@@ -33,7 +33,7 @@ const Likeproject = () => {
         projectId: project.id,
       },
       headers: {
-        ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+        ...(Cookies.get("accessToken")&& { "x-damdda-authorization": `Bearer ${Cookies.get("accessToken")}` }),
       },
 
     })
@@ -65,7 +65,7 @@ const Likeproject = () => {
         size: itemsPerPage,
       },
       headers: {
-        ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+        ...(Cookies.get("accessToken")&& { "x-damdda-authorization": `Bearer ${Cookies.get("accessToken")}` }),
       },
       
     })

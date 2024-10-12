@@ -129,7 +129,7 @@ const Detail = () => {
             // memberId: user.key,
           },
           headers: {
-            ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+            ...(Cookies.get("accessToken")&& { "x-damdda-authorization": `Bearer ${Cookies.get("accessToken")}` }),
      },
 
         }
@@ -290,7 +290,7 @@ const Detail = () => {
             projectId: productDetail.id,
           },
           headers: {
-            ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+            ...(Cookies.get("accessToken")&& { "x-damdda-authorization": `Bearer ${Cookies.get("accessToken")}` }),
      },
 
         });
@@ -305,7 +305,7 @@ const Detail = () => {
             projectId: productDetail.id,
           },
           headers: {
-            ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+            ...(Cookies.get("accessToken")&& { "x-damdda-authorization": `Bearer ${Cookies.get("accessToken")}` }),
      },
 
         });

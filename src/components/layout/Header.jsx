@@ -72,7 +72,7 @@ export function Header({ search, setSearch }) {
         // memberId: user.key,
       },
       headers: {
-        ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+        ...(Cookies.get("accessToken")&& { "x-damdda-authorization": `Bearer ${Cookies.get("accessToken")}` }),
       },
       
 
@@ -85,7 +85,7 @@ export function Header({ search, setSearch }) {
   };
 
   useEffect(() => {
-    fetchWritingProject();
+    // fetchWritingProject();
   }, []);
 
   const handleShowProjects = () => {
@@ -107,7 +107,7 @@ export function Header({ search, setSearch }) {
         method: "DELETE",
         url: ` ${SERVER_URL}/api/projects/${id}`,
         headers: {
-          ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+          ...(Cookies.get("accessToken")&& { "x-damdda-authorization": `Bearer ${Cookies.get("accessToken")}` }),
         },
       })
         .then((response) => response.status)
@@ -152,7 +152,7 @@ export function Header({ search, setSearch }) {
       url: ` ${SERVER_URL}/api/projects/register`,
       headers: {
         "Content-Type": "multipart/form-data",
-        ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+        ...(Cookies.get("accessToken")&& { "x-damdda-authorization": `Bearer ${Cookies.get("accessToken")}` }),
       },
       data: formData,
       params: {

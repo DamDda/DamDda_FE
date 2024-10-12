@@ -15,8 +15,8 @@ function MyOrders() {
       // axios.get(`${SERVER_URL}/order/myOrders/${userId}`, {
         axios.get(`${SERVER_URL}/order/myOrders`, {
         headers: {
-          // Authorization: `Bearer ${localStorage.getItem("token")}`  // JWT 토큰을 헤더에 추가
-          ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+          // "x-damdda-authorization": `Bearer ${localStorage.getItem("token")}`  // JWT 토큰을 헤더에 추가
+          ...(Cookies.get("accessToken")&& { "x-damdda-authorization": `Bearer ${Cookies.get("accessToken")}` }),
         }
       })
         .then(response => {
@@ -34,7 +34,7 @@ function MyOrders() {
   
   //   axios.get('/api/orders/user/me', {
   //     headers: {
-  //       Authorization: `Bearer ${token}`  // 토큰을 Authorization 헤더에 포함시켜 요청
+  //       "x-damdda-authorization": `Bearer ${token}`  // 토큰을 "x-damdda-authorization" 헤더에 포함시켜 요청
   //     }
   //   })
   //   .then(response => {

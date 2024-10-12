@@ -74,7 +74,7 @@ const CollaborationList = ({setCollabClick, setCollabId, filter, setFilter}) => 
         },
         withCredentials: true,
         headers: {
-          ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+          ...(Cookies.get("accessToken")&& { "x-damdda-authorization": `Bearer ${Cookies.get("accessToken")}` }),
          },
       }
     );
@@ -119,7 +119,7 @@ const CollaborationList = ({setCollabClick, setCollabId, filter, setFilter}) => 
           // user_id: user.id 
         }, 
         headers: {
-          ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+          ...(Cookies.get("accessToken")&& { "x-damdda-authorization": `Bearer ${Cookies.get("accessToken")}` }),
       },
    
         data: selectedRows  // 바로 배열을 전송
@@ -147,7 +147,7 @@ const CollaborationList = ({setCollabClick, setCollabId, filter, setFilter}) => 
     try {
       await axios.put(approvalPath, selectedRows, {
         headers: {
-          ...(Cookies.get("accessToken") && { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+          ...(Cookies.get("accessToken") && { "x-damdda-authorization": `Bearer ${Cookies.get("accessToken")}` }),
         },
         withCredentials: true,
       })

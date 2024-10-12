@@ -181,7 +181,7 @@ useEffect(() => {
       console.log('Order Data:', orderData); // 서버로 전송 전에 데이터 확인
       const response = await axios.post(`${SERVER_URL}/order/create`, orderData, {        
         headers: {
-          ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+          ...(Cookies.get("accessToken")&& { "x-damdda-authorization": `Bearer ${Cookies.get("accessToken")}` }),
          },
       });
       console.log('주문생성 완료 :', response);
@@ -204,7 +204,7 @@ useEffect(() => {
         axios
           .post(`${SERVER_URL}/payment/kakao/ready`, { orderId: createdOrderId },
             {headers: {
-              ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+              ...(Cookies.get("accessToken")&& { "x-damdda-authorization": `Bearer ${Cookies.get("accessToken")}` }),
              },}
           )
           .then((res) => {

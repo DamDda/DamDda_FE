@@ -21,17 +21,17 @@ import Qna from "./qna";
 
 import "../../styles/style.css";
 import "./Detail.css";
+import "../../../App.css";
 
 import { Header } from "../../layout/Header";
 import { Footer } from "../../layout/Footer";
-import { useLocation,useNavigate } from "react-router-dom";
-import Carousel from 'react-bootstrap/Carousel';
-import 'bootstrap/dist/css/bootstrap.min.css'; // 부트스트랩 CSS 로드
+import { useLocation, useNavigate } from "react-router-dom";
+import Carousel from "react-bootstrap/Carousel";
+import "bootstrap/dist/css/bootstrap.min.css"; // 부트스트랩 CSS 로드
 import axios from "axios"; // axios를 사용하여 REST API 호출
 import { useUser } from "../../../UserContext";
 import Cookies from "js-cookie";
 import { SERVER_URL } from "../../../constants/URLs";
-
 
 const ProductContainer = styled("div")({
   position: "relative",
@@ -43,8 +43,7 @@ const ProductContainer = styled("div")({
   justifyContent: "center",
   borderRadius: "8px",
   overflow: "hidden",
-  marginTop:"20px"
-
+  marginTop: "20px",
 });
 
 const ProductImage = styled("img")({
@@ -88,18 +87,14 @@ const projectData = {
   product_url: "https://example.com/product_image.png",
 };
 
-
 const Detail = () => {
-
   //const { user } = useUser();
-  
+
   const { user } = useUser();
   // if(!isLogin){
   //   console.log(user);
   //   //setUser(prevUser => ({ ...prevUser, key: 0 }));
   // }
-
-
 
   const {
     category,
@@ -116,29 +111,26 @@ const Detail = () => {
     product_url,
   } = projectData;
 
-
   // 페이지네이션 요청을 보내는 함수
   const fetchProducts = () => {
-    console.log("dddddddddddddddddddd" + user.key)
+    console.log("dddddddddddddddddddd" + user.key);
     axios
-      .get(
-        ` ${SERVER_URL}/api/projects/${projectId}`,
-        {
-          params: {
-            // memberId: user.key,
-          },
-          headers: {
-            ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
-     },
-
-        }
-      )
+      .get(` ${SERVER_URL}/api/projects/${projectId}`, {
+        params: {
+          // memberId: user.key,
+        },
+        headers: {
+          ...(Cookies.get("accessToken") && {
+            "x-damdda-authorization": `Bearer ${Cookies.get("accessToken")}`,
+          }),
+        },
+      })
       .then((response) => {
         console.log(response.data);
         if (response.data !== null) {
           setProductDetail(response.data);
           setIsHearted(response.data.liked);
-          setLiked_count(response.data.likeCnt)
+          setLiked_count(response.data.likeCnt);
         } else {
           setProductDetail({});
         }
@@ -150,29 +142,27 @@ const Detail = () => {
       });
   };
 
-
   useEffect(() => {
     fetchProducts();
-    
-     // HTML 요소에 대한 참조
-     const html = document.documentElement;
 
-     // 기존 scroll-behavior 값을 저장
-     const originalScrollBehavior = window.getComputedStyle(html).scrollBehavior;
- 
-     // 부드러운 스크롤 비활성화
-     html.style.scrollBehavior = "auto";
- 
-     // 부드러운 스크롤 비활성화가 적용된 후에 스크롤 이동을 실행하기 위해 약간의 지연을 추가
-     setTimeout(() => {
-       window.scrollTo(0, 0); // 즉시 스크롤을 맨 위로 이동
- 
-       // 이후 원래 scroll-behavior 복원
-       setTimeout(() => {
-         html.style.scrollBehavior = originalScrollBehavior;
-       }, 100); // 스크롤 이동 후에 100ms 대기 후 복원
-     }, 0); // scrollTo를 실행하기 전에 CSS가 적용되도록 지연을 줌
+    // HTML 요소에 대한 참조
+    const html = document.documentElement;
 
+    // 기존 scroll-behavior 값을 저장
+    const originalScrollBehavior = window.getComputedStyle(html).scrollBehavior;
+
+    // 부드러운 스크롤 비활성화
+    html.style.scrollBehavior = "auto";
+
+    // 부드러운 스크롤 비활성화가 적용된 후에 스크롤 이동을 실행하기 위해 약간의 지연을 추가
+    setTimeout(() => {
+      window.scrollTo(0, 0); // 즉시 스크롤을 맨 위로 이동
+
+      // 이후 원래 scroll-behavior 복원
+      setTimeout(() => {
+        html.style.scrollBehavior = originalScrollBehavior;
+      }, 100); // 스크롤 이동 후에 100ms 대기 후 복원
+    }, 0); // scrollTo를 실행하기 전에 CSS가 적용되도록 지연을 줌
   }, []);
 
   const [remainingDays, setRemainingDays] = useState(0);
@@ -182,7 +172,7 @@ const Detail = () => {
   );
   const [liked_count, setLiked_count] = useState(projectData.liked_count); // 좋아요 초기값
   const [isHearted, setIsHearted] = useState(projectData.liked); // 사용자가 좋아요를 눌렀는지
-  console.log(isHearted, liked_count)
+  console.log(isHearted, liked_count);
 
   const [modalOpen, setModalOpen] = useState(false);
   const [collabDetails, setCollabDetails] = useState({
@@ -204,7 +194,6 @@ const Detail = () => {
   const [projectId, setProjectId] = useState(query.get("projectId") || "");
   const [productDetail, setProductDetail] = useState({});
   console.log(projectId);
-
 
   // const fetchProducts = async () => {
   //   try {
@@ -228,7 +217,6 @@ const Detail = () => {
   //     console.error("프로젝트 데이터를 가져오는 중 오류 발생:", error);
   //   }
   // };
-
 
   // 이거어어어어어어어어어어
   // const calculateRemainingDays = () => {
@@ -279,45 +267,53 @@ const Detail = () => {
 
   const handleHeartClick = async (prev) => {
     const newHeartedStatus = !prev; // 하트 상태 반전
-  
+
     try {
       if (prev) {
         // 좋아요 취소 요청
-        const response = await axios.delete(` ${SERVER_URL}/api/projects/like`, {
-          params: {
-            // memberId: user.key,
-            projectId: productDetail.id,
-          },
-          headers: {
-            ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
-     },
-
-        });
+        const response = await axios.delete(
+          ` ${SERVER_URL}/api/projects/like`,
+          {
+            params: {
+              // memberId: user.key,
+              projectId: productDetail.id,
+            },
+            headers: {
+              ...(Cookies.get("accessToken") && {
+                "x-damdda-authorization": `Bearer ${Cookies.get("accessToken")}`,
+              }),
+            },
+          }
+        );
         console.log("좋아요 취소 성공:", response.data);
         setLiked_count(liked_count - 1);
         // setLiked_count((prevCount) => prevCount - 1); // 함수형 업데이트로 좋아요 수 감소
       } else {
         // 좋아요 추가 요청
-        const response = await axios.post(` ${SERVER_URL}/api/projects/like`, null, {
-          params: {
-            // memberId: user.key,
-            projectId: productDetail.id,
-          },
-          headers: {
-            ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
-     },
-
-        });
+        const response = await axios.post(
+          ` ${SERVER_URL}/api/projects/like`,
+          null,
+          {
+            params: {
+              // memberId: user.key,
+              projectId: productDetail.id,
+            },
+            headers: {
+              ...(Cookies.get("accessToken") && {
+                "x-damdda-authorization": `Bearer ${Cookies.get("accessToken")}`,
+              }),
+            },
+          }
+        );
         console.log("좋아요 성공:", response.data);
         setLiked_count((prevCount) => prevCount + 1); // 함수형 업데이트로 좋아요 수 증가
-      }      
+      }
       // 좋아요 상태 업데이트
       setIsHearted(newHeartedStatus);
-  
     } catch (error) {
       console.error("좋아요 처리 중 오류 발생:", error);
     }
-  
+
     return newHeartedStatus; // 새로운 상태 반환
   };
 
@@ -408,93 +404,113 @@ const Detail = () => {
     }
   };
 
-// 달성률 계산 (fundsReceive / targetFunding * 100)
-const achievementRate = Math.min(
-  (productDetail.fundsReceive / productDetail.targetFunding) * 100,
-  100
-);
-
-// 현재 시간
-const currentTime = new Date();
-// product.endDate를 Date 객체로 변환
-const endDate = new Date(productDetail.endDate);
-// 남은 시간 계산 (밀리초 기준)
-const timeDifference = endDate - currentTime;
-
-// 밀리초를 일(day) 단위로 변환
-const daysLeft = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-
-// 날짜 형식을 변환하는 함수
-const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  // return date.toISOString().slice(0, 10); // YYYY-MM-DD 형식으로 변환
-  return date.toLocaleDateString('ko-KR', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit'
-  });
-  // return dateString;
-};
-const ProductCarousel = ({ productDetail }) => {
-  return (
-    <div style={{marginTop:'200px', maxWidth: "1500px", margin: "0 auto" ,backgroundColor:"gray",}}> {/* 캐러셀의 최대 너비를 1000px로 설정 */}
-      <Carousel fade interval={3000} indicators={true} controls={true}> {/* 3초마다 자동 전환 */}
-        {productDetail && productDetail.productImages && productDetail.productImages.length > 0 ? (
-          productDetail.productImages.map((image, index) => (
-            <Carousel.Item key={index}>
-              <img
-                src={`http://localhost:9000/${image}`}
-                alt={`Product image ${index}`}
-                style={{ 
-                  width: '850px', 
-                  height: '500px', 
-                  objectFit: 'cover', 
-                  borderRadius: '8px' ,
-                  marginTop:'20px',
-                  }} // 스타일 적용
-              />
-              <Carousel.Caption>
-                <h3>Slide {index + 1}</h3>
-                <p>이 슬라이드는 {index + 1}번째 이미지입니다.</p>
-              </Carousel.Caption>
-            </Carousel.Item>
-          ))
-        ) : (
-          <Carousel.Item>
-            <div style={{ width:'850px',height:'500px',padding: "200px",marginTop:'20px', textAlign: "center" }}>
-              <Typography variant="body2" color="textSecondary">
-                이미지가 없습니다.
-              </Typography>
-            </div>
-          </Carousel.Item>
-        )}
-      </Carousel>
-    </div>
+  // 달성률 계산 (fundsReceive / targetFunding * 100)
+  const achievementRate = Math.min(
+    (productDetail.fundsReceive / productDetail.targetFunding) * 100,
+    100
   );
-};
+
+  // 현재 시간
+  const currentTime = new Date();
+  // product.endDate를 Date 객체로 변환
+  const endDate = new Date(productDetail.endDate);
+  // 남은 시간 계산 (밀리초 기준)
+  const timeDifference = endDate - currentTime;
+
+  // 밀리초를 일(day) 단위로 변환
+  const daysLeft = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+
+  // 날짜 형식을 변환하는 함수
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    // return date.toISOString().slice(0, 10); // YYYY-MM-DD 형식으로 변환
+    return date.toLocaleDateString("ko-KR", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
+    // return dateString;
+  };
+  const ProductCarousel = ({ productDetail }) => {
+    return (
+      <div
+        style={{
+          marginTop: "200px",
+          maxWidth: "1500px",
+          margin: "0 auto",
+          backgroundColor: "gray",
+        }}
+      >
+        {" "}
+        {/* 캐러셀의 최대 너비를 1000px로 설정 */}
+        <Carousel fade interval={3000} indicators={true} controls={true}>
+          {" "}
+          {/* 3초마다 자동 전환 */}
+          {productDetail &&
+          productDetail.productImages &&
+          productDetail.productImages.length > 0 ? (
+            productDetail.productImages.map((image, index) => (
+              <Carousel.Item key={index}>
+                <img
+                  src={`http://localhost:9000/${image}`}
+                  alt={`Product image ${index}`}
+                  style={{
+                    width: "850px",
+                    height: "500px",
+                    objectFit: "cover",
+                    borderRadius: "8px",
+                    marginTop: "20px",
+                  }} // 스타일 적용
+                />
+                <Carousel.Caption>
+                  <h3>Slide {index + 1}</h3>
+                  <p>이 슬라이드는 {index + 1}번째 이미지입니다.</p>
+                </Carousel.Caption>
+              </Carousel.Item>
+            ))
+          ) : (
+            <Carousel.Item>
+              <div
+                style={{
+                  width: "850px",
+                  height: "500px",
+                  padding: "200px",
+                  marginTop: "20px",
+                  textAlign: "center",
+                }}
+              >
+                <Typography variant="body2" color="textSecondary">
+                  이미지가 없습니다.
+                </Typography>
+              </div>
+            </Carousel.Item>
+          )}
+        </Carousel>
+      </div>
+    );
+  };
 
   return (
     <>
       <Header />
       <div className="container">
-         <div style={{ paddingTop: "20px",textAlign:"center" }}>
-         <div className="project-info">
-              <div className="category">{productDetail.category}</div>
-              <div className="presenter">{productDetail.nickName}</div>
+        <div style={{ paddingTop: "20px", textAlign: "center" }}>
+          <div className="project-info">
+            <div className="category">{productDetail.category}</div>
+            <div className="presenter">{productDetail.nickName}</div>
 
-              <h1 className="project-title">{productDetail.title}</h1>
-              <p className="project-description">
-                {productDetail.description}
-                {/* .split('\n').map((line, index) => (
+            <h1 className="project-title">{productDetail.title}</h1>
+            <p className="project-description">
+              {productDetail.description}
+              {/* .split('\n').map((line, index) => (
                   <span key={index}>
                     {line}
                     <br />
                   </span>
                 ))} */}
-      </p>
-      </div>
+            </p>
+          </div>
         </div>
-
       </div>
 
       <div className="container">
@@ -533,10 +549,16 @@ const ProductCarousel = ({ productDetail }) => {
                 </Grid>
               ))} */}
 
-      <div style={{ display: "flex", width: "1500px",justifyContent:"center" }}>
-      <ProductContainer>
-             <ProductCarousel></ProductCarousel>
-               {productDetail.productImages &&
+          <div
+            style={{
+              display: "flex",
+              width: "1500px",
+              justifyContent: "center",
+            }}
+          >
+            <ProductContainer>
+              <ProductCarousel></ProductCarousel>
+              {productDetail.productImages &&
               productDetail.productImages.length > 0 ? (
                 productDetail.productImages.map((image, index) => (
                   <ProductImage
@@ -549,7 +571,7 @@ const ProductCarousel = ({ productDetail }) => {
                 <Typography variant="body2" color="textSecondary">
                   이미지가 없습니다.
                 </Typography>
-              )} 
+              )}
 
               {product_url ? (
                 <ProductImage src={product_url} alt="Project Product" />
@@ -557,7 +579,7 @@ const ProductCarousel = ({ productDetail }) => {
                 <Typography variant="body2" color="textSecondary">
                   이미지가 없습니다.
                 </Typography>
-              )} 
+              )}
               <div
                 style={{
                   position: "absolute",
@@ -595,68 +617,74 @@ const ProductCarousel = ({ productDetail }) => {
             </ProductContainer>
 
             <div style={{ flex: 1, width: "1200px" }}>
-           
-           <div className="container" style={{ marginLeft: "50px" }}>
-           <h5>
-               후원금액 (진행률) 
-               <div className="goal-price">
-                 <span>{productDetail.fundsReceive}원</span>
-                 <span className="percentage">{achievementRate.toFixed(2)}%</span>
-               </div>
-             </h5>
+              <div className="container" style={{ marginLeft: "50px" }}>
+                <h5>
+                  후원금액 (진행률)
+                  <div className="goal-price">
+                    <span>{productDetail.fundsReceive}원</span>
+                    <span className="percentage">
+                      {achievementRate.toFixed(2)}%
+                    </span>
+                  </div>
+                </h5>
 
-           <LinearProgress
-             variant="determinate"
-             value={productDetail.fundsReceive}
-             className="progress-bar"
-           />
+                <LinearProgress
+                  variant="determinate"
+                  value={productDetail.fundsReceive}
+                  className="progress-bar"
+                />
 
+                <div className="stats-container">
+                  <div className="stats-item">
+                    남은 기간: <span className="stats-value">{daysLeft}일</span>
+                  </div>
+                  <div className="stats-item">
+                    후원자 수:{" "}
+                    <span className="stats-value">
+                      {productDetail.supporterCnt}명
+                    </span>
+                  </div>
+                </div>
 
-         <div className="stats-container">
-           <div className="stats-item">
-             남은 기간: <span className="stats-value">{daysLeft}일</span>
-           </div>
-           <div className="stats-item">
-             후원자 수: <span className="stats-value">{productDetail.supporterCnt}명</span>
-           </div>
-         </div>
+                <Divider className="divider" />
+                <div className="info-text">
+                  목표금액: {productDetail.targetFunding}원
+                </div>
+                <div className="info-text">
+                  펀딩 기간: {formatDate(productDetail.startDate)} ~{" "}
+                  {formatDate(productDetail.endDate)}
+                </div>
+                <div className="info-text">
+                  예상 전달일: 프로젝트 종료일로부터 30일 이내
+                </div>
+                <div className="button-container">
+                  <Button
+                    className="contained-button"
+                    onClick={handleSponsorClick}
+                  >
+                    이 프로젝트에 후원하기
+                  </Button>
+                  <div className="secondary-buttons">
+                    <Button
+                      variant="outlined"
+                      onClick={() => handleHeartClick(isHearted)}
+                      className="heart-button"
+                    >
+                      {isHearted ? "♥" : "♡"} {liked_count}명
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      onClick={handleCollabClick}
+                      className="heart-button"
+                    >
+                      협업하기
+                    </Button>
+                  </div>
+                </div>
+              </div>
 
-
- <Divider className="divider" />
- <div className="info-text">        
-   목표금액: {productDetail.targetFunding}원</div>
- <div className="info-text">
-   펀딩 기간: {formatDate(productDetail.startDate)} ~ {formatDate(productDetail.endDate)}
- </div>
- <div className="info-text">
-   예상 전달일: 프로젝트 종료일로부터 30일 이내
- </div>
- <div className="button-container">
- <Button className="contained-button" onClick={handleSponsorClick}>
-   이 프로젝트에 후원하기
- </Button>
- <div className="secondary-buttons">
-   <Button
-     variant="outlined"
-     onClick={() => handleHeartClick(isHearted)}
-     className="heart-button"
-   >
-     {isHearted ? "♥" : "♡"}  {liked_count}명
-   </Button>
-   <Button
-     variant="outlined"
-     onClick={handleCollabClick}
-     className="heart-button"
-   >
-     협업하기
-   </Button>
- </div>
-</div>
-
-          </div>
-
-           {/*  */}
-               {/* <Button variant="contained" onClick={handleSponsorClick}>
+              {/*  */}
+              {/* <Button variant="contained" onClick={handleSponsorClick}>
                  이 프로젝트에 후원하기
                </Button>
                <p>
@@ -675,9 +703,8 @@ const ProductCarousel = ({ productDetail }) => {
                    협업하기
                  </Button>
                </p> */}
-           </div>
+            </div>
           </div>
-
 
           {/* 상세설명 */}
           <Divider style={{ margin: "20px 0", width: "1220px" }} />
@@ -695,11 +722,12 @@ const ProductCarousel = ({ productDetail }) => {
               <Tab label="Q&A" onClick={() => scrollToSection("qna")} />
             </Tabs>
             <Typography variant="body1" style={{ marginTop: "10px" }}>
-              <ProjectDetail 
-              descriptionDetail={productDetail.descriptionDetail} 
-              descriptionImages={productDetail.descriptionImages}
-              projectId={projectId}
-              projectTitle={productDetail.title}/>
+              <ProjectDetail
+                descriptionDetail={productDetail.descriptionDetail}
+                descriptionImages={productDetail.descriptionImages}
+                projectId={projectId}
+                projectTitle={productDetail.title}
+              />
             </Typography>
           </div>
 
@@ -717,9 +745,8 @@ const ProductCarousel = ({ productDetail }) => {
               />
               <Tab label="Q&A" onClick={() => scrollToSection("qna")} />
             </Tabs>
-            <Notice />
+            <Notice projectId={projectId} />
           </div>
-
 
           {/* QNA */}
           <Divider style={{ margin: "20px 0" }} />

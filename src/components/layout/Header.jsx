@@ -72,7 +72,7 @@ export function Header({ search, setSearch }) {
         // memberId: user.key,
       },
       headers: {
-        ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+        ...(Cookies.get("accessToken")&& { "x-damdda-authorization": `Bearer ${Cookies.get("accessToken")}` }),
       },
       
 
@@ -85,7 +85,7 @@ export function Header({ search, setSearch }) {
   };
 
   useEffect(() => {
-    fetchWritingProject();
+    // fetchWritingProject();
   }, []);
 
   const handleShowProjects = () => {
@@ -107,7 +107,7 @@ export function Header({ search, setSearch }) {
         method: "DELETE",
         url: ` ${SERVER_URL}/api/projects/${id}`,
         headers: {
-          ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+          ...(Cookies.get("accessToken")&& { "x-damdda-authorization": `Bearer ${Cookies.get("accessToken")}` }),
         },
       })
         .then((response) => response.status)
@@ -152,7 +152,7 @@ export function Header({ search, setSearch }) {
       url: ` ${SERVER_URL}/api/projects/register`,
       headers: {
         "Content-Type": "multipart/form-data",
-        ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+        ...(Cookies.get("accessToken")&& { "x-damdda-authorization": `Bearer ${Cookies.get("accessToken")}` }),
       },
       data: formData,
       params: {
@@ -274,9 +274,10 @@ export function Header({ search, setSearch }) {
                 variant="contained"
                 onClick={handleShowProjects}
                 sx={{
+                  fontFamily: "Pretendard-Regular",
+                  fontWeight:400,
                   backgroundColor: "#7a82ed",
                   color: "white",
-                  fontWeight: "bold",
                   borderRadius: "10px",
                   padding: "8px 16px",
                   boxShadow: "none",
@@ -291,6 +292,8 @@ export function Header({ search, setSearch }) {
               {showProjects && (
                 <Box
                   sx={{
+                    fontFamily: "Pretendard-Regular",
+                    fontWeight:400,
                     marginTop: "10px",
                     padding: "10px",
                     border: "1px solid #ccc",
@@ -309,7 +312,8 @@ export function Header({ search, setSearch }) {
                     <Typography
                       variant="subtitle1"
                       sx={{
-                        fontWeight: "bold",
+                        fontFamily: "Pretendard-Regular",
+                        fontWeight:400,
                         marginBottom: "10px",
                         color: "#1263CE",
                         textAlign: "center",
@@ -327,6 +331,8 @@ export function Header({ search, setSearch }) {
                     <Box
                       key={project.id}
                       sx={{
+                        fontFamily: "Pretendard-Regular",
+                        fontWeight:400,
                         display: "flex",
                         justifyContent: "end",
                         alignItems: "center",
@@ -371,14 +377,16 @@ export function Header({ search, setSearch }) {
                   color="primary"
                   onClick={() => navigate("/login")} // 로그인 페이지로 이동
                   sx={{
+                    fontFamily: "Pretendard-Regular",
                     backgroundColor: "#7a82ed",
                     color: "white",
-                    fontWeight: "bold",
+                    fontWeight:400,
                     borderRadius: "10px",
                     padding: "8px 16px",
                     "&:hover": {
                       backgroundColor: "#33C2E2",
                     },
+                    
                   }}
                 >
                   로그인
@@ -388,6 +396,8 @@ export function Header({ search, setSearch }) {
               {showProfileCard && user.id && (
                 <Box
                   sx={{
+                    fontFamily: "Pretendard-Regular",
+                    fontWeight:400,
                     position: "absolute",
                     top: "100%",
                     left: "50%",
@@ -414,6 +424,7 @@ export function Header({ search, setSearch }) {
                     />
                     <CardContent>
                       <Typography
+                        fontFamily="Pretendard-Regular"
                         gutterBottom
                         variant="h6"
                         component="div"
@@ -441,11 +452,10 @@ export function Header({ search, setSearch }) {
                         <Button
                           variant="outlined"
                           sx={{
+                            fontFamily: "Pretendard-Regular",
+                            fontWeight:400,
                             borderRadius: 20,
-
                             width: "120px",
-
-                            fontWeight: "bold",
                           }}
                           onClick={() => navigate("/mypage")}
                         >
@@ -455,11 +465,11 @@ export function Header({ search, setSearch }) {
                         <Button
                           variant="outlined"
                           sx={{
+                            fontFamily: "Pretendard-Regular",
+                            fontWeight:400,
                             borderRadius: 20,
-
-                            width: "100px",
-
-                            fontWeight: "bold",
+                            width: "130px",
+                            height:"50px"
                           }}
                           onClick={() =>
                             navigate("/mypage", {
@@ -467,7 +477,7 @@ export function Header({ search, setSearch }) {
                             })
                           }
                         >
-                          ❤️관심프로젝트
+                          ❤️ 관심프로젝트
                         </Button>
 
                         <Typography
@@ -475,8 +485,9 @@ export function Header({ search, setSearch }) {
                           color="text.secondary"
                           textAlign="center"
                           sx={{
-                            fontWeight: 800,
-
+                            marginTop:"10px",
+                            fontFamily: "Pretendard-Regular",
+                            fontWeight:400,
                             cursor: "pointer",
                           }}
                           onClick={() => {

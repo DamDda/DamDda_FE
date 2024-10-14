@@ -17,7 +17,7 @@ const fetchUserProjectId = async (memberId) => {
     // const response = await axios.get(`${SERVER_URL}/order/user/project?memberId=${memberId}`, {
       const response = await axios.get(`${SERVER_URL}/order/user/project`, {
       headers: {
-        ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+        ...(Cookies.get("accessToken")&& { "x-damdda-authorization": `Bearer ${Cookies.get("accessToken")}` }),
        },
 
     });

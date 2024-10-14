@@ -26,10 +26,13 @@ const Login = () => {
   };
 
   const fetchUserInfo = async (accessToken) => {
+    console.log(accessToken+"****")
+
     const response = await axios.get(`${SERVER_URL}/member/userinfo`, {
+
       withCredentials: true,
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        "x-damdda-authorization": `Bearer ${accessToken}`,
       },
     });
     const contextInfo = {
@@ -65,17 +68,29 @@ const Login = () => {
 
       // 모든 필드가 입력되었을 때만 검증 진행
       if (valid) {
+
+        console.log("처음");
         const response = await axios.post(`${SERVER_URL}/member/login`, formatLogin, {
           withCredentials: true,
           headers: { "Content-Type": "application/json" },
         });
 
-        const accessToken = response.headers["authorization"].split(" ")[1];
+        console.log("token전"+response.headers);
+
+        const accessToken = response.headers["x-damdda-authorization"].split(" ")[1];
+        console.log("token전2");
+
         if (accessToken) {
           // 토큰을 제대로 저장
+          console.log("token전3");
+
           Cookies.set("accessToken", accessToken);
-        }
+          console.log("token후");
+
+
         fetchUserInfo(accessToken); // 토큰을 제대로 전달
+      }        
+      console.log("token후2");
 
         // login(userData);
         navigate("/", { state: { id: formData.id } });

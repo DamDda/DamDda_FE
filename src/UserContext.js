@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
-
+import Cookies from "js-cookie";
 const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
@@ -23,15 +23,16 @@ export const UserProvider = ({ children }) => {
 
   const login = (userData) => {
     setUser(userData);
-   setIsLogin(true);
+    setIsLogin(true);
   };
 
   const logout = () => {
-    setUser({key:0});
+    setUser({ key: 0 });
     // localStorage에서 사용자 정보를 삭제합니다.
     localStorage.removeItem("user");
+    Cookies.remove("accessToken");
 
-   setIsLogin(false);
+    setIsLogin(false);
   };
 
   return (

@@ -21,6 +21,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useUser } from "../../../UserContext";
 import Cookies from "js-cookie";
 import { SERVER_URL } from "../../../constants/URLs";
+import "../../../App.css"
 
 
 
@@ -376,7 +377,7 @@ export const ProductRecommendations = ({search, cartegory}) => {
     try {
       const response = await axios.get(` ${SERVER_URL}/api/projects/projects`, {
         headers: {
-          ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+          ...(Cookies.get("accessToken")&& { "x-damdda-authorization": `Bearer ${Cookies.get("accessToken")}` }),
    },
 
         params: {
@@ -406,7 +407,7 @@ export const ProductRecommendations = ({search, cartegory}) => {
     try {
       const response = await axios.get(` ${SERVER_URL}/api/projects/projects`, {
         headers: {
-          ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+          ...(Cookies.get("accessToken")&& { "x-damdda-authorization": `Bearer ${Cookies.get("accessToken")}` }),
    },
 
         params: {
@@ -489,7 +490,7 @@ export const ProductRecommendations = ({search, cartegory}) => {
         // liked가 true이면 DELETE 요청
         const response = await axios.delete(` ${SERVER_URL}/api/projects/like`, {
           headers: {
-            ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+            ...(Cookies.get("accessToken")&& { "x-damdda-authorization": `Bearer ${Cookies.get("accessToken")}` }),
      },
     params: {
             // memberId: user.key,
@@ -501,7 +502,7 @@ export const ProductRecommendations = ({search, cartegory}) => {
         // liked가 false이면 POST 요청
         const response = await axios.post(` ${SERVER_URL}/api/projects/like`, null, {
           headers: {
-            ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+            ...(Cookies.get("accessToken")&& { "x-damdda-authorization": `Bearer ${Cookies.get("accessToken")}` }),
      },
           params: {
             // memberId: user.key,

@@ -30,11 +30,12 @@ export default function ProfileStatistics({ setIsEditing }) {
   //   fetchProfileData(); // 프로필 데이터 로드
   // }, []);
   const fetchProfileData = async () => {
+    console.log("fetchProfileData" + fetchProfileData)
     try {
       // const response = await axios.get(`${SERVER_URL}/members/profile?loginId=${user.id}`, {
-      const response = await axios.get(`${SERVER_URL}/members/profile`, {
+      const response = await axios.get(`${SERVER_URL}/member/profile`, {
         headers: {
-          ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+          ...(Cookies.get("accessToken")&& { "x-damdda-authorization": `Bearer ${Cookies.get("accessToken")}` }),
         },
         withCredentials: true,
       });
@@ -70,6 +71,7 @@ export default function ProfileStatistics({ setIsEditing }) {
 
   // 비밀번호 모달에서 확인 버튼 클릭 시 처리 로직
   const handlePasswordSubmit = (inputPassword) => {
+    console.log("11111111111111111")
     if (inputPassword === password) {
       setPasswordError(""); // 에러 메시지 초기화
       setIsModalOpen(false); // 모달 닫기
@@ -91,6 +93,44 @@ export default function ProfileStatistics({ setIsEditing }) {
   if (!profile) {
     return <div>로딩 중...</div>;
   }
+
+  const handleSubmit = async (inputPassword) => {
+    console.log("handleSubmit 처음 부분:");
+    // e.preventDefault();
+
+    const formatLogin = {
+      loginId: user.id,
+      password: inputPassword,
+    };
+    try {
+      let valid = true;
+      console.log("트라이 처음 부분:");
+      
+      // 모든 필드가 입력되었을 때만 검증 진행
+      if (valid) {
+        console.log("if처음부분임:");
+        const response = await axios.post(`${SERVER_URL}/member/login`, formatLogin, {
+          withCredentials: true,
+          headers: { "Content-Type": "application/json" },
+        });
+        // response.data에서 X-Nickname 값 가져오기
+        const nickname = response.data["X-Nickname"];
+        console.log("Nickname:", nickname);
+        if(nickname === user.nickname){
+          setIsEditing(true); // 프로필 수정 페이지로 이동
+          setPasswordError('');  // 에러 메시지 초기화
+          setIsModalOpen(false);  // 모달 닫기
+        } else{
+          setPasswordError("비밀번호가 틀렸습니다. 다시 입력해주세요.");
+        }        
+        }       
+      }
+    catch (error) {
+      setPasswordError("비밀번호가 틀렸습니다. 다시 입력해주세요.");
+    }
+  };
+
+
 
   return (
     <div
@@ -180,7 +220,7 @@ export default function ProfileStatistics({ setIsEditing }) {
                     InputProps={{ readOnly: true }}
                   />
 
-                  <TextField
+                  {/* <TextField
                     label="비밀번호"
                     value={passwordDisplay} // 비밀번호 길이에 맞춘 별표 표시
                     size="small"
@@ -188,7 +228,7 @@ export default function ProfileStatistics({ setIsEditing }) {
                     fullWidth
                     type="password" // 입력 시에도 비밀번호는 *로 표시
                     InputProps={{ readOnly: true }}
-                  />
+                  /> */}
                   <TextField
                     label="휴대폰 번호"
                     value={profile.phoneNumber}
@@ -237,10 +277,21 @@ export default function ProfileStatistics({ setIsEditing }) {
       <Modal
         open={isModalOpen} // 모달이 열려 있는지 여부
         onClose={() => setIsModalOpen(false)} // 모달 닫기
-        onSubmit={handlePasswordSubmit} // 비밀번호 확인 로직
+        onSubmit={handleSubmit} // 비밀번호 확인 로직
+        // onSubmit={handlePasswordSubmit} // 비밀번호 확인 로직
         currentPassword={password}
         errorMessage={passwordError} // 비밀번호 오류 메시지
+        setError={setPasswordError}
+        error={passwordError}
+        
       />
+      {/* 취소 버튼 */}
+      {/* <button onClick={() => setIsModalOpen(false)}>취소</button> */}
+      
+      {/* 확인 버튼에 handleSubmit 연결 */}
+      {/* <button onClick={handleSubmit}>확인</button> */}
     </div>
   );
 }
+
+

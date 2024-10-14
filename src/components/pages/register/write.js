@@ -12,7 +12,7 @@ const Write = ({
 }) => {
   // 폼 데이터 관리 (상세 설명)
   const [formData, setFormData] = useState({
-    description: descriptionDetail || "",
+    description: descriptionDetail,
   });
 
   const [imagePreviews, setImagePreviews] = useState([]); // 이미지 미리보기 상태
@@ -21,9 +21,9 @@ const Write = ({
   useEffect(() => {
     setFormData((prevFormData) => ({
       ...prevFormData,
-      description: descriptionDetail || "", // description 필드를 업데이트, 기본값으로 빈 문자열
+      description: descriptionDetail, // description 필드를 업데이트, 기본값으로 빈 문자열
     }));
-    setImagePreviews(descriptionImagesUrl); // 이미지 미리보기 업데이트
+    setImagePreviews(descriptionImagesUrl || []); // 이미지 미리보기 업데이트
   }, [descriptionDetail, descriptionImagesUrl]);
 
   // 입력 파일을 참조할 ref
@@ -34,23 +34,25 @@ const Write = ({
     const files = Array.from(event.target.files); // 업로드된 파일 배열로 변환
 
     // 각 파일의 미리보기 URL 생성
-    const filePreviews = files.map((file) => {
-      return URL.createObjectURL(file);
-    });
+    const filePreviews = files.map((file) => URL.createObjectURL(file));
 
-    setDescriptionImages((prevImages) => [...prevImages, ...files]); // 기존 이미지에 추가
-    setImagePreviews((prevImages) => [...prevImages, ...filePreviews]); // 이미지 미리보기 상태 업데이트
+    // 미리보기 URL을 상태에 저장 (미리보기 상태 업데이트)
+    setImagePreviews((prevImages) => [...prevImages, ...filePreviews]);
+
+    // 실제 이미지 파일을 상태에 저장 (업로드된 이미지 상태 업데이트)
+    setDescriptionImages((prevImages) => [...prevImages, ...files]);
   };
 
   // 이미지 삭제 핸들러
   const handleImageDelete = (index) => {
     setImagePreviews((prevImages) => {
-      const newImages = prevImages.slice();
+      const newImages = [...prevImages];
       newImages.splice(index, 1);
       return newImages;
     });
+
     setDescriptionImages((prevImages) => {
-      const newImages = prevImages.slice();
+      const newImages = [...prevImages];
       newImages.splice(index, 1);
       return newImages;
     });
@@ -126,6 +128,28 @@ const Write = ({
           modules={modules}
         />
       </div>
+
+      {/* 이미지 미리보기 및 업로드 */}
+      <div>
+        {imagePreviews.map((image, index) => (
+          <div key={index} style={{ display: "inline-block", margin: "10px" }}>
+            <img
+              src={image}
+              alt={`preview-${index}`}
+              style={{ width: "100px", height: "100px", objectFit: "cover" }}
+            />
+            <button onClick={() => handleImageDelete(index)}>삭제</button>
+          </div>
+        ))}
+      </div>
+
+      <button onClick={() => inputRef.current.click()}></button>
+      <VisuallyHiddenInput
+        type="file"
+        ref={inputRef}
+        onChange={handleImageUpload}
+        multiple
+      />
     </div>
   );
 };

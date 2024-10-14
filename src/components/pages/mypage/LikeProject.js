@@ -33,7 +33,7 @@ const Likeproject = () => {
         projectId: project.id,
       },
       headers: {
-        ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+        ...(Cookies.get("accessToken")&& { "x-damdda-authorization": `Bearer ${Cookies.get("accessToken")}` }),
       },
 
     })
@@ -58,12 +58,16 @@ const Likeproject = () => {
   const fetchProjects = async () => {
     axios({
       method: "GET",
-      url: "http://localhost:9000/api/projects/like",
+      url: `${SERVER_URL}/api/projects/like`,
       params: {
-        memberId: user.key, // ==========================>> user.key 로 수정해야해요
+        // memberId: user.key, // ==========================>> user.key 로 수정해야해요
         page: page,
         size: itemsPerPage,
       },
+      headers: {
+        ...(Cookies.get("accessToken")&& { "x-damdda-authorization": `Bearer ${Cookies.get("accessToken")}` }),
+      },
+      
     })
       .then((response) => {
         setProjects(response.data.dtoList);

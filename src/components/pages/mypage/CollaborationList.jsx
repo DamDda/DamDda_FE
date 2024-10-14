@@ -74,7 +74,7 @@ const CollaborationList = ({setCollabClick, setCollabId, filter, setFilter}) => 
         },
         withCredentials: true,
         headers: {
-          ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+          ...(Cookies.get("accessToken")&& { "x-damdda-authorization": `Bearer ${Cookies.get("accessToken")}` }),
          },
       }
     );
@@ -119,7 +119,7 @@ const CollaborationList = ({setCollabClick, setCollabId, filter, setFilter}) => 
           // user_id: user.id 
         }, 
         headers: {
-          ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+          ...(Cookies.get("accessToken")&& { "x-damdda-authorization": `Bearer ${Cookies.get("accessToken")}` }),
       },
    
         data: selectedRows  // 바로 배열을 전송
@@ -138,12 +138,17 @@ const CollaborationList = ({setCollabClick, setCollabId, filter, setFilter}) => 
   const handleApproval = async (status) => {
     let approvalPath;
     if(status === "승인"){
+      console.log("저거임!")
         approvalPath = `${SERVER_URL}/collab/approval`
     } else if(status === "거절"){
+      console.log("이거임!")
         approvalPath = `${SERVER_URL}/collab/reject`
     }
     try {
       await axios.put(approvalPath, selectedRows, {
+        headers: {
+          ...(Cookies.get("accessToken") && { "x-damdda-authorization": `Bearer ${Cookies.get("accessToken")}` }),
+        },
         withCredentials: true,
       })
       alert(`선택된 협업들이 ${status}되었습니다.`);

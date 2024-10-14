@@ -4,6 +4,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import CoverImage from '../assets/coverImage.png';
+import '../../App.css';  // 글로벌 CSS 파일을 import
 
 // Example product data
 const products = [

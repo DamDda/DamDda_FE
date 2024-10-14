@@ -21,6 +21,7 @@ import Write from "../write";
 import "../Register.css";
 import "../../../styles/style.css";
 import AiModal from "../AiModal/AiModal";
+import { UploadFile } from "@mui/icons-material";
 
 //상세설명 페이지
 const DetailPage = (props) => {
@@ -53,12 +54,25 @@ const DetailPage = (props) => {
    * @param {string} aiGeneratedDescriptionDetail - AI가 생성한 프로젝트 설명
    */
   const confirmAiDescriptionDetailRegistration = (
-    aiGeneratedDescriptionDetail
+    aiGeneratedDescriptionDetail,
+    uploadFiles // AI 생성 설명에 추가할 이미지 파일
   ) => {
-    // formData의 description 필드를 AI가 생성한 설명으로 업데이트
+    // AI가 생성한 설명을 forData에 저장
     setDescriptionDetail(aiGeneratedDescriptionDetail);
 
-    // 설명 등록 후 모달을 닫음
+    // 이미지 업로드: AI 설명에 새로운 이미지 파일 추가
+    if (uploadFiles && uploadFiles.length > 0) {
+      const newImages = Array.from(uploadFiles).map((file) => ({
+        file: file,
+        url: URL.createObjectURL(file),
+        title: file.name,
+      }));
+
+      // 기존 이미지 배열에 새로운 이미지 추가
+      setDescriptionImages((prevImaages) => [...prevImaages, ...newImages]);
+    }
+
+    // 설명 등록 후 모달 닫음
     closeAiModal();
   };
 
@@ -88,21 +102,23 @@ const DetailPage = (props) => {
 
   // 이미지 업로드 함수
   const handleUploadImage = (e) => {
-    const files = Array.from(e.target.files);
-    files.forEach((_file) =>
-      setDescriptionImages([
-        ...descriptionImages,
-        {
-          file: _file,
-          url: URL.createObjectURL(_file),
-          title: _file.name,
-        },
-      ])
-    );
+    try {
+      const files = Array.from(e.target.files);
+      const newImages = files.map((file) => ({
+        file: file,
+        url: URL.createObjectURL(file),
+        title: file.name,
+      }));
+
+      setDescriptionImages((prevImaages) => [...prevImaages, ...newImages]);
+    } catch (error) {
+      console.log("이미지 업로드 오류 발생:", error);
+    }
   };
 
   // 상세 설명 내용이 변경될 때 호출
   const handleDescriptionChange = (value) => {
+    console.log("상세설명 내용이 변경될때 ");
     setDescriptionDetail(value);
   };
 
@@ -153,7 +169,11 @@ const DetailPage = (props) => {
               style={{ height: "300px", width: "1200px" }}
             />
 
-            {/* <Write /> */}
+          {/* <Write
+            descriptionImagesUrl={descriptionImages.map((img) => img.url)}
+            descriptionDetail={descriptionDetail}
+            setDescriptionImages={setDescriptionImages}
+          /> */}
           </div>
 
           {/* 이미지 미리보기 및 업로드 */}
@@ -176,11 +196,12 @@ const DetailPage = (props) => {
                   }}
                 >
                   <img
-                    src={
-                      image.file === null
-                        ? `http://localhost:9000/${image.url}`
-                        : image.url
-                    }
+                    // src={
+                    //   image.file === null
+                    //     ? `http://localhost:9000/${image.url}`
+                    //     : image.url
+                    // }
+                    src={image.url}
                     alt={`preview-${index}`}
                     style={{
                       width: "100px",

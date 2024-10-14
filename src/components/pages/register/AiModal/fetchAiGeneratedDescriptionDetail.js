@@ -1,5 +1,6 @@
 import axios from "axios";
 import { SERVER_URL } from "../../../../constants/URLs";
+import Cookies from "js-cookie";
 
 const API_URL = `${SERVER_URL}/api/generative-ai/project-description`;
 // TODO: Update to the actual cloud server IP address when deploying
@@ -37,12 +38,15 @@ const logAiFilterData = (aiFilterData) => {
   });
 };
 
+const accessToken = Cookies.get("accessToken");
+
 /**
  * Fetches AI-generated project description
  * @param {string} title - Project title
  * @param {string} description - Project description
  * @param {Array} tags - Tags related to the project
  * @param {string} category - Project category
+ * @param {string} token - Authorization token
  * @returns {Promise<string>} - Processed project description
  * @throws {Error} - Throws if API request fails
  */
@@ -50,7 +54,8 @@ export const fetchAiGeneratedDescriptionDetail = async (
   title = "",
   description = "",
   tags = [],
-  category = ""
+  category = "",
+  token
 ) => {
   try {
     const payload = { title, description, tags, category };
@@ -61,7 +66,12 @@ export const fetchAiGeneratedDescriptionDetail = async (
     );
     console.log("Starting API request...");
 
-    const { data, status } = await axios.post(API_URL, payload);
+    // Add token to the request headers
+    const { data, status } = await axios.post(API_URL, payload, {
+      headers: {
+        "x-damdda-authorization": `Bearer ${accessToken}`, // Include the token in the Authorization header
+      },
+    });
 
     // Log status and full_message from response
     console.log(`API request completed with status: ${status}`);

@@ -326,7 +326,7 @@ export default function MyProjectDetails({ projectId, setMyprojectClick }) {
             // memberId: user.key,
           },
           headers: {
-            ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+            ...(Cookies.get("accessToken")&& { "x-damdda-authorization": `Bearer ${Cookies.get("accessToken")}` }),
          },
 
         }).then((response) => response);

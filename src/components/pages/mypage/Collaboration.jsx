@@ -165,7 +165,7 @@ const Collab = () => {
   /*협업받은 제안자일 때만 approval, reject 가능하도록 설정 */
   const handleApproval = async () => {
     try {
-      await axios.put(`/collab/approval`, selectedCollabs, {
+      await axios.put(`${SERVER_URL}/collab/approval`, selectedCollabs, {
         withCredentials: true,
       })
       alert('선택된 협업들이 승인되었습니다.')
@@ -180,7 +180,7 @@ const Collab = () => {
   }
   const handleReject = async () => {
     try {
-      await axios.put(`/collab/reject`, selectedCollabs, {
+      await axios.put(`${SERVER_URL}/collab/reject`, selectedCollabs, {
         withCredentials: true,
       })
       alert('선택된 협업들이 거절되었습니다.')

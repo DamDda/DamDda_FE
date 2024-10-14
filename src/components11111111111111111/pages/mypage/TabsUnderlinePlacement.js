@@ -29,6 +29,7 @@ export default function TabsUnderlinePlacement( { selectedTab, setSelectedTab, s
             },
           }}
         >
+          tabList.map{}
           <Tab label="Tab 1. 프로필" sx={{ minWidth: "150px", fontSize: "14px" }} />
           <Tab label="Tab 2. 후원한 프로젝트" sx={{ minWidth: "150px", fontSize: "14px" }} />
           <Tab label="Tab 3. 나의 프로젝트" sx={{ minWidth: "150px", fontSize: "14px" }} />

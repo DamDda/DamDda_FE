@@ -1,81 +1,161 @@
-import React from "react";
+import React, { useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-
-/////////////////////////////지영////////////////////////////////////
-import Home from './components/pages/mainpage/Main'; 
-import Payment from './components/pages/support/Payment';
-import OrderPage from './components/pages/support/OrderPage';
-import TossReady from './components/pages/support/TossReady';
-import TossResult from './components/pages/support/TossResult';
-import PaymentSuccess from "./components/pages/support/PaymentSuccess";
-import MyOrders from './components/pages/support/MyOrders';
-import PaymentFail from './components/pages/support/PaymentFail';
-import SupportingSearch from './components/pages/support/SupportingSearch';
-import ProjectStatistics from './components/pages/support/ProjectStatistics';
-
-
-/////////////////////////////남희////////////////////////////////////
-import YourPage from "./components/layout/YourPage";
-import Login from "./components/pages/member/Login";
-import FindID from "./components/pages/member/FindID";
-import ResetPassword from "./components/pages/member/ResetPassword";
-import Join from "./components/pages/member/Join";
-import Detail from "./components/pages/detail/Detail";
-import Register from "./components/pages/register/info/Register";
-import ErrorPage from "./components/pages/error/ErrorPage";
-
-/////////////////////////////혜원////////////////////////////////////
-import MyPage from "./components/pages/mypage/Mypage";
-import styles from "./components/styles/style.css";
-import ProjectDetail from "./components/pages/detail/ProjectDetail";
-import { UserProvider } from "./UserContext";
-
-/////////////////////////////주현////////////////////////////////////
-import Entire from "./components/pages/entire/Main";
-import CollaborationList from "./components/pages/mypage/CollaborationList";
-import Collaboration from "./components/pages/mypage/Collaboration";
-import CollaborationDetail from "./components/pages/mypage/CollaborationDetail";
-// import { useUser } from './UserContext';
+import { MultiCategoryComponent } from "components/common/MultiCategoryComponent";
+import { BlueButtonComponent } from "components/common/ButtonComponent";
+import { RedButtonComponent } from "components/common/ButtonComponent";
+import { DropdownComponent } from "components/common/DropdownComponent";
+import { FileDownloadComponent } from "components/common/FileDownloadComponent";
+import { FileUploadComponent } from "components/common/FileUploadComponent";
+import { GiftCompositionComponent } from "components/common/GiftCompositionComponent";
+import { ImageCarousel } from "components/common/ImageCarousel";
+// import { FileDownloadComponent } from "components/common/FileDownloadComponent";
+// import { FileDownloadComponent } from "components/common/FileDownloadComponent";
 
 function App() {
-  // const {user} = useUser()
+
+
+  //MultiCategoryComponent
+  const handleyClick = (data) => {
+    alert(`${data} 클릭됨!`);
+  };
+
+  //DropdownComponent
+  const [selectedValue, setSelectedValue] = useState("option2");
+  const handleDropdownChange = (event) => {
+    setSelectedValue(event.target.value);
+  };
+  const menuItems = [
+    { value: "option1", text: "Option 1" },
+    { value: "option2", text: "Option 2" },
+    { value: "option3", text: "Option 3" },
+  ];
+  
+  //FileDownloadComponent
+  const handleFileDownload = (fileName) => {
+    alert(`${fileName} 파일을 다운로드합니다.`);
+    // 파일 다운로드 로직을 추가
+    // 실제 파일 다운로드는 서버와 통신하여 처리
+  };
+
+
+  //FileUploadComponent
+  const handleFileChange = (event) => {
+    const files = Array.from(event.target.files);
+    console.log(files); // 파일 목록 처리
+  };
+
+  const handleFileUpload = (files) => {
+    console.log(files); // 업로드 로직 처리
+  };
+
+  //GiftCompositionComponent
+  const rewardData = [
+    {
+      amount: 1000,
+      title: "선물 없이 후원하기",
+      description: "감사합니다!",
+      selectedCount: 0,
+      remainingCount: 50,
+    },
+    {
+      amount: 50000,
+      title: "[얼리버드] 스페셜 티셔츠",
+      description: "한정판 티셔츠",
+      selectedCount: 10,
+      remainingCount: 5,
+    },
+    {
+      amount: 100000,
+      title: "프리미엄 후원 패키지",
+      description: "티셔츠 + 머그컵 + 사인 포스터",
+      selectedCount: 3,
+      remainingCount: 2,
+    },
+  ];
+
+  //ImageCarousel
+  const [CarouselImages] = useState([
+    "https://img.freepik.com/free-vector/polygonal-city-elements_23-2147496342.jpg?ga=GA1.1.167959845.1724899652&semt=ais_hybrid",
+    "https://img.freepik.com/free-vector/road-infographic-template_23-2147531975.jpg?ga=GA1.1.167959845.1724899652&semt=ais_hybrid",
+    "https://img.freepik.com/free-vector/flat-people-doing-outdoor-activities_23-2147869120.jpg?ga=GA1.1.167959845.1724899652&semt=ais_hybrid",
+  ]);
+
+  const CarouselStyle = { maxWidth: "70%", width: "1920px", height: "auto" }
 
   return (
-    <UserProvider>
-      <Router>
-        <Routes>
-          {/* /////////////////////////////지영//////////////////////////////////// */}
-          <Route path="/" element={<Home />} />  
-          <Route path="/user/myorders/:userId" element={<MyOrders />} />
-          <Route path="/payment" element={<Payment />} />
-          <Route path="/payment/success" element={<PaymentSuccess />} />
-          <Route path="/payment/fail" element={<PaymentFail />} />
+    <Router>
+      <Routes>
+        <Route
+          path="/BlueButtonComponent"
+          element={
+            <BlueButtonComponent
+              text="버튼 테스트"
+              onClick={() => alert("버튼이 클릭되었습니다!")}
+              //style={buttonStyle} // 스타일 객체 전달
+            />
+          }
+        />
+        <Route
+        path="/RedButtonComponent"
+        element={
+          <RedButtonComponent
+            text="버튼 테스트"
+            onClick={() => alert("버튼이 클릭되었습니다!")}
+            //style={buttonStyle} // 스타일 객체 전달
+          />
+        }
+      />
 
-          <Route path="/TossReady" element={<TossReady />} />
-          <Route path="/TossResult" element={<TossResult />} />
+        <Route
+          path="/category"
+          element={
+            <MultiCategoryComponent
+              setCategory={(value) => handleyClick(value)}
+            />
+          }
+        />
 
-        <Route path="/SupportingSearch" element={<SupportingSearch />} />
-        <Route path="/ProjectStatistics" element={<ProjectStatistics />} />
+        <Route
+          path="/dropdown"
+          element={
+            <DropdownComponent
+              inputLabel="Select an option"
+              menuItems={menuItems}
+              selectValue={selectedValue}
+              onChange={handleDropdownChange}
+            />
+          }
+        />
 
-          {/* /////////////////////////////남희/////////////////////////////////// */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/find-id" element={<FindID />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/join" element={<Join />} />
-          <Route path="/detail" element={<Detail />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/error" element={<ErrorPage />} />
-          <Route path="/projectDetail" element={<ProjectDetail />} />
-          {/* /////////////////////////////혜원/////////////////////////////////// */}
-          <Route path="/mypage" element={<MyPage />} />
-          {/* /////////////////////////////주현/////////////////////////////////// */}
-          <Route path="/entire" element={<Entire />} />
-          <Route path="/collab" element={<CollaborationList />} />
-          <Route path="/clb" element={<Collaboration />} />
-          <Route path="/collab/detail/:id" element={<CollaborationDetail />} />
-        </Routes>
-      </Router>
-    </UserProvider>
+        <Route
+          path="/download"
+          element={
+            <FileDownloadComponent
+              handleDownload={handleFileDownload}
+              fileName="example.pdf"
+            />
+          }
+        />
+
+        <Route
+          path="/upload"
+          element={
+            <FileUploadComponent
+              handleChange={handleFileChange}
+              handleUpload={handleFileUpload}
+            />
+          }
+        />
+
+        <Route
+          path="/gifts"
+          element={<GiftCompositionComponent rewardData={rewardData} />}
+        />
+        
+        <Route path="/carousel" element={<ImageCarousel images={CarouselImages} style={CarouselStyle} />} />
+
+      </Routes>
+    </Router>
   );
 }
 

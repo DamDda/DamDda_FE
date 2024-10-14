@@ -115,6 +115,7 @@ const Detail = () => {
     // supporterCount,
     product_url,
   } = projectData;
+  
 
 
   // 페이지네이션 요청을 보내는 함수
@@ -174,6 +175,7 @@ const Detail = () => {
      }, 0); // scrollTo를 실행하기 전에 CSS가 적용되도록 지연을 줌
 
   }, []);
+
 
   const [remainingDays, setRemainingDays] = useState(0);
   const progress = (currentAmount / target_funding) * 100;
@@ -276,6 +278,9 @@ const Detail = () => {
   //     console.error("좋아요 요청 중 오류 발생:", error);
   //   }
   // };
+  useEffect(() => {
+    setCollabDetails((prev) => ({ ...prev, title: productDetail.title }));
+  }, [productDetail.title]);
 
   const handleHeartClick = async (prev) => {
     const newHeartedStatus = !prev; // 하트 상태 반전
@@ -353,9 +358,9 @@ const Detail = () => {
       setErrors({ name: false, phone: false, email: false, message: false });
     }
   };
-
-  const handleCollabSubmit = () => {
+  const handleCollabSubmit = async () => {
     const newErrors = {
+      title: !collabDetails.title,
       name: !collabDetails.name,
       phone: !collabDetails.phone,
       email: !collabDetails.email,
@@ -364,17 +369,58 @@ const Detail = () => {
 
     setErrors(newErrors);
 
+    const formData = new FormData();
+
+    /*오늘 날짜*/
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = ("0" + (date.getMonth() + 1)).slice(-2);
+    const day = ("0" + date.getDate()).slice(-2);
+    const today = `${year}-${month}-${day}`;
+
+    const jsonData = {
+      email: collabDetails.email,
+      phoneNumber: collabDetails.phone,
+      content: collabDetails.message,
+      user_id: user.id,
+      collaborationDTO: {
+        title: collabDetails.title,
+        CollaborateDate: today,
+        name: collabDetails.name,
+      },
+    };
+
+    formData.append("jsonData", JSON.stringify(jsonData));
+    collabDetails.files.forEach((file, index) => {
+      formData.append("collabDocList", file);
+    });
+
+    console.log("formData" + formData);
     if (
+      !newErrors.title &&
+      !newErrors.message &&
       !newErrors.name &&
       !newErrors.phone &&
-      !newErrors.email &&
-      !newErrors.message
+      !newErrors.email
     ) {
-      alert("협업 요청이 전송되었습니다.");
-      handleModalClose();
+      try {
+        console.log("요청 전까지는 가능함!!");
+        const response = await axios.post(
+          `/collab/register/${projectId}`,
+          formData,
+          {
+            withCredentials: true,
+            headers: { "Content-Type": "multipart/form-data", ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }), },
+          }
+        );
+        console.log("결과" + response);
+        alert("협업 요청이 전송되었습니다.");
+        handleModalClose();
+      } catch (error) {
+        console.log("register 과정 중 에러 발생 " + error);
+      }
     }
   };
-
   const handleSponsorClick = () => {
     const giftSelected = true; // 실제 로직으로 변경
     if (!giftSelected) {
@@ -400,6 +446,8 @@ const Detail = () => {
     }
   };
 
+
+
   const handleFileDelete = (index) => {
     const confirmation = window.confirm("정말로 삭제하시겠습니까?");
     if (confirmation) {
@@ -408,11 +456,11 @@ const Detail = () => {
     }
   };
 
-// 달성률 계산 (fundsReceive / targetFunding * 100)
-const achievementRate = Math.min(
-  (productDetail.fundsReceive / productDetail.targetFunding) * 100,
-  100
-);
+  // 달성률 계산 (fundsReceive / targetFunding * 100)
+  const achievementRate = Math.min(
+    (productDetail.fundsReceive / productDetail.targetFunding) * 100,
+    100
+  );
 
 // 현재 시간
 const currentTime = new Date();
@@ -422,7 +470,8 @@ const endDate = new Date(productDetail.endDate);
 const timeDifference = endDate - currentTime;
 
 // 밀리초를 일(day) 단위로 변환
-const daysLeft = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+const daysLeft = Math.floor(timeDifference / (1000 * 60 * 60 * 24)) < 0 ? 0 : Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+
 
 // 날짜 형식을 변환하는 함수
 const formatDate = (dateString) => {
@@ -446,17 +495,19 @@ const ProductCarousel = ({ productDetail }) => {
                 src={`http://localhost:9000/${image}`}
                 alt={`Product image ${index}`}
                 style={{ 
-                  width: '850px', 
-                  height: '500px', 
-                  objectFit: 'cover', 
+                  // width: '850px', 
+                  // height: '500px', 
+                  width: '100%', // 이미지를 부모 요소의 너비에 맞춤
+                  height: '500px', // 고정된 높이를 유지하면서
+                  objectFit: 'cover', // 이미지 비율을 유지하며 공간을 채움
                   borderRadius: '8px' ,
                   marginTop:'20px',
                   }} // 스타일 적용
               />
-              <Carousel.Caption>
+              {/* <Carousel.Caption>
                 <h3>Slide {index + 1}</h3>
                 <p>이 슬라이드는 {index + 1}번째 이미지입니다.</p>
-              </Carousel.Caption>
+              </Carousel.Caption> */}
             </Carousel.Item>
           ))
         ) : (
@@ -535,8 +586,8 @@ const ProductCarousel = ({ productDetail }) => {
 
       <div style={{ display: "flex", width: "1500px",justifyContent:"center" }}>
       <ProductContainer>
-             <ProductCarousel></ProductCarousel>
-               {productDetail.productImages &&
+             <ProductCarousel productDetail={productDetail}></ProductCarousel>
+               {/* {productDetail.productImages &&
               productDetail.productImages.length > 0 ? (
                 productDetail.productImages.map((image, index) => (
                   <ProductImage
@@ -557,7 +608,7 @@ const ProductCarousel = ({ productDetail }) => {
                 <Typography variant="body2" color="textSecondary">
                   이미지가 없습니다.
                 </Typography>
-              )} 
+              )}  */}
               <div
                 style={{
                   position: "absolute",
@@ -741,6 +792,26 @@ const ProductCarousel = ({ productDetail }) => {
           {/* 협업 모달 */}
           <Modal open={modalOpen} onClose={handleModalClose}>
             <ModalBox>
+            <TextField
+                label="제목"
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                value={collabDetails.title}
+                onChange={(e) =>
+                  setCollabDetails({
+                    ...collabDetails,
+                    title: e.target.value,
+                  })
+                }
+                error={errors.name}
+                helperText={errors.name ? "이름을 입력하세요." : ""}
+                InputProps={{
+                  style: {
+                    borderColor: errors.name ? "red" : "inherit",
+                  },
+                }}
+              />
               <Typography variant="h6" component="h2">
                 협업 요청
               </Typography>

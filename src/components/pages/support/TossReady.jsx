@@ -213,6 +213,8 @@ export default function TossReady() {
   //   }
   // };
       try {
+
+         console.log("createdOrderId: "+createdOrderId)
         await widgets.requestPayment({
           orderId: "DAMDDA-ORDER-" + createdOrderId.toString(),  // 서버에서 받은 주문 ID 사용
           orderName: createdOrderData.projectTitle || '펀딩 결제',  // 프로젝트 제목

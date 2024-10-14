@@ -34,6 +34,9 @@ const CollaborationDetail = ({ collabId, filter, setCollabClick }) => {
   const handleReadDetail = async () => {
     try {
       const response = await axios.get(`${SERVER_URL}/collab/readDetail/${collabId}`, {
+        headers: {
+          ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+        },
         withCredentials: true,
       });
       console.log(response.data);
@@ -55,6 +58,9 @@ const CollaborationDetail = ({ collabId, filter, setCollabClick }) => {
     try {
       const response = await axios.get(`${SERVER_URL}/collab/download`, {
         params: { fileName },
+        headers: {
+          ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+        },
         responseType: "blob",
         withCredentials: true,
       });

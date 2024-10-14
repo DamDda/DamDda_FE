@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef } from "react";
 import {
   Typography,
   Card,
@@ -18,65 +18,65 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useLocation } from 'react-router-dom'
+import { useLocation } from "react-router-dom";
 import Cookies from "js-cookie";
 import { SERVER_URL } from "../../../constants/URLs";
 
-const Container = styled('div')({
-  padding: '20px',
-  backgroundColor: '#f0f0f0',
-  display: 'flex',
-})
+const Container = styled("div")({
+  padding: "20px",
+  backgroundColor: "#f0f0f0",
+  display: "flex",
+});
 
 // 상세 설명 섹션 스타일
-const DetailSection = styled('div')({
-  display: 'flex',
-  flexDirection: 'column',
-  marginBottom: '20px',
+const DetailSection = styled("div")({
+  display: "flex",
+  flexDirection: "column",
+  marginBottom: "20px",
   flex: 2,
-  maxHeight: '800px', // 최대 높이 800px
-  overflow: 'hidden', // 넘치는 부분 숨김
-  overflowX: 'auto',
-})
+  maxHeight: "800px", // 최대 높이 800px
+  overflow: "hidden", // 넘치는 부분 숨김
+  overflowX: "auto",
+});
 
 // 선물 구성 섹션
-const PackageSection = styled('div')({
-  display: 'flex',
-  flexDirection: 'column',
-  marginLeft: '20px',
+const PackageSection = styled("div")({
+  display: "flex",
+  flexDirection: "column",
+  marginLeft: "20px",
 
-  width: '200px',
-})
+  width: "200px",
+});
 
 // 카드(선물구성)
 const PackageCard = styled(Card)({
-  backgroundColor: '#f9f9f9',
-  marginBottom: '10px',
-  width: '200px',
-  cursor: 'pointer',
-})
+  backgroundColor: "#f9f9f9",
+  marginBottom: "10px",
+  width: "200px",
+  cursor: "pointer",
+});
 
 const SelectedCard = styled(Card)({
-  marginBottom: '10px',
-  padding: '10px',
-  backgroundColor: '#ffffff',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  borderRadius: '8px',
-})
+  marginBottom: "10px",
+  padding: "10px",
+  backgroundColor: "#ffffff",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  borderRadius: "8px",
+});
 
-const CartSection = styled('div')({
-  padding: '10px',
-  backgroundColor: '#fff',
-  borderRadius: '8px',
-  marginBottom: '20px',
-})
+const CartSection = styled("div")({
+  padding: "10px",
+  backgroundColor: "#fff",
+  borderRadius: "8px",
+  marginBottom: "20px",
+});
 
-const ImageContainer = styled('img')({
-  width: '100%',
-  height: 'auto',
-})
+const ImageContainer = styled("img")({
+  width: "100%",
+  height: "auto",
+});
 
 const CountButton = styled(IconButton)({
   padding: "2px", // 버튼 크기 축소
@@ -104,8 +104,12 @@ const SelectPackageButton = styled(Button)({
   },
 });
 
-
-const ProjectDetail = ({descriptionDetail, descriptionImages,projectId,projectTitle}) => {
+const ProjectDetail = ({
+  descriptionDetail,
+  descriptionImages,
+  projectId,
+  projectTitle,
+}) => {
   const [rewardOption, setRewardOption] = useState([]);
   const [selectedPackages, setSelectedPackages] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
@@ -116,59 +120,54 @@ const ProjectDetail = ({descriptionDetail, descriptionImages,projectId,projectTi
   const detailRef = useRef(null);
   const [project_package, setProject_package] = useState([]);
 
-
   const navigate = useNavigate();
 
-  // 버튼 클릭 시 호출될 함수  
-  console.log("Project ID:", projectId);  // Project ID 확인
-  console.log("Project Title:", projectTitle);  // Project ID 확인
+  // 버튼 클릭 시 호출될 함수
+  console.log("Project ID:", projectId); // Project ID 확인
+  console.log("Project Title:", projectTitle); // Project ID 확인
 
   const handleNavigateToPayment = () => {
     const orderInfo = {
-      projectTitle: projectTitle,  // 프로젝트 이름 (실제 값으로 설정 가능)
-      selectedPackages: selectedPackages.map(pkg => ({
-        packageName: pkg.name,  // 선택된 선물 구성의 이름
-        selectedOption: pkg.selectedOption,  // 선택된 옵션
-        price: pkg.price,  // 가격
-        quantity: pkg.count,  // 수량
+      projectTitle: projectTitle, // 프로젝트 이름 (실제 값으로 설정 가능)
+      selectedPackages: selectedPackages.map((pkg) => ({
+        packageName: pkg.name, // 선택된 선물 구성의 이름
+        selectedOption: pkg.selectedOption, // 선택된 옵션
+        price: pkg.price, // 가격
+        quantity: pkg.count, // 수량
       })),
-      totalAmount: totalAmount,  // 총 금액
+      totalAmount: totalAmount, // 총 금액
       projectId: projectId, // projectId 추가
-      memberId:3,// jwt로 바꿔야함
-   
+      memberId: 3, // jwt로 바꿔야함
     };
 
     // navigate 함수로 orderInfo 데이터를 전달하여 payment 페이지로 이동
     navigate("/payment", { state: orderInfo });
   };
-  
-  
 
+  // const ProjectDetail = ({ descriptionDetail, descriptionImages }) => {
+  //   const [rewardOption, setRewardOption] = useState([])
+  //   const [selectedPackages, setSelectedPackages] = useState([])
+  //   const [totalAmount, setTotalAmount] = useState(0)
+  //   const [selectedPackage, setSelectedPackage] = useState(null) // 선택한 카드
+  //   const [selectedOptions, setSelectedOptions] = useState({}) // 각 카드의 옵션 선택
+  //   const [detailedDescription, setDetailedDescription] = useState([])
+  //   const [showMore, setShowMore] = useState(false) // 더보기 상태
 
-// const ProjectDetail = ({ descriptionDetail, descriptionImages }) => {
-//   const [rewardOption, setRewardOption] = useState([])
-//   const [selectedPackages, setSelectedPackages] = useState([])
-//   const [totalAmount, setTotalAmount] = useState(0)
-//   const [selectedPackage, setSelectedPackage] = useState(null) // 선택한 카드
-//   const [selectedOptions, setSelectedOptions] = useState({}) // 각 카드의 옵션 선택
-//   const [detailedDescription, setDetailedDescription] = useState([])
-//   const [showMore, setShowMore] = useState(false) // 더보기 상태
-  
-//   const detailRef = useRef(null)
-//   const location = useLocation()
-//   const query = new URLSearchParams(location.search)
-//   const [project_package, setProject_package] = useState([])
-//   const [projectId, setProjectId] = useState(query.get('projectId') || '')
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       // Mock 데이터
-//       fetchPackage()
-//       //setRewardOption(packageData);
-//       //setDetailedDescription(details);
-//     }
+  //   const detailRef = useRef(null)
+  //   const location = useLocation()
+  //   const query = new URLSearchParams(location.search)
+  //   const [project_package, setProject_package] = useState([])
+  //   const [projectId, setProjectId] = useState(query.get('projectId') || '')
+  //   useEffect(() => {
+  //     const fetchData = async () => {
+  //       // Mock 데이터
+  //       fetchPackage()
+  //       //setRewardOption(packageData);
+  //       //setDetailedDescription(details);
+  //     }
 
-//     fetchData()
-//   }, [])
+  //     fetchData()
+  //   }, [])
 
   // useEffect(() => {
   //   const fetchData = async () => {
@@ -248,69 +247,68 @@ const ProjectDetail = ({descriptionDetail, descriptionImages,projectId,projectTi
   //       RewardList: [],
   //     },
   //   ];
-  
+
   //   // 임의 데이터로 project_package 상태 업데이트
   //   setProject_package(packageData);
-  
+
   // }, []);
-  
 
   useEffect(() => {
     //패키지 가져오는 기능.
     const fetchPackage = async () => {
       try {
-        const response = await axios.get(`${SERVER_URL}/packages/project/${projectId}`, {
-          //project id 받아줘야 함.
-          //project_id를 넘겨받아야 함.
-          withCredentials: true,
-        })
+        const response = await axios.get(
+          `${SERVER_URL}/packages/project/${projectId}`,
+          {
+            //project id 받아줘야 함.
+            //project_id를 넘겨받아야 함.
+            withCredentials: true,
+          }
+        );
 
         if (!Array.isArray(response.data)) {
-          console.error('API response is not an array:', response.data)
-          return
+          console.error("API response is not an array:", response.data);
+          return;
         }
-        const formattedPackages = response.data.map(pac => ({
+        const formattedPackages = response.data.map((pac) => ({
           id: pac.id,
           name: pac.name,
           count: pac.count,
           price: pac.price,
           quantityLimited: pac.quantityLimited,
           RewardList: Array.isArray(pac.RewardList) ? pac.RewardList : [],
-        }))
-        console.log(formattedPackages.map(reward => reward.RewardList))
-        setProject_package(formattedPackages)
+        }));
+        console.log(formattedPackages.map((reward) => reward.RewardList));
+        setProject_package(formattedPackages);
       } catch (error) {
-        console.error('패키지 목록을 가져오는 중 오류 발생:', error)
+        console.error("패키지 목록을 가져오는 중 오류 발생:", error);
       }
     };
-    fetchPackageData();
+    fetchPackage();
   }, [projectId]);
 
   useEffect(() => {
     if (detailRef.current) {
-      setShowMore(detailRef.current.scrollHeight > 800)
+      setShowMore(detailRef.current.scrollHeight > 800);
     }
-  }, [detailedDescription])
+  }, [detailedDescription]);
 
-  const handleCardClick = pkg => {
-    setSelectedPackage(pkg)
-  }
-
-  
-  
+  const handleCardClick = (pkg) => {
+    setSelectedPackage(pkg);
+  };
 
   const handleSelectPackage = () => {
     if (selectedPackage) {
       const selectedOptionsList = Object.entries(selectedOptions) //"패키지ID-리워드인덱스": "선택된 옵션 값" 형태
         .filter(([key]) => key.startsWith(`${selectedPackage.id}-`))
-        .map(([_, value]) => value)
+        .map(([_, value]) => value);
 
       const exists = selectedPackages.some(
-        p =>
+        (p) =>
           p.id === selectedPackage.id &&
           JSON.stringify(p.selectedOption) ===
             JSON.stringify(selectedOptionsList)
-      )
+      );
 
       if (!exists) {
         setSelectedPackages([
@@ -320,74 +318,73 @@ const ProjectDetail = ({descriptionDetail, descriptionImages,projectId,projectTi
             count: 1,
             selectedOption: selectedOptionsList,
           },
-        ])
-        setSelectedPackage(null)
+        ]);
+        setSelectedPackage(null);
         // 선택된 패키지의 옵션들만 초기화
-        setSelectedOptions(prevOptions => {
-          const newOptions = { ...prevOptions }
-          Object.keys(newOptions).forEach(key => {
+        setSelectedOptions((prevOptions) => {
+          const newOptions = { ...prevOptions };
+          Object.keys(newOptions).forEach((key) => {
             if (key.startsWith(`${selectedPackage.id}-`)) {
-              delete newOptions[key]
+              delete newOptions[key];
             }
           });
           return newOptions;
         });
-        setSelectedPackage(null);  // 선택한 패키지 초기화
-
+        setSelectedPackage(null); // 선택한 패키지 초기화
       } else {
-        alert('이미 선택된 선물과 옵션 조합입니다.')
+        alert("이미 선택된 선물과 옵션 조합입니다.");
       }
     }
-  }
-  const handleRemovePackage = pkgId => {
+  };
+  const handleRemovePackage = (pkgId) => {
     setSelectedPackages(
       selectedPackages.filter(
-        pkg => `${pkg.id}-${pkg.selectedOption}` !== pkgId
+        (pkg) => `${pkg.id}-${pkg.selectedOption}` !== pkgId
       )
-    )
-  }
+    );
+  };
 
   const handleChangeCount = (pkgId, delta) => {
     setSelectedPackages(
-      selectedPackages.map(pkg =>
+      selectedPackages.map((pkg) =>
         `${pkg.id}-${pkg.selectedOption}` === pkgId
           ? { ...pkg, count: Math.max(1, pkg.count + delta) }
           : pkg
       )
-    )
-  }
+    );
+  };
 
   const handleSelectOption = (pkgId, option) => {
-    setSelectedOptions(prevOptions => {
-      const currentOptions = prevOptions[pkgId] || []
+    setSelectedOptions((prevOptions) => {
+      const currentOptions = prevOptions[pkgId] || [];
       if (currentOptions.includes(option)) {
         return {
           ...prevOptions,
-          [pkgId]: currentOptions.filter(opt => opt !== option),
-        }
+          [pkgId]: currentOptions.filter((opt) => opt !== option),
+        };
       } else {
-        return { ...prevOptions, [pkgId]: [...currentOptions, option] }
+        return { ...prevOptions, [pkgId]: [...currentOptions, option] };
       }
-    })
-  }
+    });
+  };
 
   useEffect(() => {
     const total = selectedPackages.reduce(
       (sum, pkg) => sum + pkg.price * pkg.count,
       0
-    )
-    setTotalAmount(total)
-  }, [selectedPackages])
+    );
+    setTotalAmount(total);
+  }, [selectedPackages]);
 
   return (
     <Container>
       {/* 상세 설명 섹션 */}
       <DetailSection ref={detailRef}>
-        <Typography variant="h5" style={{ marginBottom: '10px' }}>
+        <Typography variant="h5" style={{ marginBottom: "10px" }}>
           상세 설명
         </Typography>
 
-        <Typography variant="body1" style={{ marginTop: '10px' }}>
+        <Typography variant="body1" style={{ marginTop: "10px" }}>
           {descriptionDetail}
         </Typography>
 
@@ -427,7 +424,7 @@ const ProjectDetail = ({descriptionDetail, descriptionImages,projectId,projectTi
         {/* 상세 내용이 더보기 상태일 때 모든 내용 표시 */}
         {showMore && (
           <div>
-            <Typography variant="body1" style={{ marginTop: '10px' }}>
+            <Typography variant="body1" style={{ marginTop: "10px" }}>
               {descriptionDetail}
             </Typography>
 
@@ -468,10 +465,10 @@ const ProjectDetail = ({descriptionDetail, descriptionImages,projectId,projectTi
 
       {/* 선물 구성 섹션 */}
       <PackageSection>
-        <Typography variant="h5" style={{ marginBottom: '10px' }}>
+        <Typography variant="h5" style={{ marginBottom: "10px" }}>
           선물 구성 선택
         </Typography>
-        {project_package.map(pkg => (
+        {project_package.map((pkg) => (
           <PackageCard key={pkg.id} onClick={() => handleCardClick(pkg)}>
             <CardContent>
               <Typography variant="h6">{pkg.name}</Typography>
@@ -498,17 +495,17 @@ const ProjectDetail = ({descriptionDetail, descriptionImages,projectId,projectTi
                             labelId={`multiple-select-label-${pkg.id}-${rewardIndex}`}
                             id={`multiple-select-${pkg.id}-${rewardIndex}`}
                             value={
-                              selectedOptions[`${pkg.id}-${rewardIndex}`] || ''
+                              selectedOptions[`${pkg.id}-${rewardIndex}`] || ""
                             }
-                            onChange={event => {
-                              const value = event.target.value
+                            onChange={(event) => {
+                              const value = event.target.value;
                               setSelectedOptions({
                                 ...selectedOptions,
                                 [`${pkg.id}-${rewardIndex}`]: value,
-                              })
+                              });
                             }}
                           >
-                            {reward.OptionList.map(option => (
+                            {reward.OptionList.map((option) => (
                               <MenuItem
                                 key={option}
                                 value={option}
@@ -545,13 +542,13 @@ const ProjectDetail = ({descriptionDetail, descriptionImages,projectId,projectTi
                         !selectedOptions[`${pkg.id}-${index}`]
                     ) ||
                     selectedPackages.some(
-                      p =>
+                      (p) =>
                         p.id === pkg.id &&
                         JSON.stringify(p.selectedOption) ===
                           JSON.stringify(selectedOptions[pkg.id])
                     )
                   }
-                  style={{ marginTop: '10px' }}
+                  style={{ marginTop: "10px" }}
                 >
                   이 선물 구성 선택하기
                 </SelectPackageButton>
@@ -564,7 +561,7 @@ const ProjectDetail = ({descriptionDetail, descriptionImages,projectId,projectTi
         {selectedPackages.length > 0 && (
           <CartSection>
             <Typography variant="h6">선택한 선물</Typography>
-            {selectedPackages.map(pkg => (
+            {selectedPackages.map((pkg) => (
               <SelectedCard key={`${pkg.id}-${pkg.selectedOption}`}>
                 <div>
                   <Typography variant="h6">{pkg.name}</Typography>
@@ -577,13 +574,13 @@ const ProjectDetail = ({descriptionDetail, descriptionImages,projectId,projectTi
                     </Typography>
                   )}
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
+                <div style={{ display: "flex", alignItems: "center" }}>
                   <CountButton
                     onClick={() =>
                       handleChangeCount(`${pkg.id}-${pkg.selectedOption}`, -1)
                     }
                     disabled={pkg.count === 1}
-                    style={{ color: pkg.count === 1 ? 'grey' : 'black' }}
+                    style={{ color: pkg.count === 1 ? "grey" : "black" }}
                   >
                     <RemoveIcon />
                   </CountButton>
@@ -598,10 +595,10 @@ const ProjectDetail = ({descriptionDetail, descriptionImages,projectId,projectTi
                   <IconButton
                     onClick={() => {
                       const confirmDelete = window.confirm(
-                        '정말로 이 선물을 삭제하시겠습니까?'
-                      )
+                        "정말로 이 선물을 삭제하시겠습니까?"
+                      );
                       if (confirmDelete) {
-                        handleRemovePackage(`${pkg.id}-${pkg.selectedOption}`)
+                        handleRemovePackage(`${pkg.id}-${pkg.selectedOption}`);
                       }
                     }}
                   >
@@ -611,19 +608,19 @@ const ProjectDetail = ({descriptionDetail, descriptionImages,projectId,projectTi
               </SelectedCard>
             ))}
 
-          <SelectPackageButton
-            variant="contained"
-            color="primary"
-            fullWidth
-            onClick={handleNavigateToPayment}
-          >
-            총 {totalAmount.toLocaleString()}원 후원하기
-          </SelectPackageButton>
+            <SelectPackageButton
+              variant="contained"
+              color="primary"
+              fullWidth
+              onClick={handleNavigateToPayment}
+            >
+              총 {totalAmount.toLocaleString()}원 후원하기
+            </SelectPackageButton>
           </CartSection>
         )}
       </PackageSection>
     </Container>
-  )
-}
+  );
+};
 
 export default ProjectDetail;

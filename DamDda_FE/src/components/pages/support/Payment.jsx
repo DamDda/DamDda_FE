@@ -181,7 +181,7 @@ useEffect(() => {
       console.log('Order Data:', orderData); // 서버로 전송 전에 데이터 확인
       const response = await axios.post(`${SERVER_URL}/order/create`, orderData, {        
         headers: {
-          ...(Cookies.get("accessToken")&& { "x-damdda-authorization": `Bearer ${Cookies.get("accessToken")}` }),
+          ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
          },
       });
       console.log('주문생성 완료 :', response);
@@ -204,7 +204,7 @@ useEffect(() => {
         axios
           .post(`${SERVER_URL}/payment/kakao/ready`, { orderId: createdOrderId },
             {headers: {
-              ...(Cookies.get("accessToken")&& { "x-damdda-authorization": `Bearer ${Cookies.get("accessToken")}` }),
+              ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
              },}
           )
           .then((res) => {
@@ -214,16 +214,10 @@ useEffect(() => {
             console.error("Error initiating payment:", error);
           });
       }
+
     } catch (error) {
-      console.error("Error creating order:", error);
-      alert("주문 생성 중 오류가 발생했습니다. 다시 시도해 주세요.");
+      console.error('There was an error creating the order:', error);
     }
-    
-
-
-
-
-    
   };
 
   const sample6_execDaumPostcode = () => {

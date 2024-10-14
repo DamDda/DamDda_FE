@@ -216,7 +216,7 @@ export const Myproject = ({ setMyprojectClick, setMyprojectId }) => {
             size: itemsPerPage,
           },
           headers: {
-            ...(Cookies.get("accessToken")&& { "x-damdda-authorization": `Bearer ${Cookies.get("accessToken")}` }),
+            ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
            },
         }
       );

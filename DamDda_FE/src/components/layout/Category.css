@@ -1,14 +1,6 @@
 /* Category.css */
-@font-face {
-  font-family: 'Pretendard-Regular';
-  src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
-  font-weight: 400;
-  font-style: normal;
-}
-
 .category-wrapper {
   align-items: center;
-
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -71,7 +63,7 @@
 .category-image {
   height: 53px;
   position: relative;
-  width: 51px;
+  width: 45px;
 }
 
 .category-container {
@@ -85,15 +77,13 @@
 }
 
 .category-text-wrapper {
-  font-family: 'Pretendard-Regular', sans-serif;
-
-  /* color: var(--tumblbugcommine-shaft);
+  color: var(--tumblbugcommine-shaft);
   font-family: var(--tumblbug-com-noto-sans-KR-demilight-13-font-family);
   font-size: var(--tumblbug-com-noto-sans-KR-demilight-13-font-size);
   font-weight: var(--tumblbug-com-noto-sans-KR-demilight-13-font-weight);
   text-align: center;
   white-space: nowrap;
-  width: fit-content; */
+  width: fit-content;
 }
 
 .category-image-wrapper {

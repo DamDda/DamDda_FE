@@ -26,7 +26,7 @@ export default function SupportedProjects() {
       // const response = await axios.get(`${SERVER_URL}/order/supportingprojects?userId=${userId}`);
       const response = await axios.get(`${SERVER_URL}/order/supportingprojects`, {
         headers: {
-          ...(Cookies.get("accessToken")&& { "x-damdda-authorization": `Bearer ${Cookies.get("accessToken")}` }),
+          ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
         },
       });
 

@@ -17,8 +17,6 @@ import {ProductRecommendations} from './Product';
 // import { SearchBar } from '../../layout/SearchBar';
 import "./MainBanner.css";
 import "../../styles/style.css"
-import "../../../App.css"
-
 function Main() {
   const location = useLocation();
   const query = new URLSearchParams(location.search);

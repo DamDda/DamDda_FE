@@ -83,7 +83,7 @@ const Register = () => {
       const response = await axios
         .get(`${SERVER_URL}/api/projects/write/${projectId}`, {
           headers: {
-            "x-damdda-authorization": `Bearer ${accessToken}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         })
         .then((response) => response)
@@ -286,7 +286,7 @@ const Register = () => {
         data: projectFormData,
         headers: {
           "Content-Type": "multipart/form-data",
-          "x-damdda-authorization": `Bearer ${accessToken}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       });
       console.log("프로젝트 업데이트 성공:", response.data);

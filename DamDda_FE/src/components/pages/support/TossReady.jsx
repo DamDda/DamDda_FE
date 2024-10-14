@@ -213,6 +213,8 @@ export default function TossReady() {
   //   }
   // };
       try {
+
+         console.log("createdOrderId: "+createdOrderId)
         await widgets.requestPayment({
           orderId: "DAMDDA-ORDER-" + createdOrderId.toString(),  // 서버에서 받은 주문 ID 사용
           orderName: createdOrderData.projectTitle || '펀딩 결제',  // 프로젝트 제목
@@ -230,14 +232,8 @@ export default function TossReady() {
           orderId: createdOrderId.toString(),
         },
         headers: {
-          "x-damdda-authorization": Cookies.get("accessToken") 
-            ? `Bearer ${Cookies.get("accessToken")}`
-            : "" // 토큰이 없으면 빈 문자열 대신 에러 처리 필요
-        }
-        
-        // headers: {
-        //   ...(Cookies.get("accessToken")&& { "x-damdda-authorization": `Bearer ${Cookies.get("accessToken")}` }),
-        //  },
+          ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+         },
       });
       
       // 결제 상태 확인

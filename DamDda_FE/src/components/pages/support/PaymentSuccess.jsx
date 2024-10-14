@@ -32,8 +32,9 @@ const PaymentSuccess = () => {
       };
 
       await axios.put(`${SERVER_URL}/order/${orderId}/status`,updatedPaymentStatus,{
+        
         headers: {
-          "x-damdda-authorization": `Bearer ${accessToken}`,
+          Authorization: `Bearer ${accessToken}`,
         },
 
       } ); // JSON body로 전송
@@ -55,7 +56,7 @@ const PaymentSuccess = () => {
 
       const response = await axios.get(`${SERVER_URL}/order/details/${orderId}`,{
         headers: {
-          ...(Cookies.get("accessToken")&& { "x-damdda-authorization": `Bearer ${Cookies.get("accessToken")}` }),
+          ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
        },
 
       });

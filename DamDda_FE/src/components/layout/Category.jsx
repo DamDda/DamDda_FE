@@ -12,7 +12,6 @@ import tShirtMockup from '../assets/t-shirt-mockup.png';
 import gameController from '../assets/game-controller.png';
 import traditional from '../assets/traditional.png';
 
-
 export const Category = ({setCartegory}) => {
     const navigate = useNavigate();
 

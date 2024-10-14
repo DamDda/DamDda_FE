@@ -239,7 +239,7 @@ export const ProductRecommendations = ({ sortCondition, title, subTitle }) => {
             size: itemsPerPage,
           },
           headers: {
-            ...(Cookies.get("accessToken") && { "x-damdda-authorization": `Bearer ${Cookies.get("accessToken")}` }),
+            ...(Cookies.get("accessToken") && { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
           },
         }
       );
@@ -269,7 +269,7 @@ export const ProductRecommendations = ({ sortCondition, title, subTitle }) => {
           ` ${SERVER_URL}/api/projects/like`,
           {
             headers: {
-              ...(Cookies.get("accessToken") && { "x-damdda-authorization": `Bearer ${Cookies.get("accessToken")}` }),
+              ...(Cookies.get("accessToken") && { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
             },
   
             params: {
@@ -286,7 +286,7 @@ export const ProductRecommendations = ({ sortCondition, title, subTitle }) => {
           null,
           {
             headers: {
-              ...(Cookies.get("accessToken") && { "x-damdda-authorization": `Bearer ${Cookies.get("accessToken")}` }),
+              ...(Cookies.get("accessToken") && { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
             },
             params: {
               // memberId: user.key,

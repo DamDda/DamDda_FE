@@ -35,7 +35,7 @@ export default function ProfileStatistics({ setIsEditing }) {
       // const response = await axios.get(`${SERVER_URL}/members/profile?loginId=${user.id}`, {
       const response = await axios.get(`${SERVER_URL}/member/profile`, {
         headers: {
-          ...(Cookies.get("accessToken")&& { "x-damdda-authorization": `Bearer ${Cookies.get("accessToken")}` }),
+          ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
         },
         withCredentials: true,
       });

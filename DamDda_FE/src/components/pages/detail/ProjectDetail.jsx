@@ -23,7 +23,6 @@ import Cookies from "js-cookie";
 import { SERVER_URL } from "../../../constants/URLs";
 
 const Container = styled('div')({
-  
   padding: '20px',
   backgroundColor: '#f0f0f0',
   display: 'flex',
@@ -31,7 +30,6 @@ const Container = styled('div')({
 
 // 상세 설명 섹션 스타일
 const DetailSection = styled('div')({
-
   display: 'flex',
   flexDirection: 'column',
   marginBottom: '20px',
@@ -86,7 +84,6 @@ const CountButton = styled(IconButton)({
 });
 
 const SelectPackageButton = styled(Button)({
-  
   backgroundColor: "#7a82ed", // 기본 배경색
   color: "white", // 기본 글자색
   padding: "10px 20px", // 패딩 추가
@@ -214,47 +211,81 @@ const ProjectDetail = ({descriptionDetail, descriptionImages,projectId,projectTi
 
   //   fetchData();
   // }, []);
+
+  // useEffect(() => {
+  //   // 임의의 데이터 설정
+  //   const packageData = [
+  //     {
+  //       id: 2,
+  //       name: "패키지 A",
+  //       price: 50000,
+  //       RewardList: [
+  //         {
+  //           name: "리워드 1",
+  //           OptionList: ["옵션 1-1", "옵션 1-2"],
+  //         },
+  //         {
+  //           name: "리워드 2",
+  //           OptionList: ["옵션 2-1", "옵션 2-2"],
+  //         },
+  //       ],
+  //     },
+  //     {
+  //       id: 2,
+  //       name: "패키지 B",
+  //       price: 70000,
+  //       RewardList: [
+  //         {
+  //           name: "리워드 3",
+  //           OptionList: ["옵션 3-1", "옵션 3-2"],
+  //         },
+  //       ],
+  //     },
+  //     {
+  //       id: 3,
+  //       name: "패키지 C",
+  //       price: 100000,
+  //       RewardList: [],
+  //     },
+  //   ];
+  
+  //   // 임의 데이터로 project_package 상태 업데이트
+  //   setProject_package(packageData);
+  
+  // }, []);
+  
+
   useEffect(() => {
-    // 임의의 데이터 설정
-    const packageData = [
-      {
-        id: 2,
-        name: "패키지 A",
-        price: 50000,
-        RewardList: [
-          {
-            name: "리워드 1",
-            OptionList: ["옵션 1-1", "옵션 1-2"],
-          },
-          {
-            name: "리워드 2",
-            OptionList: ["옵션 2-1", "옵션 2-2"],
-          },
-        ],
-      },
-      {
-        id: 2,
-        name: "패키지 B",
-        price: 70000,
-        RewardList: [
-          {
-            name: "리워드 3",
-            OptionList: ["옵션 3-1", "옵션 3-2"],
-          },
-        ],
-      },
-      {
-        id: 3,
-        name: "패키지 C",
-        price: 100000,
-        RewardList: [],
-      },
-    ];
-  
-    // 임의 데이터로 project_package 상태 업데이트
-    setProject_package(packageData);
-  }, []);
-  
+    //패키지 가져오는 기능.
+    const fetchPackage = async () => {
+      try {
+        const response = await axios.get(`${SERVER_URL}/packages/project/${projectId}`, {
+          //project id 받아줘야 함.
+          //project_id를 넘겨받아야 함.
+          withCredentials: true,
+        })
+
+        if (!Array.isArray(response.data)) {
+          console.error('API response is not an array:', response.data)
+          return
+        }
+        const formattedPackages = response.data.map(pac => ({
+          id: pac.id,
+          name: pac.name,
+          count: pac.count,
+          price: pac.price,
+          quantityLimited: pac.quantityLimited,
+          RewardList: Array.isArray(pac.RewardList) ? pac.RewardList : [],
+        }))
+        console.log(formattedPackages.map(reward => reward.RewardList))
+        setProject_package(formattedPackages)
+      } catch (error) {
+        console.error('패키지 목록을 가져오는 중 오류 발생:', error)
+      }
+    };
+    fetchPackageData();
+  }, [projectId]);
+
   useEffect(() => {
     if (detailRef.current) {
       setShowMore(detailRef.current.scrollHeight > 800)
@@ -265,33 +296,7 @@ const ProjectDetail = ({descriptionDetail, descriptionImages,projectId,projectTi
     setSelectedPackage(pkg)
   }
 
-  //패키지 가져오는 기능.
-  const fetchPackage = async () => {
-    try {
-      const response = await axios.get(`${SERVER_URL}/packages/project/${projectId}`, {
-        //project id 받아줘야 함.
-        //project_id를 넘겨받아야 함.
-        withCredentials: true,
-      })
-
-      if (!Array.isArray(response.data)) {
-        console.error('API response is not an array:', response.data)
-        return
-      }
-      const formattedPackages = response.data.map(pac => ({
-        id: pac.id,
-        name: pac.name,
-        count: pac.count,
-        price: pac.price,
-        quantityLimited: pac.quantityLimited,
-        RewardList: Array.isArray(pac.RewardList) ? pac.RewardList : [],
-      }))
-      console.log(formattedPackages.map(reward => reward.RewardList))
-      setProject_package(formattedPackages)
-    } catch (error) {
-      console.error('패키지 목록을 가져오는 중 오류 발생:', error)
-    }
-  };
+  
   
 
   const handleSelectPackage = () => {

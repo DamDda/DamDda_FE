@@ -1,5 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from 'react';
+import { createTheme, ThemeProvider, CssBaseline } from '@mui/material';
+import ReactDOM from 'react-dom';
+
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+
+
 import { MultiCategoryComponent } from "components/common/MultiCategoryComponent";
 import { BlueButtonComponent } from "components/common/ButtonComponent";
 import { RedButtonComponent } from "components/common/ButtonComponent";
@@ -12,11 +17,29 @@ import { GiftCompositionComponent } from "components/common/GiftCompositionCompo
 import { ImageCarousel } from "components/common/ImageCarousel";
 // import { FileDownloadComponent } from "components/common/FileDownloadComponent";
 // import { FileDownloadComponent } from "components/common/FileDownloadComponent";
+import { ProjectRowComponent } from 'components/common/ProjectRowComponent';
 import {PaginationComponent} from "components/common/PaginationComponent";
 import { SearchBoxComponent } from "components/common/SearchBoxComponent";
+import { InputBox } from "components/common/InputBoxComponent";
+import { InputLargeBox } from "components/common/InputBoxComponent";
+import { InputLine } from "components/common/InputBoxComponent";
+import { ShortcutBoxComponent } from "components/common/ShortcutBoxComponent";
+import { SponsoredListComponent } from "components/common/SponsoredListComponent";
+import { PaymentInfoCard } from 'components/common/PaymentInfoCard';
+
+import {TabComponent} from "components/common/TabComponent"
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import StarIcon from '@mui/icons-material/Star';
 import './App.css';
-import { CustomInputProps } from "components/common/CustomInputProps";
-import { InputLabelProps } from "components/common/InputLabelProps";
+///////////////////////////////////
+import { Main } from 'pages/main/Main';
+
+const theme = createTheme({
+  typography: {
+    fontFamily: 'Pretendard-Regular, Arial, sans-serif',  // 폰트 적용
+  },
+});
 
 function App() {
 
@@ -86,13 +109,119 @@ function App() {
     "https://img.freepik.com/free-vector/road-infographic-template_23-2147531975.jpg?ga=GA1.1.167959845.1724899652&semt=ais_hybrid",
     "https://img.freepik.com/free-vector/flat-people-doing-outdoor-activities_23-2147869120.jpg?ga=GA1.1.167959845.1724899652&semt=ais_hybrid",
   ]);
+
   //pagenation
   const [currentPage, setCurrentPage] = useState(1);
 
+  //projectcard
+  const mockProducts = [
+    {
+      id: 1,
+      title: "프로젝트 A",
+      description: "프로젝트 A 설명입니다.",
+      thumbnailUrl: "path/to/imageA.jpg",
+      targetFunding: 1000000,
+      fundsReceive: 500000,
+      endDate: "2024-12-31T00:00:00Z",
+      nickName: "진행자A",
+      liked: false
+    },
+    {
+      id: 2,
+      title: "프로젝트 B",
+      description: "프로젝트 B 설명입니다.",
+      thumbnailUrl: "path/to/imageB.jpg",
+      targetFunding: 2000000,
+      fundsReceive: 1200000,
+      endDate: "2024-11-30T00:00:00Z",
+      nickName: "진행자B",
+      liked: true
+    }
+  ];
 
+  //PaymentInfoCard
+  const projectData = {
+    supportingProject: {
+      project: { title: "프로젝트 제목", thumbnailUrl: "thumbnail.jpg" },
+      user: { name: "홍길동", phoneNumber: "010-1234-5678" },
+      payment: { paymentMethod: "카드", paymentStatus: "결제 완료", paymentId: 1 },
+      delivery: {
+        deliveryAddress: "서울특별시 강남구",
+        deliveryDetailedAddress: "1동 101호",
+        deliveryMessage: "부재시 문 앞에 두세요",
+      },
+      supportedAt: new Date().toISOString(),
+    },
+    supportingPackage: { packageName: "패키지 A", packagePrice: 50000 },
+    delivery: { deliveryId: "123" },
+    status: "진행중",
+  };
+
+  //Carousel
   const CarouselStyle = { maxWidth: "70%", width: "1920px", height: "auto" }
 
+  //
+  const services = [
+    {
+      title: '협업하기',
+      description: '함께 협업하고 성공적인 프로젝트를 만들어보세요.',
+      icon: <InsertDriveFileIcon style={{ fontSize: 50, color: 'white' }} />,
+      backgroundColor: '#ef8055',
+    },
+    {
+      title: '프로젝트 등록하기',
+      description: '새로운 프로젝트를 등록하고 펀딩을 시작하세요.',
+      icon: <AddCircleOutlineIcon style={{ fontSize: 50, color: 'white' }} />,
+      backgroundColor: '#7a82ed',
+    },
+    {
+      title: '인기 프로젝트 가기',
+      description: '가장 인기 있는 프로젝트에 참여하고 후원하세요.',
+      icon: <StarIcon style={{ fontSize: 50, color: 'white' }} />,
+      backgroundColor: '#b5b5b5',
+    },
+  ];
+
+  //SponsoredProject
+  const projects = [
+    {
+      supportingProject: {
+        project: { title: "Project A", thumbnailUrl: "/path/to/thumbnail.jpg" },
+        supportedAt: "2023-01-01T00:00:00Z"
+      },
+      supportingPackage: { packageName: "Package A", packagePrice: 50000 },
+      delivery: { deliveryId: "123" },
+      status: "진행중"
+    },
+    {
+      supportingProject: {
+        project: { title: "Project A", thumbnailUrl: "/path/to/thumbnail.jpg" },
+        supportedAt: "2023-01-01T00:00:00Z"
+      },
+      supportingPackage: { packageName: "Package A", packagePrice: 50000 },
+      delivery: { deliveryId: "123" },
+      status: "진행중"
+    },
+    // 다른 프로젝트 추가 가능
+  ];
+
+
+  //Tab
+  const [tabIndex, setTabIndex] = useState(0);
+
+  // 각 섹션에 대한 ref 정의
+  const sectionRefs = {
+    '후원 통계': useRef(null),
+    '후원자 조회': useRef(null),
+  };
+
+  const labels = ['후원 통계', '후원자 조회']; // 탭 레이블을 배열로 정의
+
+
   return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+
     <div style={{ fontFamily: 'Pretendard-Regular' }}>
 
     <Router>
@@ -194,13 +323,42 @@ function App() {
 
         <Route path="/searchBoxComponent" element={<SearchBoxComponent/>} />
         
-        <Route path="/customInputProps" element={<CustomInputProps/>} />
+        <Route path="/inputBox" element={<InputBox/>} />
+        <Route path="/inputLine" element={<InputLine/>} />
+        <Route path="/inputLargeBox" element={<InputLargeBox/>} />
+        
+        <Route path="/shortcutBoxComponent" element={<ShortcutBoxComponent services={services}/>} />
+               
+        <Route path="/tabComponent" element={ <TabComponent
+            tabIndex={tabIndex} 
+            setTabIndex={setTabIndex} 
+            labels={labels} 
+            sectionRefs={sectionRefs} // ref 전달
+          />} />
 
-        <Route path="/inputLabelProps" element={<InputLabelProps/>} />
+        <Route path="/sponsoredListComponent" element={    
+          <SponsoredListComponent projects={projects} />
+        } />
+         {/* PaymentInfoCard가 표시되는 경로 */}
+         <Route path="/projectRowComponent" element={    
+          <ProjectRowComponent title={"타이틀"} sortCondition={"정렬기준"} subTitle={"서브타이틀"} />
+        } />
+        
+        {/* ////////////////////////////// */}
+        <Route path="/" element={    
+          <Main/>
+        } />
+
+        
+                
+
       </Routes>
     </Router>
     </div>
+    </ThemeProvider>
+
   );
 }
+ReactDOM.render(<App />, document.getElementById('root'));
 
 export default App;

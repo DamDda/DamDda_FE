@@ -1,29 +1,37 @@
-/* FileComponent.module.css */
 .customTextField {
-    margin: 20px 0; /* 마진 */
-    width: 250px; /* 너비 */
-    background-color: #ffffff; /* 배경색 */
-    border-radius: 8px; /* 둥근 모서리 */
-}
-.iconButton {
+    margin: 20px;
+    width: 100%;
+    max-width: 200px;
+    background-color: #ffffff;
+    border-radius: 80px;
+  }
+  
+  .inputField {
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #f0f0f0;
+  }
+  
+  .iconButton {
     padding: 8px;
-}
-
-.fileIcon {
+  }
+  
+  .fileIcon {
     font-size: 24px;
-}
-
-.fileName {
+  }
+  
+  .fileName {
     cursor: pointer;
     font-weight: bold;
     font-size: 14px;
     margin-right: 10px;
-}
-
-.fileName:hover {
+  }
+  
+  .fileName:hover {
     color: #4a62d1;
-}
-
-.fileIcon:hover {
+  }
+  
+  .fileIcon:hover {
     color: #4a62d1;
-}
+  }
+  

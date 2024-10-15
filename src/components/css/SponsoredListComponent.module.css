@@ -1,0 +1,61 @@
+/* ProjectCard.module.css */
+
+.project-card {
+  max-width: 80%;
+  padding: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border-radius: 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.thumbnail-box {
+  flex: 0 0 10px;
+  margin-right: 5px;
+}
+
+.card-content {
+  flex: 1;
+  margin-right: 5px;
+  padding: 8px;
+  margin: 0;
+}
+
+.typography-h5 {
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.typography-body2 {
+  margin-bottom: 1rem;
+  color: var(--text-secondary);
+}
+
+.right-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+  min-width: 160px;
+}
+
+.right-info-text {
+  text-align: right;
+  margin-bottom: 80px;
+}
+
+.right-info-typography {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.buttons-box {
+  display: flex;
+  gap: 5px;
+  justify-content: flex-end;
+  margin-top: auto;
+}

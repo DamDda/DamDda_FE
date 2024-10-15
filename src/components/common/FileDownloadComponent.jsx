@@ -1,7 +1,7 @@
 import React from 'react';
 import { TextField, InputAdornment, IconButton } from '@mui/material';
-import FilePresentIcon from '@mui/icons-material/FilePresent'; // 아이콘 import
-import styles from '../css/FileDownloadComponent.module.css'; // 스타일 모듈 가져오기
+import FilePresentIcon from '@mui/icons-material/FilePresent'; 
+import styles from '../css/FileDownloadComponent.module.css';
 
 export const FileDownloadComponent = ({ handleDownload, fileName }) => {
   return (

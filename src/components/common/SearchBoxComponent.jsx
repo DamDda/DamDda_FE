@@ -7,27 +7,30 @@ export const SearchBoxComponent = ({ search, setSearch }) => {
   const [searchText, setSearchText] = useState(search || '');
 
   const handleSearchChange = (event) => {
-    setSearchText(event.target.value); 
+    setSearchText(event.target.value);
   };
 
   const handleKeyDown = (event) => {
     if (event.key === 'Enter') {
-      enterSearch(searchText); 
+      setSearch(searchText);
     }
   };
 
   const enterSearch = () => {
-    setSearch(searchText); 
+    setSearch(searchText);
   };
 
   return (
     <Box className={styles.container}>
       <TextField
-        placeholder="새로운 일상이 필요하신가요?" 
+        variant="standard" 
+        placeholder="새로운 일상이 필요하신가요?"
         value={searchText}
         onChange={handleSearchChange}
-        onKeyDown={handleKeyDown} 
+        onKeyDown={handleKeyDown}
+        className={styles.textField}
         InputProps={{
+          disableUnderline: true, // underline 제거
           endAdornment: (
             <InputAdornment position="end" className={styles.endAdornment}>
               <Button onClick={enterSearch} className={styles.searchButton}>
@@ -35,9 +38,10 @@ export const SearchBoxComponent = ({ search, setSearch }) => {
               </Button>
             </InputAdornment>
           ),
-          className: styles.inputBase,
+          classes: {
+            root: styles.inputBase,
+          },
         }}
-        className={styles.textField}
       />
     </Box>
   );

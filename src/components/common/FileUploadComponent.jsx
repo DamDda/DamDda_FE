@@ -2,6 +2,7 @@ import { Box, Button, Typography } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { styled } from "@mui/material/styles";
 import { useState } from "react";
+import styles from '../css/FileUploadComponent.module.css'; // 경로 확인
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -30,38 +31,25 @@ export const FileUploadComponent = (props) => {
   };
 
   return (
-    <Box
-      onDragEnter={handleDragStart}
+     <Box
+      className={`${styles.fileUploadBox} ${isActive ? styles.fileUploadBoxActive : ""}`} // 클래스명 확인
+      onDragEnter={handleDragStart}  
       onDragOver={handleDragOver}
       onDragLeave={handleDragEnd}
       onDrop={handleDrop}
-      sx={{
-        backgroundColor: `${isActive ? "#DDDDEE" : "#EEEEFF"}`,
-        width: "90%",
-        height: 200,
-        mx: "5%",
-        border: 1,
-        borderRadius: 4,
-        display: "flex",
-        flexDirection: "column",
-        textAlign: "center",
-      }}
     >
-      <CloudUploadIcon
-        color="primary"
-        sx={{ m: 3, mx: "auto", fontSize: 50 }}
-      />
-      <Typography variant="body2">
+      <CloudUploadIcon color="primary" className={styles.uploadIcon} />
+      <Typography variant="body2" className={styles.uploadText}>
         여러 이미지를 이곳에 드래그 & 드롭하여 업로드하세요.
       </Typography>
       <Button
-        sx={{ width: "160px", mx: "auto", mt: 2 }}
+        className={styles.uploadButton}
         component="label"
         variant="contained"
         tabIndex={-1}
       >
         Upload Images
-        <VisuallyHiddenInput type="file" onChange={handleChange} multiple />
+        <input type="file" className={styles.hiddenInput} onChange={handleChange} multiple />
       </Button>
     </Box>
   );

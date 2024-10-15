@@ -5,49 +5,48 @@
   margin: 50px auto;
   width: 100%;
   max-width: 500px;
+  border-radius: 100px;
+  background-color: #d7e8ff;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .textField {
   width: 100%;
-  border: 2px solid #7a82ed; /* Teal border color */
-  border-radius: 50px; /* Full rounded corners */
-  background-color: #fff; /* White background */
-  height: 56px; /* Height to match the input field */
-  font-size: 1rem; /* Increase font size for placeholder */
-}
-
-.textField::placeholder {
-  color: #ffffff; /* Gray placeholder color */
+  border: none;
+  border-radius: 100px;
+  background-color: #f4f9ff;
+  height: 56px;
+  font-size: 1rem;
+  padding: 0 20px;
 }
 
 .inputBase {
-  border-radius: 50px; /* Full rounded border */
-  padding: 0 12px; /* Adjust padding to center content */
-  height: 100%; /* Ensure the height matches the container */
+  border-radius: 50px;
+  height: 100%;
   display: flex;
-  width: 100%;
   justify-content: space-between;
-  align-items: center; /* Vertically center the content */
-}
-
-.outlinedInputRoot fieldset {
-  border-color: transparent; /* Hide default border */
-}
-
-.outlinedInputRoot:hover fieldset {
-  border-color: transparent; /* Hide default border on hover */
-}
-
-.outlinedInputRoot.Mui-focused fieldset {
-  border-color: transparent; /* Hide border when focused */
+  align-items: center;
+  width: 100%;
 }
 
 .endAdornment {
-  margin-top: -8px;
-  margin-right: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 16px;
 }
 
 .searchButton {
   min-width: 0;
   padding: 0;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  color: #007bff;
+  font-size: 1.5rem;
+}
+
+.searchButton:hover {
+  color: #0056b3;
 }

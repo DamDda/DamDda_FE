@@ -44,7 +44,6 @@ export function ImageCarousel({images, style}) {
           interval={4000}
           style={style}
         >
-          {/* interval={5000} 추가로 5초마다 자동 전환 */}
 
           <Carousel.Item>
             <img

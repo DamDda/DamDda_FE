@@ -10,7 +10,8 @@ export function ImageCarousel({images, style}) {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        margin: "20px 0",
+        margin: "40px 0",
+        
       }}
     >
       {images.length > 0 ? (

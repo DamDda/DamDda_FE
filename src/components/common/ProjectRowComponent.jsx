@@ -180,11 +180,11 @@ export const ProjectRowComponent = ({ sortCondition, title, subTitle }) => {
             alignItems: "center",
             justifyContent: "center",
             padding: 0,
-            width: "80%",
-            marginTop: 1,
+            width: "100%",
+            marginTop: 4,
           }}
         >
-                    <Box
+          <Box
             sx={{
               margin: "0 auto",
               padding: 2,
@@ -195,7 +195,6 @@ export const ProjectRowComponent = ({ sortCondition, title, subTitle }) => {
               alignItems: "flex-start",
               width: "100%",
               position: "relative",
-              marginBottom: "80px",
             }}
           >
             <Typography
@@ -203,14 +202,11 @@ export const ProjectRowComponent = ({ sortCondition, title, subTitle }) => {
               component="div"
               sx={{
                 fontWeight: "bold",
-                marginLeft: 15,
-                position: "fixed", 
-              maxWidth:"800px",
+                maxWidth: "800px",
                 backgroundColor: "white",
-                zIndex: 1000, 
+                zIndex: 1000,
               }}
             >
-            
               <p className="text">
                 <span className="text-wrapper">[담ː따] 의 </span>
                 <span className="span">{title}</span>
@@ -220,7 +216,7 @@ export const ProjectRowComponent = ({ sortCondition, title, subTitle }) => {
               </Typography>
             </Typography>
           </Box>
-
+    
           <Box
             sx={{
               display: "flex",
@@ -231,20 +227,16 @@ export const ProjectRowComponent = ({ sortCondition, title, subTitle }) => {
               height: "auto",
             }}
           >
-            <IconButton
-              onClick={() => handleScroll("left")}
-              sx={{ marginRight: "10px" }}
-            >
+            <IconButton onClick={() => handleScroll("left")} >
               <ArrowBackIosNewIcon />
             </IconButton>
-
+    
             <Box
               sx={{
                 display: "flex",
                 overflowX: "hidden",
                 scrollBehavior: "smooth",
-                maxWidth: "90%",
-                width: "90%",
+                maxWidth: "100%",
               }}
               ref={scrollContainerRef}
             >
@@ -254,15 +246,13 @@ export const ProjectRowComponent = ({ sortCondition, title, subTitle }) => {
                 </Box>
               ))}
             </Box>
-
-            <IconButton
-              onClick={() => handleScroll("right")}
-              sx={{ marginLeft: "10px" }}
-            >
+    
+            <IconButton onClick={() => handleScroll("right")} sx={{ marginLeft: "10px" }}>
               <ArrowForwardIosIcon />
             </IconButton>
           </Box>
         </Box>
       </>
     );
+    
   };

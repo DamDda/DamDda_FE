@@ -1,0 +1,32 @@
+.customTextField {
+    margin: 100px 0;
+    width: 100px;
+  }
+  
+  .customTextField input {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #dcdcdc;
+  }
+  
+  .customTextField:hover input {
+    border-color: #4a62d1;
+    color: #4a62d1;
+  }
+  
+  .customTextField input:focus {
+    outline: none;
+    border-color: #677cf9;
+  }
+  
+  .fileName {
+    color: #677cf9;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+  }
+  
+  .fileName:hover {
+    color: #4a62d1;
+  }
+  

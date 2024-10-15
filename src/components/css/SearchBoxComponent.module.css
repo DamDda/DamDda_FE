@@ -1,0 +1,53 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 50px auto;
+  width: 100%;
+  max-width: 500px;
+}
+
+.textField {
+  width: 100%;
+  border: 2px solid #7a82ed; /* Teal border color */
+  border-radius: 50px; /* Full rounded corners */
+  background-color: #fff; /* White background */
+  height: 56px; /* Height to match the input field */
+  font-size: 1rem; /* Increase font size for placeholder */
+}
+
+.textField::placeholder {
+  color: #ffffff; /* Gray placeholder color */
+}
+
+.inputBase {
+  border-radius: 50px; /* Full rounded border */
+  padding: 0 12px; /* Adjust padding to center content */
+  height: 100%; /* Ensure the height matches the container */
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center; /* Vertically center the content */
+}
+
+.outlinedInputRoot fieldset {
+  border-color: transparent; /* Hide default border */
+}
+
+.outlinedInputRoot:hover fieldset {
+  border-color: transparent; /* Hide default border on hover */
+}
+
+.outlinedInputRoot.Mui-focused fieldset {
+  border-color: transparent; /* Hide border when focused */
+}
+
+.endAdornment {
+  margin-top: -8px;
+  margin-right: 8px;
+}
+
+.searchButton {
+  min-width: 0;
+  padding: 0;
+}

@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { MultiCategoryComponent } from "components/common/MultiCategoryComponent";
 import { BlueButtonComponent } from "components/common/ButtonComponent";
 import { RedButtonComponent } from "components/common/ButtonComponent";
+import { BlueBorderButtonComponent } from "components/common/ButtonComponent";
+import { RedBorderButtonComponent } from "components/common/ButtonComponent";
 import { DropdownComponent } from "components/common/DropdownComponent";
 import { FileDownloadComponent } from "components/common/FileDownloadComponent";
 import { FileUploadComponent } from "components/common/FileUploadComponent";
@@ -10,6 +12,11 @@ import { GiftCompositionComponent } from "components/common/GiftCompositionCompo
 import { ImageCarousel } from "components/common/ImageCarousel";
 // import { FileDownloadComponent } from "components/common/FileDownloadComponent";
 // import { FileDownloadComponent } from "components/common/FileDownloadComponent";
+import {PaginationComponent} from "components/common/PaginationComponent";
+import { SearchBoxComponent } from "components/common/SearchBoxComponent";
+import './App.css';
+import { CustomInputProps } from "components/common/CustomInputProps";
+import { InputLabelProps } from "components/common/InputLabelProps";
 
 function App() {
 
@@ -79,16 +86,31 @@ function App() {
     "https://img.freepik.com/free-vector/road-infographic-template_23-2147531975.jpg?ga=GA1.1.167959845.1724899652&semt=ais_hybrid",
     "https://img.freepik.com/free-vector/flat-people-doing-outdoor-activities_23-2147869120.jpg?ga=GA1.1.167959845.1724899652&semt=ais_hybrid",
   ]);
+  //pagenation
+  const [currentPage, setCurrentPage] = useState(1);
+
 
   const CarouselStyle = { maxWidth: "70%", width: "1920px", height: "auto" }
 
   return (
+    <div style={{ fontFamily: 'Pretendard-Regular' }}>
+
     <Router>
       <Routes>
         <Route
           path="/BlueButtonComponent"
           element={
             <BlueButtonComponent
+              text="버튼 테스트"
+              onClick={() => alert("버튼이 클릭되었습니다!")}
+              //style={buttonStyle} // 스타일 객체 전달
+            />
+          }
+        />
+         <Route
+          path="/BlueBorderButtonComponent"
+          element={
+            <BlueBorderButtonComponent
               text="버튼 테스트"
               onClick={() => alert("버튼이 클릭되었습니다!")}
               //style={buttonStyle} // 스타일 객체 전달
@@ -105,6 +127,16 @@ function App() {
           />
         }
       />
+       <Route
+          path="/RedBorderButtonComponent"
+          element={
+            <RedBorderButtonComponent
+              text="버튼 테스트"
+              onClick={() => alert("버튼이 클릭되었습니다!")}
+              //style={buttonStyle} // 스타일 객체 전달
+            />
+          }
+        />
 
         <Route
           path="/category"
@@ -153,9 +185,21 @@ function App() {
         />
         
         <Route path="/carousel" element={<ImageCarousel images={CarouselImages} style={CarouselStyle} />} />
+        
+        
+        <Route path="/pagination" element={<PaginationComponent
+         currentPage={currentPage}
+         setCurrentPage={setCurrentPage}/>} />
 
+
+        <Route path="/searchBoxComponent" element={<SearchBoxComponent/>} />
+        
+        <Route path="/customInputProps" element={<CustomInputProps/>} />
+
+        <Route path="/inputLabelProps" element={<InputLabelProps/>} />
       </Routes>
     </Router>
+    </div>
   );
 }
 

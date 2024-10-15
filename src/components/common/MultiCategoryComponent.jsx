@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { CategoryComponent } from "./CategoryComponent";
+import styles from '../css/MultiCategoryComponent.module.css'; 
 
 export const MultiCategoryComponent = ({ setCategory }) => {
   const navigate = useNavigate();
@@ -18,8 +19,7 @@ export const MultiCategoryComponent = ({ setCategory }) => {
   ];
 
   return (
-    <div className="category-wrapper">
-      {/* 카테고리 목록을 순회하며 CategoryComponent 렌더링 */}
+    <div className={styles['category-wrapper']}>
       {categoryList.map((category, index) => (
         <CategoryComponent
           key={index}

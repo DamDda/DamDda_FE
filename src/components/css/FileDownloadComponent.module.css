@@ -1,0 +1,29 @@
+/* FileComponent.module.css */
+.customTextField {
+    margin: 20px 0; /* 마진 */
+    width: 250px; /* 너비 */
+    background-color: #ffffff; /* 배경색 */
+    border-radius: 8px; /* 둥근 모서리 */
+}
+.iconButton {
+    padding: 8px;
+}
+
+.fileIcon {
+    font-size: 24px;
+}
+
+.fileName {
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    margin-right: 10px;
+}
+
+.fileName:hover {
+    color: #4a62d1;
+}
+
+.fileIcon:hover {
+    color: #4a62d1;
+}

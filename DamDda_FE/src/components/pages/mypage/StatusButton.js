@@ -1,5 +1,6 @@
 import React from "react";
 import { Button, Tooltip } from "@mui/material";
+import { borderRadius } from "@mui/system";
 
 const StatusButton = ({
   status,
@@ -61,6 +62,12 @@ const StatusButton = ({
           backgroundColor: "transparent",
           hoverBackgroundColor: "#e3f2fd",
           width: "140px",
+        };
+      case "회원탈퇴":
+        return {
+          color: "white",
+          backgroundColor: "#1976d2",
+          borderColor: "#2196f3",
         };
       default:
         return {

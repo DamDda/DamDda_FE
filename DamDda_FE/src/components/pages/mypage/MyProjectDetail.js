@@ -22,11 +22,11 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import StatusButton from "./StatusButton";
+import ProgressChart from "./ProgressChart";
 // import { Row } from "react-bootstrap";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { SERVER_URL } from "../../../constants/URLs";
-
 
 import { useUser } from "../../../UserContext";
 
@@ -58,42 +58,67 @@ const mockSupportStat = {
   remainingDays: 0,
 };
 
-// 후원자 조회
-const mockSupporterData = [
-  {
-    deliveryId: "123456",
-    deliveryName: "홍길동",
-    supportedAt: "2024.09.07 - 오전 11:30",
-    item_name: "눌림 플레이트 2세트 + 미니 보냉백 1개",
-    deliveryPhoneNumber: "010-1234-5678",
-    deliveryAddress: "경기도 광명시",
-    deliveryDetailedAddress: "oo동",
-    deliveryMessage: "배송 전 연락 주세요.",
-    // history: [
-    //   {
-    //     date: "2024-09-01",
-    //     customerId: "11091700",
-    //     amount: 3,
-    //   },
-    // ],
-  },
-  {
-    deliveryId: "123457",
-    deliveryName: "김철수",
-    supportedAt: "2024.09.07 - 오후 2:30",
-    item_name: "세트 상품 1개",
-    deliveryPhoneNumber: "010-9876-5432",
-    deliveryAddress: "서울특별시 강남구",
-    deliveryDetailedAddress: "xx동",
-    deliveryMessage: "배송 전에 전화 부탁드립니다.",
-    // history: [
-    //   {
-    //     date: "2024-09-03",
-    //     customerId: "11091701",
-    //     amount: 2,
-    //   },
-    // ],
-  },
+// // 후원자 조회
+// const mockSupporterData = [
+//   {
+//     deliveryId: "123456",
+//     deliveryName: "홍길동",
+//     supportedAt: "2024.09.07 - 오전 11:30",
+//     item_name: "눌림 플레이트 2세트 + 미니 보냉백 1개",
+//     deliveryPhoneNumber: "010-1234-5678",
+//     deliveryAddress: "경기도 광명시",
+//     deliveryDetailedAddress: "oo동",
+//     deliveryMessage: "배송 전 연락 주세요.",
+//     // history: [
+//     //   {
+//     //     date: "2024-09-01",
+//     //     customerId: "11091700",
+//     //     amount: 3,
+//     //   },
+//     // ],
+//   },
+//   {
+//     deliveryId: "123457",
+//     deliveryName: "김철수",
+//     supportedAt: "2024.09.07 - 오후 2:30",
+//     item_name: "세트 상품 1개",
+//     deliveryPhoneNumber: "010-9876-5432",
+//     deliveryAddress: "서울특별시 강남구",
+//     deliveryDetailedAddress: "xx동",
+//     deliveryMessage: "배송 전에 전화 부탁드립니다.",
+//     // history: [
+//     //   {
+//     //     date: "2024-09-03",
+//     //     customerId: "11091701",
+//     //     amount: 2,
+//     //   },
+//     // ],
+//   },
+// ];
+
+// 서버 연동 후 주석 풀기
+// const mockServerData = [
+//   ["2024-10-08T00:00:00", 103000],
+//   ["2024-10-09T00:00:00", 103000],
+//   ["2024-10-22T00:00:00", 103000],
+//   ["2024-11-01T00:00:00", 103000],
+//   ["2024-11-02T00:00:00", 103000],
+//   ["2024-11-05T00:00:00", 103000],
+//   ["2024-11-09T00:00:00", 103000],
+//   ["2024-11-10T00:00:00", 206000],
+//   ["2024-11-16T00:00:00", 103000],
+// ];
+
+const mockChartData = [
+  ["2024-10-08T00:00:00", 103000],
+  ["2024-10-09T00:00:00", 103000],
+  ["2024-10-22T00:00:00", 103000],
+  ["2024-11-01T00:00:00", 103000],
+  ["2024-11-02T00:00:00", 103000],
+  ["2024-11-05T00:00:00", 103000],
+  ["2024-11-09T00:00:00", 103000],
+  ["2024-11-10T00:00:00", 206000],
+  ["2024-11-16T00:00:00", 103000],
 ];
 
 const ThumbnailContainer = styled("div")({
@@ -310,36 +335,57 @@ export default function MyProjectDetails({ projectId, setMyprojectClick }) {
   const [loading, setLoading] = useState(true);
   const [tabIndex, setTabIndex] = useState(0);
   const { user } = useUser();
+  const [chartData, setChartData] = useState(null);
+  const targetAmount = 5000000; // 목표 금액 설정
   const navigate = useNavigate();
 
   // 두 API를 병렬로 호출하여 데이터를 가져옴
   useEffect(() => {
     const fetchData = async () => {
-      console.log(projectId);
-      console.log(user.key);
       try {
         // 프로젝트 상세 정보 api 호출
-        const projectResponse = await axios({
+        const [projectResponse, chartResponse] = await Promise.all([
+          axios({
+            method: "GET",
+            url: `${SERVER_URL}/api/projects/myproject/${projectId}`, // 템플릿 리터럴을 올바르게 적용
+            params: {
+              // memberId: user.key,
+            },
+            headers: {
+              Authorization: `Bearer ${Cookies.get("accessToken")}`, // 템플릿 리터럴을 올바르게 적용
+            },
+          }).then((response) => response),
+        ]);
+        axios({
           method: "GET",
-          url: `${SERVER_URL}/api/projects/myproject/${projectId}`,
+          url: `${SERVER_URL}/damdda/project/daily/${projectId}`,
           params: {
             // memberId: user.key,
           },
           headers: {
-            ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
-         },
-
+            Authorization: `Bearer ${Cookies.get("accessToken")}`, // 템플릿 리터럴을 올바르게 적용
+          },
         }).then((response) => response);
-        console.log(projectResponse);
+
+        console.log(chartResponse);
 
         // 후원 통계 api 호출
         // const supportStatResponse = await axios.get(
         //   `/projects/myproject/sptstat/${projectId}`
         // );
+
         setSupportStat(mockSupportStat);
 
         setProjectData(projectResponse.data); // 프로젝트 데이터 저장
         // setSupportStat(supportStatResponse.data); // 후원통계 데이터 저장
+
+        // 차트 데이터 가공
+        const processedChartData = chartResponse.data.map(([date, amount]) => ({
+          date: new Date(date).toLocaleDateString(), // 날짜 형식 변환
+          amount, // 후원액
+        }));
+
+        setChartData(mockChartData); // 차트 데이터 저장
 
         setLoading(false); // 로딩 상태 완료
       } catch (error) {
@@ -641,7 +687,6 @@ export default function MyProjectDetails({ projectId, setMyprojectClick }) {
             {/* 시작일: {new Date(statistics.startDate).toLocaleDateString()} |
             마감일: {new Date(statistics.endDate).toLocaleDateString()} */}
           </div>
-
           <DashboardSection
             style={{
               display: "flex",
@@ -703,6 +748,10 @@ export default function MyProjectDetails({ projectId, setMyprojectClick }) {
               <br />
             </Typography>
           </DashboardSection>
+          {/* 후원 차트 추가 부분 */}
+          <Box mt={5}>
+            <ProgressChart serverData={supportStat} targetAmount={500000} />
+          </Box>
         </>
       )}
 
@@ -710,6 +759,4 @@ export default function MyProjectDetails({ projectId, setMyprojectClick }) {
       {tabIndex === 1 && <SupporterTable />}
     </DetailContainer>
   );
-};
-
-
+}

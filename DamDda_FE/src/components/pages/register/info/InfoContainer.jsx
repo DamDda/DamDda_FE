@@ -25,16 +25,18 @@ import SortableItem from "./SortableItem";
 import datejs from "dayjs";
 import Preview from "../preview/Preview";
 
-const InfoContainer = (props) => {
-  const {
-    tags,
-    setTags,
-    formData,
-    setFormData,
-    productImages,
-    setProductImages,
-  } = props;
-
+const InfoContainer = ({
+  formData,
+  setFormData,
+  tags,
+  setTags,
+  productImages,
+  setProductImages,
+  descriptionDetail,
+  setDescriptionDetail,
+  descriptionImages,
+  setDescriptionImages,
+}) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [activeId, setActiveId] = useState(null);
   const [openPreview, setOpenPreview] = useState(false);
@@ -256,19 +258,23 @@ const InfoContainer = (props) => {
                       <DragOverlay>
                         {activeId ? (
                           <div style={{ width: "60px", height: "60px" }}>
-                            <img
-                              src={
-                                productImages.find(
-                                  (item) => item.url === activeId
-                                ).url
-                              }
-                              alt="Drag Image"
-                              style={{
-                                width: "100%",
-                                height: "100%",
-                                objectFit: "cover",
-                              }}
-                            />
+                            {productImages.find(
+                              (item) => item.url === activeId
+                            ) ? (
+                              <img
+                                src={
+                                  productImages.find(
+                                    (item) => item.url === activeId
+                                  ).url
+                                }
+                                alt="Drag Image"
+                                style={{
+                                  width: "100%",
+                                  height: "100%",
+                                  objectFit: "cover",
+                                }}
+                              />
+                            ) : null}
                           </div>
                         ) : null}
                       </DragOverlay>
@@ -473,18 +479,21 @@ const InfoContainer = (props) => {
                   background: "white",
                   margin: "auto",
                   width: "80%",
-                  maxWidth: "600px",
+                  height: "800px",
                   borderRadius: "10px",
                   top: "20%",
                   position: "absolute",
+                  boxShadow: "0 4px 20px rgba(0, 0, 0, 0.2)",
+                  transition: "all 0.3s ease",
                 }}
               >
                 {/* 입력한 값들을 미리보기로 전달 */}
-
                 <Preview
                   formData={formData}
                   tags={tags}
                   productImages={productImages}
+                  descriptionDetail={descriptionDetail}
+                  descriptionImages={descriptionImages}
                 />
 
                 <Button variant="contained" onClick={handleClose}>

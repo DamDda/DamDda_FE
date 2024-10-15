@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import {
   MDBCol,
@@ -30,12 +29,14 @@ export default function ProfileStatistics({ setIsEditing }) {
   //   fetchProfileData(); // 프로필 데이터 로드
   // }, []);
   const fetchProfileData = async () => {
-    console.log("fetchProfileData" + fetchProfileData)
+    console.log("fetchProfileData" + fetchProfileData);
     try {
       // const response = await axios.get(`${SERVER_URL}/members/profile?loginId=${user.id}`, {
       const response = await axios.get(`${SERVER_URL}/member/profile`, {
         headers: {
-          ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+          ...(Cookies.get("accessToken") && {
+            Authorization: `Bearer ${Cookies.get("accessToken")}`,
+          }),
         },
         withCredentials: true,
       });
@@ -69,17 +70,17 @@ export default function ProfileStatistics({ setIsEditing }) {
     setIsModalOpen(true); // 모달 열기
   };
 
-  // 비밀번호 모달에서 확인 버튼 클릭 시 처리 로직
-  const handlePasswordSubmit = (inputPassword) => {
-    console.log("11111111111111111")
-    if (inputPassword === password) {
-      setPasswordError(""); // 에러 메시지 초기화
-      setIsModalOpen(false); // 모달 닫기
-      setIsEditing(true); // 프로필 수정 페이지로 이동
-    } else {
-      setPasswordError("비밀번호가 틀렸습니다. 다시 입력해주세요.");
-    }
-  };
+  // // 비밀번호 모달에서 확인 버튼 클릭 시 처리 로직
+  // const handlePasswordSubmit = (inputPassword) => {
+  //   console.log("11111111111111111")
+  //   if (inputPassword === password) {
+  //     setPasswordError(""); // 에러 메시지 초기화
+  //     setIsModalOpen(false); // 모달 닫기
+  //     setIsEditing(true); // 프로필 수정 페이지로 이동
+  //   } else {
+  //     setPasswordError("비밀번호가 틀렸습니다. 다시 입력해주세요.");
+  //   }
+  // };
 
   const UserAvatar = ({ profile, defaultImageUrl, ...props }) => {
     return (
@@ -105,32 +106,33 @@ export default function ProfileStatistics({ setIsEditing }) {
     try {
       let valid = true;
       console.log("트라이 처음 부분:");
-      
+
       // 모든 필드가 입력되었을 때만 검증 진행
       if (valid) {
         console.log("if처음부분임:");
-        const response = await axios.post(`${SERVER_URL}/member/login`, formatLogin, {
-          withCredentials: true,
-          headers: { "Content-Type": "application/json" },
-        });
+        const response = await axios.post(
+          `${SERVER_URL}/member/login`,
+          formatLogin,
+          {
+            withCredentials: true,
+            headers: { "Content-Type": "application/json" },
+          }
+        );
         // response.data에서 X-Nickname 값 가져오기
         const nickname = response.data["X-Nickname"];
         console.log("Nickname:", nickname);
-        if(nickname === user.nickname){
+        if (nickname === user.nickname) {
           setIsEditing(true); // 프로필 수정 페이지로 이동
-          setPasswordError('');  // 에러 메시지 초기화
-          setIsModalOpen(false);  // 모달 닫기
-        } else{
+          setPasswordError(""); // 에러 메시지 초기화
+          setIsModalOpen(false); // 모달 닫기
+        } else {
           setPasswordError("비밀번호가 틀렸습니다. 다시 입력해주세요.");
-        }        
-        }       
+        }
       }
-    catch (error) {
+    } catch (error) {
       setPasswordError("비밀번호가 틀렸습니다. 다시 입력해주세요.");
     }
   };
-
-
 
   return (
     <div
@@ -283,15 +285,12 @@ export default function ProfileStatistics({ setIsEditing }) {
         errorMessage={passwordError} // 비밀번호 오류 메시지
         setError={setPasswordError}
         error={passwordError}
-        
       />
       {/* 취소 버튼 */}
       {/* <button onClick={() => setIsModalOpen(false)}>취소</button> */}
-      
+
       {/* 확인 버튼에 handleSubmit 연결 */}
       {/* <button onClick={handleSubmit}>확인</button> */}
     </div>
   );
 }
-
-

@@ -42,10 +42,16 @@ const ProjectDocument = (props) => {
     setDocs(newDocs); // 이미지 배열 업데이트
   };
   const handleDownloadFile = async (doc) => {
-    const splitted = doc.url.split("/");
+    let _url;
+    if (doc.file === null) {
+      const splitted = doc.url.split("/");
+      _url = `${SERVER_URL}/${splitted[0]}/${splitted[1]}/${splitted[2]}/${encodeURIComponent(splitted[3])}`;
+    } else {
+      _url = doc.url;
+    }
     axios({
       method: "GET",
-      url: `${SERVER_URL}/${splitted[0]}/${splitted[1]}/${splitted[2]}/${encodeURIComponent(splitted[3])}`,
+      url: _url,
       responseType: "blob",
       withCredentials: true,
     })

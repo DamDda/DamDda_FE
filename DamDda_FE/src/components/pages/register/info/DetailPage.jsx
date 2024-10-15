@@ -24,14 +24,13 @@ import AiModal from "../AiModal/AiModal";
 import { UploadFile } from "@mui/icons-material";
 
 //상세설명 페이지
-const DetailPage = (props) => {
-  const {
-    descriptionImages,
-    descriptionDetail,
-    setDescriptionDetail,
-    setDescriptionImages,
-    aiRequestData,
-  } = props;
+const DetailPage = ({
+  descriptionImages,
+  descriptionDetail,
+  setDescriptionDetail,
+  setDescriptionImages,
+  aiRequestData,
+}) => {
   const [confirmationOpen, setConfirmationOpen] = useState(false); // 설명 등록 확인 모달 상태
   const [snackbarOpen, setSnackbarOpen] = useState(false); // 스낵바 상태 (알림)
   const [aiText, setAiText] = useState("AI가 생성한 설명 내용"); // AI 도움받기 내용
@@ -169,7 +168,7 @@ const DetailPage = (props) => {
               style={{ height: "300px", width: "1200px" }}
             />
 
-          {/* <Write
+            {/* <Write
             descriptionImagesUrl={descriptionImages.map((img) => img.url)}
             descriptionDetail={descriptionDetail}
             setDescriptionImages={setDescriptionImages}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import {
   TextField,
@@ -40,7 +40,7 @@ const Package = () => {
   const [Snackbar, setSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [currentPackageId, setCurrentPackageId] = useState(null);
-
+  const inputRef = useRef(0);
   const location = useLocation();
   const query = new URLSearchParams(location.search);
   const [projectId, setProjectId] = useState(query.get("projectId") || 1);
@@ -50,6 +50,10 @@ const Package = () => {
     fetchPackage();
     getProjectId();
   }, []);
+
+  useEffect(() => {
+    fetchPackage();
+  }, [project_package.id]);
 
   const getProjectId = async () => {
     try {
@@ -77,7 +81,6 @@ const Package = () => {
           },
         }
       );
-      console.log(response.data);
 
       const formattedGifts = response.data.map((gift) => ({
         id: gift.id,
@@ -101,9 +104,11 @@ const Package = () => {
         {
           //project_id를 넘겨받아야 함.
           withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
         }
       );
-
       if (!Array.isArray(response.data)) {
         console.error("API response is not an array:", response.data);
         return;
@@ -116,7 +121,6 @@ const Package = () => {
         quantityLimited: pac.quantityLimited,
         RewardList: Array.isArray(pac.RewardList) ? pac.RewardList : [],
       }));
-
       setProject_package(formattedPackages);
     } catch (error) {
       console.error("패키지 목록을 가져오는 중 오류 발생:", error);
@@ -129,14 +133,12 @@ const Package = () => {
       alert("선물 이름과 옵션을 모두 입력해주세요.");
       return;
     }
-
     const newGift = {
       name: reward_name,
       count: 1, // 기본값 설정
       OptionList: Options,
       optionType: optionType,
     };
-    setReward_list([...reward_list, newGift]);
 
     try {
       const response = await axios.post(
@@ -149,6 +151,8 @@ const Package = () => {
           },
         }
       );
+      newGift.id = response.data;
+      setReward_list([...reward_list, newGift]);
 
       setSnackbarMessage("선물이 추가되었습니다.");
       setSnackbar(true);
@@ -190,7 +194,6 @@ const Package = () => {
   };
   //선택된 선물 삭제 기능
   const handleSelectedGiftDelete = (index) => {
-    console.log(selected_reward.map((reward) => reward.id));
     setSelected_reward(selected_reward.filter((reward) => reward.id !== index));
   };
   //옵션 추가 기능
@@ -266,16 +269,13 @@ const Package = () => {
         OptionList: reward.OptionList,
         optionType: reward.optionType,
       })),
-      quantityLimited: isLimitEnabled ? package_limit : 0, // 제한 수량이 없으면 '무제한'
+      quantityLimited: isLimitEnabled ? package_limit : 9999, // 제한 수량이 9999이면 '무제한'
       price: parseInt(package_price.replace(/,/g, "")),
     };
 
-    setProject_package([...project_package, newConfig]);
-
     if (isEditing) {
       try {
-        console.log("남이님" + accessToken);
-        await axios.put(
+        const response = await axios.put(
           `${SERVER_URL}/packages/modify?projectId=${projectId}`,
           newConfig,
           {
@@ -285,25 +285,25 @@ const Package = () => {
             },
           }
         );
-
+        newConfig.id = response.data;
+        setProject_package([...project_package, newConfig]);
         const updatedPackages = [...project_package];
         updatedPackages[editingIndex] = newConfig;
         setProject_package(updatedPackages);
         setSnackbarMessage("구성이 수정되었습니다.");
         setIsEditing(false);
         setEditingIndex(null);
+        await fetchPackage();
       } catch (error) {
         console.error("구성 수정 중 오류 발생:", error);
         setSnackbarMessage("구성 수정 중 오류가 발생했습니다.");
       }
     } else {
       try {
-        console.log("남이님2" + accessToken);
         await axios.post(
           `${SERVER_URL}/packages/register/${projectId}`,
           newConfig,
           {
-            //projectId 받아와야 함
             withCredentials: true,
             headers: {
               "Content-Type": "application/json",
@@ -327,14 +327,18 @@ const Package = () => {
   };
 
   const handleCountChange = (increment) => {
-    setPackage_limit((prev) => (prev + increment < 1 ? 1 : prev + increment));
+    // setPackage_limit((prev) => (prev + increment < 1 ? 1 : prev + increment));
+    const newValue = Number(inputRef.current.value);
+    setPackage_limit(newValue + increment);
   };
   //패키지 수정 기능
   const handleEdit = async (index) => {
     //fetchPackage에서 들고옴.
     const selectedPackage = project_package[index];
+
     setPackage_name(selectedPackage.name);
     setCurrentPackageId(selectedPackage.id);
+
     setSelected_reward(
       selectedPackage.RewardList.map((reward) => ({
         id: reward.id,
@@ -344,6 +348,7 @@ const Package = () => {
         OptionList: reward.OptionList,
       }))
     );
+
     setPackage_limit(selectedPackage.quantityLimited);
     setIsLimitEnabled(selectedPackage.quantityLimited !== -1);
     setPackage_price(selectedPackage.price.toLocaleString());
@@ -389,7 +394,7 @@ const Package = () => {
     setEditingIndex(null);
   };
   const formatQunatity = (quantity) => {
-    return quantity == 0 ? "무제한" : `${quantity}개 남음`;
+    return quantity == 9999 ? "무제한" : `${quantity}개 남음`;
   };
 
   return (
@@ -688,17 +693,23 @@ const Package = () => {
             {isLimitEnabled && (
               <div className="count-box">
                 <button
-                  onClick={() => handleCountChange(-1)}
-                  disabled={package_limit <= 0}
+                  onClick={() => {
+                    handleCountChange(-1);
+                  }}
+                  disabled={package_limit <= 0 || package_limit >= 9999}
                 >
                   -
                 </button>
                 {/* <span>{package_limit}</span> */}
                 <input
-                  value={package_limit}
+                  ref={inputRef}
+                  value={package_limit === 9999 ? 0 : package_limit}
                   onChange={(e) => {
-                    const value = Math.max(0, Number(e.target.value)); // 최소 0으로 제한
-                    handleCountChange(value - package_limit); // 카운트 차이를 반영
+                    let newValue = Math.max(
+                      0,
+                      Math.min(9999, Number(e.target.value))
+                    ); // 최소 0으로 제한
+                    setPackage_limit(newValue);
                   }}
                   style={{
                     width: "50px",
@@ -707,7 +718,13 @@ const Package = () => {
                     border: "0",
                   }}
                 />
-                <button onClick={() => handleCountChange(1)}>+</button>
+                <button
+                  onClick={() => {
+                    handleCountChange(+1);
+                  }}
+                >
+                  +
+                </button>
               </div>
             )}
           </div>

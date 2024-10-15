@@ -7,6 +7,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { SERVER_URL } from "../../../../constants/URLs";
 
+import "components/pages/register/Register.css";
 import "../Register.css";
 import "../../../styles/style.css";
 import { Header } from "../../../layout/Header";
@@ -108,8 +109,8 @@ const Register = () => {
       title: writeData.title,
       description: writeData.description,
       target_funding: writeData.targetFunding,
-      start_date: dayjs(writeData.startDate).format("yyyy-MM-dd"),
-      end_date: dayjs(writeData.endDate).format("yyyy-MM-dd"),
+      start_date: dayjs(writeData.startDate).format("YYYY-MM-DD"),
+      end_date: dayjs(writeData.endDate).format("YYYY-MM-DD"),
       delivery_date: null,
     });
     writeData.tags && setTags(writeData.tags);
@@ -322,12 +323,16 @@ const Register = () => {
 
             {writeData ? (
               <InfoContainer
-                tags={tags}
-                setTags={setTags}
                 formData={formData}
                 setFormData={setFormData}
+                tags={tags}
+                setTags={setTags}
                 productImages={productImages}
                 setProductImages={setProductImages}
+                descriptionDetail={descriptionDetail}
+                setDescriptionDetail={setDescriptionDetail}
+                descriptionImages={descriptionImages}
+                setDescriptionImages={setDescriptionImages}
               />
             ) : (
               <div>Now Loading...</div>

@@ -5,6 +5,7 @@ import Headers from "./MypageHeader";
 import MyProjectDetails from "./MyProjectDetail";
 import ProfileStatistics from "./ProfileStatistics";
 import SupportedProjects from "./SupportedProjects";
+import Withdrawal from "./Withdrawal";
 import TabsUnderlinePlacement from "./TabsUnderlinePlacement";
 import CollaborationList from "./CollaborationList";
 import LikeProject from "./LikeProject";
@@ -17,7 +18,6 @@ import { useUser } from "../../../UserContext";
 import CollaborationDetail from "./CollaborationDetail";
 import Cookies from "js-cookie";
 import { SERVER_URL } from "../../../constants/URLs";
-
 
 const Mypage = () => {
   const [profileData, setProfileData] = useState(null); // 프로필 데이터 상태
@@ -33,7 +33,9 @@ const Mypage = () => {
       // const response = await axios.get(`${SERVER_URL}/members/profile?loginId=${user.id}`, {
       const response = await axios.get(`${SERVER_URL}/member/profile`, {
         headers: {
-          ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+          ...(Cookies.get("accessToken") && {
+            Authorization: `Bearer ${Cookies.get("accessToken")}`,
+          }),
         },
         withCredentials: true,
       });
@@ -136,6 +138,8 @@ const Mypage = () => {
             />
           );
         }
+      case 5:
+        return <Withdrawal />;
       default:
         return (
           <ProfileStatistics

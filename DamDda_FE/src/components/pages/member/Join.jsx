@@ -116,6 +116,19 @@ const Join = () => {
   const checkNickNameDuplicate = async (event) => {
     event.preventDefault(); // Prevent default action
     const { nickname } = formData;
+
+    if (nickname === null || nickname.length === 0) {
+      setErrors((prev) => ({
+        ...prev,
+        nickname: "닉네임을 입력하세요.",
+      }));
+      setStatusMessages((prev) => ({
+        ...prev,
+        nickname: "",
+      }));
+      return;
+    }
+
     try {
       const response = await axios.get(
         `${SERVER_URL}/member/check/nickname?nickname=${nickname}`
@@ -208,7 +221,10 @@ const Join = () => {
         /^[가-힣a-zA-Z]+$/.test(name) && name.length >= 1
           ? ""
           : "올바른 이름을 입력해주세요.",
-      nickname: nickname.length >= 1 ? "" : "닉네임을 입력해주세요.",
+      nickname:
+        nickname.length >= 1 && /^[a-zA-Z0-9가-힣]+$/.test(nickname)
+          ? ""
+          : "닉네임은 1자 이상이어야 하며, 특수문자 및 띄어쓰기를 포함할 수 없습니다.",
       email:
         /^[A-Za-z0-9._-]+@[a-zA-Z0-9-]+(.[a-zA-Z0-9-]+)*(.[a-zA-Z]{1,})$/.test(
           email
@@ -264,7 +280,7 @@ const Join = () => {
         .filter(([_, value]) => value !== "")
         .map(([field, message]) => `${message}`)
         .join("\n");
-      //alert(`다음 오류를 해결해주세요:\n\n${errorMessages}`);
+      // alert(`\n\n${errorMessages}`);
     }
   };
 
@@ -282,13 +298,9 @@ const Join = () => {
     };
 
     try {
-      const response = await axios.post(
-        `${SERVER_URL}/member/profile`,
-        formattedJoin,
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await axios.post(`${SERVER_URL}/member`, formattedJoin, {
+        withCredentials: true,
+      });
 
       console.log(response + "성공");
       navigate("/login");
@@ -327,7 +339,9 @@ const Join = () => {
                       value={formData.id}
                       onChange={handleChange}
                       error={Boolean(errors.id)}
-                      helperText={errors.id}
+                      helperText={
+                        errors.id || "아이디는 4자 이상이어야 합니다."
+                      }
                     />
                     <Button
                       variant="outlined"
@@ -358,7 +372,9 @@ const Join = () => {
                     value={formData.password}
                     onChange={handleChange}
                     error={Boolean(errors.password)}
-                    helperText={errors.password}
+                    helperText={
+                      errors.password || "비밀번호는 8~16자로 입력해주세요."
+                    }
                   />
                   <TextField
                     required
@@ -371,7 +387,10 @@ const Join = () => {
                     value={formData.password_confirm}
                     onChange={handleChange}
                     error={Boolean(errors.password_confirm)}
-                    helperText={errors.password_confirm}
+                    helperText={
+                      errors.password_confirm ||
+                      "비밀번호를 다시 입력해 주세요."
+                    }
                   />
 
                   <TextField
@@ -384,7 +403,7 @@ const Join = () => {
                     value={formData.name}
                     onChange={handleChange}
                     error={Boolean(errors.name)}
-                    helperText={errors.name}
+                    helperText={errors.name || "이름을 입력해 주세요."}
                   />
 
                   <div style={{ display: "flex", alignItems: "center" }}>
@@ -397,7 +416,9 @@ const Join = () => {
                       value={formData.nickname}
                       onChange={handleChange}
                       error={Boolean(errors.nickname)}
-                      helperText={errors.nickname}
+                      helperText={
+                        errors.nickname || "특수문자와 띄어쓰기 입력 불가."
+                      }
                     />
                     <Button
                       variant="outlined"
@@ -429,7 +450,10 @@ const Join = () => {
                     value={formData.email}
                     onChange={handleChange}
                     error={Boolean(errors.email)}
-                    helperText={errors.email}
+                    helperText={
+                      errors.email ||
+                      "이메일 형식(aaa@aaa.com)으로 입력해 주세요."
+                    }
                   />
 
                   <TextField
@@ -442,7 +466,7 @@ const Join = () => {
                     value={formData.phone_number}
                     onChange={handleChange}
                     error={Boolean(errors.phone_number)}
-                    helperText={errors.phone_number}
+                    helperText={errors.phone_number || "000-0000-0000"}
                   />
 
                   <div style={{ display: "flex", alignItems: "center" }}>

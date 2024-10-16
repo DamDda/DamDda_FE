@@ -73,7 +73,7 @@ const Join = () => {
   };
 
   const handleCancel = () => {
-    navigate(-1);
+    navigate("/login");
   };
 
   // 아이디 유효성 체크
@@ -234,7 +234,7 @@ const Join = () => {
       phone_number: /^([0-9]{2,4})-([0-9]{3,4})-([0-9]{4})$/.test(phone_number)
         ? ""
         : "올바른 연락처를 입력해주세요.",
-      address: address.length >= 1 ? "" : "주소를 입력해주세요.",
+      address: address.length >= 0 ? "" : "주소를 입력해주세요.",
       detailed_address:
         address && detailed_address.length < 1
           ? "상세주소를 입력해주세요."
@@ -280,7 +280,7 @@ const Join = () => {
         .filter(([_, value]) => value !== "")
         .map(([field, message]) => `${message}`)
         .join("\n");
-      // alert(`\n\n${errorMessages}`);
+      alert(`\n\n${errorMessages}`);
     }
   };
 

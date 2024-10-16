@@ -336,7 +336,7 @@ export default function MyProjectDetails({ projectId, setMyprojectClick }) {
   const [tabIndex, setTabIndex] = useState(0);
   const { user } = useUser();
   const [chartData, setChartData] = useState(null);
-  const targetAmount = 5000000; // 목표 금액 설정
+  const targetFunding = 500000; // 목표 금액 설정
   const navigate = useNavigate();
 
   // 두 API를 병렬로 호출하여 데이터를 가져옴
@@ -344,7 +344,7 @@ export default function MyProjectDetails({ projectId, setMyprojectClick }) {
     const fetchData = async () => {
       try {
         // 프로젝트 상세 정보 api 호출
-        const [projectResponse, chartResponse] = await Promise.all([
+        const [projectResponse] = await Promise.all([
           axios({
             method: "GET",
             url: `${SERVER_URL}/api/projects/myproject/${projectId}`, // 템플릿 리터럴을 올바르게 적용
@@ -356,36 +356,18 @@ export default function MyProjectDetails({ projectId, setMyprojectClick }) {
             },
           }).then((response) => response),
         ]);
-        axios({
-          method: "GET",
-          url: `${SERVER_URL}/damdda/project/daily/${projectId}`,
-          params: {
-            // memberId: user.key,
-          },
-          headers: {
-            Authorization: `Bearer ${Cookies.get("accessToken")}`, // 템플릿 리터럴을 올바르게 적용
-          },
-        }).then((response) => response);
 
-        console.log(chartResponse);
+        // 가짜 차트 데이터 사용
+        // const processedChartData = mockChartData.map(([date, amount]) => ({
+        //   date: new Date(date).toLocaleDateString(), // 날짜 형식 변환
+        //   amount, // 후원액
+        // }));
 
         // 후원 통계 api 호출
-        // const supportStatResponse = await axios.get(
-        //   `/projects/myproject/sptstat/${projectId}`
-        // );
-
         setSupportStat(mockSupportStat);
 
         setProjectData(projectResponse.data); // 프로젝트 데이터 저장
-        // setSupportStat(supportStatResponse.data); // 후원통계 데이터 저장
-
-        // 차트 데이터 가공
-        const processedChartData = chartResponse.data.map(([date, amount]) => ({
-          date: new Date(date).toLocaleDateString(), // 날짜 형식 변환
-          amount, // 후원액
-        }));
-
-        setChartData(mockChartData); // 차트 데이터 저장
+        // setChartData(processedChartData); // 차트 데이터 저장
 
         setLoading(false); // 로딩 상태 완료
       } catch (error) {
@@ -488,7 +470,7 @@ export default function MyProjectDetails({ projectId, setMyprojectClick }) {
     title, // 제목
     description, // 설명
     fundsReceive, // 받은 후원금
-    targetFunding, // 목표 후원금
+    // targetFunding, // 목표 후원금
     startDate, // 시작일
     endDate, // 마감일
     supporterCnt, // 후원자수
@@ -750,7 +732,11 @@ export default function MyProjectDetails({ projectId, setMyprojectClick }) {
           </DashboardSection>
           {/* 후원 차트 추가 부분 */}
           <Box mt={5}>
-            <ProgressChart serverData={supportStat} targetAmount={500000} />
+            {/* 가짜 데이터 전달 */}
+            <ProgressChart
+              serverData={chartData || mockChartData}
+              targetFunding={targetFunding}
+            />
           </Box>
         </>
       )}

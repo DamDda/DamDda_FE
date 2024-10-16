@@ -11,12 +11,11 @@ import { useNavigate } from "react-router-dom";
 
 const Withdrawal = () => {
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 열기 상태 관리
-  const [password, setPassword] = useState(""); // 비밀번호 입력 상태
   const [passwordError, setPasswordError] = useState(""); // 비밀번호 에러 메시지
+  const [password, setPassword] = useState(""); // 비밀번호 입력 상태
   const [checked, setChecked] = useState(false);
   const { user, setUser } = useUser();
   const navigate = useNavigate();
-  const { logout, isLogin } = useUser();
 
   // 모달 열기
   useEffect(() => {
@@ -24,10 +23,10 @@ const Withdrawal = () => {
   }, []);
 
   // 비밀번호 확인 함수
-  const handleSubmit = async () => {
+  const handleSubmit = async (inputPassword) => {
     const formatLogin = {
       loginId: user.id,
-      password: password,
+      password: inputPassword,
     };
     try {
       // let valid = true;
@@ -58,25 +57,6 @@ const Withdrawal = () => {
     // 아무 동작도 하지 않음
   };
 
-  // 회원탈퇴 요청 함수
-  const handleDeleteAccount = async () => {
-    try {
-      const response = await axios.delete(`${SERVER_URL}/member/${user.id}`, {
-        withCredentials: true,
-        headers: { "Content-Type": "application/json" },
-      });
-      if (response.status === 200) {
-        alert("회원탈퇴가 완료되었습니다.");
-        // 로그아웃 처리
-        setUser(null);
-        // 메인페이지로 리다이렉트
-        navigate("/");
-      }
-    } catch (error) {
-      alert("회원탈퇴 중 오류가 발생했습니다. 다시 시도해주세요.");
-    }
-  };
-
   // 체크박스 상태 변경
   const handleCheck = (event) => {
     setChecked(event.target.checked);
@@ -85,9 +65,59 @@ const Withdrawal = () => {
   // 회원탈퇴 버튼 클릭 처리
   const handleWithdrawlCilck = () => {
     if (checked) {
-      alert("회원탈퇴가 완료되었습니다.");
+      handleDeleteAccount();
     } else {
       alert("탈퇴 동의가 필요합니다");
+    }
+  };
+
+  // const handleDeleteAccount = async () => {
+  //   try {
+  //     // 서버가 준비되지 않았을 경우 임시로 탈퇴 성공 처리를 모의로 진행
+  //     // 실제 서버와 연동이 되면 이 부분을 axios 요청으로 변경
+  //     console.log("회원탈퇴 모의 실행");
+
+  //     // 임시로 탈퇴 완료 처리
+  //     setTimeout(() => {
+  //       alert("회원탈퇴가 완료되었습니다.");
+
+  //       // 로그아웃 처리: 사용자 정보 초기화
+  //       setUser(null);
+  //       Cookies.remove("accessToken");
+
+  //       // 메인페이지로 리다이렉트
+  //       navigate("/");
+  //     }, 1000); // 1초 후에 로그아웃 처리 및 페이지 이동
+  //   } catch (error) {
+  //     console.error("회원탈퇴 오류:", error); // 오류 로그 출력
+  //     alert("회원탈퇴 중 오류가 발생했습니다. 다시 시도해주세요.");
+  //   }
+  // };
+
+  // 회원탈퇴 요청 함수 **** 서버 연동 시 풀기 ****
+  const handleDeleteAccount = async () => {
+    try {
+      const response = await axios.delete(`${SERVER_URL}/member/${user.id}`, {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+          ...(Cookies.get("accessToken") && {
+            Authorization: `Bearer ${Cookies.get("accessToken")}`,
+          }),
+        },
+      });
+      console.log("회원탈퇴 응답:", response);
+      if (response.status === 200) {
+        alert("회원탈퇴가 완료되었습니다.");
+        // 로그아웃 처리
+        setUser(null);
+        Cookies.remove("accessToken"); // 쿠키에서 토큰 제거
+        // 메인페이지로 리다이렉트
+        navigate("/");
+      }
+    } catch (error) {
+      console.log("회원탈퇴 오류:", error);
+      alert("회원탈퇴 중 오류가 발생했습니다. 다시 시도해주세요.");
     }
   };
 

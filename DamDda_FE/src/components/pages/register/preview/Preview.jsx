@@ -19,8 +19,7 @@ import "./Preview.css"; // CSS 파일 불러오기
 import dayjs from "dayjs"; // 날짜 처리 라이브러리
 
 // PreviewDetail 컴포넌트
-const PreviewDetail = ({ projectDescription, projectImages }) => {
-  const [packages] = useState([]); // 빈 배열로 초기화
+const PreviewDetail = ({ formattedGifts }) => {
   const [selectedPackage, setSelectedPackage] = useState(null); // 선택한 패키지
   const [selectedPackageOptions, setSelectedPackageOptions] = useState({}); // 각 패키지의 옵션 선택
 
@@ -37,9 +36,9 @@ const PreviewDetail = ({ projectDescription, projectImages }) => {
 
   return (
     <div className="package-section">
-      <h1 style={{ marginBottom: "10px" }}>선택한 선물</h1>
-      {Array.isArray(packages) && packages.length > 0 ? (
-        packages.map((pkg) => (
+      <h1 style={{ marginBottom: "10px" }}>선물구성</h1>
+      {Array.isArray(formattedGifts) && formattedGifts.length > 0 ? (
+        formattedGifts.map((pkg) => (
           <Card
             key={pkg.id}
             className="package-card"
@@ -76,7 +75,7 @@ const PreviewDetail = ({ projectDescription, projectImages }) => {
                   <Typography variant="body2">옵션을 선택해주세요</Typography>
                 )}
                 <Button variant="contained" style={{ marginTop: "10px" }}>
-                  Select This Package
+                  이 패키지 선택
                 </Button>
               </div>
             )}
@@ -90,7 +89,14 @@ const PreviewDetail = ({ projectDescription, projectImages }) => {
 };
 
 // Preview 컴포넌트
-const Preview = ({ formData, tags, productImages }) => {
+const Preview = ({
+  formData,
+  tags,
+  productImages,
+  descriptionDetail,
+  descriptionImages,
+  formattedGifts,
+}) => {
   const {
     title = "",
     description = "",
@@ -100,6 +106,12 @@ const Preview = ({ formData, tags, productImages }) => {
     end_date = "",
     start_date = "",
   } = formData;
+  console.log("dmdkdkdkdkdkr" + descriptionImages);
+
+  console.log("dmdkdkdkdkdkr" + descriptionImages);
+  descriptionImages.forEach((image) => {
+    console.log(image); // 각 객체의 내용을 확인
+  });
 
   // 진행률 계산
   const progressPercentage = (currentAmount / targetAmount) * 100 || 0;
@@ -220,18 +232,55 @@ const Preview = ({ formData, tags, productImages }) => {
 
         <Divider />
 
-        <div id="details" style={{ margin: "30px" }}>
-          <Tabs value={0} indicatorColor="primary" textColor="primary">
-            <Tab label="상세설명" />
-            <Tab label="선물구성" />
-            <Tab label="서류제출" />
-          </Tabs>
+        <div className="details" style={{ margin: "30px" }}>
+          <div>
+            <Tabs value={0} indicatorColor="primary" textColor="primary">
+              <Tab label="상세설명" />
+              <Tab label="공지사항" />
+              <Tab label="Q&A" />
+            </Tabs>
+          </div>
 
-          <Typography variant="body1" style={{ marginTop: "10px" }}>
-            {formData.descriptionDetail
-              ? formData.descriptionDetail
-              : "상세설명이 없습니다."}
-          </Typography>
+          <div className="detailDescription">
+            <div className="container4">
+              <Typography variant="body1" style={{ marginTop: "80px" }}>
+                {descriptionDetail ? (
+                  <div
+                    dangerouslySetInnerHTML={{ __html: descriptionDetail }}
+                  />
+                ) : (
+                  "상세설명이 없습니다."
+                )}
+              </Typography>
+
+              {descriptionImages && descriptionImages.length > 0 ? (
+                <div style={{ marginTop: "10px" }}>
+                  {descriptionImages.map((image, index) => (
+                    <img
+                      key={index}
+                      src={image.url}
+                      alt={`description-image-${index}`}
+                      style={{
+                        width: "100%",
+                        height: "auto",
+                        marginTop: "10px",
+                      }}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <Typography
+                  variant="body2"
+                  style={{ marginTop: "10px", color: "gray" }}
+                >
+                  이미지가 없습니다.
+                </Typography>
+              )}
+            </div>
+            <div className="container5">
+              <PreviewDetail formattedGifts={formattedGifts} />
+            </div>
+          </div>
         </div>
       </div>
     </>

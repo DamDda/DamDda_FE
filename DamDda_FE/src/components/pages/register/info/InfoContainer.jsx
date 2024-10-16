@@ -481,10 +481,13 @@ const InfoContainer = ({
                   width: "80%",
                   height: "800px",
                   borderRadius: "10px",
-                  top: "20%",
+                  top: "50%",
+                  left: "50%",
                   position: "absolute",
+                  transform: "translate(-50%, -50%)",
                   boxShadow: "0 4px 20px rgba(0, 0, 0, 0.2)",
                   transition: "all 0.3s ease",
+                  overflow: "auto",
                 }}
               >
                 {/* 입력한 값들을 미리보기로 전달 */}

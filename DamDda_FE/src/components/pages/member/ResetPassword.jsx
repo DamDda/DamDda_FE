@@ -211,6 +211,13 @@ const ResetPassword = () => {
                   marginTop: "16px",
                 }}
               >
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={() => navigate("/login")}
+                >
+                  로그인
+                </Button>
                 <Button type="submit" variant="contained" color="primary">
                   비밀번호 재설정하기
                 </Button>

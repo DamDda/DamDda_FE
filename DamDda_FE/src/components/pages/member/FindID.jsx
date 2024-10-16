@@ -141,6 +141,13 @@ const FindID = () => {
                   marginTop: "16px",
                 }}
               >
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={() => navigate("/login")}
+                >
+                  로그인
+                </Button>
                 <Button type="submit" variant="contained" color="primary">
                   아이디 찾기
                 </Button>

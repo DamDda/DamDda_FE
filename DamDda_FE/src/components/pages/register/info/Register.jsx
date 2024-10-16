@@ -44,7 +44,7 @@ const Register = () => {
     tags: "",
   });
   const [descriptionDetail, setDescriptionDetail] = useState(""); // 상세설명
-
+  const [formattedGifts, setFormattedGifts] = useState([]);
   const [productImages, setProductImages] = useState([]); // 상품이미지
   const [descriptionImages, setDescriptionImages] = useState([]); // 설명이미지
   const [docs, setDocs] = useState([]);
@@ -82,6 +82,7 @@ const Register = () => {
     try {
       const accessToken = Cookies.get("accessToken");
       const response = await axios
+
         .get(`${SERVER_URL}/api/projects/write/${projectId}`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -92,6 +93,14 @@ const Register = () => {
           console.error("프로젝트 데이터를 가져오는 중 오류 발생:", error)
         );
       setWriteData(response.data || []);
+      const formattedGifts = response.data.gifts.map((gift) => ({
+        id: gift.id,
+        name: gift.name,
+        count: gift.count,
+        optionType: gift.optionType,
+        options: gift.OptionList || [], // 옵션이 없을 경우 빈 배열로 처리
+      }));
+      setFormattedGifts(formattedGifts);
       console.log("WRITE DATA : ", response.data);
     } catch (error) {
       console.log(error);
@@ -333,6 +342,7 @@ const Register = () => {
                 setDescriptionDetail={setDescriptionDetail}
                 descriptionImages={descriptionImages}
                 setDescriptionImages={setDescriptionImages}
+                formattedGifts={formattedGifts}
               />
             ) : (
               <div>Now Loading...</div>
@@ -387,7 +397,7 @@ const Register = () => {
             </Tabs>
             <hr />
             <Typography variant="body1" style={{ marginTop: "10px" }}>
-              <Package />
+              <Package formattedGifts={formattedGifts} />
             </Typography>
           </div>
 

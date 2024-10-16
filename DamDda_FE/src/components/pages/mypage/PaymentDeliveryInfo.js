@@ -7,10 +7,10 @@ import { South } from "@mui/icons-material";
 import Cookies from "js-cookie";
 import { SERVER_URL } from "../../../constants/URLs";
 
-
-
 const PaymentDeliveryInfo = ({ project }) => {
-  const [paymentStatus, setPaymentStatus] = useState(project.payment.paymentStatus); // 결제 상태 상태 추가
+  const [paymentStatus, setPaymentStatus] = useState(
+    project.payment.paymentStatus
+  ); // 결제 상태 상태 추가
 
   // 결제 취소 로직
   const handleCancelPayment = async () => {
@@ -19,22 +19,24 @@ const PaymentDeliveryInfo = ({ project }) => {
 
     const updatedPaymentStatus = {
       supportingProject: supportingProject, // 해당 supportingProject 객체 전달
-      paymentStatus: '결제 취소' // '결제 취소' 상태 설정
+      paymentStatus: "결제 취소", // '결제 취소' 상태 설정
     };
 
     try {
-      const response = await axios.put(`${SERVER_URL}/order/${supportingProject.payment.paymentId}/cancel`, updatedPaymentStatus); // 객체를 JSON 바디로 전달
+      const response = await axios.put(
+        `${SERVER_URL}/damdda/order/${supportingProject.payment.paymentId}/cancel`,
+        updatedPaymentStatus
+      ); // 객체를 JSON 바디로 전달
       if (response.status === 200) {
         // 성공적으로 결제가 취소됨
         alert("결제가 취소되었습니다.");
         // 필요한 경우 UI를 업데이트하거나 상태를 새로 고침하는 로직 추가
       }
     } catch (error) {
-      console.error('결제 취소 중 오류 발생:', error);
+      console.error("결제 취소 중 오류 발생:", error);
       alert("결제 취소에 실패했습니다.");
     }
   };
-
 
   return (
     <Box sx={{ padding: "20px" }}>
@@ -58,7 +60,7 @@ const PaymentDeliveryInfo = ({ project }) => {
             수령인:
           </Typography>
           <Typography sx={{ marginLeft: "50px" }}>
-           {project.supportingProject.user.name}
+            {project.supportingProject.user.name}
           </Typography>
         </Box>
         <Box sx={{ display: "flex", marginBottom: "5px" }}>
@@ -68,7 +70,7 @@ const PaymentDeliveryInfo = ({ project }) => {
             휴대폰:
           </Typography>
           <Typography sx={{ marginLeft: "50px" }}>
-          {project.supportingProject.user.phoneNumber}
+            {project.supportingProject.user.phoneNumber}
           </Typography>
         </Box>
         <Box sx={{ display: "flex", marginBottom: "5px" }}>
@@ -78,9 +80,8 @@ const PaymentDeliveryInfo = ({ project }) => {
             주소:
           </Typography>
           <Typography sx={{ marginLeft: "50px" }}>
-          {project.supportingProject.delivery.deliveryAddress}
-          (  {project.supportingProject.delivery.deliveryDetailedAddress}  )
-
+            {project.supportingProject.delivery.deliveryAddress}({" "}
+            {project.supportingProject.delivery.deliveryDetailedAddress} )
           </Typography>
         </Box>
         <Box sx={{ display: "flex", marginBottom: "5px" }}>
@@ -90,7 +91,7 @@ const PaymentDeliveryInfo = ({ project }) => {
             배송 요청 사항:
           </Typography>
           <Typography sx={{ marginLeft: "20px" }}>
-          {project.supportingProject.delivery.deliveryMessage}
+            {project.supportingProject.delivery.deliveryMessage}
           </Typography>
         </Box>
       </Box>
@@ -134,7 +135,7 @@ const PaymentDeliveryInfo = ({ project }) => {
             총 상품 금액:
           </Typography>
           <Typography sx={{ marginLeft: "38px" }}>
-          {project.supportingPackage.packagePrice}
+            {project.supportingPackage.packagePrice}
           </Typography>
         </Box>
         <Box sx={{ display: "flex", marginBottom: "5px" }}>
@@ -144,17 +145,24 @@ const PaymentDeliveryInfo = ({ project }) => {
             결제 상태:
           </Typography>
           <Typography sx={{ marginLeft: "50px" }}>
-          {paymentStatus} {/* 상태를 직접 보여줌 */}
+            {paymentStatus} {/* 상태를 직접 보여줌 */}
           </Typography>
         </Box>
       </Box>
 
-     {/* 결제 취소 버튼 */}
-      <Box sx={{ textAlign: "right", position: "relative", top: "-60px", left: "-180px" }}>
+      {/* 결제 취소 버튼 */}
+      <Box
+        sx={{
+          textAlign: "right",
+          position: "relative",
+          top: "-60px",
+          left: "-180px",
+        }}
+      >
         <StatusButton
           status="결제 취소"
           label="결제 취소"
-          onClick={() => handleCancelPayment()} 
+          onClick={() => handleCancelPayment()}
           // onClick={() => handleCancelPayment(3)} // orderId 전달
 
           sx={{
@@ -171,4 +179,3 @@ const PaymentDeliveryInfo = ({ project }) => {
 };
 
 export default PaymentDeliveryInfo;
-

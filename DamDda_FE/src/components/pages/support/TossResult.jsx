@@ -1,9 +1,8 @@
-import { useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import axios from 'axios';
+import { useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import axios from "axios";
 import Cookies from "js-cookie";
 import { SERVER_URL } from "../../../constants/URLs";
-
 
 const TossResult = () => {
   const navigate = useNavigate();
@@ -13,22 +12,25 @@ const TossResult = () => {
     const checkPaymentResult = async () => {
       try {
         const searchParams = new URLSearchParams(location.search);
-        const orderId = searchParams.get('orderId');  // 쿼리 파라미터로 orderId를 가져옴
+        const orderId = searchParams.get("orderId"); // 쿼리 파라미터로 orderId를 가져옴
 
-        const response = await axios.get(`${SERVER_URL}/payment/toss/success/getOrder`, {
-          params: {
-            orderId: orderId
+        const response = await axios.get(
+          `${SERVER_URL}/damdda/payment/toss/success/getOrder`,
+          {
+            params: {
+              orderId: orderId,
+            },
           }
-        });
+        );
 
-        if (response.data.status === 'DONE') {
-          navigate('/payment/success');
-        console.log('success로 이동');
+        if (response.data.status === "DONE") {
+          navigate("/payment/success");
+          console.log("success로 이동");
         } else {
-        //   navigate('/payment/fail');
+          //   navigate('/payment/fail');
         }
       } catch (error) {
-        console.error('결제 결과 처리 중 오류 발생:', error);
+        console.error("결제 결과 처리 중 오류 발생:", error);
         // navigate('/payment/fail');  // 에러 발생 시 실패 페이지로 이동
       }
     };

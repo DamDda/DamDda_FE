@@ -2,7 +2,7 @@ import axios from "axios";
 import { SERVER_URL } from "../../../../constants/URLs";
 import Cookies from "js-cookie";
 
-const API_URL = `${SERVER_URL}/api/generative-ai/project-description`;
+const API_URL = `${SERVER_URL}/damdda/generative-ai/project-description`;
 // TODO: Update to the actual cloud server IP address when deploying
 
 /**
@@ -64,7 +64,9 @@ export const fetchAiGeneratedDescriptionDetail = async (
 
     const { data, status } = await axios.post(API_URL, payload, {
       headers: {
-        ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+        ...(Cookies.get("accessToken") && {
+          Authorization: `Bearer ${Cookies.get("accessToken")}`,
+        }),
       },
     });
 

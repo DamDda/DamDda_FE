@@ -252,7 +252,7 @@ function SupporterTable() {
   // 주문 정보를 가져오는 함수
   const fetchOrders = async () => {
     try {
-      const response = await axios.get(`${SERVER_URL}/order/all`);
+      const response = await axios.get(`${SERVER_URL}/damdda/order/all`);
       setOrders(response.data); // 가져온 주문 정보를 상태에 저장
       setLoading(false); // 로딩 완료
     } catch (err) {
@@ -347,7 +347,7 @@ export default function MyProjectDetails({ projectId, setMyprojectClick }) {
         const [projectResponse] = await Promise.all([
           axios({
             method: "GET",
-            url: `${SERVER_URL}/api/projects/myproject/${projectId}`, // 템플릿 리터럴을 올바르게 적용
+            url: `${SERVER_URL}/damdda/project/myproject/${projectId}`, // 템플릿 리터럴을 올바르게 적용
             params: {
               // memberId: user.key,
             },

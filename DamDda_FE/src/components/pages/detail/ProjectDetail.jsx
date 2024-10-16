@@ -258,7 +258,7 @@ const ProjectDetail = ({
     const fetchPackage = async () => {
       try {
         const response = await axios.get(
-          `${SERVER_URL}/packages/project/${projectId}`,
+          `${SERVER_URL}/damdda/package/project/${projectId}`,
           {
             //project id 받아줘야 함.
             //project_id를 넘겨받아야 함.

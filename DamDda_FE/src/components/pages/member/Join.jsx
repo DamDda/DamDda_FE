@@ -92,7 +92,7 @@ const Join = () => {
 
     try {
       const response = await axios.get(
-        ` ${SERVER_URL}/member/check/id?loginId=${id}`
+        ` ${SERVER_URL}/damdda/member/check/id?loginId=${id}`
       );
       const available = response.data;
       setStatusMessages((prev) => ({
@@ -131,7 +131,7 @@ const Join = () => {
 
     try {
       const response = await axios.get(
-        `${SERVER_URL}/member/check/nickname?nickname=${nickname}`
+        `${SERVER_URL}/damdda/member/check/nickname?nickname=${nickname}`
       );
       console.log(response.data);
       setStatusMessages((prev) => ({
@@ -298,9 +298,13 @@ const Join = () => {
     };
 
     try {
-      const response = await axios.post(`${SERVER_URL}/member`, formattedJoin, {
-        withCredentials: true,
-      });
+      const response = await axios.post(
+        `${SERVER_URL}/damdda/member`,
+        formattedJoin,
+        {
+          withCredentials: true,
+        }
+      );
 
       console.log(response + "성공");
       navigate("/login");

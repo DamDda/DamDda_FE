@@ -25,7 +25,6 @@ import Cookies from "js-cookie";
 import { SERVER_URL } from "../../constants/URLs";
 
 export function Header({ search, setSearch }) {
-
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [showProfileCard, setShowProfileCard] = useState(false); // 프로필 카드 표시 여부
@@ -35,12 +34,12 @@ export function Header({ search, setSearch }) {
   const [profile, setProfile] = useState("");
 
   //const { logout, user } = useUser();
-  const {logout, isLogin, user, setUser} = useUser();
+  const { logout, isLogin, user, setUser } = useUser();
   // if(!isLogin){
   //   console.log(user);
   //   // setUser({ ...user, key: 0 });
   // }
-  console.log("여기역이겨이겨익여깅겨ㅣㅇ겨이겨"+user.key+"111 "+isLogin);
+  console.log("여기역이겨이겨익여깅겨ㅣㅇ겨이겨" + user.key + "111 " + isLogin);
 
   // useEffect(() => {
   //   if (location.state?.id) {
@@ -67,15 +66,15 @@ export function Header({ search, setSearch }) {
   const fetchWritingProject = async () => {
     const writings = await axios({
       method: "GET",
-      url: `${SERVER_URL}/api/projects/write`,
+      url: `${SERVER_URL}/damdda/project/write`,
       params: {
         // memberId: user.key,
       },
       headers: {
-        ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+        ...(Cookies.get("accessToken") && {
+          Authorization: `Bearer ${Cookies.get("accessToken")}`,
+        }),
       },
-      
-
     })
       .then((response) => {
         setProjects(response.data);
@@ -105,9 +104,11 @@ export function Header({ search, setSearch }) {
     ) {
       const responseCode = await axios({
         method: "DELETE",
-        url: ` ${SERVER_URL}/api/projects/${id}`,
+        url: ` ${SERVER_URL}/damdda/project/${id}`,
         headers: {
-          ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+          ...(Cookies.get("accessToken") && {
+            Authorization: `Bearer ${Cookies.get("accessToken")}`,
+          }),
         },
       })
         .then((response) => response.status)
@@ -149,10 +150,12 @@ export function Header({ search, setSearch }) {
     );
     const projectId = await axios({
       method: "POST",
-      url: ` ${SERVER_URL}/api/projects/register`,
+      url: ` ${SERVER_URL}/damdda/project/register`,
       headers: {
         "Content-Type": "multipart/form-data",
-        ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+        ...(Cookies.get("accessToken") && {
+          Authorization: `Bearer ${Cookies.get("accessToken")}`,
+        }),
       },
       data: formData,
       params: {

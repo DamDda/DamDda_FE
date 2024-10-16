@@ -83,7 +83,7 @@ const Register = () => {
       const accessToken = Cookies.get("accessToken");
       const response = await axios
 
-        .get(`${SERVER_URL}/api/projects/write/${projectId}`, {
+        .get(`${SERVER_URL}/damdda/project/write/${projectId}`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
@@ -292,7 +292,7 @@ const Register = () => {
       console.log(accessToken);
       const response = await axios({
         method: "PUT",
-        url: `${SERVER_URL}/api/projects/register/${projectId}`,
+        url: `${SERVER_URL}/damdda/project/register/${projectId}`,
         data: projectFormData,
         headers: {
           "Content-Type": "multipart/form-data",

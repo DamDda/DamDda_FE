@@ -32,7 +32,7 @@ const Withdrawal = () => {
       // let valid = true;
 
       const response = await axios.post(
-        `${SERVER_URL}/member/login`,
+        `${SERVER_URL}/damdda/member/login`,
         formatLogin,
         {
           withCredentials: true,
@@ -97,15 +97,18 @@ const Withdrawal = () => {
   // 회원탈퇴 요청 함수 **** 서버 연동 시 풀기 ****
   const handleDeleteAccount = async () => {
     try {
-      const response = await axios.delete(`${SERVER_URL}/member/${user.id}`, {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "application/json",
-          ...(Cookies.get("accessToken") && {
-            Authorization: `Bearer ${Cookies.get("accessToken")}`,
-          }),
-        },
-      });
+      const response = await axios.delete(
+        `${SERVER_URL}/damdda/member/${user.id}`,
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+            ...(Cookies.get("accessToken") && {
+              Authorization: `Bearer ${Cookies.get("accessToken")}`,
+            }),
+          },
+        }
+      );
       console.log("회원탈퇴 응답:", response);
       if (response.status === 200) {
         alert("회원탈퇴가 완료되었습니다.");

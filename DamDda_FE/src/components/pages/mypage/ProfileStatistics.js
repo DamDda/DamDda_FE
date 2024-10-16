@@ -32,7 +32,7 @@ export default function ProfileStatistics({ setIsEditing }) {
     console.log("fetchProfileData" + fetchProfileData);
     try {
       // const response = await axios.get(`${SERVER_URL}/members/profile?loginId=${user.id}`, {
-      const response = await axios.get(`${SERVER_URL}/member/profile`, {
+      const response = await axios.get(`${SERVER_URL}/damdda/member/profile`, {
         headers: {
           ...(Cookies.get("accessToken") && {
             Authorization: `Bearer ${Cookies.get("accessToken")}`,
@@ -111,7 +111,7 @@ export default function ProfileStatistics({ setIsEditing }) {
       if (valid) {
         console.log("if처음부분임:");
         const response = await axios.post(
-          `${SERVER_URL}/member/login`,
+          `${SERVER_URL}/damdda/member/login`,
           formatLogin,
           {
             withCredentials: true,

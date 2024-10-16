@@ -8,7 +8,6 @@ import { useUser } from "../../../UserContext";
 import Cookies from "js-cookie";
 import { SERVER_URL } from "../../../constants/URLs";
 
-
 // Likeproject 컴포넌트
 const Likeproject = () => {
   const itemsPerPage = 10; // 한 페이지에 10개의 항목을 표시
@@ -27,15 +26,16 @@ const Likeproject = () => {
     // liked가 true이면 DELETE 요청
     const response = await axios({
       method: project.liked ? "DELETE" : "POST",
-      url: `${SERVER_URL}/api/projects/like`,
+      url: `${SERVER_URL}/damdda/project/like`,
       params: {
         // memberId: user.key, // ==========================>> user.key 로 수정해야해요
         projectId: project.id,
       },
       headers: {
-        ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+        ...(Cookies.get("accessToken") && {
+          Authorization: `Bearer ${Cookies.get("accessToken")}`,
+        }),
       },
-
     })
       .then((response) => response.status)
       .catch((e) => console.error(e));
@@ -58,16 +58,17 @@ const Likeproject = () => {
   const fetchProjects = async () => {
     axios({
       method: "GET",
-      url: `${SERVER_URL}/api/projects/like`,
+      url: `${SERVER_URL}/damdda/project/like`,
       params: {
         // memberId: user.key, // ==========================>> user.key 로 수정해야해요
         page: page,
         size: itemsPerPage,
       },
       headers: {
-        ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+        ...(Cookies.get("accessToken") && {
+          Authorization: `Bearer ${Cookies.get("accessToken")}`,
+        }),
       },
-      
     })
       .then((response) => {
         setProjects(response.data.dtoList);

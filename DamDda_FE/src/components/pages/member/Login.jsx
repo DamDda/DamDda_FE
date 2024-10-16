@@ -9,7 +9,6 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import { SERVER_URL } from "../../../constants/URLs";
 
-
 const Login = () => {
   const [formData, setFormData] = useState({ id: "", password: "" });
   const [idError, setIdError] = useState("");
@@ -26,7 +25,7 @@ const Login = () => {
   };
 
   const fetchUserInfo = async (accessToken) => {
-    const response = await axios.get(`${SERVER_URL}/member/userinfo`, {
+    const response = await axios.get(`${SERVER_URL}/damdda/member/userinfo`, {
       withCredentials: true,
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -65,10 +64,14 @@ const Login = () => {
 
       // 모든 필드가 입력되었을 때만 검증 진행
       if (valid) {
-        const response = await axios.post(`${SERVER_URL}/member/login`, formatLogin, {
-          withCredentials: true,
-          headers: { "Content-Type": "application/json" },
-        });
+        const response = await axios.post(
+          `${SERVER_URL}/damdda/member/login`,
+          formatLogin,
+          {
+            withCredentials: true,
+            headers: { "Content-Type": "application/json" },
+          }
+        );
 
         const accessToken = response.headers["authorization"].split(" ")[1];
         if (accessToken) {

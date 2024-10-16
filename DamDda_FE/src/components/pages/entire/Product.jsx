@@ -9,7 +9,10 @@ import {
   Button,
   IconButton,
   LinearProgress,
-  FormControl, InputLabel, Select, MenuItem
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
@@ -17,16 +20,13 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import CoverImage from "../../assets/coverImage.png";
 import axios from "axios"; // axios를 사용하여 REST API 호출
 import { useState, useEffect } from "react";
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from "react-router-dom";
 import { useUser } from "../../../UserContext";
 import Cookies from "js-cookie";
 import { SERVER_URL } from "../../../constants/URLs";
 
-
-
 // Individual product card component
 export const ProductCard1 = ({ product, handleLike }) => {
-  
   // 달성률 계산 (fundsReceive / targetFunding * 100)
   const achievementRate = Math.min(
     (product.fundsReceive / product.targetFunding) * 100,
@@ -42,7 +42,6 @@ export const ProductCard1 = ({ product, handleLike }) => {
 
   // 밀리초를 일(day) 단위로 변환
   const daysLeft = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-  
 
   return (
     <>
@@ -75,7 +74,7 @@ export const ProductCard1 = ({ product, handleLike }) => {
             right: 20,
             color: product.liked ? "red" : "gray",
           }}
-          onClick={() => handleLike(product)}  // 클릭 시 좋아요 요청
+          onClick={() => handleLike(product)} // 클릭 시 좋아요 요청
         >
           <FavoriteIcon />
         </IconButton>
@@ -161,18 +160,18 @@ export const ProductCard1 = ({ product, handleLike }) => {
   );
 };
 
-
 // Individual product card component
 export const ProductCard = ({ product, handleLike }) => {
-
-  const formattedTargetFunding = new Intl.NumberFormat().format(product.targetFunding);
+  const formattedTargetFunding = new Intl.NumberFormat().format(
+    product.targetFunding
+  );
 
   // 달성률 계산 (fundsReceive / targetFunding * 100)
   const achievementRate = Math.min(
     (product.fundsReceive / product.targetFunding) * 100,
     100
   );
-  
+
   // 현재 시간
   const currentTime = new Date();
   // product.endDate를 Date 객체로 변환
@@ -185,7 +184,6 @@ export const ProductCard = ({ product, handleLike }) => {
 
   const navigate = useNavigate(); //새로운 프로젝트 눌렀을 때 이동하는 네비게이트
 
-
   return (
     <>
       <Card
@@ -193,7 +191,7 @@ export const ProductCard = ({ product, handleLike }) => {
           borderRadius: "15px",
           boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
           padding: 2,
-          margin: '0px 10px',
+          margin: "0px 10px",
           // position: "relative",
           display: "flex",
           flexDirection: "column",
@@ -274,7 +272,7 @@ export const ProductCard = ({ product, handleLike }) => {
               flexDirection: "row",
               alignItems: "center",
               justifyContent: "space-between",
-              width: "100%",  // 부모 Box가 전체 너비를 가지도록 설정
+              width: "100%", // 부모 Box가 전체 너비를 가지도록 설정
             }}
           >
             <Typography
@@ -287,8 +285,7 @@ export const ProductCard = ({ product, handleLike }) => {
               variant="body2"
               sx={{ fontWeight: "bold", fontSize: "0.8rem" }}
             >
-              {formattedTargetFunding}원
-              {/* {product.targetFunding} */}
+              {formattedTargetFunding}원{/* {product.targetFunding} */}
             </Typography>
           </Box>
 
@@ -314,7 +311,7 @@ export const ProductCard = ({ product, handleLike }) => {
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
-              width: "100%",  // 부모 Box가 전체 너비를 가지도록 설정
+              width: "100%", // 부모 Box가 전체 너비를 가지도록 설정
             }}
           >
             <Button
@@ -344,7 +341,7 @@ export const ProductCard = ({ product, handleLike }) => {
 };
 
 // Product recommendations section
-export const ProductRecommendations = ({search, cartegory}) => {
+export const ProductRecommendations = ({ search, cartegory }) => {
   // const { user } = useUser();
 
   const { user } = useUser();
@@ -358,7 +355,7 @@ export const ProductRecommendations = ({search, cartegory}) => {
   const [products, setProducts] = useState([]); // 서버에서 가져온 프로젝트 데이터
   const [totalProductNum, setTotalProductNum] = useState(0); // 서버에서 가져온 프로젝트 데이터
   const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수
-  
+
   const [recommendedProducts, setRecommendedProducts] = useState([]); // 서버에서 가져온 프로젝트 데이터
 
   const [progress, setProgress] = useState("all"); // progress 상태 관리
@@ -372,53 +369,69 @@ export const ProductRecommendations = ({search, cartegory}) => {
   const recommendedItemPerPage = 5; //에디터 추천도 동일하게 있어야 할 듯
 
   // 페이지네이션 요청을 보내는 함수
-  const fetchProducts = async (page, progress, sortCondition, cartegory, search) => {
+  const fetchProducts = async (
+    page,
+    progress,
+    sortCondition,
+    cartegory,
+    search
+  ) => {
     try {
-      const response = await axios.get(` ${SERVER_URL}/api/projects/projects`, {
-        headers: {
-          ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
-   },
+      const response = await axios.get(
+        ` ${SERVER_URL}/damdda/project/projects`,
+        {
+          headers: {
+            ...(Cookies.get("accessToken") && {
+              Authorization: `Bearer ${Cookies.get("accessToken")}`,
+            }),
+          },
 
-        params: {
-          search: search, 
-          category: cartegory,
-          sort: sortCondition,
-          // memberId: user.key,
-          page: page,
-          size: itemsPerPage,
-          progress: progress, // 진행 상태 필터 적용
-        },
-      });
-      
-      if(response.data.dtoList !== null){
+          params: {
+            search: search,
+            category: cartegory,
+            sort: sortCondition,
+            // memberId: user.key,
+            page: page,
+            size: itemsPerPage,
+            progress: progress, // 진행 상태 필터 적용
+          },
+        }
+      );
+
+      if (response.data.dtoList !== null) {
         setProducts(response.data.dtoList); // 서버에서 받은 프로젝트 리스트
       } else {
         setProducts([]); // 서버에서 받은 프로젝트 리스트
       }
       setTotalPages(Math.ceil(response.data.total / itemsPerPage)); // 전체 페이지 수 업데이트
-      setTotalProductNum(response.data.total)
+      setTotalProductNum(response.data.total);
     } catch (error) {
       console.error("프로젝트 데이터를 가져오는 중 오류 발생:", error);
     }
   };
-  
+
   const fetchRecommendedProducts = async (page, progress) => {
     try {
-      const response = await axios.get(` ${SERVER_URL}/api/projects/projects`, {
-        headers: {
-          ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
-   },
+      const response = await axios.get(
+        ` ${SERVER_URL}/damdda/project/project`,
+        {
+          headers: {
+            ...(Cookies.get("accessToken") && {
+              Authorization: `Bearer ${Cookies.get("accessToken")}`,
+            }),
+          },
 
-        params: {
-          page: page,
-          sort: "recommend",
-          // memberId: user.key,
-          size: recommendedItemPerPage,
-          progress: progress, // 진행 상태 필터 적용
-        },
-      });
-      
-      if(response.data.dtoList !== null){
+          params: {
+            page: page,
+            sort: "recommend",
+            // memberId: user.key,
+            size: recommendedItemPerPage,
+            progress: progress, // 진행 상태 필터 적용
+          },
+        }
+      );
+
+      if (response.data.dtoList !== null) {
         setRecommendedProducts(response.data.dtoList); // 서버에서 받은 프로젝트 리스트
       } else {
         setRecommendedProducts([]); // 서버에서 받은 프로젝트 리스트
@@ -428,109 +441,122 @@ export const ProductRecommendations = ({search, cartegory}) => {
     }
   };
 
-
-   // 처음 마운트되었을 때 및 페이지 변경 시 데이터 가져오기
+  // 처음 마운트되었을 때 및 페이지 변경 시 데이터 가져오기
   useEffect(() => {
     fetchProducts(currentPage, progress, sortCondition, cartegory, search);
-    fetchRecommendedProducts(currentPage, progress, sortCondition, cartegory, search)
+    fetchRecommendedProducts(
+      currentPage,
+      progress,
+      sortCondition,
+      cartegory,
+      search
+    );
   }, [currentPage, progress, sortCondition, cartegory, search]);
 
-
-    // 클릭 핸들러
-    const handleClick = (value) => {
-      setProgress(value); // 클릭한 버튼에 따라 상태 변경
-      setCurrentPage(1); // 새로운 필터로 처음 페이지부터 시작
-    };
-
+  // 클릭 핸들러
+  const handleClick = (value) => {
+    setProgress(value); // 클릭한 버튼에 따라 상태 변경
+    setCurrentPage(1); // 새로운 필터로 처음 페이지부터 시작
+  };
 
   const halfIndex = Math.ceil(products.length / 2); // 절반 인덱스 계산
   const firstHalf = products.slice(0, halfIndex); // 첫 번째 절반
   const secondHalf = products.slice(halfIndex); // 두 번째 절반
 
-
-    // 페이지 번호 배열 생성
+  // 페이지 번호 배열 생성
   const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
-  
-  
-    // 처음 페이지로 이동
-    const handleFirstPage = () => {
-      setCurrentPage(1);
-    };
 
+  // 처음 페이지로 이동
+  const handleFirstPage = () => {
+    setCurrentPage(1);
+  };
 
-    // 이전 페이지로 이동
-    const handlePrevPage = () => {
-      if (currentPage > 1) {
-        setCurrentPage(currentPage - 1);
-      }
-    };
-  
-    // 다음 페이지로 이동
-    const handleNextPage = () => {
-      if (currentPage < totalPages) {
-        setCurrentPage(currentPage + 1);
-      }
-    };
-
-    // 끝 페이지로 이동
-    const handleEndPage = () => {
-      setCurrentPage(totalPages);
-    };
-
-    const handleSortChange = (e) => {
-      setSortCondition(e.target.value)
+  // 이전 페이지로 이동
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
     }
- 
+  };
 
-    // 좋아요 요청을 처리하는 함수
+  // 다음 페이지로 이동
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  // 끝 페이지로 이동
+  const handleEndPage = () => {
+    setCurrentPage(totalPages);
+  };
+
+  const handleSortChange = (e) => {
+    setSortCondition(e.target.value);
+  };
+
+  // 좋아요 요청을 처리하는 함수
   const handleLike = async (project) => {
     try {
       if (project.liked) {
         // liked가 true이면 DELETE 요청
-        const response = await axios.delete(` ${SERVER_URL}/api/projects/like`, {
-          headers: {
-            ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
-     },
-    params: {
-            // memberId: user.key,
-            projectId: project.id,
-          },
-        });
+        const response = await axios.delete(
+          ` ${SERVER_URL}/damdda/project/like`,
+          {
+            headers: {
+              ...(Cookies.get("accessToken") && {
+                Authorization: `Bearer ${Cookies.get("accessToken")}`,
+              }),
+            },
+            params: {
+              // memberId: user.key,
+              projectId: project.id,
+            },
+          }
+        );
         console.log("좋아요 취소 성공:", response.data);
       } else {
         // liked가 false이면 POST 요청
-        const response = await axios.post(` ${SERVER_URL}/api/projects/like`, null, {
-          headers: {
-            ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
-     },
-          params: {
-            // memberId: user.key,
-            projectId: project.id,
-          },
-        });
+        const response = await axios.post(
+          ` ${SERVER_URL}/damdda/project/like`,
+          null,
+          {
+            headers: {
+              ...(Cookies.get("accessToken") && {
+                Authorization: `Bearer ${Cookies.get("accessToken")}`,
+              }),
+            },
+            params: {
+              // memberId: user.key,
+              projectId: project.id,
+            },
+          }
+        );
         console.log("좋아요 성공:", response.data);
       }
 
-    // fetchProducts(currentPage, progress);
-    // fetchRecommendedProducts(currentPage, progress)
+      // fetchProducts(currentPage, progress);
+      // fetchRecommendedProducts(currentPage, progress)
 
       // 이후에 필요한 처리 (예: UI 업데이트)
       setProducts((prevProjects) =>
         prevProjects.map((prevProject) =>
-          prevProject.id === project.id ? { ...prevProject, liked: !prevProject.liked } : prevProject
+          prevProject.id === project.id
+            ? { ...prevProject, liked: !prevProject.liked }
+            : prevProject
         )
       );
       // 이후에 필요한 처리 (예: UI 업데이트)
       setRecommendedProducts((prevProjects) =>
         prevProjects.map((prevProject) =>
-          prevProject.id === project.id ? { ...prevProject, liked: !prevProject.liked } : prevProject
+          prevProject.id === project.id
+            ? { ...prevProject, liked: !prevProject.liked }
+            : prevProject
         )
       );
     } catch (error) {
       console.error("좋아요 요청 중 오류 발생:", error);
     }
   };
-
 
   return (
     <>
@@ -547,7 +573,6 @@ export const ProductRecommendations = ({search, cartegory}) => {
       >
         {/* Title section similar to the example image */}
 
-
         {/* 상품 카드 그리드 */}
         <Box
           sx={{
@@ -561,113 +586,111 @@ export const ProductRecommendations = ({search, cartegory}) => {
             maxWidth: "100%",
           }}
         >
-          
-            {/* 중간 텍스트 */}
+          {/* 중간 텍스트 */}
+          <Box
+            sx={{
+              paddingLeft: 2, // 왼쪽으로 살짝 이동 (2는 16px)
+              textAlign: "left",
+              fontSize: "0.875rem", // 글씨 크기 조정 (1rem = 16px -> 0.875rem = 14px)
+              width: "100%",
+            }}
+          >
             <Box
               sx={{
-                paddingLeft: 2, // 왼쪽으로 살짝 이동 (2는 16px)
-                textAlign: "left",
-                fontSize: "0.875rem", // 글씨 크기 조정 (1rem = 16px -> 0.875rem = 14px)
-                width : "100%"
+                display: "flex",
+                justifyContent: "space-between", // 요소들을 좌우로 배치
+                alignItems: "center", // 수직 가운데 정렬
+                width: "100%", // 컨테이너 너비를 100%로 설정
+                marginBottom: 2, // 아래쪽 여백
               }}
             >
-              <Box
-  sx={{
-    display: "flex",
-    justifyContent: "space-between", // 요소들을 좌우로 배치
-    alignItems: "center", // 수직 가운데 정렬
-    width: "100%", // 컨테이너 너비를 100%로 설정
-    marginBottom: 2, // 아래쪽 여백
-  }}
->
-  {/* 좌측 타이틀 */}
-  <Box>
-    <h2 style={{ fontSize: "1.7rem", marginBottom: 20 }}>{cartegory} 프로젝트</h2>
-    <h4 style={{ fontSize: "1.1rem", margin: 5, marginBottom: 20 }}>
-      {totalProductNum}개의 프로젝트가 있습니다.
-    </h4>
-  </Box>
+              {/* 좌측 타이틀 */}
+              <Box>
+                <h2 style={{ fontSize: "1.7rem", marginBottom: 20 }}>
+                  {cartegory} 프로젝트
+                </h2>
+                <h4 style={{ fontSize: "1.1rem", margin: 5, marginBottom: 20 }}>
+                  {totalProductNum}개의 프로젝트가 있습니다.
+                </h4>
+              </Box>
 
-  {/* 우측 드롭다운 (정렬 기준) */}
-  <FormControl sx={{ minWidth: 200 }}>
-    <InputLabel id="sort-select-label">정렬 기준</InputLabel>
-    <Select
-      labelId="sort-select-label"
-      id="sort-select"
-      value={sortCondition} // 현재 선택된 정렬 조건
-      label="정렬 기준"
-      onChange={handleSortChange} // 선택 시 호출
-    >
-      <MenuItem value="all">----------</MenuItem>
-      <MenuItem value="fundsReceive">달성률순</MenuItem>
-      <MenuItem value="endDate">마감 임박순</MenuItem>
-      <MenuItem value="viewCnt">최다 조회순</MenuItem>
-      <MenuItem value="createdAt">등록순</MenuItem>
-      <MenuItem value="targetFunding">최다 후원금액순</MenuItem>
-      <MenuItem value="supporterCnt">최대 후원자순</MenuItem>
-      <MenuItem value="likeCnt">좋아요순</MenuItem>
-    </Select>
-  </FormControl>
-</Box>
-
-            
-              <Box            
-          sx={{
-            marginBottom: 3, // 아래쪽 여백
-          }}
-              >
-
-      {/* 전체 프로젝트 버튼 */}
-      <Button
-        onClick={() => handleClick("all")}
-        variant={progress === "all" ? "contained" : "outlined"} // 상태에 따라 variant 변경
-        // color="secondary"
-        size="small"
-        sx={{
-          // backgroundColor: progress === "all" ? "#5a87f7" : "transparent", // 배경색도 동적으로
-          borderRadius: "12px",
-          fontSize: "0.75rem",
-          marginRight: "20px",
-        }}
-      >
-        전체 프로젝트
-      </Button>
-
-      {/* 진행중인 프로젝트 버튼 */}
-      <Button
-        onClick={() => handleClick("ongoing")}
-        variant={progress === "ongoing" ? "contained" : "outlined"} // 상태에 따라 variant 변경
-        // color="secondary"
-        size="small"
-        sx={{
-          // backgroundColor: progress === "progress" ? "#5a87f7" : "transparent", // 배경색도 동적으로
-          borderRadius: "12px",
-          fontSize: "0.75rem",
-          marginRight: "20px",
-        }}
-      >
-        진행중인 프로젝트
-      </Button>
-
-      {/* 종료된 프로젝트 버튼 */}
-      <Button
-        onClick={() => handleClick("completed")}
-        variant={progress === "completed" ? "contained" : "outlined"} // 상태에 따라 variant 변경
-        // color="secondary"
-        size="small"
-        sx={{
-          // backgroundColor: progress === "completed" ? "#5a87f7" : "transparent", // 배경색도 동적으로
-          borderRadius: "12px",
-          fontSize: "0.75rem",
-        }}
-      >
-        종료된 프로젝트
-      </Button>
-    </Box>
-    
-
-              {/* 글씨 크기 줄이기 */}
+              {/* 우측 드롭다운 (정렬 기준) */}
+              <FormControl sx={{ minWidth: 200 }}>
+                <InputLabel id="sort-select-label">정렬 기준</InputLabel>
+                <Select
+                  labelId="sort-select-label"
+                  id="sort-select"
+                  value={sortCondition} // 현재 선택된 정렬 조건
+                  label="정렬 기준"
+                  onChange={handleSortChange} // 선택 시 호출
+                >
+                  <MenuItem value="all">----------</MenuItem>
+                  <MenuItem value="fundsReceive">달성률순</MenuItem>
+                  <MenuItem value="endDate">마감 임박순</MenuItem>
+                  <MenuItem value="viewCnt">최다 조회순</MenuItem>
+                  <MenuItem value="createdAt">등록순</MenuItem>
+                  <MenuItem value="targetFunding">최다 후원금액순</MenuItem>
+                  <MenuItem value="supporterCnt">최대 후원자순</MenuItem>
+                  <MenuItem value="likeCnt">좋아요순</MenuItem>
+                </Select>
+              </FormControl>
             </Box>
+
+            <Box
+              sx={{
+                marginBottom: 3, // 아래쪽 여백
+              }}
+            >
+              {/* 전체 프로젝트 버튼 */}
+              <Button
+                onClick={() => handleClick("all")}
+                variant={progress === "all" ? "contained" : "outlined"} // 상태에 따라 variant 변경
+                // color="secondary"
+                size="small"
+                sx={{
+                  // backgroundColor: progress === "all" ? "#5a87f7" : "transparent", // 배경색도 동적으로
+                  borderRadius: "12px",
+                  fontSize: "0.75rem",
+                  marginRight: "20px",
+                }}
+              >
+                전체 프로젝트
+              </Button>
+
+              {/* 진행중인 프로젝트 버튼 */}
+              <Button
+                onClick={() => handleClick("ongoing")}
+                variant={progress === "ongoing" ? "contained" : "outlined"} // 상태에 따라 variant 변경
+                // color="secondary"
+                size="small"
+                sx={{
+                  // backgroundColor: progress === "progress" ? "#5a87f7" : "transparent", // 배경색도 동적으로
+                  borderRadius: "12px",
+                  fontSize: "0.75rem",
+                  marginRight: "20px",
+                }}
+              >
+                진행중인 프로젝트
+              </Button>
+
+              {/* 종료된 프로젝트 버튼 */}
+              <Button
+                onClick={() => handleClick("completed")}
+                variant={progress === "completed" ? "contained" : "outlined"} // 상태에 따라 variant 변경
+                // color="secondary"
+                size="small"
+                sx={{
+                  // backgroundColor: progress === "completed" ? "#5a87f7" : "transparent", // 배경색도 동적으로
+                  borderRadius: "12px",
+                  fontSize: "0.75rem",
+                }}
+              >
+                종료된 프로젝트
+              </Button>
+            </Box>
+
+            {/* 글씨 크기 줄이기 */}
+          </Box>
           <Box
             sx={{
               // display: "flex",
@@ -677,9 +700,6 @@ export const ProductRecommendations = ({search, cartegory}) => {
               height: "auto",
             }}
           >
-
-
-
             <Grid
               container
               justifyContent="center"
@@ -712,7 +732,9 @@ export const ProductRecommendations = ({search, cartegory}) => {
                 fontSize: "0.875rem", // 글씨 크기 조정 (1rem = 16px -> 0.875rem = 14px)
               }}
             >
-              <h2 style={{ fontSize: "1.25rem", margin: 0 }}>에디터 추천 상품</h2>{" "}
+              <h2 style={{ fontSize: "1.25rem", margin: 0 }}>
+                에디터 추천 상품
+              </h2>{" "}
               {/* 글씨 크기 줄이기 */}
             </Box>
 
@@ -773,66 +795,66 @@ export const ProductRecommendations = ({search, cartegory}) => {
               ))}
             </Grid>
 
-      {/* 페이지네이션 버튼 */}
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          marginTop: 2,
-        }}
-      >
+            {/* 페이지네이션 버튼 */}
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                marginTop: 2,
+              }}
+            >
+              <Button onClick={handleFirstPage} disabled={currentPage === 1}>
+                처음으로
+              </Button>
 
-        <Button
-          onClick={handleFirstPage}
-          disabled={currentPage === 1}
-        >
-          처음으로
-        </Button>
+              <Button onClick={handlePrevPage} disabled={currentPage === 1}>
+                이전
+              </Button>
 
-        <Button
-          onClick={handlePrevPage}
-          disabled={currentPage === 1}
-        >
-          이전
-        </Button>
-        
-        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: 0 }}>
-      {pageNumbers.map((pageNumber) => (
-        <Button
-          key={pageNumber}
-          onClick={() => setCurrentPage(pageNumber)} // 페이지 변경
-          variant={currentPage === pageNumber ? "contained" : "outlined"} // 현재 페이지 스타일
-          sx={{ mx: 1.0 ,
-            minWidth: 40,  // 최소 너비
-            minHeight: 40,  // 최소 높이
-            fontSize: "0.8rem",  // 폰트 크기 조절
-            }} // 좌우 간격
-          
-        >
-          {pageNumber}
-        </Button>
-      ))}
-    </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginTop: 0,
+                }}
+              >
+                {pageNumbers.map((pageNumber) => (
+                  <Button
+                    key={pageNumber}
+                    onClick={() => setCurrentPage(pageNumber)} // 페이지 변경
+                    variant={
+                      currentPage === pageNumber ? "contained" : "outlined"
+                    } // 현재 페이지 스타일
+                    sx={{
+                      mx: 1.0,
+                      minWidth: 40, // 최소 너비
+                      minHeight: 40, // 최소 높이
+                      fontSize: "0.8rem", // 폰트 크기 조절
+                    }} // 좌우 간격
+                  >
+                    {pageNumber}
+                  </Button>
+                ))}
+              </Box>
 
-        <Button
-          onClick={handleNextPage}
-          disabled={currentPage === totalPages}
-        >
-          다음
-        </Button>
-        
-        <Button
-          onClick={handleEndPage}
-          disabled={currentPage === totalPages}
-        >
-          끝으로
-        </Button>
+              <Button
+                onClick={handleNextPage}
+                disabled={currentPage === totalPages}
+              >
+                다음
+              </Button>
 
-      </Box>
+              <Button
+                onClick={handleEndPage}
+                disabled={currentPage === totalPages}
+              >
+                끝으로
+              </Button>
+            </Box>
           </Box>
         </Box>
-        
       </Box>
     </>
   );

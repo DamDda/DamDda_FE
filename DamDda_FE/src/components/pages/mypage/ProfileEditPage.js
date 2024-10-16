@@ -127,7 +127,7 @@ export default function ProfileEditPage({
     const { nickname } = formData;
     try {
       const response = await axios.get(
-        `${SERVER_URL}/member/profile/nickname?nickname=${nickname}`
+        `${SERVER_URL}/damdda/member/profile/nickname?nickname=${nickname}`
       );
       console.log(response.data);
       setNicknameError(

@@ -1,71 +1,71 @@
-import React, { useState, useEffect } from 'react'
-import axios from 'axios'
-import { useUser } from '../../../UserContext'
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useUser } from "../../../UserContext";
 import { SERVER_URL } from "../../../constants/URLs";
 
 const Collab = () => {
-  const [title, setTitle] = useState('')
-  const [content, setContent] = useState('')
-  const [phoneNumber, setPhoneNumber] = useState('')
-  const [email, setEmail] = useState('')
-  const [user_id, setUser_Id] = useState(1) //작성자 아이디
-  const [collabDocList, setCollabDocList] = useState([])
-  const [approval, setApproval] = useState('')
-  const [check, setCheck] = useState(false)
-  const [CollaborateDate, setCollaborateDate] = useState('')
-  const [name, setName] = useState('')
-  const [id, setId] = useState(0)
-  const [page, setPage] = useState(1)
-  const [size, setSize] = useState(10)
-  const [selectedCollab, setSelectedCollab] = useState([])
-  const [collaborations, setCollaborations] = useState([])
-  const [totalPages, setTotalPages] = useState(0)
-  const [totalElements, setTotalElements] = useState(0)
-  const [showModal, setShowModal] = useState(false)
-  const [selectedCollabs, setSelectedCollabs] = useState([])
-  const { user } = useUser()
-  const handleCheckboxChange = id => {
-    setSelectedCollabs(prev =>
-      prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
-    )
-  }
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [email, setEmail] = useState("");
+  const [user_id, setUser_Id] = useState(1); //작성자 아이디
+  const [collabDocList, setCollabDocList] = useState([]);
+  const [approval, setApproval] = useState("");
+  const [check, setCheck] = useState(false);
+  const [CollaborateDate, setCollaborateDate] = useState("");
+  const [name, setName] = useState("");
+  const [id, setId] = useState(0);
+  const [page, setPage] = useState(1);
+  const [size, setSize] = useState(10);
+  const [selectedCollab, setSelectedCollab] = useState([]);
+  const [collaborations, setCollaborations] = useState([]);
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalElements, setTotalElements] = useState(0);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedCollabs, setSelectedCollabs] = useState([]);
+  const { user } = useUser();
+  const handleCheckboxChange = (id) => {
+    setSelectedCollabs((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
 
-  const handleDownload = async fileName => {
-    console.log(fileName) //4604642e-2515-466e-aa78-a18afebf9a3b_성공성공오예.txt
+  const handleDownload = async (fileName) => {
+    console.log(fileName); //4604642e-2515-466e-aa78-a18afebf9a3b_성공성공오예.txt
     try {
-      const response = await axios.get(`${SERVER_URL}/collab/download`, {
+      const response = await axios.get(`${SERVER_URL}/damdda/collab/download`, {
         params: { fileName },
-        responseType: 'blob',
+        responseType: "blob",
         withCredentials: true,
-      })
+      });
 
       // 파일 다운로드 처리
-      const contentDisposition = response.headers['content-disposition']
+      const contentDisposition = response.headers["content-disposition"];
       const downloadFileName = contentDisposition
-        ? contentDisposition.split('filename=')[1].replace(/['"]/g, '')
-        : fileName
+        ? contentDisposition.split("filename=")[1].replace(/['"]/g, "")
+        : fileName;
 
-      const url = window.URL.createObjectURL(new Blob([response.data]))
-      const link = document.createElement('a')
-      link.href = url
-      link.setAttribute('download', downloadFileName)
-      document.body.appendChild(link)
-      link.click()
-      link.remove()
-      window.URL.revokeObjectURL(url)
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", downloadFileName);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('파일 다운로드 중 에러 발생:', error)
-      alert('파일 다운로드에 실패했습니다.')
+      console.error("파일 다운로드 중 에러 발생:", error);
+      alert("파일 다운로드에 실패했습니다.");
     }
-  }
+  };
 
   useEffect(() => {
-    handleReadRequest()
-    handleReadReceive()
-  }, [size, page])
+    handleReadRequest();
+    handleReadReceive();
+  }, [size, page]);
 
-  const handleAddCollab = async e => {
-    const formData = new FormData()
+  const handleAddCollab = async (e) => {
+    const formData = new FormData();
 
     const jsonData = {
       email: email,
@@ -78,141 +78,144 @@ const Collab = () => {
         CollaborateDate: CollaborateDate,
         name: name,
       },
-    }
-    formData.append('jsonData', JSON.stringify(jsonData))
+    };
+    formData.append("jsonData", JSON.stringify(jsonData));
 
     // 파일 추가
     collabDocList.forEach((file, index) => {
-      formData.append(`collabDocList`, file)
-      console.log(`Appending file ${index + 1}:`, file.name)
-    })
-    console.log('handleAddCollab' + CollaborateDate)
+      formData.append(`collabDocList`, file);
+      console.log(`Appending file ${index + 1}:`, file.name);
+    });
+    console.log("handleAddCollab" + CollaborateDate);
 
     try {
-      await axios.post(`${SERVER_URL}/collab/register/1`, formData, {
+      await axios.post(`${SERVER_URL}/damdda/collab/register/1`, formData, {
         //projectId 받아오기
         withCredentials: true,
         headers: {
-          'Content-Type': 'multipart/form-data',
+          "Content-Type": "multipart/form-data",
         },
-      })
-      alert('Collaboration registered successfully!')
+      });
+      alert("Collaboration registered successfully!");
     } catch (error) {
-      console.log('register 과정 중 에러 발생 ' + error)
+      console.log("register 과정 중 에러 발생 " + error);
     }
-  }
+  };
 
-  const handleReadDetail = async index => {
+  const handleReadDetail = async (index) => {
     try {
-      const response = await axios.get(`/collab/readDetail/${index}`, {
-        withCredentials: true,
-      })
-      console.log(response.data)
-      setSelectedCollab(response.data)
-      setShowModal(true)
+      const response = await axios.get(
+        `${SERVER_URL}/damdda/collab/readDetail/${index}`,
+        {
+          withCredentials: true,
+        }
+      );
+      console.log(response.data);
+      setSelectedCollab(response.data);
+      setShowModal(true);
     } catch (error) {
-      console.log('handleReadDetail에서 에러 발생 ' + error)
+      console.log("handleReadDetail에서 에러 발생 " + error);
     }
-  }
+  };
   const handleCloseModal = () => {
-    setShowModal(false)
-    setSelectedCollab(null)
-  }
+    setShowModal(false);
+    setSelectedCollab(null);
+  };
 
   const handleReadReceive = async () => {
-    console.log('user_id' + user.id)
+    console.log("user_id" + user.id);
     const response = await axios.get(
-      '/collab/readListReceive',
+      `${SERVER_URL}/damdda/collab/readListReceive`,
       { params: { page, size, userId: user.id } },
       {
         withCredentials: true,
       }
-    )
-    const { dtoList, total, page: responsePage } = response.data
-    console.log('dtoList:', dtoList)
-    setCollaborations(dtoList)
-    setTotalElements(total)
-    setTotalPages(Math.ceil(total / size))
+    );
+    const { dtoList, total, page: responsePage } = response.data;
+    console.log("dtoList:", dtoList);
+    setCollaborations(dtoList);
+    setTotalElements(total);
+    setTotalPages(Math.ceil(total / size));
     //setPage(responsePage + 1);
-  }
+  };
 
   const handleReadRequest = async () => {
-    console.log('user_id' + user.id)
+    console.log("user_id" + user.id);
     const response = await axios.get(
-      '/collab/readListRequest',
+      "/collab/readListRequest",
       { params: { page, size, userId: user.id } },
       {
         withCredentials: true,
       }
-    )
-    const { dtoList, total, page: responsePage } = response.data
-    console.log('dtoList:', dtoList)
-    setCollaborations(dtoList)
-    setTotalElements(total)
-    setTotalPages(Math.ceil(total / size))
+    );
+    const { dtoList, total, page: responsePage } = response.data;
+    console.log("dtoList:", dtoList);
+    setCollaborations(dtoList);
+    setTotalElements(total);
+    setTotalPages(Math.ceil(total / size));
     //setPage(responsePage + 1);
-  }
+  };
 
-  const handleDelete = async id => {
-    await axios.delete(`/collab/delete`, {
+  const handleDelete = async (id) => {
+    await axios.delete(`${SERVER_URL}/damdda/collab/delete`, {
       params: { cno: id, user_id: user.id },
-    })
-    alert('선택된 협업이 삭제되었습니다.')
+    });
+    alert("선택된 협업이 삭제되었습니다.");
     /*if처리하면 좋을 듯 */
-    handleReadRequest()
-    handleReadReceive()
-  }
+    handleReadRequest();
+    handleReadReceive();
+  };
   /*협업받은 제안자일 때만 approval, reject 가능하도록 설정 */
   const handleApproval = async () => {
     try {
-      await axios.put(`${SERVER_URL}/collab/approval`, selectedCollabs, {
+      await axios.put(`${SERVER_URL}/damdda/collab/approval`, selectedCollabs, {
         withCredentials: true,
-      })
-      alert('선택된 협업들이 승인되었습니다.')
-      setApproval('승인')
-      handleReadReceive() // 목록 새로고침
-      setSelectedCollabs([]) // 선택 초기화
+      });
+      alert("선택된 협업들이 승인되었습니다.");
+      setApproval("승인");
+      handleReadReceive(); // 목록 새로고침
+      setSelectedCollabs([]); // 선택 초기화
       // 새로고침 트리거
     } catch (error) {
-      console.error('승인 처리 중 에러 발생:', error)
-      alert('승인 처리에 실패했습니다.')
+      console.error("승인 처리 중 에러 발생:", error);
+      alert("승인 처리에 실패했습니다.");
     }
-  }
+  };
   const handleReject = async () => {
     try {
-      await axios.put(`${SERVER_URL}/collab/reject`, selectedCollabs, {
+      await axios.put(`${SERVER_URL}/damdda/collab/reject`, selectedCollabs, {
         withCredentials: true,
-      })
-      alert('선택된 협업들이 거절되었습니다.')
-      setApproval('거절')
-      handleReadReceive() // 목록 새로고침
-      setSelectedCollabs([]) // 선택 초기화
+      });
+      alert("선택된 협업들이 거절되었습니다.");
+      setApproval("거절");
+      handleReadReceive(); // 목록 새로고침
+      setSelectedCollabs([]); // 선택 초기화
       // 새로고침 트리거
     } catch (error) {
-      console.error('승인 처리 중 에러 발생:', error)
-      alert('승인 처리에 실패했습니다.')
+      console.error("승인 처리 중 에러 발생:", error);
+      alert("승인 처리에 실패했습니다.");
     }
-  }
-  const handleFileChange = e => {
-    const files = Array.from(e.target.files)
-    setCollabDocList(files)
+  };
+  const handleFileChange = (e) => {
+    const files = Array.from(e.target.files);
+    setCollabDocList(files);
 
     // 파일 정보 로깅
     files.forEach((file, index) => {
       console.log(`File ${index + 1}:`, {
         name: file.name,
         type: file.type,
-        size: file.size + ' bytes',
-      })
-    })
-  }
+        size: file.size + " bytes",
+      });
+    });
+  };
 
-  const handlePageChange = page => {
-    setPage(page)
-  }
+  const handlePageChange = (page) => {
+    setPage(page);
+  };
   // 상세 정보 모달 컴포넌트
   const DetailModal = () => {
-    if (!selectedCollab) return null
+    if (!selectedCollab) return null;
 
     return (
       <div className="modal">
@@ -240,8 +243,8 @@ const Collab = () => {
           <button onClick={handleCloseModal}>닫기</button>
         </div>
       </div>
-    )
-  }
+    );
+  };
 
   return (
     <>
@@ -311,7 +314,7 @@ const Collab = () => {
         </thead>
         <tbody>
           {collaborations != null &&
-            collaborations.map(collab => (
+            collaborations.map((collab) => (
               <tr key={collab.id}>
                 <td>
                   <input
@@ -339,27 +342,24 @@ const Collab = () => {
       </table>
 
       <div>
-            <br /> <br /> <br /> <br />
-        </div>
-
+        <br /> <br /> <br /> <br />
+      </div>
 
       <button onClick={handleApproval} disabled={selectedCollabs.length === 0}>
         선택된 항목 승인
       </button>
 
       <div>
-            <br /> <br /> <br /> <br />
-        </div>
-
+        <br /> <br /> <br /> <br />
+      </div>
 
       <button onClick={handleReject} disabled={selectedCollabs.length === 0}>
         선택된 항목 거절
       </button>
 
       <div>
-            <br /> <br /> <br /> <br />
-        </div>
-
+        <br /> <br /> <br /> <br />
+      </div>
 
       <div>
         <button
@@ -373,14 +373,12 @@ const Collab = () => {
       </div>
 
       <div>
-            <br /> <br /> <br /> <br />
-        </div>
-
+        <br /> <br /> <br /> <br />
+      </div>
 
       {showModal && <DetailModal />}
-
     </>
-  )
-}
+  );
+};
 
-export default Collab
+export default Collab;

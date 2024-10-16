@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import Cookies from "js-cookie";
 import { SERVER_URL } from "../../../constants/URLs";
 
@@ -11,11 +11,11 @@ function SupportingSearch() {
   // 주문 정보를 가져오는 함수
   const fetchOrders = async () => {
     try {
-      const response = await axios.get(`${SERVER_URL}/order/all`);
+      const response = await axios.get(`${SERVER_URL}/damdda/order/all`);
       setOrders(response.data); // 가져온 주문 정보를 상태에 저장
       setLoading(false); // 로딩 완료
     } catch (err) {
-      setError('주문 정보를 가져오는 중 오류가 발생했습니다.');
+      setError("주문 정보를 가져오는 중 오류가 발생했습니다.");
       setLoading(false); // 로딩 완료
     }
   };
@@ -24,7 +24,6 @@ function SupportingSearch() {
   useEffect(() => {
     fetchOrders();
   }, []);
-
 
   return (
     <div className="order-list-container">
@@ -46,7 +45,9 @@ function SupportingSearch() {
             <tr key={index}>
               <td>{order.supportingProject.supportingProjectId}</td>
               <td>{order.delivery.deliveryName}</td>
-              <td>{new Date(order.supportingProject.supportedAt).toLocaleString()}</td>
+              <td>
+                {new Date(order.supportingProject.supportedAt).toLocaleString()}
+              </td>
               <td>{order.supportingPackage.packageName}</td>
               <td>{order.delivery.deliveryPhoneNumber}</td>
               <td>{order.delivery.deliveryAddress}</td>

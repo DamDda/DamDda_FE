@@ -22,7 +22,6 @@ import FilePresentIcon from "@mui/icons-material/FilePresent";
 import Cookies from "js-cookie";
 import { SERVER_URL } from "../../../constants/URLs";
 
-
 const CollaborationDetail = ({ collabId, filter, setCollabClick }) => {
   const { user } = useUser();
   //const { id } = useParams();
@@ -33,12 +32,17 @@ const CollaborationDetail = ({ collabId, filter, setCollabClick }) => {
 
   const handleReadDetail = async () => {
     try {
-      const response = await axios.get(`${SERVER_URL}/collab/readDetail/${collabId}`, {
-        headers: {
-          ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
-        },
-        withCredentials: true,
-      });
+      const response = await axios.get(
+        `${SERVER_URL}/damdda/collab/readDetail/${collabId}`,
+        {
+          headers: {
+            ...(Cookies.get("accessToken") && {
+              Authorization: `Bearer ${Cookies.get("accessToken")}`,
+            }),
+          },
+          withCredentials: true,
+        }
+      );
       console.log(response.data);
       setProjectDetail(response.data);
     } catch (error) {
@@ -56,10 +60,12 @@ const CollaborationDetail = ({ collabId, filter, setCollabClick }) => {
     console.log(fileName); // 파일명 확인용 로그
 
     try {
-      const response = await axios.get(`${SERVER_URL}/collab/download`, {
+      const response = await axios.get(`${SERVER_URL}/damdda/collab/download`, {
         params: { fileName },
         headers: {
-          ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+          ...(Cookies.get("accessToken") && {
+            Authorization: `Bearer ${Cookies.get("accessToken")}`,
+          }),
         },
         responseType: "blob",
         withCredentials: true,
@@ -107,19 +113,20 @@ const CollaborationDetail = ({ collabId, filter, setCollabClick }) => {
   const handleApproval = async (status) => {
     let approvalPath;
     if (status === "승인") {
-      approvalPath = `${SERVER_URL}/collab/approval`;
+      approvalPath = `${SERVER_URL}/damdda/collab/approval`;
     } else if (status === "거절") {
-      approvalPath = `${SERVER_URL}/collab/reject`;
+      approvalPath = `${SERVER_URL}/damdda/collab/reject`;
     }
     try {
       await axios.put(approvalPath, [collabId], {
         headers: {
-          ...(Cookies.get("accessToken") && { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+          ...(Cookies.get("accessToken") && {
+            Authorization: `Bearer ${Cookies.get("accessToken")}`,
+          }),
         },
         withCredentials: true,
       });
-      
-    
+
       alert(`선택된 협업들이 ${status}되었습니다.`);
       setCollabClick(false);
     } catch (error) {
@@ -129,12 +136,14 @@ const CollaborationDetail = ({ collabId, filter, setCollabClick }) => {
   };
 
   const handleDelete = async (status) => {
-    await axios.delete(`${SERVER_URL}/collab/delete`, {
-      params: { 
-        // user_id: user.id 
+    await axios.delete(`${SERVER_URL}/damdda/collab/delete`, {
+      params: {
+        // user_id: user.id
       },
       headers: {
-        ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+        ...(Cookies.get("accessToken") && {
+          Authorization: `Bearer ${Cookies.get("accessToken")}`,
+        }),
       },
 
       data: [collabId], // 바로 배열을 전송

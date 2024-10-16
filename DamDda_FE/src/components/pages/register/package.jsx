@@ -73,7 +73,7 @@ const Package = () => {
   const fetchGifts = async () => {
     try {
       const response = await axios.get(
-        `${SERVER_URL}/packages/rewards/project/${projectId}`, //project_id를 넘겨받아야 함.
+        `${SERVER_URL}/damdda/package/rewards/project/${projectId}`, //project_id를 넘겨받아야 함.
         {
           withCredentials: true,
           headers: {
@@ -100,7 +100,7 @@ const Package = () => {
   const fetchPackage = async () => {
     try {
       const response = await axios.get(
-        `${SERVER_URL}/packages/project/${projectId}`,
+        `${SERVER_URL}/damdda/package/project/${projectId}`,
         {
           //project_id를 넘겨받아야 함.
           withCredentials: true,
@@ -142,7 +142,7 @@ const Package = () => {
 
     try {
       const response = await axios.post(
-        `${SERVER_URL}/packages/rewards/register/${projectId}`,
+        `${SERVER_URL}/damdda/package/rewards/register/${projectId}`,
         newGift,
         {
           withCredentials: true,
@@ -174,12 +174,15 @@ const Package = () => {
   const handleGiftDelete = async (giftId, index) => {
     if (window.confirm("정말로 삭제하시겠습니까?")) {
       try {
-        await axios.delete(`${SERVER_URL}/packages/rewards/delete/${giftId}`, {
-          withCredentials: true,
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
+        await axios.delete(
+          `${SERVER_URL}/damdda/package/rewards/delete/${giftId}`,
+          {
+            withCredentials: true,
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
         const updatedGifts = [...reward_list];
         updatedGifts.splice(index, 1);
         setReward_list(updatedGifts);
@@ -276,7 +279,7 @@ const Package = () => {
     if (isEditing) {
       try {
         const response = await axios.put(
-          `${SERVER_URL}/packages/modify?projectId=${projectId}`,
+          `${SERVER_URL}/damdda/package/modify?projectId=${projectId}`,
           newConfig,
           {
             withCredentials: true,
@@ -301,7 +304,7 @@ const Package = () => {
     } else {
       try {
         await axios.post(
-          `${SERVER_URL}/packages/register/${projectId}`,
+          `${SERVER_URL}/damdda/package/register/${projectId}`,
           newConfig,
           {
             withCredentials: true,
@@ -360,7 +363,7 @@ const Package = () => {
   const handleConfigDelete = async (packageId, index) => {
     if (window.confirm("정말로 삭제하시겠습니까?")) {
       try {
-        await axios.delete(`${SERVER_URL}/packages/delete/${packageId}`, {
+        await axios.delete(`${SERVER_URL}/damdda/package/delete/${packageId}`, {
           withCredentials: true,
           headers: {
             Authorization: `Bearer ${accessToken}`,

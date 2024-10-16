@@ -47,7 +47,7 @@ const FindID = () => {
 
     try {
       const response = await axios.get(
-        `${SERVER_URL}/member/findid`,
+        `${SERVER_URL}/damdda/member/findid`,
         {
           params: {
             name: formData.name,

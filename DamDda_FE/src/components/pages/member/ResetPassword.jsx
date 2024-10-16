@@ -75,7 +75,7 @@ const ResetPassword = () => {
 
     try {
       const response = await axios.get(
-        `${SERVER_URL}/member/check`,
+        `${SERVER_URL}/damdda/member/check`,
         { params: serachData },
         {
           headers: {
@@ -129,7 +129,7 @@ const ResetPassword = () => {
 
     try {
       const response = await axios.put(
-        `${SERVER_URL}/member/${formData.resetPw}/password`,
+        `${SERVER_URL}/damdda/member/${formData.resetPw}/password`,
         { password: formData.password },
         {
           headers: {

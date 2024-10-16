@@ -194,7 +194,7 @@ function Payment() {
       // 주문 정보 생성 POST 요청 (결제 대기중 상태로 먼저 저장)
       console.log("Order Data:", orderData); // 서버로 전송 전에 데이터 확인
       const response = await axios.post(
-        `${SERVER_URL}/order/create`,
+        `${SERVER_URL}/damdda/order/create`,
         orderData,
         {
           headers: {
@@ -223,7 +223,7 @@ function Payment() {
         // 카카오페이 결제창 호출
         axios
           .post(
-            `${SERVER_URL}/payment/kakao/ready`,
+            `${SERVER_URL}/damdda/payment/kakao/ready`,
             { orderId: createdOrderId },
             {
               headers: {

@@ -114,7 +114,7 @@ const Detail = () => {
   const fetchProducts = () => {
     console.log("dddddddddddddddddddd" + user.key);
     axios
-      .get(` ${SERVER_URL}/api/projects/${projectId}`, {
+      .get(` ${SERVER_URL}/damdda/project/${projectId}`, {
         params: {
           // memberId: user.key,
         },
@@ -274,7 +274,7 @@ const Detail = () => {
       if (prev) {
         // 좋아요 취소 요청
         const response = await axios.delete(
-          ` ${SERVER_URL}/api/projects/like`,
+          ` ${SERVER_URL}/damdda/project/like`,
           {
             params: {
               // memberId: user.key,
@@ -293,7 +293,7 @@ const Detail = () => {
       } else {
         // 좋아요 추가 요청
         const response = await axios.post(
-          ` ${SERVER_URL}/api/projects/like`,
+          ` ${SERVER_URL}/damdda/project/like`,
           null,
           {
             params: {
@@ -399,7 +399,7 @@ const Detail = () => {
       try {
         console.log("요청 전까지는 가능함!!");
         const response = await axios.post(
-          `/collab/register/${projectId}`,
+          `${SERVER_URL}/damdda/collab/register/${projectId}`,
           formData,
           {
             withCredentials: true,

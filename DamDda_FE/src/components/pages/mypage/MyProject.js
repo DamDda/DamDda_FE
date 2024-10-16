@@ -22,7 +22,6 @@ import { useUser } from "../../../UserContext";
 import Cookies from "js-cookie";
 import { SERVER_URL } from "../../../constants/URLs";
 
-
 // 프로젝트 카드 컴포넌트
 export const ProductCard = ({ product, setMyprojectClick, setMyprojectId }) => {
   console.log(product.approval);
@@ -208,7 +207,7 @@ export const Myproject = ({ setMyprojectClick, setMyprojectId }) => {
   const fetchProducts = async (page) => {
     try {
       const response = await axios.get(
-        `${SERVER_URL}/api/projects/myproject`,
+        `${SERVER_URL}/damdda/project/myproject`,
         {
           params: {
             // memberId: user.key,
@@ -216,8 +215,10 @@ export const Myproject = ({ setMyprojectClick, setMyprojectId }) => {
             size: itemsPerPage,
           },
           headers: {
-            ...(Cookies.get("accessToken")&& { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
-           },
+            ...(Cookies.get("accessToken") && {
+              Authorization: `Bearer ${Cookies.get("accessToken")}`,
+            }),
+          },
         }
       );
 

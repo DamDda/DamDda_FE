@@ -6,18 +6,26 @@
   width: 100%;
   max-width: 500px;
   border-radius: 100px;
-  background-color: #d7e8ff;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  transition: width 0.3s ease; /* 애니메이션 효과 추가 */
 }
 
 .textField {
-  width: 100%;
-  border: none;
+  width: 0; /* 기본 너비 */
+  transition: width 0.3s ease, opacity 0.3s ease; /* 너비와 불투명도에 애니메이션 효과 추가 */
+  opacity: 0; /* 기본적으로 숨김 */
+  border:#e9e9e9;
   border-radius: 100px;
-  background-color: #f4f9ff;
+  background-color: transparent;
+  /* background-color: #f4f9ff; */
+
   height: 56px;
   font-size: 1rem;
   padding: 0 20px;
+}
+
+.expanded {
+  width: 250px; /* 확장 시 너비 */
+  opacity: 1; /* 확장 시 보이게 */
 }
 
 .inputBase {
@@ -34,7 +42,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-right: 16px;
+  margin-left: 16px; /* 검색 바와 간격 조정 */
+  cursor: pointer; /* 커서 포인터 추가 */
+  width:20px
 }
 
 .searchButton {
@@ -44,7 +54,6 @@
   border: none;
   outline: none;
   cursor: pointer;
-  color: #007bff;
   font-size: 1.5rem;
 }
 

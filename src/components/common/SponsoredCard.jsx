@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import AspectRatio from "@mui/joy/AspectRatio";
 import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
-import { StatusButton } from "../common/ButtonComponent"; // named export로 가져오기
+import { StatusButton } from "./ButtonComponent"; // named export로 가져오기
 import { PaymentInfoCard } from "../common/PaymentInfoCard";
 import Typography from "@mui/joy/Typography";
 import Box from "@mui/joy/Box";

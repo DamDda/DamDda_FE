@@ -103,12 +103,12 @@ export const GiftPage = () => {
             /> */}
             {/* <OptionOrder text="옵션 A" num={num} setNum={setNum}></OptionOrder> */}
 
-            <GiftOrder 
+            {/* <GiftOrder 
                 title="선물 구성 A세트" 
                 price="10000원" 
                 options={options} // 옵션 목록 전달
                 setOptions = {setOptions}
-            />
+            /> */}
      <GiftCompositionComponent rewardData={rewardData} />
      {/* <ProjectRowComponent title={"타이틀"} sortCondition={"정렬기준"} subTitle={"서브타이틀"} /> */}
 

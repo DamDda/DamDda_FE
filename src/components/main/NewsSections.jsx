@@ -27,7 +27,7 @@ const CardComponent = ({ title, description, buttonText, imageUrl }) => (
 );
 
 export const NewsSection = ({ cardData }) => (
-    <Box sx={{ width: '85%', margin: 'auto', marginTop: 4, maxWidth: 1500, height: 500 }}>
+    <Box sx={{ width: '100%', margin: 'auto', marginTop: 4, maxWidth: 1500, height: 500 }}>
       <Typography variant="h5" sx={{ fontWeight: 'bold', marginBottom: 4 }}>
         담따의 최신 소식을 확인하세요
       </Typography>

@@ -28,6 +28,7 @@ export const NumericInput = ({ value, min, max, setNum }) => {
 
   const handleCountChange = (addNum) => {
     const newValue = Math.max(min, Math.min(max, value + addNum));
+    console.log("handleCountChange!!", newValue)
     setNum(isNaN(newValue) ? 0 : newValue);
   };
 

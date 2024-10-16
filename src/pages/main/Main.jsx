@@ -1,11 +1,7 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Header } from "components/layout/Header";
-import { Footer } from "components/layout/Footer";
-
 import { ImageCarousel } from "components/common/ImageCarousel";
 import { MultiCategoryComponent } from "components/common/MultiCategoryComponent";
-import { SearchBoxComponent } from "components/common/SearchBoxComponent";
 import { ShortcutBoxComponent } from "components/common/ShortcutBoxComponent";
 import { NewsSection } from "components/main/NewsSections";
 import { ProjectRowComponent } from "components/common/ProjectRowComponent";
@@ -14,15 +10,15 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import StarIcon from "@mui/icons-material/Star";
 import Box from "@mui/material/Box";
 
-
 import new_section_image1 from 'assets/newSection_image_1.png';
 import new_section_image2 from 'assets/newSection_image_2.png';
 import new_section_image3 from 'assets/newSection_image_3.png';
 import new_section_image4 from 'assets/newSection_image_4.png';
-import Banner2 from 'assets/Banner2.png'
+import Banner2 from 'assets/Banner2.png';
+import { Layout } from "components/layout/DamdDaContainer"; // Layout 컴포넌트 import
 
-// Card data to pass to NewSection component
 const cardData = [
+  // 카드 데이터 설정
   {
     title: '펀딩 뉴스',
     description: '1억 목표 달성! 성공적인 펀딩 프로젝트의 비결을 확인하세요.',
@@ -48,10 +44,10 @@ const cardData = [
     imageUrl: new_section_image4,
   },
 ];
+
 export function Main() {
   const navigate = useNavigate();
   const [category, setCategory] = useState("전체");
-  const [search, setSearch] = useState("");
 
   const services = [
     {
@@ -73,29 +69,18 @@ export function Main() {
       backgroundColor: "#edf1ff",
     },
   ];
-  // const isFirstRender = useRef(true);
-
-  // useEffect(() => {
-  //   if (isFirstRender.current) {
-  //     isFirstRender.current = false;
-  //     return;
-  //   }
-  //   const fetchData = () => {
-  //     navigate(`/entire?category=${category}&search=${search}`);
-  //   };
-  //   fetchData();
-  // }, [category, search, navigate]);
 
   const [CarouselImages] = useState([
-    "https://img.freepik.com/free-vector/polygonal-city-elements_23-2147496342.jpg?ga=GA1.1.167959845.1724899652&semt=ais_hybrid",
-    "https://img.freepik.com/free-vector/road-infographic-template_23-2147531975.jpg?ga=GA1.1.167959845.1724899652&semt=ais_hybrid",
-    "https://img.freepik.com/free-vector/flat-people-doing-outdoor-activities_23-2147869120.jpg?ga=GA1.1.167959845.1724899652&semt=ais_hybrid",
+    // 캐러셀 이미지 배열
+    "https://img.freepik.com/free-vector/polygonal-city-elements_23-2147496342.jpg",
+    "https://img.freepik.com/free-vector/road-infographic-template_23-2147531975.jpg",
+    "https://img.freepik.com/free-vector/flat-people-doing-outdoor-activities_23-2147869120.jpg",
   ]);
-  const CarouselStyle = { maxWidth: "90%", width: "1320px", height: "auto" };
+
+  const CarouselStyle = { maxWidth: "90%", width: "1320px", height: "auto",marginTop:"100px" };
 
   return (
-    <>
-      <Header search={search} setSearch={setSearch} />
+    <Layout>
       <Box
         sx={{
           margin: "0 auto",
@@ -106,38 +91,29 @@ export function Main() {
       >
         <ImageCarousel images={CarouselImages} style={CarouselStyle} />
         <MultiCategoryComponent setCategory={setCategory} />
-        {/* <SearchBoxComponent search={search} setSearch={setSearch} /> */}
-        <ShortcutBoxComponent services={services} />
+        {/* <ShortcutBoxComponent services={services} /> */}
 
-        <ProjectRowComponent sortCondition={"likeCnt"} title={"인기 프로젝트"} subTitle={"좋아요가 가장 많은 프로젝트"}></ProjectRowComponent>
-        <ProjectRowComponent sortCondition={"endDate"} title={"마감 임박 프로젝트"} subTitle={"마감임박! 마지막 기회 놓치지 말아요!"}></ProjectRowComponent> 
+        <ProjectRowComponent sortCondition={"likeCnt"} title={"인기 프로젝트"} subTitle={"좋아요가 가장 많은 프로젝트"} />
+        <ProjectRowComponent sortCondition={"endDate"} title={"마감 임박 프로젝트"} subTitle={"마감임박! 마지막 기회 놓치지 말아요!"} />
 
-<div
-  style={{
-    textAlign: 'center', // Centers the banner horizontally
-    margin: '70px 0', // Adds margin around the banner
-  }}
->
-  <img
-    src={Banner2}
-    alt="Banner"
-    style={{
-      width: '100%', // Ensures the banner takes up the full width
-      maxWidth: '1520px', // Optional: Limits the max width
-      height: '270px', // Height of the banner
-      borderRadius: '20px', // Sets the border radius to 20px
-    }}
-  />
-</div>
+        <div style={{ textAlign: 'center', margin: '70px 0' }}>
+          <img
+            src={Banner2}
+            alt="Banner"
+            style={{
+              width: '100%',
+              maxWidth: '1220px',
+              height: '220px',
+              borderRadius: '20px',
+            }}
+          />
+        </div>
 
-         <ProjectRowComponent sortCondition={"recommend"} title={"사용자 추천 프로젝트"} subTitle={"나에게 딱 맞는 프로젝트."}></ProjectRowComponent>
-      <ProjectRowComponent sortCondition={"viewCnt"} title={"최다 조회 프로젝트"} subTitle={"많은 사람들이 구경한 프로젝트"}></ProjectRowComponent>
-
-      <ProjectRowComponent sortCondition={"targetFunding"} title={"최다 후원 프로젝트"} subTitle={"많은 사람들의 이유있는 후원! 후원금이 가장 많은 프로젝트!"}></ProjectRowComponent> 
-          <NewsSection cardData={cardData} />
-
-        <Footer />
+        <ProjectRowComponent sortCondition={"recommend"} title={"사용자 추천 프로젝트"} subTitle={"나에게 딱 맞는 프로젝트."} />
+        <ProjectRowComponent sortCondition={"viewCnt"} title={"최다 조회 프로젝트"} subTitle={"많은 사람들이 구경한 프로젝트"} />
+        <ProjectRowComponent sortCondition={"targetFunding"} title={"최다 후원 프로젝트"} subTitle={"많은 사람들의 이유있는 후원! 후원금이 가장 많은 프로젝트!"} />
+        <NewsSection cardData={cardData} />
       </Box>
-    </>
+    </Layout>
   );
 }

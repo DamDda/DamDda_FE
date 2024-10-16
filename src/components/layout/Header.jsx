@@ -18,7 +18,6 @@ import { useUser } from "../../UserContext";
 export function Header({ search, setSearch }) {
   const [showProjects, setShowProjects] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
-  // const { isLogin, user, logout } = useUser()
   const navigate = useNavigate();
 
   const handleShowProjects = () => {
@@ -32,17 +31,17 @@ export function Header({ search, setSearch }) {
   };
 
   return (
-    <AppBar position="static" sx={{ bgcolor: "white", color: "black" }}>
-      <Container maxWidth="1520px" sx={{ width: "70%", margin: "0 auto" }}>
+    <AppBar position="fixed" sx={{ bgcolor: "white", boxShadow: "none" }}>
+      <Container maxWidth="1520px" sx={{ width: "80%", margin: "0 auto" }}>
         <Toolbar
           disableGutter
-          sx={{ display: "flex", justifyContent: "space-between" }}
+          sx={{ display: "flex", justifyContent: "space-between", height: "120px" }}
         >
           <Link to="/">
             <img
               src={logo}
               alt="logo"
-              style={{ width: "200px", height: "80px" }}
+              style={{ width: "170px", height: "70px" }}
             />
           </Link>
           <Box
@@ -75,11 +74,6 @@ export function Header({ search, setSearch }) {
             >
               로그인
             </BlueBorderButtonComponent>
-
-            {/* <ProfileMenu
-                            isOpen={profileOpen}
-                            handleProfileMenuOpen={handleProfileMenuOpen}
-                        /> */}
           </Box>
         </Toolbar>
       </Container>

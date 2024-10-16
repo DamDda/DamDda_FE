@@ -1,6 +1,7 @@
 import React, { useState } from "react"; // React
-import { Typography, Box } from "@mui/material";
+import { Typography, Box, Divider } from "@mui/material";
 import { PackageCard } from "components/common/Gift/PackageCard";
+import { GiftOrder } from "components/common/Gift/GiftOrder"
 
 export const GiftCompositionComponent = ({ rewardData }) => {
 
@@ -115,36 +116,120 @@ export const GiftCompositionComponent = ({ rewardData }) => {
       ],
     },
   ];
+  const [selectPackages, setSelectPackages] = useState([]);
+  console.log("selectPackages", selectPackages);
 
-  // useState로 초기값 설정
-const [selectPackages, setSelectPackages] = useState([]);
-const handleOrder = (packageName, selectOption) => {
-  setSelectPackages((prevSelectPackages) => [
-    ...prevSelectPackages, 
-    { packageName: packageName, selectOption: selectOption, selectedCount: 1 }
-  ]);
-};
 
-  const findSelectCount = (packageName) => {
-    let count = 0; // 'let'으로 변경하여 재할당 가능하게 설정
-    selectPackages?.forEach((selectPackage) => { // forEach를 사용하여 각 요소에 대해 처리
-      if (selectPackage.packageName === packageName) {
-        count += selectPackage.selectedCount; // 선택된 수량을 합산
+  const deepEqual = (obj1, obj2) => {
+    if (obj1 === obj2) return true; // 같은 참조거나 값이 같으면 true
+    if (typeof obj1 !== "object" || typeof obj2 !== "object" || obj1 === null || obj2 === null) {
+      return false; // 객체가 아닌 경우 false
+    }
+
+    const keys1 = Object.keys(obj1);
+    const keys2 = Object.keys(obj2);
+
+    if (keys1.length !== keys2.length) return false; // 키의 개수가 다르면 false
+
+    // 모든 키와 값을 재귀적으로 비교
+    for (let key of keys1) {
+      if (!keys2.includes(key) || !deepEqual(obj1[key], obj2[key])) {
+        return false;
       }
-    });
-    return count; // 최종 count 반환
+    }
+
+    return true;
   };
 
 
-  const handleOption = (packageId, rewardId, option) => {
-    console.log(
-      `Package ID: ${packageId}, Reward ID: ${rewardId}, Option: ${option}`
-    );
-    // 추가 로직을 구현할 수 있습니다.
+  // 패키지를 삭제하는 함수
+  const removePackageById = (selectName, selectOption) => {
+    setSelectPackages((prevPackages) => {
+      const newPackages = prevPackages.filter(
+        (pkg) => pkg.packageName !== selectName || !deepEqual(pkg.selectOption, selectOption)
+      );
+      console.log("Updated packages after deletion:", newPackages); // 상태 확인
+      return newPackages;
+    });
+  };
+
+
+
+  // 선택된 패키지의 수량을 변경하는 함수
+  const updateSelectedCountById = (selectName, selectOption, setNum) => {
+    console.log("selectName, selectOption, setNum", selectName, selectOption, setNum);
+
+    setSelectPackages((prevPackages) => {
+      const newPackages = prevPackages.map((pkg) => {
+        if (pkg.packageName === selectName && deepEqual(pkg.selectOption, selectOption)) {
+          return { ...pkg, selectedCount: setNum };
+        }
+        return pkg;
+      });
+      console.log("newPackages:", newPackages); // 상태 변경 후 확인
+      return newPackages;
+    });
+  };
+
+
+
+
+  // 주문 처리 함수
+  const handleOrder = (packageName, packagePrice, selectOption) => {
+    setSelectPackages((prevSelectPackages) => {
+      const existingPackage = prevSelectPackages.find(
+        (selectPackage) =>
+          selectPackage.packageName === packageName &&
+          deepEqual(selectPackage.selectOption, selectOption)
+      );
+
+      if (existingPackage) {
+        return prevSelectPackages.map((selectPackage) =>
+          selectPackage.packageName === packageName &&
+            deepEqual(selectPackage.selectOption, selectOption)
+            ? { ...selectPackage, selectedCount: selectPackage.selectedCount + 1 }
+            : selectPackage
+        );
+      }
+
+      return [
+        ...prevSelectPackages,
+        {
+          packageName: packageName,
+          packagePrice: packagePrice,
+          selectOption: JSON.parse(JSON.stringify(selectOption)), // 깊은 복사
+          selectedCount: 1,
+        },
+      ];
+    });
+  };
+
+  // 패키지 선택 수량 계산 함수
+  const findSelectCount = (packageName) => {
+    let count = 0;
+    selectPackages?.forEach((selectPackage) => {
+      if (selectPackage.packageName === packageName) {
+        count += selectPackage.selectedCount;
+      }
+    });
+    return count;
   };
 
   return (
-    <div>
+    <div style={{ margin: "100px" }}>
+      {selectPackages.length > 0 &&
+        selectPackages.map((selectPackage) => (
+          <GiftOrder
+            key={selectPackage.packageName + selectPackage.selectOption}
+            selectPackage={selectPackage}
+            updateSelectedCountById={updateSelectedCountById}
+            removePackageById={removePackageById}
+          />
+        ))}
+
+        {selectPackages.length > 0 && <Divider sx={{ my: 3,  width: "480px", borderColor:"black" }} />}
+
+
       {packageData.map((packageDTO) => (
         <PackageCard
           key={packageDTO.id}

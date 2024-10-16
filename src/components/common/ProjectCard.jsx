@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardMedia, IconButton, Button, LinearProgress, Box, Typography } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -22,15 +22,15 @@ export const ProductCard = ({ product, handleLike }) => {
           borderRadius: "15px",
           boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
           padding: 1,
-          margin: '0px 10px',
+          margin: '0px 5px',  // margin 줄이기
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
           overflow: "visible",
-          width: "320px",
-          height: "480px",
-          transform: "scale(0.95)",
+          width: "245px",  // 너비 줄이기
+          height: "350px", // 높이 줄이기
+          transform: "scale(0.95)", // 스케일 조정
           transformOrigin: "top left",
         }}
         onClick={() => navigate(`/detail?projectId=${product.id}`)}
@@ -39,7 +39,7 @@ export const ProductCard = ({ product, handleLike }) => {
           <CardMedia
             component="img"
             image={`http://${window.location.hostname}:9000/${product.thumbnailUrl}`}
-            sx={{ height: "187.5px", borderRadius: "5px", width: "100%" }}
+            sx={{ height: "160px", borderRadius: "5px", width: "100%" }} // 높이 줄이기
           />
           <IconButton
             sx={{
@@ -59,8 +59,8 @@ export const ProductCard = ({ product, handleLike }) => {
 
         <CardContent
           sx={{
-            width:"270px",
-            height: "230px",
+            width: "245px", // 너비 줄이기
+            height: "210px", // 높이 줄이기
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-around",
@@ -70,7 +70,7 @@ export const ProductCard = ({ product, handleLike }) => {
           {/* Title */}
           <Typography
             component="div"
-            sx={{ fontWeight: "bold", fontSize: "1.4rem"}} 
+            sx={{ fontWeight: "bold", fontSize: "1.2rem"}} // 폰트 크기 줄이기
           >
             {product.title}
           </Typography>
@@ -79,7 +79,7 @@ export const ProductCard = ({ product, handleLike }) => {
           <Typography
             variant="body2"
             color="text.secondary"
-            sx={{ fontSize: "1rem", mb: 2 }} 
+            sx={{ fontSize: "0.9rem", mb: 2 }} // 폰트 크기 줄이기
           >
             {product.description}
           </Typography>
@@ -95,13 +95,13 @@ export const ProductCard = ({ product, handleLike }) => {
           >
             <Typography
               variant="body2"
-              sx={{ fontWeight: "bold", fontSize: "1.1rem" }} 
+              sx={{ fontWeight: "bold", fontSize: "1rem" }} // 폰트 크기 줄이기
             >
               달성률 {achievementRate.toFixed(2)}%
             </Typography>
             <Typography
               variant="body2"
-              sx={{ fontWeight: "bold", fontSize: "0.85rem" }} 
+              sx={{ fontWeight: "bold", fontSize: "0.8rem" }} // 폰트 크기 줄이기
             >
               {formattedTargetFunding}원
             </Typography>
@@ -111,11 +111,11 @@ export const ProductCard = ({ product, handleLike }) => {
             <LinearProgress
               variant="determinate"
               value={achievementRate}
-              sx={{ height: 10, borderRadius: "5px", mt: 1, mb: 2 }}
+              sx={{ height: 8, borderRadius: "5px", mt: 1, mb: 2 }} // 높이 줄이기
             />
           </Box>
 
-          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%",marginTop:"15px" }}>
+          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", marginTop: "10px" }}>
             <Button
               variant="contained"
               color="secondary"
@@ -123,16 +123,16 @@ export const ProductCard = ({ product, handleLike }) => {
               sx={{
                 backgroundColor: "#5a87f7",
                 borderRadius: "12px",
-                fontSize: "1rem", 
-                width:"130px",
-                height:"40px",
+                fontSize: "0.8rem", // 폰트 크기 줄이기
+                width: "110px", // 너비 줄이기
+                height: "35px", // 높이 줄이기
               }}
             >
               마감임박 D - {daysLeft}
             </Button>
 
-            <Typography variant="body2" sx={{ fontWeight: "300", fontSize: "0.85rem" }}>
-              진행자: {product.nickName}
+            <Typography variant="body2" sx={{ fontWeight: "300", fontSize: "0.75rem" }}>
+                          진행자: {product.nickName}
             </Typography>
           </Box>
         </CardContent>

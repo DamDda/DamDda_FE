@@ -194,6 +194,8 @@ export const ProjectRowComponent = ({ sortCondition, title, subTitle }) => {
               justifyContent: "flex-start",
               alignItems: "flex-start",
               width: "100%",
+              marginLeft:"10px",
+
               position: "relative",
             }}
           >
@@ -202,16 +204,22 @@ export const ProjectRowComponent = ({ sortCondition, title, subTitle }) => {
               component="div"
               sx={{
                 fontWeight: "bold",
-                maxWidth: "800px",
+                maxWidth: "600px",
                 backgroundColor: "white",
                 zIndex: 1000,
+                fontSize:"24px"
               }}
             >
               <p className="text">
                 <span className="text-wrapper">[담ː따] 의 </span>
                 <span className="span">{title}</span>
               </p>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" color="text.secondary" sx={{
+               
+                fontSize:"15px",
+                marginLeft:"10px",
+                marginTop:"-6px"
+              }}>
                 {subTitle}
               </Typography>
             </Typography>

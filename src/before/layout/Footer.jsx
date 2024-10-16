@@ -1,11 +1,11 @@
 import React from "react";
-import "./css/Footer.css";
+import "./Footer.css";
 
 // 이미지 import
-import link1Svg from "assets/link-1.svg";
-import link2Svg from "assets/link-2.svg";
-import link3Svg from "assets/link-3.svg";
-import link4Svg from "assets/link-4.svg";
+import link1Svg from "../assets/link-1.svg";
+import link2Svg from "../assets/link-2.svg";
+import link3Svg from "../assets/link-3.svg";
+import link4Svg from "../assets/link-4.svg";
 
 export const Footer = () => {
     return (

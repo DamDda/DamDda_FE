@@ -1,0 +1,62 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 50px auto;
+  width: 100%;
+  max-width: 500px;
+  border-radius: 100px;
+  transition: width 0.3s ease; /* 애니메이션 효과 추가 */
+}
+
+.textField {
+  width: 0; /* 기본 너비 */
+  transition: width 0.3s ease, opacity 0.3s ease; /* 너비와 불투명도에 애니메이션 효과 추가 */
+  opacity: 0; /* 기본적으로 숨김 */
+  border:#e9e9e9;
+  border-radius: 100px;
+  background-color: transparent;
+  /* background-color: #f4f9ff; */
+
+  height: 56px;
+  font-size: 1rem;
+  padding: 0 20px;
+}
+
+.expanded {
+  width: 250px; /* 확장 시 너비 */
+  opacity: 1; /* 확장 시 보이게 */
+}
+
+.inputBase {
+  border-radius: 50px;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-left: 20px;
+}
+
+.endAdornment {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 16px; /* 검색 바와 간격 조정 */
+  cursor: pointer; /* 커서 포인터 추가 */
+  width:20px
+}
+
+.searchButton {
+  min-width: 0;
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+}
+
+.searchButton:hover {
+  color: #0056b3;
+}

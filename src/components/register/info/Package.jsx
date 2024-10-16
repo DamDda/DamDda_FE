@@ -1,18 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { Divider, Typography } from "@mui/material";
-
 import axios from "axios";
 import Cookies from "js-cookie";
 import { SERVER_URL } from "utils/URLs";
-import { InputBox } from "components/common/InputBoxComponent";
-import {
-  BlueButtonComponent,
-  RedButtonComponent,
-} from "components/common/ButtonComponent";
-import { DropdownComponent } from "components/common/DropdownComponent";
-import { PackageCard } from "components/common/Gift/PackageCard";
-import Form from "./Form";
+import { BlueButtonComponent } from "components/common/ButtonComponent";
+import GiftConfig from "./GiftConfig";
+import PackageConfig from "./PackageConfig";
+import PackageList from "./PackageList";
+import { ArrowBack, ArrowForward } from "@mui/icons-material";
+import { IconButton, ThemeProvider } from "@mui/material";
+import { arrowTheme } from "components/common/InputBoxComponent";
 
 const Package = () => {
   const [reward_name, setReward_name] = useState("");
@@ -380,251 +377,60 @@ const Package = () => {
     setIsEditing(false);
     setEditingIndex(null);
   };
-  const formatQunatity = (quantity) => {
-    return quantity == 0 ? "무제한" : `${quantity}개 남음`;
-  };
 
+  const [page, setPage] = useState(0);
   return (
     <div className="package-page">
-      <div className="package-left">
-        <div className="text-section">
-          <h3>선물 옵션</h3>
-          <Form title={"선물 이름"}>
-            <InputBox
-              label=""
-              value={reward_name}
-              onChange={(e) => setReward_name(e.target.value)}
-              tooltip={"선물 이름을 적어주세요."}
-            />
-          </Form>
-          <Form title={"옵션 조건"}>
-            <div className="button-group">
-              <BlueButtonComponent
-                text="없음"
-                onClick={() => setOptionType("none")}
-              />
-              <BlueButtonComponent
-                text="선택식"
-                onClick={() => setOptionType("select")}
-              />
-            </div>
-          </Form>
-          {optionType === "select" && (
-            <>
-              <Form title="옵션 항목">
-                <div className="button-group">
-                  <InputBox
-                    label=""
-                    value={OptionInput}
-                    onChange={(e) => setOptionInput(e.target.value)}
-                    tooltip={"옵션을 입력해주세요."}
-                  />
-                  <BlueButtonComponent text="+" onClick={handleOptionAdd} />
-                </div>
-              </Form>
-              <Form title="옵션 리스트">
-                <div className="scrollable">
-                  {Options !== undefined &&
-                    Options.map((option, index) => (
-                      <div className="option-item" key={index}>
-                        <Typography variant="h5">{option}</Typography>
-                        <RedButtonComponent
-                          text="X"
-                          onClick={() => handleOptionDelete(index)}
-                        />
-                      </div>
-                    ))}
-                </div>
-              </Form>
-              <Form>
-                <BlueButtonComponent text="선물 추가" onClick={handleGiftAdd} />
-              </Form>
-            </>
-          )}
-          <Form title="선물 리스트">
-            <div className="scrollable">
-              {reward_list.length > 0 &&
-                reward_list.map((gift, index) => (
-                  <div key={gift.id}>
-                    {gift.name}
-                    {gift.OptionList && gift.OptionList.length > 0 && (
-                      <span> ({gift.OptionList.join(", ")})</span>
-                    )}
-                    <RedButtonComponent
-                      text="X"
-                      onClick={() => handleGiftDelete(gift.id, index)}
-                    />
-                  </div>
-                ))}
-            </div>
-          </Form>
+      <div className="button-group">
+        <IconButton disabled={page === 0} onClick={() => setPage(0)}>
+          <ArrowBack />
+        </IconButton>
+        <div className={page === 0 ? "block" : "hide"}>
+          <GiftConfig
+            Options={Options}
+            optionType={optionType}
+            reward_name={reward_name}
+            OptionInput={OptionInput}
+            reward_list={reward_list}
+            handleGiftAdd={handleGiftAdd}
+            setOptionType={setOptionType}
+            setReward_name={setReward_name}
+            setOptionInput={setOptionInput}
+            handleOptionAdd={handleOptionAdd}
+            handleGiftDelete={handleGiftDelete}
+            handleOptionDelete={handleOptionDelete}
+          />
         </div>
-        <hr />
-
-        <div className="text-section">
-          <h3>선물 구성</h3>
-          <Form title={"구성 이름"}>
-            <InputBox
-              label=""
-              value={package_name}
-              onChange={(e) => setPackage_name(e.target.value)}
-              tooltip={"선물 구성 이름을 적어주세요."}
-            />
-          </Form>
-          <Form title={"선물 선택"}>
-            <DropdownComponent
-              name={""}
-              inputLabel={""}
-              menuItems={reward_list.map((gift) => gift.name)}
-              onChange={(e) => handleSelectReward(e.target.value)}
-            />
-          </Form>
-          <Form title={"선택된 선물"}>
-            <div className="scrollable">
-              {selected_reward && (
-                <div>
-                  {selected_reward.map((reward, index) => (
-                    <div key={index} className="button-group">
-                      <span>{reward.name}</span>
-                      <div
-                        className="count-box"
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          marginLeft: "10px",
-                        }}
-                      >
-                        <BlueButtonComponent
-                          text="-"
-                          onClick={() => handleCount(reward.name, -1)}
-                          disabled={reward.count <= 1}
-                        />
-                        <input
-                          className="count-input"
-                          value={reward.count}
-                          onChange={(e) => {
-                            const value = Math.max(1, Number(e.target.value)); // 최소 1로 제한
-                            handleCount(reward.name, value - reward.count); // 카운트 차이를 반영
-                          }}
-                        />
-                        <BlueButtonComponent
-                          text="+"
-                          onClick={() => handleCount(reward.name, 1)}
-                        />
-                      </div>
-                      <RedButtonComponent
-                        text="X"
-                        onClick={() => handleSelectedGiftDelete(reward.id)}
-                      />
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </Form>
-
-          <Form title={"제한 수량"}>
-            <div className="button-group">
-              <BlueButtonComponent
-                text="없음"
-                onClick={() => setIsLimitEnabled(false)}
-              />
-              <BlueButtonComponent
-                text="있음"
-                onClick={() => setIsLimitEnabled(true)}
-              />
-              {isLimitEnabled && (
-                <div className="count-box">
-                  <BlueButtonComponent
-                    text="-"
-                    onClick={() => handleCountChange(-1)}
-                    disabled={package_limit <= 0}
-                  />
-                  <input
-                    className="count-input"
-                    value={package_limit}
-                    onChange={(e) => {
-                      const value = Math.max(0, Number(e.target.value)); // 최소 0으로 제한
-                      handleCountChange(value - package_limit); // 카운트 차이를 반영
-                    }}
-                  />
-                  <BlueButtonComponent
-                    text="+"
-                    onClick={() => handleCountChange(1)}
-                  />
-                </div>
-              )}
-            </div>
-          </Form>
-
-          <Form title={"가격"}>
-            <InputBox
-              label=""
-              value={package_price + "원"}
-              onChange={(e) =>
-                setPackage_price(
-                  e.target.value
-                    .replace(/[^\d]/g, "") //이전 상태에 쉼표가 포함됨 -> 쉼표 제거
-                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                )
-              }
-              tooltip={"선물 구성의 가격을 입력하세요."}
-            />
-          </Form>
-          <Form>
-            <BlueButtonComponent
-              text={isEditing ? "구성 수정" : "구성 추가"}
-              onClick={handleConfigAdd}
-            />
-          </Form>
-
-          {Snackbar && <div className="snackbar">{snackbarMessage}</div>}
+        <div className={page === 1 ? "block" : "hide"}>
+          <PackageConfig
+            isEditing={isEditing}
+            reward_list={reward_list}
+            package_name={package_name}
+            package_limit={package_limit}
+            package_price={package_price}
+            isLimitEnabled={isLimitEnabled}
+            selected_reward={selected_reward}
+            handleCount={handleCount}
+            setPackage_name={setPackage_name}
+            handleConfigAdd={handleConfigAdd}
+            setPackage_price={setPackage_price}
+            setIsLimitEnabled={setIsLimitEnabled}
+            handleCountChange={handleCountChange}
+            handleSelectReward={handleSelectReward}
+            handleSelectedGiftDelete={handleSelectedGiftDelete}
+          />
         </div>
+        <IconButton disabled={page === 1} onClick={() => setPage(1)}>
+          <ArrowForward />
+        </IconButton>
       </div>
+      <PackageList
+        project_package={project_package}
+        handleEdit={handleEdit}
+        handleConfigDelete={handleConfigDelete}
+      />
 
-      <div className="package-right">
-        <h3>내가 만든 선물구성</h3>
-        {project_package.length > 0 ? (
-          project_package.map((config, index) => (
-            <div key={index} className="package-card">
-              <div className="quantity-box">
-                {formatQunatity(config.quantityLimited)}
-              </div>
-              <h3>{config.name}</h3>
-              <h3> {config.price.toLocaleString()} 원</h3>
-
-              <div className="reward-list">
-                {config.RewardList.map((reward, rewardIndex) => (
-                  <div key={rewardIndex}>
-                    <div className="reward-info">
-                      {reward.name}
-                      <p className="quantity-box">{reward.count}개</p>
-                    </div>
-                    <ul>
-                      {reward.OptionList.map((opt, optIndex) => (
-                        <li key={optIndex}>{opt}</li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-
-              <div className="button-group">
-                <BlueButtonComponent
-                  text="수정"
-                  onClick={() => handleEdit(index)}
-                />
-                <BlueButtonComponent
-                  text="삭제"
-                  onClick={() => handleConfigDelete(config.id, index)}
-                />
-              </div>
-            </div>
-          ))
-        ) : (
-          <p>추가된 선물 구성이 없습니다.</p>
-        )}
-      </div>
+      {Snackbar && <div className="snackbar">{snackbarMessage}</div>}
     </div>
   );
 };

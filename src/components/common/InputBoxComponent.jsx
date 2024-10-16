@@ -9,6 +9,10 @@ import {
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
+export const arrowTheme = createTheme({
+  palette: { secondary: { main: "#FFFFFF" } },
+});
+
 export const baseTheme = createTheme({
   // 색상 일괄 조정
   palette: {

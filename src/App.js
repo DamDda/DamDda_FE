@@ -33,12 +33,18 @@ import StarIcon from "@mui/icons-material/Star";
 import "./App.css";
 ///////////////////////////////////
 import { Main } from "pages/main/Main";
+import {Entire} from "pages/entire/Entire";
+import { UserProvider } from "./UserContext";
+import { Login } from "pages/member/Login" 
+import { Join } from "pages/member/Join" 
+import { ProjectDetail } from "pages/detail/ProjectDetail";
 
 const theme = createTheme({
   typography: {
     fontFamily: "Pretendard-Regular, Arial, sans-serif", // 폰트 적용
   },
 });
+
 
 function App() {
   //MultiCategoryComponent
@@ -217,6 +223,8 @@ function App() {
   const labels = ["후원 통계", "후원자 조회"]; // 탭 레이블을 배열로 정의
 
   return (
+    <UserProvider>
+
     <ThemeProvider theme={theme}>
       <CssBaseline />
 
@@ -372,10 +380,38 @@ function App() {
             <Route path="/gift" element={<GiftPage />} />
             {/* ////////////////////////////// */}
             <Route path="/" element={<Main />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/join" element={<Join />} />
+            <Route path="/entire" element={<Entire />} />
+            <Route path="/newdetail" element={<ProjectDetail />} />
+            {/* /////////////////////////////지영//////////////////////////////////// */}
+{/* +                    <Route path="/order" element={<OrderPage />} />
+                    <Route path="/user/myorders/:userId" element={<MyOrders />} />
+                    <Route path="/yourpage" element={<YourPage />} />
+                    <Route path="/payment" element={<Payment />} />
+                    <Route path="/payment/success" element={<PaymentSuccess />} />
+                    <Route path="/TossReady" element={<TossReady />} /> */}
+
+            {/* /////////////////////////////남희/////////////////////////////////// */}
+            
+              {/* 
+              <Route path="/find-id" element={<FindID />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
+              
+              <Route path="/detail" element={<Detail />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/error" element={<ErrorPage />} />
+              <Route path="/projectDetail" element={<ProjectDetail />} /> */}
+            {/* /////////////////////////////혜원/////////////////////////////////// */}
+            {/* <Route path="/mypage" element={<MyPage />} /> */}
+            {/* /////////////////////////////주현/////////////////////////////////// */}
+            
+
           </Routes>
         </Router>
       </div>
     </ThemeProvider>
+    </UserProvider>
   );
 }
 ReactDOM.render(<App />, document.getElementById("root"));

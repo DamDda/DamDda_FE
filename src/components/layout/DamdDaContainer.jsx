@@ -9,8 +9,8 @@ export function Layout({ children }) {
     return (
         <>
             <Header search={search} setSearch={setSearch} />
-            <div className="container">
-                {children} {/* 페이지 내용이 여기에 들어감 */}
+            <div className="container" style={{ width: "100%" }}>
+            {children} {/* 페이지 내용이 여기에 들어감 */}
             </div>
             <Footer />
         </>

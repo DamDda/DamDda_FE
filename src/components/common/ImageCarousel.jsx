@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Carousel from "react-bootstrap/Carousel";
-import ExampleCarouselImage from "../../assets/fresh-sale.png";
+import ExampleCarouselImage from "../../assets/fresh-sale.png"; // 기본 이미지
 import "bootstrap/dist/css/bootstrap.min.css";
 
-export function ImageCarousel({images, style}) {
+export function ImageCarousel({ images, style }) {
   return (
     <div
       style={{
@@ -11,20 +11,15 @@ export function ImageCarousel({images, style}) {
         justifyContent: "center",
         alignItems: "center",
         margin: "40px 0",
-        
       }}
     >
       {images.length > 0 ? (
-        <Carousel
-          fade
-          interval={4000}
-          style={style}
-        >
-          {images.map((url) => (
-            <Carousel.Item>
+        <Carousel fade interval={4000} style={style}>
+          {images.map((url, index) => (
+            <Carousel.Item key={index}>
               <img
-                src={url}
-                alt={url}
+                src={`http://101.79.9.79:9000/${url}`} // 이미지 URL 설정
+                alt={`carousel-${index}`}
                 style={{
                   width: "100%",
                   height: "300px",
@@ -40,12 +35,8 @@ export function ImageCarousel({images, style}) {
           ))}
         </Carousel>
       ) : (
-        <Carousel
-          fade
-          interval={4000}
-          style={style}
-        >
-
+        // 기본 이미지를 보여줌
+        <Carousel fade interval={4000} style={style}>
           <Carousel.Item>
             <img
               src={ExampleCarouselImage}

@@ -9,10 +9,9 @@ import link4Svg from "assets/link-4.svg";
 
 export const Footer = () => {
     return (
-        <div className="footer" maxWidth={false} // maxWidth를 false로 설정하여 100%가 기본값이 되지 않도록 설정
-        sx={{
-          width: '70%', // 푸터의 너비를 전체의 70%로 설정
-          margin: '0 auto', // 푸터를 중앙에 배치
+        <div className="footer" maxWidth="100%"
+        style={{
+              marginTop:'1000px',
         }}>
             <div className="footer-container">
                 <div className="horizontal-border">

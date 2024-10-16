@@ -216,7 +216,7 @@ export const GiftCompositionComponent = ({ rewardData }) => {
   };
 
   return (
-    <div style={{ margin: "100px" }}>
+    <div>
       {selectPackages.length > 0 &&
         selectPackages.map((selectPackage) => (
           <GiftOrder

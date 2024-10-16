@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import {React, useState, useRef, useEffect} from 'react';
 import { useNavigate } from "react-router-dom";
 import { ImageCarousel } from "components/common/ImageCarousel";
 import { MultiCategoryComponent } from "components/common/MultiCategoryComponent";
@@ -9,13 +9,14 @@ import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import StarIcon from "@mui/icons-material/Star";
 import Box from "@mui/material/Box";
+import axios from "axios";
 
 import new_section_image1 from 'assets/newSection_image_1.png';
 import new_section_image2 from 'assets/newSection_image_2.png';
 import new_section_image3 from 'assets/newSection_image_3.png';
 import new_section_image4 from 'assets/newSection_image_4.png';
 import Banner2 from 'assets/Banner2.png';
-import { Layout } from "components/layout/DamdDaContainer"; // Layout 컴포넌트 import
+import { Layout } from "components/layout/DamDdaContainer"; // Layout 컴포넌트 import
 
 const cardData = [
   // 카드 데이터 설정
@@ -46,8 +47,12 @@ const cardData = [
 ];
 
 export function Main() {
+
+//////////////////////////////////
   const navigate = useNavigate();
   const [category, setCategory] = useState("전체");
+  const isFirstRender = useRef(true); // 처음 렌더링 여부 추적
+  const [search, setSearch] = useState('');
 
   const services = [
     {
@@ -69,15 +74,56 @@ export function Main() {
       backgroundColor: "#edf1ff",
     },
   ];
-
-  const [CarouselImages] = useState([
-    // 캐러셀 이미지 배열
-    "https://img.freepik.com/free-vector/polygonal-city-elements_23-2147496342.jpg",
-    "https://img.freepik.com/free-vector/road-infographic-template_23-2147531975.jpg",
-    "https://img.freepik.com/free-vector/flat-people-doing-outdoor-activities_23-2147869120.jpg",
-  ]);
-
   const CarouselStyle = { maxWidth: "90%", width: "1320px", height: "auto",marginTop:"100px" };
+//////////////////////////////////
+
+//카테고리
+
+ // cartegory 또는 search가 바뀔 때 실행되는 useEffect
+ useEffect(() => {
+  if (isFirstRender.current) {
+    isFirstRender.current = false; // 첫 렌더링 이후로는 false로 설정
+    return;
+  }
+
+  const fetchData = () => {
+    // navigate(`/entire?category=${category}&search=${search}`);
+    
+  };
+
+  fetchData();
+}, [category, search]); // 의존성 배열에 cartegory와 search 추가
+
+
+useEffect(() => {
+  if (isFirstRender.current) {
+    // 처음 렌더링 시에는 실행되지 않도록 함
+    isFirstRender.current = false;
+    return;
+  }
+  
+  // 이후 상태가 변경될 때만 navigate 호출
+  // navigate(`/entire?category=${category}&search=${"k"}`);
+}, [category, search, navigate]);
+  
+
+///캐러샐 (OK)
+const [images, setImages] = useState([]);
+
+const fetchImage = async () => {
+  const response = await axios({
+    method: "GET",
+    url: "http://101.79.9.79:9000/admin/files/carousels",
+  })
+    .then((response) => setImages(response.data))
+    .catch((e) => console.error(e));
+};
+
+useEffect(() => {
+  fetchImage();
+}, []);
+
+//////////////////////////////////
 
   return (
     <Layout>
@@ -89,9 +135,9 @@ export function Main() {
           minWidth: "600px",
         }}
       >
-        <ImageCarousel images={CarouselImages} style={CarouselStyle} />
-        <MultiCategoryComponent setCategory={setCategory} />
-        {/* <ShortcutBoxComponent services={services} /> */}
+      <ImageCarousel images={images} style={CarouselStyle} /> {/* 상태를 props로 전달 */}
+      <MultiCategoryComponent setCategory={setCategory} />
+        <ShortcutBoxComponent services={services} />
 
         <ProjectRowComponent sortCondition={"likeCnt"} title={"인기 프로젝트"} subTitle={"좋아요가 가장 많은 프로젝트"} />
         <ProjectRowComponent sortCondition={"endDate"} title={"마감 임박 프로젝트"} subTitle={"마감임박! 마지막 기회 놓치지 말아요!"} />

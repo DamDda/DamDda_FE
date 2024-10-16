@@ -2,7 +2,7 @@ import React, { useState } from "react"; // React
 import { Card, CardContent, Typography, Button, Box, Grid } from "@mui/material";
 import CheckIcon from "@mui/icons-material/CheckCircle";
 import { DropdownComponent } from 'components/common/DropdownComponent';
-import { BlueButtonComponentComponent } from "../ButtonComponent";
+import { BlueButtonComponent } from "../ButtonComponent";
 
 export const PackageCard = ({ packageDTO, selectedCount, handleOrder }) => {
   const [onclickCard, setOnclickCard] = useState(false)
@@ -102,7 +102,7 @@ export const PackageCard = ({ packageDTO, selectedCount, handleOrder }) => {
         {onclickCard &&
           <Box display="flex" justifyContent="flex-end">
 
-            <BlueButtonComponentComponent text={"구매하기"} onClick={() => {
+            <BlueButtonComponent text={"구매하기"} onClick={() => {
               setOnclickCard(false);
               handleOrder(packageDTO.name, packageDTO.price, selectOptions)
             }}

@@ -18,22 +18,20 @@
 }
 
 .uploadIcon {
-    margin: 5px;
-    font-size: 70px; 
-    color: #96a5ff;
-
-  }  
+  margin: 5px;
+  font-size: 70px;
+  color: #96a5ff;
+}
 
 .uploadText {
   margin-bottom: px;
 }
 
 .uploadButton {
-  width: 140px;
-  font-size: 10px; 
+  width: 200px;
+  font-size: 10px;
   margin-top: 15px;
   background-color: #677cf9;
-
 }
 
 .hiddenInput {

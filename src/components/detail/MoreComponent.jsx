@@ -33,7 +33,7 @@ export const ProjectInfoBox = ({ title, value, unit, statistics }) => {
       sx={{
         textAlign: "left",
         padding: "10px",
-        margin: "10px 0",
+        margin: "7px 0",
       }}
     >
       {/* 제목 */}

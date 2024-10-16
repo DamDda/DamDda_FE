@@ -227,7 +227,7 @@ export const GiftCompositionComponent = ({ rewardData }) => {
           />
         ))}
 
-        {selectPackages.length > 0 && <Divider sx={{ my: 3,  width: "480px", borderColor:"black" }} />}
+        {selectPackages.length > 0 && <Divider sx={{ my: 3,  width: "400px", borderColor:"black" }} />}
 
 
       {packageData.map((packageDTO) => (

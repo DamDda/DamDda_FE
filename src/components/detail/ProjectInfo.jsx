@@ -62,25 +62,31 @@ export const ProjectInfo = ({
           />
           {/* 구분선 */}
           <Divider className="divider" />
-          {/* 목표금액 */}
-          <div className="info-text">
-            목표금액: {projectInfo.targetFunding.toLocaleString()}원
+          <div style={{ margin: "10px 0px" }}>
+            {/* 목표금액 */}
+            <div className="info-text">
+              목표금액: {projectInfo.targetFunding.toLocaleString()}원
+            </div>
+            {/* 펀딩기간 */}
+            <div className="info-text">
+              펀딩 기간: {formatDate(projectInfo.startDate)} ~{" "}
+              {formatDate(projectInfo.endDate)}
+            </div>
+            {/* 예상전달일 */}
+            <div className="info-text">
+              예상 전달일: 프로젝트 종료일로부터 30일 이내
+            </div>
           </div>
-          {/* 펀딩기간 */}
-          <div className="info-text">
-            펀딩 기간: {formatDate(projectInfo.startDate)} ~{" "}
-            {formatDate(projectInfo.endDate)}
-          </div>
-          {/* 예상전달일 */}
-          <div className="info-text">
-            예상 전달일: 프로젝트 종료일로부터 30일 이내
-          </div>
+          {/* 구분선 */}
+          <Divider className="divider" />
           <div className="button-container">
-            <BlueButtonComponent
-              text="이 프로젝트에 후원하기"
-              className="contained-button"
-              onClick={handleSponsorClick}
-            />
+            <div style={{ margin: "10px 0px" }}>
+              <BlueButtonComponent
+                text="이 프로젝트에 후원하기"
+                className="contained-button"
+                onClick={handleSponsorClick}
+              />
+            </div>
             <div
               className="secondary-buttons"
               style={{
@@ -92,19 +98,23 @@ export const ProjectInfo = ({
                 height: "50px",
               }}
             >
-              <BlueBorderButtonComponent
-                text={
-                  (isHearted ? "♥ " : "♡ ") + projectInfo.liked_count + "명"
-                }
-                onClick={() => handleHeartClick(isHearted)}
-                className="heart-button"
-              />
-              <BlueBorderButtonComponent
-                text="협업하기"
-                variant="outlined"
-                onClick={handleCollabClick}
-                className="heart-button"
-              />
+              <div style={{ width: "180px" }}>
+                <BlueBorderButtonComponent
+                  text={
+                    (isHearted ? "♥ " : "♡ ") + projectInfo.liked_count + "명"
+                  }
+                  onClick={() => handleHeartClick(isHearted)}
+                  className="heart-button"
+                />
+              </div>
+              <div style={{ width: "180px" }}>
+                <BlueBorderButtonComponent
+                  text="협업하기"
+                  variant="outlined"
+                  onClick={handleCollabClick}
+                  className="heart-button"
+                />
+              </div>
             </div>
           </div>
         </div>

@@ -112,7 +112,7 @@ export const GiftOrder = ({ selectPackage, updateSelectedCountById, removePackag
                 borderColor: 'black',
                 borderWidth: 1,
                 padding: "10px",
-                width: '480px',
+                width: '400px',
                 backgroundColor: '#fafafa',
             }}
         >

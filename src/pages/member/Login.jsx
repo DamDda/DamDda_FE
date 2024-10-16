@@ -27,49 +27,72 @@ export const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     const formatLogin = {
       loginId: formData.id,
       password: formData.password,
     };
+  
     try {
       let valid = true;
-
+  
+      // 유효성 검사
       if (!formData.id) {
         setIdError("아이디를 입력해주세요.");
         valid = false;
       } else {
         setIdError("");
       }
-
+  
       if (!formData.password) {
         setPasswordError("비밀번호를 입력해주세요.");
         valid = false;
       } else {
         setPasswordError("");
       }
-
-      if (!valid) return;
-      const response = await axios.post(
-        `${SERVER_URL}/damdda/member/login`,
-        formatLogin,
-        {
-          withCredentials: true,
-        }
-      );
-      // 모든 필드가 입력되었을 때만 검증 진행
-      if (valid) {
-        const userData = {
-          id: response.data.split(" ")[1],
-          nickname: response.data.split(" ")[0],
-        };
-        login(userData);
-        navigate("/", { state: { id: formData.id } });
+  
+      if (!valid) {
+        console.log("유효성 검사 실패: 로그인 폼의 필드가 비어있음");
+        return;
       }
+  
+      console.log("로그인 요청 데이터:", formatLogin);
+  
+      // 서버에 로그인 요청
+      const response = await axios.post(
+        `${SERVER_URL}/member/login`,
+        formatLogin,
+        { withCredentials: true }
+      );
+  
+      console.log("서버 응답 데이터:", response.data);
+  
+      // 응답 데이터에서 닉네임 추출
+      const { "X-Nickname": nickname } = response.data;
+  
+      if (!nickname) {
+        console.error("잘못된 응답 형식:", response.data);
+        setLoginError("서버로부터 예상치 못한 응답을 받았습니다.");
+        return;
+      }
+  
+      const userData = {
+        id: formData.id, // 사용자가 입력한 아이디 그대로 사용
+        nickname,
+      };
+  
+      console.log("유저 데이터:", userData);
+  
+      // 로그인 처리 및 페이지 이동
+      login(userData);
+      navigate("/", { state: { id: formData.id } });
     } catch (error) {
+      console.error("로그인 오류:", error);
       setLoginError("로그인 정보가 틀렸습니다. 다시 입력해주세요.");
     }
   };
+  
+  
 
   const handleJoinClick = () => {
     navigate("/join"); // 회원가입 페이지로 이동

@@ -28,7 +28,7 @@ export const PackageCard = ({ packageDTO, selectedCount, handleOrder }) => {
         borderRadius: 2,
         borderColor: selectedCount > 0 ? "#FF4081" : "#E0E0E0",
         borderWidth: 2,
-        width: "480px",
+        width: "400px",
       }}
     >
       <CardContent>
@@ -72,7 +72,8 @@ export const PackageCard = ({ packageDTO, selectedCount, handleOrder }) => {
 
                       {onclickCard && Array.isArray(reward.option) &&
                         reward.option.length > 0 && (
-                          <DropdownComponent
+                          <div style={{width: "200px"}}>
+                           <DropdownComponent
                             inputLabel={packageDTO.name + "의 옵션"}
                             menuItems={reward.option}
                             selectValue={selectOptions[index].selectOption} // 기본 선택값
@@ -80,6 +81,9 @@ export const PackageCard = ({ packageDTO, selectedCount, handleOrder }) => {
                               handleSelectOptions(index, e);
                             }}
                           />
+                          </div>
+
+
                         )}
                     </div>
                   ))}
@@ -89,6 +93,7 @@ export const PackageCard = ({ packageDTO, selectedCount, handleOrder }) => {
           <Grid item xs={2} sx={{ textAlign: "right" }}>
             <Button
               size="small"
+              sx={{ width: "100px"}}
               variant="outlined"
               color={packageDTO.quantityLimited === 0 ? "error" : "primary"}
               disabled={packageDTO.quantityLimited === 0}

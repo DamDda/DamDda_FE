@@ -1,9 +1,9 @@
 import React, { useState, useRef } from "react"; // React
-// import { DetailDescroption } from "components/detail/DetailDescription";
+import { DetailDescroption } from "components/detail/DetailDescription";
 import { Notice } from "components/detail/Notices";
+import { Divider } from "@mui/material";
 import { ProjectInfo } from "components/detail/ProjectInfo";
 import { QnA } from "./QnA";
-// import { ImageCarousel } from "components/common/ImageCarousel";
 import { TabComponent } from "components/common/TabComponent";
 import { CollabModal } from "components/detail/CollabModal";
 import { ProjectTitle } from "./ProjectTitle";
@@ -17,7 +17,7 @@ export const DetailPage = ({ project }) => {
   //더미데이터
 
   //ImageCarousel
-  const [CarouselImages] = useState([
+  const [Images] = useState([
     "https://img.freepik.com/free-vector/polygonal-city-elements_23-2147496342.jpg?ga=GA1.1.167959845.1724899652&semt=ais_hybrid",
     "https://img.freepik.com/free-vector/road-infographic-template_23-2147531975.jpg?ga=GA1.1.167959845.1724899652&semt=ais_hybrid",
     "https://img.freepik.com/free-vector/flat-people-doing-outdoor-activities_23-2147869120.jpg?ga=GA1.1.167959845.1724899652&semt=ais_hybrid",
@@ -179,7 +179,7 @@ export const DetailPage = ({ project }) => {
           alignItems: "center",
         }}
       >
-        <ImageCarousel images={CarouselImages} style={CarouselStyle} />
+        <ImageCarousel images={Images} style={CarouselStyle} />
         <ProjectInfo
           projectInfo={dummyProjectInfo}
           handleSponsorClick={handleSponsorClick}
@@ -202,11 +202,24 @@ export const DetailPage = ({ project }) => {
           display: "flex",
           flexFlow: "row wrap",
           justifyContent: "space-around",
-          alignItems: "center",
+          alignItems: "flex-start",
+          height: "atuo",
         }}
       >
         {/* <DetailDescroption /> */}
-        <GiftCompositionComponent />
+        <div
+          style={{
+            width: "800px",
+            height: "atuo",
+          }}
+        >
+          <DetailDescroption
+            descriptionDetail={
+              "descriptionDdescriptionDetaildescriptionDetaildescriptionDetaildescriptionDetaildescriptionDetaildescriptionDetaildescriptionDetaildescriptionDetaildescriptionDetaildescriptionDetaildescriptionDetaildescriptionDetaildescriptionDetaildescriptionDetailetaildescriptionDetail"
+            }
+            descriptionImages={Images}
+          />
+        </div>
         <GiftCompositionComponent />
       </div>
 

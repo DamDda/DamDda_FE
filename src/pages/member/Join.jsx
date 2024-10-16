@@ -14,8 +14,8 @@ import {
   BlueBorderButtonComponent,
 } from "components/common/ButtonComponent";
 import { Layout } from "components/layout/DamDdaContainer";
+import { SERVER_URL } from "constants/URLs";
 
-// 배경 컴포넌트
 const Background = styled.div`
   background-color: #3366cc;
   color: white;
@@ -111,7 +111,8 @@ export const Join = () => {
     }
 
     try {
-      const response = await axios.get(`damdda/member/check/id?loginId=${id}`);
+
+      const response = await axios.get(`${SERVER_URL}/member/check/id?loginId=${id}`);
       const available = response.data;
       setStatusMessages((prev) => ({
         ...prev,
@@ -136,8 +137,10 @@ export const Join = () => {
     event.preventDefault(); // Prevent default action
     const { nickname } = formData;
     try {
+
+   
       const response = await axios.get(
-        `damdda/member/check/nickname?nickname=${nickname}`
+           `${SERVER_URL}/member/check/nickname?nickname=${nickname}`
       );
       console.log(response.data);
       setStatusMessages((prev) => ({
@@ -298,7 +301,7 @@ export const Join = () => {
     };
 
     try {
-      const response = await axios.post("damdda/member", formattedJoin, {
+      const response = await axios.post(`${SERVER_URL}/member`, formattedJoin, {
         withCredentials: true,
       });
 
@@ -322,6 +325,17 @@ const FormContainer = styled.div`
   z-index: 10; /* 배경 위로 나오도록 설정 */
   position: relative; /* 배경과의 위치 조정 */
   margin-top: -100px; /* 배경과 겹치지 않게 조정 */
+`;
+
+const FormRow = styled.div`
+  display: flex;
+  gap: 20px; /* 필드 사이의 간격 */
+  width: 100%;
+  justify-content: space-between;
+`;
+
+const HalfWidthBox = styled(InputLargeBox)`
+  flex: 1; /* 각 필드가 균등한 너비를 가지도록 설정 */
 `;
   ////////////////////////////////////////////
 
@@ -561,7 +575,13 @@ const FormContainer = styled.div`
               </div>
             </FormControl>
             <FormHelperTexts>{statusMessages.register}</FormHelperTexts>
-          </form>      </FormContainer>
+          </form>      
+          
+          
+          
+          
+          
+          </FormContainer>
 
         </div>
       </div>

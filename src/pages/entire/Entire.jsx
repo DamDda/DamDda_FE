@@ -15,6 +15,8 @@ import { Layout } from "components/layout/DamDdaContainer";
 import { PaginationComponent } from "components/common/PaginationComponent";
 import { ProgressButton } from "components/common/ButtonComponent";
 import { DropdownComponent } from "components/common/DropdownComponent"
+import { SERVER_URL } from "constants/URLs";
+
 export function Entire() {
   ////////////////////////////////////
   const location = useLocation();
@@ -69,7 +71,7 @@ export function Entire() {
   const fetchRecommendedProducts = async (page, progress) => {
     try {
       const response = await axios.get(
-        `http://localhost:9000/api/projects/projects`,
+        `${SERVER_URL}/api/projects/projects`,
         {
           params: {
             page: page,
@@ -117,7 +119,7 @@ export function Entire() {
   ) => {
     try {
       const response = await axios.get(
-        `http://localhost:9000/api/projects/projects`,
+        `${SERVER_URL}/api/projects/projects`,
         {
           params: {
             search: search,
@@ -155,7 +157,7 @@ export function Entire() {
       if (project.liked) {
         // liked가 true이면 DELETE 요청
         const response = await axios.delete(
-          `http://localhost:9000/api/projects/like`,
+          `${SERVER_URL}/api/projects/like`,
           {
             params: {
               memberId: memberId,
@@ -167,7 +169,7 @@ export function Entire() {
       } else {
         // liked가 false이면 POST 요청
         const response = await axios.post(
-          `http://localhost:9000/api/projects/like`,
+          `${SERVER_URL}/api/projects/like`,
           null,
           {
             params: {

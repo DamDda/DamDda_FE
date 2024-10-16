@@ -2,7 +2,7 @@ import React from "react";
 import Carousel from "react-bootstrap/Carousel";
 import ExampleCarouselImage from "../../assets/fresh-sale.png"; // 기본 이미지
 import "bootstrap/dist/css/bootstrap.min.css";
-
+import {ADMIN_SERVER_URL} from "constants/URLs"
 export function ImageCarousel({ images, style }) {
   return (
     <div
@@ -18,7 +18,7 @@ export function ImageCarousel({ images, style }) {
           {images.map((url, index) => (
             <Carousel.Item key={index}>
               <img
-                src={`http://101.79.9.79:9000/${url}`} // 이미지 URL 설정
+                src={`${ADMIN_SERVER_URL}/${url}`} // 서버 베이스 URL을 붙여줌
                 alt={`carousel-${index}`}
                 style={{
                   width: "100%",

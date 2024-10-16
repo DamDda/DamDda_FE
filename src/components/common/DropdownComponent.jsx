@@ -3,6 +3,7 @@ import { Box, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import styles from "../css/DropdownComponent.module.css";
 
 export const DropdownComponent = ({
+  name,
   inputLabel,
   menuItems,
   selectValue,
@@ -17,6 +18,7 @@ export const DropdownComponent = ({
       >
         <InputLabel>{inputLabel}</InputLabel>
         <Select
+          name={name || null}
           value={selectValue}
           onChange={onChange}
           label={inputLabel}

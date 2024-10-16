@@ -207,6 +207,7 @@ export const BlueButtonComponent = ({ text, onClick }) => {
     borderRadius: "5px",
     cursor: "pointer",
     color: "#ffffff",
+    width: "100%",
   };
   return (
     <button style={buttonStyle} onClick={onClick}>
@@ -223,6 +224,7 @@ export const BlueBorderButtonComponent = ({ text, onClick }) => {
     borderRadius: "5px",
     cursor: "pointer",
     color: "#2d2736",
+    width: "100%",
   };
   return (
     <button style={buttonStyle} onClick={onClick}>
@@ -239,6 +241,7 @@ export const RedButtonComponent = ({ text, onClick }) => {
     borderRadius: "5px",
     cursor: "pointer",
     color: "#ffffff",
+    width: "100%",
   };
 
   return (
@@ -255,6 +258,7 @@ export const RedBorderButtonComponent = ({ text, onClick }) => {
     borderRadius: "5px",
     cursor: "pointer",
     color: "#2d2736",
+    width: "100%",
   };
 
   return (
@@ -387,6 +391,7 @@ export const ProgressButton = ({ type, progress, handleClick, children }) => {
         variant={progress === type ? "contained" : "outlined"}
         size="small"
         sx={{
+          width: "100%",
           borderRadius: "12px",
           fontSize: "0.75rem",
           marginRight: "20px",

@@ -108,20 +108,27 @@ useEffect(() => {
   
 
 ///캐러샐 (OK)
+// 캐러셀 이미지 로드
 const [images, setImages] = useState([]);
 
 const fetchImage = async () => {
-  const response = await axios({
-    method: "GET",
-    url: "http://101.79.9.79:9000/admin/files/carousels",
-  })
-    .then((response) => setImages(response.data))
-    .catch((e) => console.error(e));
+  try {
+    const response = await axios.get(
+      "http://101.79.9.79:9000/admin/files/carousels"
+    );
+
+    console.log("서버 응답 데이터:", response.data); // 데이터 로그 찍기
+
+    setImages(response.data);
+  } catch (error) {
+    console.error("이미지 불러오기 실패:", error);
+  }
 };
 
 useEffect(() => {
   fetchImage();
 }, []);
+
 
 //////////////////////////////////
 

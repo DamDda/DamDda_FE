@@ -206,6 +206,47 @@ export function InputLargeBox({
 }
 
 
+export function StandardInputBox({
+  title,
+  name,
+  value,
+  onChange,
+  placeholder = "아이디를 입력하세요",
+  id,
+  inputRef,
+  error = false,
+  errorMessage,
+  required = false,
+  readOnly = false,
+  sx,
+  style,
+}) {
+  return (
+    <div style={{ width: "100%" }}>
+      {title && <Typography variant="body1">{title}</Typography>}
+      <TextField
+        fullWidth
+        id={id}
+        name={name}
+        type="text" // 아이디는 일반 텍스트 입력
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        inputRef={inputRef}
+        error={error}
+        helperText={error ? errorMessage : ""}
+        required={required}
+        InputProps={{
+          transform: "translateX(88px)",  // 라벨 위치를 오른쪽으로 8px 이동
+          readOnly: readOnly,
+        }}
+        sx={sx}
+        style={style}
+      />
+    </div>
+  );
+}
+
 export function PasswordInputBox({
   title,
   name,
@@ -228,8 +269,8 @@ export function PasswordInputBox({
   };
 
   return (
-    <ThemeProvider theme={baseTheme}>
-      {title && <Typography variant="mytitle">{title}</Typography>}
+    <div style={{ width: "100%" }}>
+      {title && <Typography variant="body1">{title}</Typography>}
       <TextField
         fullWidth
         id={id}
@@ -255,6 +296,6 @@ export function PasswordInputBox({
         sx={sx}
         style={style}
       />
-    </ThemeProvider>
+    </div>
   );
 }

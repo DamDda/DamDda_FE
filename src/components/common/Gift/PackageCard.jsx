@@ -33,7 +33,7 @@ export const PackageCard = ({ packageDTO, selectedCount, handleOrder }) => {
     >
       <CardContent>
         <Grid container spacing={2} alignItems="center">
-          <Grid item xs={10}>
+          <Grid item xs={8}>
             <Box>
               <Box onClick={() => {
                 setOnclickCard((prev) => packageDTO.quantityLimited > 0 ? !prev : false)
@@ -65,16 +65,16 @@ export const PackageCard = ({ packageDTO, selectedCount, handleOrder }) => {
               <Typography variant="body2" color="text.secondary">
                 {packageDTO.RewardDTO &&
                   packageDTO.RewardDTO.map((reward, index) => (
-                    <div key={reward.id}>
-                      <div style={{ width: "100px" }}>
-                        {reward.name} --- {reward.count}개
+                    <div key={reward.id} style={{ display: "flex", flexDirection:"row", justifyContent:"space-between", alignItems:"center", height: onclickCard > 0 ? "80px" : "35px" }}>
+                      <div style={{ width: "130px", fontSize:"18px" }}>
+                        {reward.name} : {reward.count}개
                       </div>
 
                       {onclickCard && Array.isArray(reward.option) &&
                         reward.option.length > 0 && (
-                          <div style={{width: "200px"}}>
+                          <div style={{width: "150px", height: "50px"}}>
                            <DropdownComponent
-                            inputLabel={packageDTO.name + "의 옵션"}
+                            inputLabel={reward.name + "의 옵션"}
                             menuItems={reward.option}
                             selectValue={selectOptions[index].selectOption} // 기본 선택값
                             onChange={(e) => {
@@ -90,7 +90,7 @@ export const PackageCard = ({ packageDTO, selectedCount, handleOrder }) => {
               </Typography>
             </Box>
           </Grid>
-          <Grid item xs={2} sx={{ textAlign: "right" }}>
+          <Grid item xs={4} sx={{ textAlign: "right" }}>
             <Button
               size="small"
               sx={{ width: "100px"}}

@@ -6,7 +6,7 @@ import {
   BlueButtonComponent,
   BlueBorderButtonComponent,
 } from "components/common/ButtonComponent";
-import { InputLargeBox,PasswordInputBox } from "components/common/InputBoxComponent";
+import { StandardInputBox,PasswordInputBox } from "components/common/InputBoxComponent";
 import { Layout } from "components/layout/DamDdaContainer"; // Layout 컴포넌트 import
 import PersonIcon from "@mui/icons-material/Person"; // 사람 아이콘
 import axios from "axios";
@@ -130,12 +130,12 @@ export const Login = () => {
           >
             {/* 아이디 입력란에 사람 아이콘 추가 */}
             <div style={{ position: "relative", marginBottom: "15px" }}>
-              <InputLargeBox
+              <StandardInputBox
                 required
                 fullWidth
+                title="아이디"
                 id="id"
                 name="id"
-                label="아이디"
                 variant="standard"
                 value={formData.id}
                 onChange={handleChange}

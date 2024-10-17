@@ -9,6 +9,7 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'; // 오른
 import { SERVER_URL } from "constants/URLs";
 import { useNavigate } from 'react-router-dom';
 
+//추천
 export const ProjectRowComponent = ({ sortCondition, title, subTitle }) => {
   const { user } = useUser();
   const [products, setProducts] = useState([]); // 서버에서 가져온 프로젝트 데이터

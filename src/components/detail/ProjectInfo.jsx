@@ -15,6 +15,7 @@ export const ProjectInfo = ({
   handleCollabClick,
   handleHeartClick,
 }) => {
+  console.log("projectInfo: ",projectInfo);
   // 날짜 형식을 변환하는 함수
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -38,7 +39,7 @@ export const ProjectInfo = ({
             title={"후원 금액"}
             value={projectInfo.fundsReceive.toLocaleString()}
             unit={"원"}
-            statistics={projectInfo.achievementRate.toFixed(0) + "%"}
+            statistics={projectInfo.achievementRate?.toFixed(0) + "%"}
           />
           {/* 진행바 */}
           <LinearProgress

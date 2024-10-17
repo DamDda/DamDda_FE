@@ -141,11 +141,11 @@ useEffect(() => {
   return (
     <Layout >
       <Box
-        sx={{
-          margin: "0 auto",
-          width: "100%",
+         sx={{
+          margin: '0 auto',
+          width: "80%",
           maxWidth: "1750px",
-          minWidth: "600px",
+          minWidth: '600px',
         }}
       >
       <ImageCarousel images={images} style={CarouselStyle} /> {/* 상태를 props로 전달 */}

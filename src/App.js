@@ -39,7 +39,10 @@ import { Login } from "pages/member/Login";
 import { Join } from "pages/member/Join";
 import { ProjectDetail } from "pages/detail/ProjectDetail";
 import Register from "pages/register/Register";
+import { FindID } from  "pages/member/FindID";
+import { ResetPassword } from  "pages/member/ResetPassword";
 
+// import { ResetPassword } from  "pages/member/ResetPassword";
 const theme = createTheme({
   typography: {
     fontFamily: "Pretendard-Regular, Arial, sans-serif", // 폰트 적용
@@ -387,6 +390,11 @@ function App() {
               <Route path="/entire" element={<Entire />} />
               <Route path="/newdetail" element={<ProjectDetail />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/find-id" element={<FindID />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
+
+              
+
               {/* /////////////////////////////지영//////////////////////////////////// */}
               {/* +                    <Route path="/order" element={<OrderPage />} />
                     <Route path="/user/myorders/:userId" element={<MyOrders />} />
@@ -398,7 +406,6 @@ function App() {
               {/* /////////////////////////////남희/////////////////////////////////// */}
 
               {/* 
-              <Route path="/find-id" element={<FindID />} />
               <Route path="/reset-password" element={<ResetPassword />} />
               
               <Route path="/detail" element={<Detail />} />

@@ -7,12 +7,13 @@ import { BlueButtonComponent } from "../ButtonComponent";
 export const PackageCard = ({ packageDTO, selectedCount, handleOrder }) => {
   const [onclickCard, setOnclickCard] = useState(false)
   console.log("onclickCard", onclickCard)
+  console.log("packageDTO : " , packageDTO);
   // useState로 초기값 설정
   const [selectOptions, setSelectOptions] = useState(
-    packageDTO?.RewardDTO?.map((reward) => ({
+    packageDTO?.RewardList?.map((reward) => ({
       rewardName: reward.name,
       selectOption: reward.option ? reward.option[0] : null,
-    })) || [] // 만약 RewardDTO가 undefined일 경우 빈 배열 반환
+    })) || [] // 만약 RewardList가 undefined일 경우 빈 배열 반환
   );
 
   const handleSelectOptions = (index, e) => {
@@ -63,19 +64,19 @@ export const PackageCard = ({ packageDTO, selectedCount, handleOrder }) => {
               </Box>
 
               <Typography variant="body2" color="text.secondary">
-                {packageDTO.RewardDTO &&
-                  packageDTO.RewardDTO.map((reward, index) => (
+                {packageDTO.RewardList &&
+                  packageDTO.RewardList.map((reward, index) => (
                     <div key={reward.id} style={{ display: "flex", flexDirection:"row", justifyContent:"space-between", alignItems:"center", height: onclickCard > 0 ? "80px" : "35px" }}>
                       <div style={{ width: "130px", fontSize:"18px" }}>
                         {reward.name} : {reward.count}개
                       </div>
 
-                      {onclickCard && Array.isArray(reward.option) &&
-                        reward.option.length > 0 && (
+                      {onclickCard && Array.isArray(reward.OptionList) &&
+                        reward.OptionList.length > 0 && (
                           <div style={{width: "150px", height: "50px"}}>
                            <DropdownComponent
                             inputLabel={reward.name + "의 옵션"}
-                            menuItems={reward.option}
+                            menuItems={reward.OptionList}
                             selectValue={selectOptions[index].selectOption} // 기본 선택값
                             onChange={(e) => {
                               handleSelectOptions(index, e);
@@ -105,14 +106,16 @@ export const PackageCard = ({ packageDTO, selectedCount, handleOrder }) => {
           </Grid>
         </Grid>
         {onclickCard &&
-          <Box display="flex" justifyContent="flex-end">
+          <div style={{display:"flex", justifyContent:"flex-end"}}>
+          <div style={{width: "150px", marginTop:"10px"}}>
 
-            <BlueButtonComponent text={"구매하기"} onClick={() => {
+            <BlueButtonComponent text={"장바구니 담기"} onClick={() => {
               setOnclickCard(false);
               handleOrder(packageDTO.name, packageDTO.price, selectOptions)
             }}
             />
-          </Box>
+          </div>
+          </div>
         }
       </CardContent>
     </Card>

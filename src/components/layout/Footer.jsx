@@ -1,5 +1,6 @@
 import React from "react";
 import "./css/Footer.css";
+import { Collaboration } from "components/main/Collaboration";
 
 // 이미지 import
 import link1Svg from "assets/link-1.svg";
@@ -9,6 +10,9 @@ import link4Svg from "assets/link-4.svg";
 
 export const Footer = () => {
     return (
+        <>
+        <Collaboration/>
+
         <div className="footer" maxWidth="100%"
         style={{
               marginTop:'300px',
@@ -163,6 +167,9 @@ export const Footer = () => {
                     </div>
                 </div>
             </div>
+
+
         </div>
+        </>
     );
 };

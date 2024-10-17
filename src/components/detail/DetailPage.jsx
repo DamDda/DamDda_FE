@@ -13,6 +13,7 @@ import { SERVER_URL } from "constants/URLs";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useUser } from "UserContext";
 
 ////////////////////////////////////////////////////////
 
@@ -44,6 +45,7 @@ export const DetailPage = () => {
   };
 
 
+  const { isLogin } = useUser();
 
   ///////////////////////////데이터 요청 시작/////////////////////////////
   const navigate = useNavigate();
@@ -90,7 +92,8 @@ export const DetailPage = () => {
   const [projectInfo, setProjectInfo] = useState();
   const [likedCount, setLikedCount] = useState();
   const [isHearted, setIsHearted] = useState();
-  const [selectedPackages, setSelectedPackages] = useState();
+  const [selectedPackages, setSelectedPackages] = useState([]);
+
 
   // 프로젝트 정보 요청을 보내는 함수
   const fetchProducts = () => {
@@ -135,16 +138,19 @@ export const DetailPage = () => {
       targetFunding: projectDetail.targetFunding, // 목표 금액
       startDate: projectDetail.startDate, // 펀딩 시작일
       endDate: projectDetail.endDate, // 펀딩 종료일
-      liked: projectDetail.Liked, // 사용자가 좋아요를 눌렀는지 여부
+      liked: projectDetail.liked, // 사용자가 좋아요를 눌렀는지 여부
       liked_count: projectDetail.likeCnt, // 좋아요를 누른 사람의 수
     }
     );
+    console.log("projectDetail useEffect" , projectDetail);
+    console.log("projectInfo useEffect" , projectInfo);
   }, [projectDetail]);
   ///////////////////////////프로젝트 정보 요청 끝/////////////////////////////
 
 
   //////////////////주문 요청 시작/////////////////////////////////////
   const handleSponsorClick = () => {
+    if(isLogin){
     if (selectedPackages || selectedPackages.legnth() > 0) {
       const confirmation = window.confirm("이 프로젝트를 후원하시겠습니까?");
       if (confirmation) {
@@ -152,6 +158,8 @@ export const DetailPage = () => {
       }
     } else {
       alert("선물구성을 선택하세요.");      
+    }} else {
+      alert("로그인 후 이용이 가능합니다.")
     }
   };
 
@@ -231,6 +239,7 @@ export const DetailPage = () => {
   });
 
   const [errors, setErrors] = useState({
+    title: false, 
     name: false,
     phone: false,
     email: false,
@@ -238,79 +247,82 @@ export const DetailPage = () => {
   });
 
   const handleCollabClick = (isHearted) => {
-    alert("협업하기 버튼 클릭!");
-    handleCollabSubmit();
+    if(isLogin){
+    //handleCollabSubmit();
     setModalOpen(true);
-  };
-  
-  const handleCollabSubmit = async () => {
-    const newErrors = {
-      title: !collabDetails.title,
-      name: !collabDetails.name,
-      phone: !collabDetails.phone,
-      email: !collabDetails.email,
-      message: !collabDetails.message,
-    };
-
-    setErrors(newErrors);
-
-    const formData = new FormData();
-
-    /*오늘 날짜*/
-    const date = new Date();
-    const year = date.getFullYear();
-    const month = ("0" + (date.getMonth() + 1)).slice(-2);
-    const day = ("0" + date.getDate()).slice(-2);
-    const today = `${year}-${month}-${day}`;
-
-    const jsonData = {
-      email: collabDetails.email,
-      phoneNumber: collabDetails.phone,
-      content: collabDetails.message,
-      // user_id: user.id,
-      collaborationDTO: {
-        title: collabDetails.title,
-        CollaborateDate: today,
-        name: collabDetails.name,
-      },
-    };
-
-    formData.append("jsonData", JSON.stringify(jsonData));
-    collabDetails.files.forEach((file, index) => {
-      formData.append("collabDocList", file);
-    });
-
-    console.log("formData" + formData);
-    if (
-      !newErrors.title &&
-      !newErrors.message &&
-      !newErrors.name &&
-      !newErrors.phone &&
-      !newErrors.email
-    ) {
-      try {
-        console.log("요청 전까지는 가능함!!");
-        const response = await axios.post(
-          `collab/register/${projectId}`,
-          formData,
-          {
-            withCredentials: true,
-            headers: {
-              "Content-Type": "multipart/form-data",
-              ...(Cookies.get("accessToken") && {
-                Authorization: `Bearer ${Cookies.get("accessToken")}`,
-              }),
-            },
-          }
-        );
-        console.log("결과" + response);
-        alert("협업 요청이 전송되었습니다.");
-        //handleModalClose();
-      } catch (error) {
-        console.log("register 과정 중 에러 발생 " + error);
-      }
+    } else {
+      alert("로그인 후 이용이 가능합니다.")
     }
   };
+  
+  // const handleCollabSubmit = async () => {
+  //   const newErrors = {
+  //     title: !collabDetails.title,
+  //     name: !collabDetails.name,
+  //     phone: !collabDetails.phone,
+  //     email: !collabDetails.email,
+  //     message: !collabDetails.message,
+  //   };
+
+  //   setErrors(newErrors);
+
+  //   const formData = new FormData();
+
+  //   /*오늘 날짜*/
+  //   const date = new Date();
+  //   const year = date.getFullYear();
+  //   const month = ("0" + (date.getMonth() + 1)).slice(-2);
+  //   const day = ("0" + date.getDate()).slice(-2);
+  //   const today = `${year}-${month}-${day}`;
+
+  //   const jsonData = {
+  //     email: collabDetails.email,
+  //     phoneNumber: collabDetails.phone,
+  //     content: collabDetails.message,
+  //     // user_id: user.id,
+  //     collaborationDTO: {
+  //       title: collabDetails.title,
+  //       CollaborateDate: today,
+  //       name: collabDetails.name,
+  //     },
+  //   };
+
+  //   formData.append("jsonData", JSON.stringify(jsonData));
+  //   collabDetails.files.forEach((file, index) => {
+  //     formData.append("collabDocList", file);
+  //   });
+
+  //   console.log("formData" + formData);
+  //   if (
+  //     !newErrors.title &&
+  //     !newErrors.message &&
+  //     !newErrors.name &&
+  //     !newErrors.phone &&
+  //     !newErrors.email
+  //   ) {
+  //     try {
+  //       console.log("요청 전까지는 가능함!!");
+  //       const response = await axios.post(
+  //         `collab/register/${projectId}`,
+  //         formData,
+  //         {
+  //           withCredentials: true,
+  //           headers: {
+  //             "Content-Type": "multipart/form-data",
+  //             ...(Cookies.get("accessToken") && {
+  //               Authorization: `Bearer ${Cookies.get("accessToken")}`,
+  //             }),
+  //           },
+  //         }
+  //       );
+  //       console.log("결과" + response);
+  //       alert("협업 요청이 전송되었습니다.");
+  //       //handleModalClose();
+  //     } catch (error) {
+  //       console.log("register 과정 중 에러 발생 " + error);
+  //     }
+  //   }
+  // };
 
 
   const handleModalClose = () => {
@@ -324,38 +336,45 @@ export const DetailPage = () => {
         message: "",
         files: [],
       });
-      setErrors({ name: false, phone: false, email: false, message: false });
+      setErrors({ title: false, name: false, phone: false, email: false, message: false });
     }
   };
 
   //////좋아요 요청 시작////////////////////////////////////////////////
-  const handleHeartClick = async (isHearted) => {
-    axios({
-      method: projectDetail.liked ? "DELETE" : "POST",
-      url: `${SERVER_URL}/project/like`,
-      params: {
-        projectId: projectDetail.id,
-      },
-      headers: {
-        ...(Cookies.get("accessToken") && {
-          Authorization: `Bearer ${Cookies.get("accessToken")}`,
-        }),
-      },
-    })
-      .then((response) => {
-        if (response.status === 200) {
-          console.log(`좋아요 ${projectDetail.liked ? "취소" : "추가"} 성공:`, response.data);
-          
-          // 상태 업데이트 - 불변성 유지
-          setProjectDetail(prevState => ({
-            ...prevState,
-            liked: !prevState.liked, // liked 상태를 반전시킴
-          }));
-        }
+  const handleHeartClick = async () => {
+    const isLike = projectDetail.liked
+    console.log("projectDetail.Liked",isLike);
+    if(isLogin){
+      axios({
+        method: isLike ? "DELETE" : "POST",
+        url: `${SERVER_URL}/project/like`,
+        params: {
+          projectId: projectDetail.id,
+        },
+        headers: {
+          ...(Cookies.get("accessToken") && {
+            Authorization: `Bearer ${Cookies.get("accessToken")}`,
+          }),
+        },
       })
-      .catch((e) => {
-        console.error(e);
-      });
+        .then((response) => {
+          if (response.status === 200) {
+            console.log(`좋아요 ${isLike ? "취소" : "추가"} 성공:`, response.data);
+            
+            // 상태 업데이트 - 불변성 유지
+            setProjectDetail(prevState => ({
+              ...prevState,
+              liked: !prevState.liked, // liked 상태를 반전시킴
+              likeCnt: isLike ? prevState.likeCnt - 1 : prevState.likeCnt + 1,
+            }));
+          }
+        })
+        .catch((e) => {
+          console.error(e);
+        });      
+    } else {
+      alert("로그인 후 이용이 가능합니다.")
+    }
   };
   //////좋아요 요청 끝////////////////////////////////////////////////
 
@@ -420,7 +439,7 @@ export const DetailPage = () => {
         >
           <DetailDescroption
             descriptionDetail={projectDetail.description}
-            descriptionImages={projectDetail.descriptionImages.flatMap(image => Array(10).fill(image))}
+            descriptionImages={projectDetail.descriptionImages.flatMap(image => Array(5).fill(image))}
           />
         </div>
         <div
@@ -433,7 +452,6 @@ export const DetailPage = () => {
       overflowY: "auto", // 내부 스크롤 활성화
     }}
   >
-
           <GiftCompositionComponent handleSponsorClick={handleSponsorClick} selectedPackages={selectedPackages} setSelectedPackages={setSelectedPackages} projectId={projectDetail.id}/>
         </div>
       </div>
@@ -445,7 +463,7 @@ export const DetailPage = () => {
           collabDetails={collabDetails}
           errors={errors}
           setErrors={setErrors}
-          projectId={"project.id"} //------------------------------>project.id로 수정
+          projectId={projectDetail.id} //------------------------------>project.id로 수정
         />
       )}
 

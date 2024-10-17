@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardMedia, IconButton, Button, LinearProgress, Box, Typography } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import { SERVER_URL } from "constants/URLs";
 
 export const ProductCard = ({ product, handleLike }) => {
   const formattedTargetFunding = new Intl.NumberFormat().format(product.targetFunding);
@@ -14,8 +15,11 @@ export const ProductCard = ({ product, handleLike }) => {
   const daysLeft = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
 
   const navigate = useNavigate();
+
 /////////////////////////////////////////////
 
+  // handleLike 함수가 제대로 전달되었는지 확인
+  console.log("ProductCard - handleLike 함수:", handleLike);
 
 ////////////////////////////////////////////
   return (
@@ -25,14 +29,13 @@ export const ProductCard = ({ product, handleLike }) => {
           borderRadius: "15px",
           boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
           padding: 1,
-          margin: '0px 5px',  // margin 줄이기
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
           overflow: "visible",
-          width: "245px",  // 너비 줄이기
-          height: "350px", // 높이 줄이기
+          width: "250px",  // 너비 줄이기
+          height: "370px", // 높이 줄이기
           transform: "scale(0.95)", // 스케일 조정
           transformOrigin: "top left",
         }}
@@ -41,7 +44,7 @@ export const ProductCard = ({ product, handleLike }) => {
         <Box sx={{ position: "relative" }}>
           <CardMedia
             component="img"
-            image={`http://${window.location.hostname}:9000/${product.thumbnailUrl}`}
+            image={`${SERVER_URL}/${product.thumbnailUrl}`}
             sx={{ height: "160px", borderRadius: "5px", width: "100%" }} // 높이 줄이기
           />
           <IconButton
@@ -53,6 +56,8 @@ export const ProductCard = ({ product, handleLike }) => {
             }}
             onClick={(event) => {
               event.stopPropagation();
+              console.log("handleLike 호출됨:", product); // 로그로 함수 호출 확인
+
               handleLike(product);
             }}
           >
@@ -62,8 +67,8 @@ export const ProductCard = ({ product, handleLike }) => {
 
         <CardContent
           sx={{
-            width: "245px", // 너비 줄이기
-            height: "210px", // 높이 줄이기
+            width: "250px", // 너비 줄이기
+            height: "220px", // 높이 줄이기
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-around",
@@ -94,6 +99,7 @@ export const ProductCard = ({ product, handleLike }) => {
               alignItems: "center",
               justifyContent: "space-between",
               width: "100%",
+              
             }}
           >
             <Typography

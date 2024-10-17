@@ -10,10 +10,13 @@ damdda-body {
 
 /* 기본 레이아웃 설정 */
 damdda-container {
-  width: 70%;
+  /* width: 70%;
   max-width: 1520px;
-  /* margin: 30px auto; */
-  /* padding: 0 20px; */
+  margin: 30px auto;
+  padding: 0 20px; */
+  width: 100%;
+  max-width: 1520px;
+  margin: 0px auto;
 }
 
 /* 제목 스타일 */

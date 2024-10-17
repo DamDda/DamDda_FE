@@ -15,7 +15,7 @@ export const ProjectInfo = ({
   handleCollabClick,
   handleHeartClick,
 }) => {
-  console.log("projectInfo: ",projectInfo);
+  console.log("projectInfo.liked: ",projectInfo.liked);
   // 날짜 형식을 변환하는 함수
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -28,7 +28,11 @@ export const ProjectInfo = ({
     // return dateString;
   };
 
-  const [isHearted, setIsHearted] = useState(projectInfo.liked); // 사용자가 좋아요를 눌렀는지
+  useEffect(() => {
+    console.log("Updated projectInfo:", projectInfo);
+  }, [projectInfo]);
+
+  //const [isHearted, setIsHearted] = useState(projectInfo.liked); // 사용자가 좋아요를 눌렀는지
 
   return (
     <>
@@ -102,9 +106,9 @@ export const ProjectInfo = ({
               <div style={{ width: "180px" }}>
                 <BlueBorderButtonComponent
                   text={
-                    (isHearted ? "♥ " : "♡ ") + projectInfo.liked_count + "명"
+                    (projectInfo.liked ? "♥ " : "♡ ") + projectInfo.liked_count + "명"
                   }
-                  onClick={() => handleHeartClick(isHearted)}
+                  onClick={() => handleHeartClick(projectInfo.liked)}
                   className="heart-button"
                 />
               </div>

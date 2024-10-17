@@ -1,10 +1,12 @@
 import {React, useState, useRef, useEffect} from 'react';
 import { useNavigate } from "react-router-dom";
-import { ImageCarousel } from "components/common/ImageCarousel";
+import { MainImageCarousel } from "components/common/ImageCarousel";
 import { MultiCategoryComponent } from "components/common/MultiCategoryComponent";
 import { ShortcutBoxComponent } from "components/common/ShortcutBoxComponent";
 import { NewsSection } from "components/main/NewsSections";
 import { ProjectRowComponent } from "components/common/ProjectRowComponent";
+
+
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import StarIcon from "@mui/icons-material/Star";
@@ -79,7 +81,7 @@ export function Main() {
     height: "400px", 
     marginTop: "100px", 
     overflow: "hidden", // 부모 컨테이너에서 넘치는 부분 숨기기
-    marginTop:"100px"
+    marginTop:"150px"
   };
   //////////////////////////////////
 
@@ -101,16 +103,16 @@ export function Main() {
 }, [category, search]); // 의존성 배열에 cartegory와 search 추가
 
 
-useEffect(() => {
-  if (isFirstRender.current) {
-    // 처음 렌더링 시에는 실행되지 않도록 함
-    isFirstRender.current = false;
-    return;
-  }
+// useEffect(() => {
+//   if (isFirstRender.current) {
+//     // 처음 렌더링 시에는 실행되지 않도록 함
+//     isFirstRender.current = false;
+//     return;
+//   }
   
-  // 이후 상태가 변경될 때만 navigate 호출
-  // navigate(`/entire?category=${category}&search=${search}`);
-}, [category, search, navigate]);
+//   // 이후 상태가 변경될 때만 navigate 호출
+//   navigate(`/entire?category=${category}&search=${search}`);
+// }, [category, search, navigate]);
   
 
 ///캐러샐 (OK)
@@ -142,17 +144,17 @@ useEffect(() => {
     <Layout >
       <Box
          sx={{
-          margin: '0 auto',
-          width: "80%",
-          maxWidth: "1750px",
-          minWidth: '600px',
+          // margin: '0 auto',
+          // maxWidth: "1750px",
+          // minWidth: '600px',
         }}
       >
-      <ImageCarousel images={images} style={CarouselStyle} /> {/* 상태를 props로 전달 */}
+      <MainImageCarousel images={images} style={CarouselStyle} /> {/* 상태를 props로 전달 */}
       <MultiCategoryComponent setCategory={setCategory} />
-        <ShortcutBoxComponent services={services} />
 
+     
         <ProjectRowComponent sortCondition={"likeCnt"} title={"인기 프로젝트"} subTitle={"좋아요가 가장 많은 프로젝트"} />
+        <NewsSection cardData={cardData} />
         <ProjectRowComponent sortCondition={"endDate"} title={"마감 임박 프로젝트"} subTitle={"마감임박! 마지막 기회 놓치지 말아요!"} />
 
         <div style={{ textAlign: 'center', margin: '70px 0' }}>
@@ -160,18 +162,21 @@ useEffect(() => {
             src={Banner2}
             alt="Banner"
             style={{
-              width: '100%',
               maxWidth: '1220px',
               height: '220px',
               borderRadius: '20px',
+            
             }}
           />
         </div>
 
         <ProjectRowComponent sortCondition={"recommend"} title={"사용자 추천 프로젝트"} subTitle={"나에게 딱 맞는 프로젝트."} />
+
         <ProjectRowComponent sortCondition={"viewCnt"} title={"최다 조회 프로젝트"} subTitle={"많은 사람들이 구경한 프로젝트"} />
+        
         <ProjectRowComponent sortCondition={"targetFunding"} title={"최다 후원 프로젝트"} subTitle={"많은 사람들의 이유있는 후원! 후원금이 가장 많은 프로젝트!"} />
-        <NewsSection cardData={cardData} />
+        <ShortcutBoxComponent services={services} />
+
       </Box>
     </Layout>
   );

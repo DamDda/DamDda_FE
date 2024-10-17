@@ -1,4 +1,4 @@
-import React, { useState } from "react"; // React
+import React, { useState, useEffect } from "react"; // React
 import { Typography, Box, Divider } from "@mui/material";
 import { PackageCard } from "components/common/Gift/PackageCard";
 import { GiftOrder } from "components/common/Gift/GiftOrder"
@@ -122,8 +122,7 @@ export const GiftCompositionComponent = ({ handleSponsorClick, selectedPackages,
  // const [selectPackages, setSelectPackages] = useState([]);
 
 
- const [projectPackage, setProjectPackage] = useState();
-
+ const [projectPackage, setProjectPackage] = useState([]);
  ////////패키지 데이터 가져오기 시작//////////////////////////////////////
  const fetchPackage = async () => {
   try {
@@ -135,7 +134,6 @@ export const GiftCompositionComponent = ({ handleSponsorClick, selectedPackages,
       console.error("API response is not an array:", response.data);
       return;
     }
-
     const formattedPackages = response.data?.map((pac) => ({
       id: pac.id,
       name: pac.name,
@@ -144,15 +142,16 @@ export const GiftCompositionComponent = ({ handleSponsorClick, selectedPackages,
       quantityLimited: pac.quantityLimited,
       RewardList: Array.isArray(pac.RewardList) ? pac.RewardList : [],
     }));
-
     console.log("패키지 데이터: ", formattedPackages); // 패키지 데이터를 콘솔에 출력
     setProjectPackage(formattedPackages);
   } catch (error) {
-    console.error("패키지 목록을 가져오는 중 오류 발생:", error);
+    console.error(`패키지 목록을 가져오는 중 오류 발생:`, error);
   }
 };
 
-
+useEffect(() => {
+  fetchPackage()
+}, []);
 
 
  ////////패키지 데이터 가져오기 끝//////////////////////////////////////
@@ -266,6 +265,8 @@ export const GiftCompositionComponent = ({ handleSponsorClick, selectedPackages,
             removePackageById={removePackageById}
           />
         ))}
+
+        
         {selectedPackages?.length > 0 && <div style={{width:"100px", marginLeft:"300px"}}><BlueButtonComponent onClick={handleSponsorClick} text={"후원하기"}/></div>}
         {selectedPackages?.length > 0 && <Divider sx={{ my: 3,  width: "400px", borderColor:"black" }} />}
 

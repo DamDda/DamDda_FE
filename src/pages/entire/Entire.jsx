@@ -345,12 +345,12 @@ export function Entire({ search, category }) {
                   display="flex"
                   justifyContent="center"
                 >
-                   <EntireProjectRowComponent
+                   {/* <EntireProjectRowComponent
         product={product}
         search={search}
         category={category}
         handleLike={handleLike}
-      />
+      /> */}
                 </grid2>
               ))}
             </grid2>
@@ -426,10 +426,10 @@ export function Entire({ search, category }) {
                   display="flex"
                   justifyContent="center"
                 >
-                  <EntireProjectRowComponent
+                  {/* <EntireProjectRowComponent
                     product={product}
                     handleLike={handleLike}
-                  />
+                  /> */}
                 </grid2>
               ))}
             </grid2>

@@ -398,3 +398,38 @@ export const ProgressButton = ({ type, progress, handleClick, children }) => {
     </Button>
   );
 };
+
+//로그인 버튼
+// export const LoginBlueButtonComponent = ({ text, onClick, type = "button" }) => {
+//   const buttonStyle = {
+//     backgroundColor: "#677cf9",
+//     padding: "10px 20px",
+//     border: "none",
+//     borderRadius: "5px",
+//     cursor: "pointer",
+//     color: "#ffffff",
+//     width: "100%",
+//   };
+//   return (
+//     <button style={buttonStyle} onClick={onClick} type={type}>
+//       {text}
+//     </button>
+//   );
+// };
+//로그인 버튼
+export const LoginBlueButtonComponent = ({ text, onClick, type = "button", onKeyDown }) => {
+  const buttonStyle = {
+    backgroundColor: "#677cf9",
+    padding: "10px 20px",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer",
+    color: "#ffffff",
+    width: "100%",
+  };
+  return (
+    <button onKeyDown={onKeyDown} style={buttonStyle} onClick={onClick} type={type}>
+      {text}
+    </button>
+  );
+};

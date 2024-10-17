@@ -388,7 +388,7 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/join" element={<Join />} />
               <Route path="/entire" element={<Entire />} />
-              <Route path="/newdetail" element={<ProjectDetail />} />
+              <Route path="/detail" element={<ProjectDetail />} />
               <Route path="/register" element={<Register />} />
               <Route path="/find-id" element={<FindID />} />
               <Route path="/reset-password" element={<ResetPassword />} />

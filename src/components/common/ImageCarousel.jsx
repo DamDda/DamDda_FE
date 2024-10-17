@@ -103,3 +103,87 @@ export function ImageCarousel({ images, style }) {
     </div>
   );
 }
+
+
+
+export function MainImageCarousel({ images, style }) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      {images.length > 0 ? (
+        <Carousel fade interval={4000} style={style}>
+          {images.map((url, index) => (
+            <Carousel.Item key={index}>
+              <img
+                src={
+                  url.substring(6, 15) === "carousels"
+                    ? `${ADMIN_SERVER_URL}/${url}`
+                    : url.substring(0, 5) === "files"
+                    ? `${SERVER_URL}/${url}`
+                    : url
+                }
+                alt={`Slide ${index + 1}`}
+                style={{
+                  width: "100%",
+                  height: "350px",
+                  objectFit: "cover",
+                  borderRadius: 30,
+                }}
+              />
+             
+            </Carousel.Item>
+          ))}
+        </Carousel>
+      ) : (
+        <Carousel fade interval={4000} style={style}>
+          <Carousel.Item>
+            <img
+              src={ExampleCarouselImage}
+              alt="First slide"
+              style={{
+                width: "100%",
+                height: "300px",
+                objectFit: "cover",
+                borderRadius: 30,
+              }}
+            />
+       
+          </Carousel.Item>
+
+          <Carousel.Item>
+            <img
+              src={ExampleCarouselImage}
+              alt="Second slide"
+              style={{
+                width: "100%",
+                height: "300px",
+                objectFit: "cover",
+                borderRadius: 30,
+              }}
+            />
+            
+          </Carousel.Item>
+
+          <Carousel.Item>
+            <img
+              src={ExampleCarouselImage}
+              alt="Third slide"
+              style={{
+                width: "100%",
+                height: "300px",
+                objectFit: "cover",
+                borderRadius: 30,
+              }}
+            />
+           
+          </Carousel.Item>
+        </Carousel>
+      )}
+    </div>
+  );
+}

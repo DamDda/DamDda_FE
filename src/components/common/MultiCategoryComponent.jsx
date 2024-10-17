@@ -1,11 +1,11 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { CategoryComponent } from "./CategoryComponent";
-import styles from '../css/MultiCategoryComponent.module.css'; 
+import styles from "../css/MultiCategoryComponent.module.css";
 
 export const MultiCategoryComponent = ({ setCategory }) => {
   const navigate = useNavigate();
-  
+
   // 카테고리 목록
   const categoryList = [
     { value: "전체", text: "dAbstract", imgUrl: require('../../assets/d-abstract-holographic-form.png') },
@@ -19,7 +19,7 @@ export const MultiCategoryComponent = ({ setCategory }) => {
   ];
 
   return (
-    <div className={styles['category-wrapper']}>
+    <div className={styles["category-wrapper"]}>
       {categoryList.map((category, index) => (
         <CategoryComponent
           key={index}

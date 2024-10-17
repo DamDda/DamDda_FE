@@ -36,7 +36,6 @@ export const FindID = () => {
     setFormData({ ...formData, [name]: value });
   };
   
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setNameError("");
@@ -52,9 +51,14 @@ export const FindID = () => {
       return;
     }
   
-    try {
-      console.log("Axios 요청 시작"); // 디버깅
+    // 이메일 형식 검증
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(formData.email)) {
+      setEmailError("유효한 이메일 주소를 입력해주세요.");
+      return;
+    }
   
+    try {
       const response = await axios.get(`${SERVER_URL}/member/findid`, {
         params: {
           name: formData.name,
@@ -65,14 +69,11 @@ export const FindID = () => {
         },
       });
   
-      console.log("Axios 응답 수신:", response); // 응답 로깅
-  
       if (response.status !== 200) {
         throw new Error(`서버 오류: ${response.status}`);
       }
   
       const idData = response.data;
-      console.log("ID Data:", idData);
   
       if (idData && idData.userId) {
         setUserId(idData.userId);
@@ -81,22 +82,70 @@ export const FindID = () => {
         alert("아이디를 찾을 수 없습니다. 다시 입력해주세요.");
       }
     } catch (error) {
-      console.error("Axios 요청 중 오류 발생:", error); // 디버깅 강화
-      if (error.response) {
-        // 서버에서 응답을 받았으나 오류 상태 코드 반환
-        console.error("서버 응답:", error.response.data);
-        alert(`오류: ${error.response.status} - ${error.response.statusText}`);
-      } else if (error.request) {
-        // 요청은 전송되었으나 응답을 받지 못함
-        console.error("요청 자체가 문제:", error.request);
-        alert("네트워크 문제로 인해 서버에 연결할 수 없습니다.");
-      } else {
-        // 요청 설정 중 오류 발생
-        console.error("설정 오류:", error.message);
-        alert("요청 설정 중 문제가 발생했습니다.");
-      }
+      console.error("Axios 요청 중 오류 발생:", error);
+      alert("아이디 찾기 요청 중 오류가 발생했습니다.");
     }
   };
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   setNameError("");
+  //   setEmailError("");
+  
+  //   // 입력 검증
+  //   if (!formData.name) {
+  //     setNameError("이름을 입력해주세요.");
+  //     return;
+  //   }
+  //   if (!formData.email) {
+  //     setEmailError("이메일을 입력해주세요.");
+  //     return;
+  //   }
+  
+  //   try {
+  //     console.log("Axios 요청 시작"); // 디버깅
+  
+  //     const response = await axios.get(`${SERVER_URL}/member/findid`, {
+  //       params: {
+  //         name: formData.name,
+  //         email: formData.email,
+  //       },
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //     });
+  
+  //     console.log("Axios 응답 수신:", response); // 응답 로깅
+  
+  //     if (response.status !== 200) {
+  //       throw new Error(`서버 오류: ${response.status}`);
+  //     }
+  
+  //     const idData = response.data;
+  //     console.log("ID Data:", idData);
+  
+  //     if (idData && idData.userId) {
+  //       setUserId(idData.userId);
+  //       setOpen(true); // 모달 열기
+  //     } else {
+  //       alert("아이디를 찾을 수 없습니다. 다시 입력해주세요.");
+  //     }
+  //   } catch (error) {
+  //     console.error("Axios 요청 중 오류 발생:", error); // 디버깅 강화
+  //     if (error.response) {
+  //       // 서버에서 응답을 받았으나 오류 상태 코드 반환
+  //       console.error("서버 응답:", error.response.data);
+  //       alert(`오류: ${error.response.status} - ${error.response.statusText}`);
+  //     } else if (error.request) {
+  //       // 요청은 전송되었으나 응답을 받지 못함
+  //       console.error("요청 자체가 문제:", error.request);
+  //       alert("네트워크 문제로 인해 서버에 연결할 수 없습니다.");
+  //     } else {
+  //       // 요청 설정 중 오류 발생
+  //       console.error("설정 오류:", error.message);
+  //       alert("요청 설정 중 문제가 발생했습니다.");
+  //     }
+  //   }
+  // };
   
 
 

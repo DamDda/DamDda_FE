@@ -168,7 +168,6 @@ export function InputLargeBox({
   customInputProps,
   row,
   sx,
-
   style,
   required, // required 속성 추가
   readOnly = false, 
@@ -198,9 +197,7 @@ export function InputLargeBox({
           },
         }}
         required={required} // required 속성 적용
-
         sx={sx}
-
         style={style}
       />
     </ThemeProvider>

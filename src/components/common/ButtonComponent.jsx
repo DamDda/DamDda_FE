@@ -26,9 +26,9 @@
 
 // export const BlueBorderButtonComponent = ({ text, onClick }) => {
 //     const buttonStyle = {
-//         backgroundColor: 'transparent', 
+//         backgroundColor: 'transparent',
 //         padding: '10px 20px',
-//         border: '2px solid #677cf9', 
+//         border: '2px solid #677cf9',
 //         borderRadius: '5px',
 //         cursor: 'pointer',
 //         color: '#2d2736',
@@ -58,12 +58,12 @@
 // }
 // export const RedBorderButtonComponent = ({ text, onClick }) => {
 //     const buttonStyle = {
-//         backgroundColor: 'transparent', 
+//         backgroundColor: 'transparent',
 //         padding: '10px 20px',
-//         border: '2px solid #ce9dee', 
+//         border: '2px solid #ce9dee',
 //         borderRadius: '5px',
 //         cursor: 'pointer',
-//         color: '#2d2736', 
+//         color: '#2d2736',
 //     }
 
 //     return (
@@ -186,8 +186,6 @@
 //         </Tooltip>
 //     )
 // }
-
-
 
 import { Button, Tooltip } from "@mui/material";
 
@@ -382,22 +380,21 @@ export const StatusButton = ({
   );
 };
 
-
 //Entire.jsx버튼
 export const ProgressButton = ({ type, progress, handleClick, children }) => {
-    return (
-      <Button
-        onClick={() => handleClick(type)}
-        variant={progress === type ? "contained" : "outlined"}
-        size="small"
-        sx={{
-          width: "100%",
-          borderRadius: "12px",
-          fontSize: "0.75rem",
-          marginRight: "20px",
-        }}
-      >
-        {children}
-      </Button>
-    );
-  };
+  return (
+    <Button
+      onClick={() => handleClick(type)}
+      variant={progress === type ? "contained" : "outlined"}
+      size="small"
+      sx={{
+        width: "100%",
+        borderRadius: "12px",
+        fontSize: "0.75rem",
+        marginRight: "20px",
+      }}
+    >
+      {children}
+    </Button>
+  );
+};

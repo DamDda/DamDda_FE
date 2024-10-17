@@ -47,7 +47,7 @@ export const ProfileMenu = ({ isOpen, handleProfileMenuOpen, user, isLogin, logo
                 </Button>
                 <Button
                   variant="outlined"
-                  sx={{ borderRadius: 20, width: "100px", fontWeight: "bold" }}
+                  sx={{ borderRadius: 20, width: "200px", fontWeight: "bold" }}
                   onClick={() => navigate("/mypage", { state: { activeTab: "likeProject" } })}
                 >
                   ❤️관심프로젝트

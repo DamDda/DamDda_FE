@@ -9,32 +9,41 @@ import {
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
-const baseTheme = createTheme({
+export const arrowTheme = createTheme({
+  palette: {
+    action: {
+      active: "#787878",
+      disabled: "#DFDFDF",
+    },
+  },
+});
+
+export const baseTheme = createTheme({
   // 색상 일괄 조정
   palette: {
     mode: "light",
     primary: {
       main: "#677cf9", // 클릭 시 적용되는 색상
-      light: "#d65db1",
-      dark: "#ff6f91",
+      light: "#677cf9",
+      dark: "#677cf9",
       contrastText: "#FFFFFF", // 대비 텍스트 색상
     },
     action: {
       active: "#ffc75f", // 툴팁 아이콘 색상
     },
     text: {
-      primary: "#444444", // 입력한 텍스트 색상, placeholder는 자동으로 연하게
-      secondary: "#444444", // label 에 입혀지는 색상
-      disabled: "#ff6f91",
+      primary: "#374edb", // 입력한 텍스트 색상, placeholder는 자동으로 연하게
+      secondary: "#677cf9", // label 에 입혀지는 색상
+      disabled: "#677cf9",
     },
     grey: {
       700: "#ff9671", // 툴팁 텍스트 바탕 색상
     },
     // divider, background는 언제 먹는지 모르겠음
-    divider: "#677cf9",
+    divider: "#845ec2",
     background: {
-      paper: "#d65db1",
-      default: "#ff6f91",
+      paper: "#FFFFFF",
+      default: "#374edb",
     },
   },
   // shape 조정
@@ -44,7 +53,7 @@ const baseTheme = createTheme({
   // 텍스트 조정
   typography: {
     mytitle: {
-      color: "#444444", // 제목 색상 조정
+      color: "#FF00FF", // 제목 색상 조정
       fontFamily: "Roboto, Helvetica, Arial, sans-serif",
       fontWeight: 400,
       fontSize: "1rem",
@@ -61,6 +70,7 @@ export function InputBox({
   label,
   value,
   onChange,
+  onKeyDown,
   type,
   placeholder,
   id,
@@ -77,6 +87,7 @@ export function InputBox({
         label={label}
         value={value}
         onChange={onChange}
+        onKeyDown={onKeyDown}
         placeholder={placeholder}
         type={type ? type : "text"}
         error={error}
@@ -157,37 +168,41 @@ export function InputLargeBox({
   customInputProps,
   row,
   sx,
+
   style,
   required, // required 속성 추가
-  readOnly = false, // readOnly를 변수로 추가
+  readOnly = false, 
 }) {
   return (
     <ThemeProvider theme={baseTheme}>
-      {title && <Typography variant="mytitle">{title}</Typography>}
+      <Typography variant="mytitle">{title}</Typography>
       {/* 제목 스타일 */}
       <TextField
         fullWidth
-        multiline={!!row} // row 값이 있으면 multiline 적용
+        multiline
         rows={row}
         id={id}
         name={name}
         label={label}
         value={value}
         onChange={onChange}
-        type={type || "text"} // type을 바로 TextField에 적용
+        type={type}
         placeholder={placeholder}
         maxRows={100}
         checked={checked}
         inputRef={inputRef}
-        InputProps={{
-          ...customInputProps,
-          readOnly: readOnly, // readOnly를 그대로 전달
+        slotProps={{
+          input: {
+            ...customInputProps,
+            readOnly: readOnly,
+          },
         }}
         required={required} // required 속성 적용
+
         sx={sx}
+
         style={style}
       />
     </ThemeProvider>
   );
 }
-

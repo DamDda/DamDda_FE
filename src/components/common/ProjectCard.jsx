@@ -14,7 +14,10 @@ export const ProductCard = ({ product, handleLike }) => {
   const daysLeft = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
 
   const navigate = useNavigate();
+/////////////////////////////////////////////
 
+
+////////////////////////////////////////////
   return (
     <>
       <Card

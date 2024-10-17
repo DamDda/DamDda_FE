@@ -82,7 +82,7 @@ export function MyInfoBox() {
               sx={{
                 borderRadius: 20,
 
-                width: "100px",
+                width: "120px",
 
                 fontWeight: "bold",
               }}
@@ -101,7 +101,7 @@ export function MyInfoBox() {
               textAlign="center"
               sx={{
                 fontWeight: 800,
-
+                marginTop:2,
                 cursor: "pointer",
               }}
               onClick={() => {

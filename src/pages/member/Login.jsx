@@ -11,6 +11,8 @@ import { Layout } from "components/layout/DamDdaContainer"; // Layout 컴포넌�
 import PersonIcon from "@mui/icons-material/Person"; // 사람 아이콘
 import axios from "axios";
 import { SERVER_URL } from "constants/URLs";
+import Cookies from "js-cookie";
+
 export const Login = () => {
   const [formData, setFormData] = useState({ id: "", password: "" });
   const [idError, setIdError] = useState("");
@@ -23,6 +25,22 @@ export const Login = () => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
     setLoginError(""); // 입력할 때마다 로그인 오류 메시지 초기화
+  };
+
+  const fetchUserInfo = async (accessToken) => {
+    const response = await axios.get(`${SERVER_URL}/member/userinfo`, {
+      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    const contextInfo = {
+      id: response.data.id,
+      key: response.data.key,
+      profile: response.data.imageUrl,
+      nickname: response.data.nickname,
+    };
+    login(contextInfo);
   };
 
   const handleSubmit = async (e) => {
@@ -51,47 +69,36 @@ export const Login = () => {
         setPasswordError("");
       }
   
-      if (!valid) {
-        console.log("유효성 검사 실패: 로그인 폼의 필드가 비어있음");
-        return;
-      }
-  
-      console.log("로그인 요청 데이터:", formatLogin);
-  
-      // 서버에 로그인 요청
+    
+    // 모든 필드가 입력되었을 때만 검증 진행
+    if (valid) {
       const response = await axios.post(
         `${SERVER_URL}/member/login`,
         formatLogin,
-        { withCredentials: true }
+        {
+          withCredentials: true,
+          headers: { "Content-Type": "application/json" },
+        }
       );
-  
-      console.log("서버 응답 데이터:", response.data);
-  
-      // 응답 데이터에서 닉네임 추출
-      const { "X-Nickname": nickname } = response.data;
-  
-      if (!nickname) {
-        console.error("잘못된 응답 형식:", response.data);
-        setLoginError("서버로부터 예상치 못한 응답을 받았습니다.");
-        return;
+
+      const accessToken = response.headers["authorization"].split(" ")[1];
+      if (accessToken) {
+        // 토큰을 제대로 저장
+        Cookies.set("accessToken", accessToken);
       }
-  
-      const userData = {
-        id: formData.id, // 사용자가 입력한 아이디 그대로 사용
-        nickname,
-      };
-  
-      console.log("유저 데이터:", userData);
-  
-      // 로그인 처리 및 페이지 이동
-      login(userData);
+      fetchUserInfo(accessToken); // 토큰을 제대로 전달
+
+      // login(userData);
       navigate("/", { state: { id: formData.id } });
-    } catch (error) {
-      console.error("로그인 오류:", error);
-      setLoginError("로그인 정보가 틀렸습니다. 다시 입력해주세요.");
     }
-  };
-  
+  } catch (error) {
+    setLoginError("로그인 정보가 틀렸습니다. 다시 입력해주세요.");
+  }
+};
+
+
+    
+
   
 
   const handleJoinClick = () => {

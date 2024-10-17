@@ -87,7 +87,7 @@ export function Main() {
   }
 
   const fetchData = () => {
-    // navigate(`/entire?category=${category}&search=${search}`);
+    navigate(`/entire?category=${category}&search=${search}`);
     
   };
 
@@ -103,7 +103,7 @@ useEffect(() => {
   }
   
   // 이후 상태가 변경될 때만 navigate 호출
-  // navigate(`/entire?category=${category}&search=${"k"}`);
+  // navigate(`/entire?category=${category}&search=${search}`);
 }, [category, search, navigate]);
   
 
@@ -133,7 +133,7 @@ useEffect(() => {
 //////////////////////////////////
 
   return (
-    <Layout>
+    <Layout >
       <Box
         sx={{
           margin: "0 auto",

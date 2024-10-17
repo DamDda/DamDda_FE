@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Typography, Button } from "@mui/material";
 import { styled } from "@mui/system";
+import { ADMIN_SERVER_URL } from "constants/URLs";
 
 const Container = styled("div")({
   padding: "20px",
@@ -40,7 +41,16 @@ export const DetailDescroption = ({ descriptionDetail, descriptionImages }) => {
     <Container>
       {/* 상세 설명 섹션 */}
       <DetailSection ref={detailRef}>
-        <Typography variant="body1" style={{ marginTop: "10px" }}>
+        <Typography variant="body1" style={{ 
+            width: "760px", 
+            marginTop: "10px",   
+            overflow: "auto",  
+            whiteSpace: "pre-line", // pre-line 대신 normal로 변경
+            textAlign: "center", // 가운데 정렬
+            fontSize: "18px", // 폰트 크기 조정
+            wordBreak: "break-word", // 긴 단어 줄바꿈
+            overflowWrap: "break-word", // 긴 텍스트 줄바꿈
+          }}>
           {descriptionDetail}
         </Typography>
         {descriptionImages && descriptionImages.length > 0 ? (
@@ -49,7 +59,7 @@ export const DetailDescroption = ({ descriptionDetail, descriptionImages }) => {
             return (
               <ImageContainer
                 key={index}
-                src={image}
+                src={image.substring(0,4) === "http" ? image : `${ADMIN_SERVER_URL}/${image}`}
                 alt={`Product image ${index}`}
               />
             );

@@ -74,8 +74,14 @@ export function Main() {
       backgroundColor: "#edf1ff",
     },
   ];
-  const CarouselStyle = { maxWidth: "90%", width: "1320px", height: "auto",marginTop:"100px" };
-//////////////////////////////////
+  const CarouselStyle = { 
+    width: "1320px", 
+    height: "400px", 
+    marginTop: "100px", 
+    overflow: "hidden", // 부모 컨테이너에서 넘치는 부분 숨기기
+    marginTop:"100px"
+  };
+  //////////////////////////////////
 
 //카테고리
 

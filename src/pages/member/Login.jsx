@@ -6,7 +6,7 @@ import {
   BlueButtonComponent,
   BlueBorderButtonComponent,
 } from "components/common/ButtonComponent";
-import { InputLargeBox } from "components/common/InputBoxComponent";
+import { InputLargeBox,PasswordInputBox } from "components/common/InputBoxComponent";
 import { Layout } from "components/layout/DamDdaContainer"; // Layout 컴포넌트 import
 import PersonIcon from "@mui/icons-material/Person"; // 사람 아이콘
 import axios from "axios";
@@ -148,20 +148,15 @@ export const Login = () => {
 
             {/* 비밀번호 입력란에 잠금열쇠 아이콘 추가 */}
             <div style={{ position: "relative", marginBottom: "20px" }}>
-              <InputLargeBox
-                required
-                fullWidth
-                id="password"
+            <PasswordInputBox
+                title="비밀번호"
                 name="password"
-                label="비밀번호"
-                type="password"
-                variant="standard"
                 value={formData.password}
                 onChange={handleChange}
                 error={Boolean(passwordError)}
-                helperText={passwordError}
-                margin="normal"
-                readOnly={false} // readOnly 속성을 false로 설정
+                errorMessage={passwordError}
+                id="password"
+                required={true}
               />
             </div>
 

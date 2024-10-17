@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   TextField,
   Typography,
@@ -8,7 +8,8 @@ import {
 } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 export const arrowTheme = createTheme({
   palette: {
     action: {
@@ -160,7 +161,7 @@ export function InputLargeBox({
   label,
   value,
   onChange,
-  type,
+  type, 
   placeholder,
   id,
   inputRef,
@@ -185,7 +186,7 @@ export function InputLargeBox({
         label={label}
         value={value}
         onChange={onChange}
-        type={type}
+        type={type || "text"} // type을 바로 TextField에 적용
         placeholder={placeholder}
         maxRows={100}
         checked={checked}
@@ -197,6 +198,60 @@ export function InputLargeBox({
           },
         }}
         required={required} // required 속성 적용
+        sx={sx}
+        style={style}
+      />
+    </ThemeProvider>
+  );
+}
+
+
+export function PasswordInputBox({
+  title,
+  name,
+  value,
+  onChange,
+  placeholder = "비밀번호를 입력하세요",
+  id,
+  inputRef,
+  error = false,
+  errorMessage,
+  required = false,
+  readOnly = false,
+  sx,
+  style,
+}) {
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleTogglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
+
+  return (
+    <ThemeProvider theme={baseTheme}>
+      {title && <Typography variant="mytitle">{title}</Typography>}
+      <TextField
+        fullWidth
+        id={id}
+        name={name}
+        type={showPassword ? "text" : "password"} // 비밀번호 가리기/보이기 기능
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        inputRef={inputRef}
+        error={error}
+        helperText={error ? errorMessage : ""}
+        required={required}
+        InputProps={{
+          readOnly: readOnly,
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton onClick={handleTogglePasswordVisibility} edge="end">
+                {showPassword ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
         sx={sx}
         style={style}
       />

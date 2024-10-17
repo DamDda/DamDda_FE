@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react"; // React
+import React, { useState, useRef, useEffect } from "react"; // React
 import { DetailDescroption } from "components/detail/DetailDescription";
 import { Notice } from "components/detail/Notices";
 import { Divider } from "@mui/material";
@@ -8,7 +8,7 @@ import { TabComponent } from "components/common/TabComponent";
 import { CollabModal } from "components/detail/CollabModal";
 import { ProjectTitle } from "./ProjectTitle";
 import { ImageCarousel } from "components/common/ImageCarousel";
-import { display, width } from "@mui/system";
+import { display, margin, width } from "@mui/system";
 import { GiftCompositionComponent } from "components/common/Gift/GiftCompositionComponent";
 
 ////////////////////////////////////////////////////////
@@ -18,6 +18,11 @@ export const DetailPage = ({ project }) => {
 
   //ImageCarousel
   const [Images] = useState([
+    "files/carousels/20be6610-109a-498a-ad80-d3e64cc0c0e3_1.png",
+    "files/carousels/e7f9e8da-5d74-44b5-901d-e5e7b2771b8b_2.png",
+    "files/carousels/542de336-8048-4e56-97e8-6e868f14cb0c_3.png",
+    "files/carousels/184b85b6-bf13-4d04-85b5-16182c7d60de_4.png",
+    "files/carousels/b6b6d663-7e1b-410d-85a6-402836fa75b7_5.png",
     "https://img.freepik.com/free-vector/polygonal-city-elements_23-2147496342.jpg?ga=GA1.1.167959845.1724899652&semt=ais_hybrid",
     "https://img.freepik.com/free-vector/road-infographic-template_23-2147531975.jpg?ga=GA1.1.167959845.1724899652&semt=ais_hybrid",
     "https://img.freepik.com/free-vector/flat-people-doing-outdoor-activities_23-2147869120.jpg?ga=GA1.1.167959845.1724899652&semt=ais_hybrid",
@@ -51,7 +56,7 @@ export const DetailPage = ({ project }) => {
   };
 
   //////////캐러셀//////////////////////////////
-  const CarouselStyle = { width: "500px", height: "500px" };
+  const CarouselStyle = { width: "500px", height: "500px"};
 
   //////////Tab//////////////////////////////////
   //Tab
@@ -59,9 +64,9 @@ export const DetailPage = ({ project }) => {
 
   // 각 섹션에 대한 ref 정의
   const sectionRefs = {
-    "상 세 설 명": useRef(null),
-    "공 지 사 항": useRef(null),
-    "Q & A": useRef(null),
+    "descriptionRef": useRef(null),
+    "noticeRef": useRef(null),
+    "qnaRef": useRef(null),
   };
 
   const labels = ["상 세 설 명", "공 지 사 항", "Q & A"]; // 탭 레이블을 배열로 정의
@@ -159,6 +164,26 @@ export const DetailPage = ({ project }) => {
     // return newHeartedStatus; // 새로운 상태 반환
   };
 
+
+  /////탭 이동//////////////////////////////////////
+  const handleScrollToSectionWithOffset = (index) => {
+    setTabIndex(index);
+    const sectionKeys = Object.keys(sectionRefs);
+    const selectedSectionKey = sectionKeys[index];
+    const selectedSectionRef = sectionRefs[selectedSectionKey];
+
+    if (selectedSectionRef && selectedSectionRef.current) {
+      const elementPosition = selectedSectionRef.current.getBoundingClientRect().top + window.pageYOffset;
+
+      // 원하는 위치로 스크롤, offset을 적용해서 100px만큼 내려오게 함
+      window.scrollTo({
+        top: elementPosition - 150, // 100px만큼 상단에서 떨어지게 설정
+        behavior: 'smooth', // 부드러운 스크롤 이동
+      });
+    }
+  };
+
+  
   return (
     <div style={{ width: "100%", margin: "0px auto" }}>
       <div style={{ marginTop: "150px" }}>
@@ -188,10 +213,10 @@ export const DetailPage = ({ project }) => {
         />
       </div>
 
-      <div style={{ margin: "100px 0px 50px 0px" }}>
+      <div ref={sectionRefs.descriptionRef} style={{ margin: "100px 0px 50px 0px" }}>
         <TabComponent
           tabIndex={tabIndex}
-          setTabIndex={setTabIndex}
+          setTabIndex={(index) => handleScrollToSectionWithOffset(index)}
           labels={labels}
           sectionRefs={sectionRefs} // ref 전달
         />
@@ -208,6 +233,7 @@ export const DetailPage = ({ project }) => {
       >
         {/* <DetailDescroption /> */}
         <div
+          //id="desc-component"
           style={{
             width: "800px",
             height: "atuo",
@@ -215,12 +241,23 @@ export const DetailPage = ({ project }) => {
         >
           <DetailDescroption
             descriptionDetail={
-              "descriptionDdescriptionDetaildescriptionDetaildescriptionDetaildescriptionDetaildescriptionDetaildescriptionDetaildescriptionDetaildescriptionDetaildescriptionDetaildescriptionDetaildescriptionDetaildescriptionDetaildescriptionDetaildescriptionDetailetaildescriptionDetail"
-            }
+              "이 제품은 최고급 소재로 제작되어 오랜 사용에도 변함없는 품질을 자랑합니다. \n\n 세련된 디자인과 편안한 착용감으로 다양한 스타일에 어울리며, \n\n실용성과 미적인 요소를 모두 겸비한 완벽한 아이템입니다. \n\n여러 번의 테스트를 거쳐 내구성을 확인하였으며, \n\n가벼운 무게로 이동이 편리하고 사용하기에 매우 적합합니다. \n\n다양한 색상과 사이즈 옵션이 준비되어 있어 개개인의 취향에 맞춘 선택이 가능합니다. \n\n지금 구매하셔서 특별한 혜택을 누리세요."}
             descriptionImages={Images}
           />
         </div>
-        <GiftCompositionComponent />
+        <div
+    id="gift-component"
+    style={{
+      width: "35%",
+      position: "sticky",
+      top: "130px", // 상단 고정 위치
+      maxHeight: "calc(100vh - 130px)", // 뷰포트 높이에 맞춘 최대 높이
+      overflowY: "auto", // 내부 스크롤 활성화
+    }}
+  >
+
+          <GiftCompositionComponent handleSponsorClick={handleSponsorClick} />
+        </div>
       </div>
 
       {modalOpen && (
@@ -234,10 +271,10 @@ export const DetailPage = ({ project }) => {
         />
       )}
 
-      <div style={{ margin: "100px 0px 50px 0px" }}>
+      <div ref={sectionRefs.noticeRef} style={{ margin: "100px 0px 50px 0px" }}>
         <TabComponent
           tabIndex={tabIndex}
-          setTabIndex={setTabIndex}
+          setTabIndex={(index) => handleScrollToSectionWithOffset(index)}
           labels={labels}
           sectionRefs={sectionRefs} // ref 전달
         />
@@ -246,14 +283,15 @@ export const DetailPage = ({ project }) => {
         <Notice />
       </div>
 
-      <div style={{ margin: "100px 0px 50px 0px" }}>
+      <div ref={sectionRefs.qnaRef} style={{ margin: "100px 0px 50px 0px" }}>
         <TabComponent
           tabIndex={tabIndex}
-          setTabIndex={setTabIndex}
+          setTabIndex={(index) => handleScrollToSectionWithOffset(index)}
           labels={labels}
           sectionRefs={sectionRefs} // ref 전달
         />
       </div>
+
       <div style={{ padding: "20px", width: "90%", margin: "0 auto" }}>
         <QnA />
       </div>

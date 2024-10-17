@@ -2,9 +2,9 @@ import React, { useState } from "react"; // React
 import { Typography, Box, Divider } from "@mui/material";
 import { PackageCard } from "components/common/Gift/PackageCard";
 import { GiftOrder } from "components/common/Gift/GiftOrder"
+import { BlueButtonComponent } from "../ButtonComponent";
 
-export const GiftCompositionComponent = ({ rewardData }) => {
-
+export const GiftCompositionComponent = ({ handleSponsorClick, rewardData }) => {
   // 더미 데이터
   const packageData = [
     {
@@ -226,7 +226,7 @@ export const GiftCompositionComponent = ({ rewardData }) => {
             removePackageById={removePackageById}
           />
         ))}
-
+        {selectPackages.length > 0 && <div style={{width:"100px", marginLeft:"300px"}}><BlueButtonComponent onClick={handleSponsorClick} text={"후원하기"}/></div>}
         {selectPackages.length > 0 && <Divider sx={{ my: 3,  width: "400px", borderColor:"black" }} />}
 
 

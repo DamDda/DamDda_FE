@@ -7,42 +7,29 @@ import {
   CardMedia,
   CardContent,
   Button,
-  IconButton,
   LinearProgress,
 } from "@mui/material";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import Pagination from "@mui/material/Pagination";
-import Stack from "@mui/material/Stack";
+
 import StatusButton from "./StatusButton";
 import axios from "axios"; // 나중에 백엔드 연결 시 주석 해제
-import { useNavigate } from "react-router-dom";
 import { useUser } from "../../../UserContext";
 import Cookies from "js-cookie";
 import { SERVER_URL } from "../../../constants/URLs";
 
 // 프로젝트 카드 컴포넌트
 export const ProductCard = ({ product, setMyprojectClick, setMyprojectId }) => {
-  console.log(product.approval);
-  console.log(product);
-  const navigate = useNavigate(); // 페이지 이동을 위한 훅
-
-  // 카드 클릭 시 상세 페이지로 이동 (지금은 index +1 사용할거임)
+  // 카드 클릭 시 상세 페이지로 이동
   const handleCardClick = () => {
-    console.log("누락된 인덱스:", product.id); // index값 확인
+    console.log("누락된 인덱스:", product.id);
     setMyprojectId(product.id);
 
     // index값이 유효한 숫자인지 체크하고 url로 전달
     if (typeof product.id == "number" && !isNaN(product.id)) {
       // 페이지 이동
       setMyprojectClick(true);
-      // navigate(`/myproject/${product.id}`); // 올바른 url로 navigate
     } else {
       console.log("인덱스 번호 없음");
     }
-    // navigate(`/projects/myproject/${index + 1}`); // index +1 사용
-    // // navigate(`/projects/myproject/${projectId}`); // 백엔드 api함수
   };
 
   // 승인 상태에 따른 상태 라벨 결정
@@ -91,11 +78,6 @@ export const ProductCard = ({ product, setMyprojectClick, setMyprojectId }) => {
         image={`http://localhost:9000/${product.thumbnailUrl}`}
         sx={{ height: "180px", borderRadius: "10px", objectFit: "cover" }}
       />
-      {/* <IconButton
-        sx={{ position: 'absolute', top: 10, right: 10, color: product.hearted ? 'red' : 'gray' }}
-      > 
-        <FavoriteIcon />
-      </IconButton> */}
 
       {/* 관리자 승인 상태에 따른 StatusButton 추가*/}
       <StatusButton
@@ -186,23 +168,13 @@ export const ProductCard = ({ product, setMyprojectClick, setMyprojectId }) => {
 
 // Myproject 컴포넌트
 export const Myproject = ({ setMyprojectClick, setMyprojectId }) => {
-  //const {user} = useUser();
   const { user } = useUser();
-  // if(!isLogin){
-  //   console.log(user);
-  //   //setUser(prevUser => ({ ...prevUser, key: 0 }));
-  // }
-
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
-
   const [projectList, setProjectList] = useState([]);
-
   const [totalProducts, setTotalProducts] = useState(0); // 서버에서 가져온 프로젝트 데이터
   const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수
 
   const itemsPerPage = 10; // 페이지당 항목 수
-
-  //const [page, setPage] = useState(1); // 현재 페이지 상태
 
   const fetchProducts = async (page) => {
     try {
@@ -210,7 +182,6 @@ export const Myproject = ({ setMyprojectClick, setMyprojectId }) => {
         `${SERVER_URL}/damdda/project/myproject`,
         {
           params: {
-            // memberId: user.key,
             page: page,
             size: itemsPerPage,
           },
@@ -236,38 +207,10 @@ export const Myproject = ({ setMyprojectClick, setMyprojectId }) => {
     }
   };
 
-  //const totalProducts = projectList.length; // 전체 프로젝트 개수
-
   // 처음 마운트되었을 때 및 페이지 변경 시 데이터 가져오기
   useEffect(() => {
     fetchProducts(currentPage);
-  }, [currentPage]);
-
-  // 페이지 변경 핸들러
-  // const handlePageChange = (event, value) => {
-  //   setPage(value);
-  // };
-
-  // 백엔드 구현 시 주석 해제
-  /*
-  useEffect() = > {
-  const fetchProject = async() => {
-    try {
-    const response = await.get(`projects/myproject?page=1&size=10}`);
-    setProject(response.data); // 서버에서 받아온 데이터
-    } catch(error) {
-    console.error('프로젝트 데이터를 불러오는 중...':error);
-    }
-   };
-   fetchProject();
-  }, [page]);
-  */
-
-  // 현재 페이지에서 보여줄 프로젝트들만 추출
-  // const displayedProducts = projectList.slice(
-  //   (page - 1) * itemsPerPage,
-  //   page * itemsPerPage
-  // );
+  }, []);
 
   const displayedProducts = projectList;
 
@@ -284,9 +227,6 @@ export const Myproject = ({ setMyprojectClick, setMyprojectId }) => {
     );
   };
   const pageNumbers = generatePageNumbers(currentPage, totalPages);
-
-  // 페이지 번호 배열 생성
-  // const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   console.log(totalPages + "ssssssssssssssssssssssss");
   console.log(pageNumbers + "ddddddddddddddddddddddddddd");
@@ -356,17 +296,6 @@ export const Myproject = ({ setMyprojectClick, setMyprojectId }) => {
         ))}
       </Grid>
 
-      {/* Pagination 컴포넌트 추가 */}
-      {/* <Stack spacing={2} sx={{ marginTop: "20px" }}>
-        <Pagination
-          count={Math.ceil(totalProducts / itemsPerPage)} // 페이지 수 계산
-          page={page} // 현재 페이지
-          onChange={handlePageChange} // 페이지 변경 핸들러
-          showFirstButton
-          showLastButton
-        />
-      </Stack> */}
-
       {/* 페이지네이션 버튼 */}
       <Box
         sx={{
@@ -396,13 +325,13 @@ export const Myproject = ({ setMyprojectClick, setMyprojectId }) => {
             <Button
               key={pageNumber}
               onClick={() => setCurrentPage(pageNumber)} // 페이지 변경
-              variant={currentPage === pageNumber ? "contained" : "outlined"} // 현재 페이지 스타일
+              variant={currentPage === pageNumber ? "contained" : "outlined"}
               sx={{
                 mx: 1.0,
-                minWidth: 40, // 최소 너비
-                minHeight: 40, // 최소 높이
-                fontSize: "0.8rem", // 폰트 크기 조절
-              }} // 좌우 간격
+                minWidth: 40,
+                minHeight: 40,
+                fontSize: "0.8rem",
+              }}
             >
               {pageNumber}
             </Button>

@@ -31,14 +31,17 @@ const Mypage = () => {
     try {
       console.log("User state:", user);
       // const response = await axios.get(`${SERVER_URL}/members/profile?loginId=${user.id}`, {
-      const response = await axios.get(`${SERVER_URL}/damdda/member/profile`, {
-        headers: {
-          ...(Cookies.get("accessToken") && {
-            Authorization: `Bearer ${Cookies.get("accessToken")}`,
-          }),
-        },
-        withCredentials: true,
-      });
+      const response = await axios.get(
+        `${SERVER_URL}/damdda/member/profile?loginId=${user.id}`,
+        {
+          headers: {
+            ...(Cookies.get("accessToken") && {
+              Authorization: `Bearer ${Cookies.get("accessToken")}`,
+            }),
+          },
+          withCredentials: true,
+        }
+      );
       console.log(response.data);
       // 로컬 스토리지에 데이터가 없을 때 초기 비밀번호 설정
       const initialProfileData = {
@@ -155,10 +158,6 @@ const Mypage = () => {
       <Header />
       <div className="container">
         <div>
-          {/* 헤더와 탭은 공통으로 표시됩니다 */}
-          {/* <Headers nickname={profileData.nickname || "사용자"} />{" "} */}
-          {/* <Headers profile={profileData.nickname || "사용자"} />{" "} */}
-          {/* <Headers profileData={profileData} /> */}
           <MypageHeader nickname={profileData.nickname || "사용자"} />
           <TabsUnderlinePlacement
             selectedTab={selectedTab}

@@ -9,17 +9,14 @@ import { SERVER_URL } from "../../../constants/URLs";
 export default function SupportedProjects() {
   const { user } = useUser();
   const [projects, setProjects] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [order, setOrder] = useState(true);
 
   const userId = 3; // jwt 적용후에 바꿔야함
 
   // 백엔드에서 후원한 프로젝트 목록을 가져오는 함수 (주석 처리)
   const fetchOrders = async () => {
     try {
-      // const response = await axios.get(`${SERVER_URL}/order/supportingprojects?userId=${userId}`);
       const response = await axios.get(
         `${SERVER_URL}/damdda/order/supportingprojects`,
         {

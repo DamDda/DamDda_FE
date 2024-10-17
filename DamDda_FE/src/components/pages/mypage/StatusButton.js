@@ -1,6 +1,5 @@
 import React from "react";
 import { Button, Tooltip } from "@mui/material";
-import { borderRadius } from "@mui/system";
 
 const StatusButton = ({
   status,
@@ -89,7 +88,7 @@ const StatusButton = ({
 
   return (
     <Tooltip
-      title={showRejectReason && rejectMessage ? rejectMessage : ""} //showRejectReason이 true일 때만 rejectMessage를 보여줌
+      title={showRejectReason && rejectMessage ? rejectMessage : ""}
       arrow
       placement="top"
     >
@@ -109,7 +108,7 @@ const StatusButton = ({
           "&:hover": {
             backgroundColor: disableHover
               ? backgroundColor
-              : hoverBackgroundColor || backgroundColor, // 결제 취소일 때 hover 시 색 변경 안 함
+              : hoverBackgroundColor || backgroundColor,
             borderColor,
             color,
           },

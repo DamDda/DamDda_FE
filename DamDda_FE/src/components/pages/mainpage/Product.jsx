@@ -227,7 +227,7 @@ export const ProductRecommendations = ({ sortCondition, title, subTitle }) => {
     console.log("Cookies.get(accessToken)" + Cookies.get("accessToken"));
     try {
       const response = await axios.get(
-        ` ${SERVER_URL}/damdda/project/project`,
+        ` ${SERVER_URL}/damdda/project/projects`,
         {
           params: {
             // memberId: user.key,

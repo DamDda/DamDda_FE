@@ -25,21 +25,21 @@ export default function ProfileStatistics({ setIsEditing }) {
   const [passwordDisplay, setPasswordDisplay] = useState(""); // 비밀번호 표시 상태
   const { user } = useUser();
 
-  // useEffect(() => {
-  //   fetchProfileData(); // 프로필 데이터 로드
-  // }, []);
   const fetchProfileData = async () => {
     console.log("fetchProfileData" + fetchProfileData);
     try {
       // const response = await axios.get(`${SERVER_URL}/members/profile?loginId=${user.id}`, {
-      const response = await axios.get(`${SERVER_URL}/damdda/member/profile`, {
-        headers: {
-          ...(Cookies.get("accessToken") && {
-            Authorization: `Bearer ${Cookies.get("accessToken")}`,
-          }),
-        },
-        withCredentials: true,
-      });
+      const response = await axios.get(
+        `${SERVER_URL}/damdda/member/profile?loginId=${user.id}`,
+        {
+          headers: {
+            ...(Cookies.get("accessToken") && {
+              Authorization: `Bearer ${Cookies.get("accessToken")}`,
+            }),
+          },
+          withCredentials: true,
+        }
+      );
       console.log(response.data);
       // 로컬 스토리지에 데이터가 없을 때 초기 비밀번호 설정
       const initialProfileData = {
@@ -66,21 +66,8 @@ export default function ProfileStatistics({ setIsEditing }) {
 
   // 프로필 수정 버튼 클릭 시 모달 열기
   const handleProfileEdit = () => {
-    // setPassword("1234"); // 모달 열때마다 비밀번호 초기화
     setIsModalOpen(true); // 모달 열기
   };
-
-  // // 비밀번호 모달에서 확인 버튼 클릭 시 처리 로직
-  // const handlePasswordSubmit = (inputPassword) => {
-  //   console.log("11111111111111111")
-  //   if (inputPassword === password) {
-  //     setPasswordError(""); // 에러 메시지 초기화
-  //     setIsModalOpen(false); // 모달 닫기
-  //     setIsEditing(true); // 프로필 수정 페이지로 이동
-  //   } else {
-  //     setPasswordError("비밀번호가 틀렸습니다. 다시 입력해주세요.");
-  //   }
-  // };
 
   const UserAvatar = ({ profile, defaultImageUrl, ...props }) => {
     return (
@@ -118,7 +105,6 @@ export default function ProfileStatistics({ setIsEditing }) {
             headers: { "Content-Type": "application/json" },
           }
         );
-        // response.data에서 X-Nickname 값 가져오기
         const nickname = response.data["X-Nickname"];
         console.log("Nickname:", nickname);
         if (nickname === user.nickname) {
@@ -141,7 +127,6 @@ export default function ProfileStatistics({ setIsEditing }) {
         justifyContent: "center",
         alignItems: "flex-start",
         minHeight: "100vh",
-        // backgroundColor: "#fff",
       }}
     >
       <MDBContainer style={{ width: "200%" }}>
@@ -150,10 +135,7 @@ export default function ProfileStatistics({ setIsEditing }) {
             <MDBCard
               style={{
                 width: "100%",
-                // maxWidth: "600px",
-                // borderRadius: "15px",
                 backgroundColor: "transparent",
-                // boxShadow: "none",
               }}
             >
               <MDBCardBody
@@ -222,15 +204,6 @@ export default function ProfileStatistics({ setIsEditing }) {
                     InputProps={{ readOnly: true }}
                   />
 
-                  {/* <TextField
-                    label="비밀번호"
-                    value={passwordDisplay} // 비밀번호 길이에 맞춘 별표 표시
-                    size="small"
-                    variant="standard"
-                    fullWidth
-                    type="password" // 입력 시에도 비밀번호는 *로 표시
-                    InputProps={{ readOnly: true }}
-                  /> */}
                   <TextField
                     label="휴대폰 번호"
                     value={profile.phoneNumber}
@@ -286,11 +259,6 @@ export default function ProfileStatistics({ setIsEditing }) {
         setError={setPasswordError}
         error={passwordError}
       />
-      {/* 취소 버튼 */}
-      {/* <button onClick={() => setIsModalOpen(false)}>취소</button> */}
-
-      {/* 확인 버튼에 handleSubmit 연결 */}
-      {/* <button onClick={handleSubmit}>확인</button> */}
     </div>
   );
 }

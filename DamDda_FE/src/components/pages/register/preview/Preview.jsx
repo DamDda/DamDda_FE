@@ -36,53 +36,69 @@ const PreviewDetail = ({ formattedGifts }) => {
 
   return (
     <div className="package-section">
-      <h1 style={{ marginBottom: "10px" }}>선물구성</h1>
+      <h1 style={{ marginBottom: "10px", marginTop: "20px" }}>선물구성</h1>
       {Array.isArray(formattedGifts) && formattedGifts.length > 0 ? (
-        formattedGifts.map((pkg) => (
-          <Card
-            key={pkg.id}
-            className="package-card"
-            onClick={() => handlePackageSelect(pkg)}
-          >
-            <CardContent>
-              <h3>{pkg.name}</h3>
-              <span>{pkg.price.toLocaleString()} 원</span>
-              <span>{pkg.description}</span>
-            </CardContent>
+        formattedGifts.map((pkg) => {
+          const {
+            id,
+            name,
+            count,
+            OptionList,
+            optionType,
+            price,
+            description,
+          } = pkg;
 
-            {selectedPackage?.id === pkg.id && (
-              <div style={{ marginTop: "10px" }}>
-                {pkg.options.length > 0 ? (
-                  <FormControl fullWidth>
-                    <InputLabel id={`select-option-label-${pkg.id}`}>
-                      옵션
-                    </InputLabel>
-                    <Select
-                      labelId={`select-option-label-${pkg.id}`}
-                      value={selectedPackageOptions[pkg.id] || ""}
-                      onChange={(event) =>
-                        handleOptionSelect(pkg.id, event.target.value)
-                      }
-                    >
-                      {pkg.options.map((option) => (
-                        <MenuItem key={option} value={option}>
-                          {option}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                ) : (
-                  <Typography variant="body2">옵션을 선택해주세요</Typography>
-                )}
-                <Button variant="contained" style={{ marginTop: "10px" }}>
-                  이 패키지 선택
-                </Button>
-              </div>
-            )}
-          </Card>
-        ))
+          return (
+            <Card
+              key={id}
+              className="package-card"
+              onClick={() => handlePackageSelect(pkg)}
+            >
+              <CardContent>
+                <h3>{name}</h3>
+                {/* 가격이 있을 경우 표시하고 없으면 기본값 0원 */}
+                <span>{price ? price.toLocaleString() : "0"} 원</span>
+                {/* 설명이 있으면 표시하고 없으면 기본 메시지 표시 */}
+                <span>{description || "설명이 없습니다."}</span>
+              </CardContent>
+
+              {/* 선택된 패키지일 때 옵션 선택 표시 */}
+              {selectedPackage?.id === id && (
+                <div style={{ marginTop: "10px" }}>
+                  {/* 옵션 리스트가 있을 경우 Select 컴포넌트로 표시 */}
+                  {OptionList && OptionList.length > 0 ? (
+                    <FormControl fullWidth>
+                      <InputLabel id={`select-option-label-${id}`}>
+                        옵션
+                      </InputLabel>
+                      <Select
+                        labelId={`select-option-label-${id}`}
+                        value={selectedPackageOptions[id] || ""}
+                        onChange={(event) =>
+                          handleOptionSelect(id, event.target.value)
+                        }
+                      >
+                        {OptionList.map((option, index) => (
+                          <MenuItem key={index} value={option}>
+                            {option}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  ) : (
+                    <Typography variant="body2">옵션이 없습니다.</Typography>
+                  )}
+                  <Button variant="contained" style={{ marginTop: "10px" }}>
+                    이 패키지 선택
+                  </Button>
+                </div>
+              )}
+            </Card>
+          );
+        })
       ) : (
-        <Typography variant="body2">No packages available.</Typography>
+        <Typography variant="body2">입력된 내용이 없습니다.</Typography>
       )}
     </div>
   );
@@ -232,7 +248,7 @@ const Preview = ({
 
         <Divider />
 
-        <div className="details" style={{ margin: "30px" }}>
+        <div className="details" style={{ margin: "10px" }}>
           <div>
             <Tabs value={0} indicatorColor="primary" textColor="primary">
               <Tab label="상세설명" />
@@ -243,7 +259,7 @@ const Preview = ({
 
           <div className="detailDescription">
             <div className="container4">
-              <Typography variant="body1" style={{ marginTop: "80px" }}>
+              <Typography variant="body1" style={{ marginTop: "20px" }}>
                 {descriptionDetail ? (
                   <div
                     dangerouslySetInnerHTML={{ __html: descriptionDetail }}

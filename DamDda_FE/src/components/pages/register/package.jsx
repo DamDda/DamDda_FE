@@ -142,7 +142,7 @@ const Package = () => {
 
     try {
       const response = await axios.post(
-        `${SERVER_URL}/damdda/package/rewards/register/${projectId}`,
+        `${SERVER_URL}/damdda/package/rewards/${projectId}`,
         newGift,
         {
           withCredentials: true,
@@ -279,7 +279,7 @@ const Package = () => {
     if (isEditing) {
       try {
         const response = await axios.put(
-          `${SERVER_URL}/damdda/package/modify?projectId=${projectId}`,
+          `${SERVER_URL}/damdda/package/${projectId}`,
           newConfig,
           {
             withCredentials: true,

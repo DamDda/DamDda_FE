@@ -68,22 +68,21 @@ const ProgressChart = ({ serverData, targetFunding }) => {
     plugins: {
       annotation: {
         annotations: {
-          // 목표 금액을 강조하는 선 추가
           targetLine: {
             type: "line",
             scaleID: "y",
-            value: safeTargetFunding, // 목표 금액 설정
-            borderColor: "rgba(75, 192, 192, 1)", // 선의 색상
-            borderWidth: 2, // 선의 두께
-            borderDash: [5, 5], // 대시 스타일 (선이 점선으로 보이도록)
+            value: safeTargetFunding,
+            borderColor: "rgba(75, 192, 192, 1)",
+            borderWidth: 2,
+            borderDash: [5, 5],
             label: {
-              content: `목표액: ${safeTargetFunding.toLocaleString()} 원`, // 목표 금액 라벨
+              content: `목표액: ${safeTargetFunding.toLocaleString()} 원`,
               enabled: true,
-              position: "end", // 라벨의 위치
-              backgroundColor: "rgba(75, 192, 192, 1)", // 라벨의 배경색
-              color: "#fff", // 라벨의 글자색
+              position: "end",
+              backgroundColor: "rgba(75, 192, 192, 1)",
+              color: "#fff",
               font: {
-                family: "Arial", // 폰트 설정
+                family: "Arial",
                 size: 12,
                 weight: "bold",
               },

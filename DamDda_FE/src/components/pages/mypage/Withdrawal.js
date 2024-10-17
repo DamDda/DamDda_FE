@@ -71,30 +71,7 @@ const Withdrawal = () => {
     }
   };
 
-  // const handleDeleteAccount = async () => {
-  //   try {
-  //     // 서버가 준비되지 않았을 경우 임시로 탈퇴 성공 처리를 모의로 진행
-  //     // 실제 서버와 연동이 되면 이 부분을 axios 요청으로 변경
-  //     console.log("회원탈퇴 모의 실행");
-
-  //     // 임시로 탈퇴 완료 처리
-  //     setTimeout(() => {
-  //       alert("회원탈퇴가 완료되었습니다.");
-
-  //       // 로그아웃 처리: 사용자 정보 초기화
-  //       setUser(null);
-  //       Cookies.remove("accessToken");
-
-  //       // 메인페이지로 리다이렉트
-  //       navigate("/");
-  //     }, 1000); // 1초 후에 로그아웃 처리 및 페이지 이동
-  //   } catch (error) {
-  //     console.error("회원탈퇴 오류:", error); // 오류 로그 출력
-  //     alert("회원탈퇴 중 오류가 발생했습니다. 다시 시도해주세요.");
-  //   }
-  // };
-
-  // 회원탈퇴 요청 함수 **** 서버 연동 시 풀기 ****
+  // 회원탈퇴 요청 함수
   const handleDeleteAccount = async () => {
     try {
       const response = await axios.delete(
@@ -128,13 +105,12 @@ const Withdrawal = () => {
     <Box>
       {/* 비밀번호 확인 모달 */}
       <Modal
-        open={isModalOpen} // 모달이 열려 있는지 여부
-        onClose={handleCloseModal} // 모달 닫히지 않도록 설정
-        // onClose={() => setIsModalOpen(false)} // 모달 닫기
-        disableEscapeKeyDown // 외부클릭으로 모달 닫힘 방지
-        onSubmit={handleSubmit} // 비밀번호 확인 로직
+        open={isModalOpen}
+        onClose={handleCloseModal}
+        disableEscapeKeyDown
+        onSubmit={handleSubmit}
         currentPassword={password}
-        errorMessage={passwordError} // 비밀번호 오류 메시지
+        errorMessage={passwordError}
         setError={setPasswordError}
         error={passwordError}
       />

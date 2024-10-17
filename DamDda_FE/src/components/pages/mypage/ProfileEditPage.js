@@ -14,7 +14,7 @@ import axios from "axios";
 import Modal from "@mui/material/Modal"; // Modal 컴포넌트 import
 import { useUser } from "../../../UserContext";
 import { SERVER_URL } from "../../../constants/URLs";
-
+import Cookies from "js-cookie";
 export default function ProfileEditPage({
   profile,
   setIsEditing,
@@ -32,7 +32,7 @@ export default function ProfileEditPage({
   const [openSnackbar, setOpenSnackbar] = useState(false); // Snackbar 열림 상태
   const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
   const { user } = useUser();
-
+  const [profilePreview, setProfilePreview] = useState("");
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
 
@@ -55,8 +55,10 @@ export default function ProfileEditPage({
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
+
       reader.onloadend = () => {
-        setProfileImage(reader.result);
+        setProfilePreview(reader.result);
+        setProfileImage(file);
       };
       reader.readAsDataURL(file);
     }
@@ -67,6 +69,34 @@ export default function ProfileEditPage({
     return;
   };
 
+  /*이미지 올리는 함수*/
+
+  const handleImage = async () => {
+    // 닉네임 중복 확인이 실패한 경우 프로필 저장을 중단
+
+    try {
+      // 백엔드에 데이터를 저장하는 로직 (주석 처리)
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${Cookies.get("accessToken") || ""}`,
+        },
+        withCredentials: true,
+      };
+      console.log("aceessToken" + Cookies.get("accessToken"));
+
+      const response = await axios.put(
+        `${SERVER_URL}/damdda/member/profile/photo`,
+        { imageUrl: profileImage },
+        config
+      );
+      console.log("프로필 이미지" + response.data);
+      return response.data;
+    } catch (error) {
+      console.error("프로필 이미지 저장 중 오류 발생:", error);
+    }
+  };
+
   const handleSubmit = async () => {
     // 닉네임 중복 확인이 실패한 경우 프로필 저장을 중단
     if (!nicknameCheck) {
@@ -74,29 +104,40 @@ export default function ProfileEditPage({
       return; // 닉네임 중복 확인이 완료되지 않았으면 저장 중단
     }
 
-    if (!formData.nickname) {
-      setErrorMessage((prevErrors) => ({
-        ...prevErrors,
-        name: "이름을 입력해주세요.",
-      }));
-      return;
-    }
-    if (!formData.phoneNumber) {
-      setErrorMessage((prevErrors) => ({
-        ...prevErrors,
-        phoneNumber: "전화번호를 입력해주세요.",
-      }));
-      return;
-    }
-    if (!formData.address) {
-      setErrorMessage((prevErrors) => ({
-        ...prevErrors,
-        address: "주소를 입력해주세요.",
-      }));
-      return;
-    }
-    const updatedFormData = { ...formData, imageUrl: profileImage };
+    // if (formData.nickname !== profile.nickname && !nicknameCheck) {
+    //   setNicknameError("닉네임 중복 확인을 해주세요.");
+    //   return; // 닉네임 중복 확인이 완료되지 않았으면 저장 중단
+    // }
 
+    if (!formData.nickname || !formData.phoneNumber || !formData.address) {
+      setErrorMessage({
+        nickname: !formData.nickname ? "닉네임을 입력해주세요." : "",
+        phoneNumber: !formData.phoneNumber ? "전화번호를 입력해주세요." : "",
+        address: !formData.address ? "주소를 입력해주세요." : "",
+      });
+      return;
+    }
+
+    const imageUrl = await handleImage();
+    const updatedFormData = {
+      ...formData,
+      email: formData.email,
+      password: formData.password,
+      nickname: formData.nickname,
+      phoneNumber: formData.phoneNumber,
+      address: formData.address,
+      imageUrl: imageUrl,
+    };
+
+    const sendData = {
+      email: formData.email,
+      password: formData.password,
+      name: formData.name,
+      nickname: formData.nickname,
+      phoneNumber: formData.phoneNumber,
+      address: formData.address,
+      imageUrl: imageUrl,
+    };
     // 부모 컴포넌트에 데이터 전달
     updateProfileData(updatedFormData);
 
@@ -104,8 +145,19 @@ export default function ProfileEditPage({
     setOpenSnackbar(true);
 
     try {
-      // 백엔드에 데이터를 저장하는 로직 (주석 처리)
-      // await axios.put('/member/profile', updatedFormData,);
+      const config = {
+        headers: {
+          // "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${Cookies.get("accessToken") || ""}`,
+        },
+        withCredentials: true,
+      };
+
+      await axios.put(
+        `${SERVER_URL}/damdda/member/${user.id}`,
+        sendData,
+        config
+      );
 
       // 모의 로컬 스토리지 저장
       localStorage.setItem("profileData", JSON.stringify(updatedFormData));
@@ -127,7 +179,7 @@ export default function ProfileEditPage({
     const { nickname } = formData;
     try {
       const response = await axios.get(
-        `${SERVER_URL}/damdda/member/profile/nickname?nickname=${nickname}`
+        `${SERVER_URL}/damdda/member/check/nickname?nickname=${nickname}`
       );
       console.log(response.data);
       setNicknameError(
@@ -143,19 +195,16 @@ export default function ProfileEditPage({
   };
 
   // 비밀번호 변경 모달을 열고 닫는 함수
-  const handleOpenModal = () => setModalOpen(true);
+  const handleOpenModal = () => {
+    setModalOpen(true);
+  };
   const handleCloseModal = () => setModalOpen(false);
 
   const handlePasswordChange = async () => {
     setErrorMessage((prevErrors) => ({ ...prevErrors, password: "" }));
 
-    if (currentPassword !== formData.password) {
-      setErrorMessage((prevErrors) => ({
-        ...prevErrors,
-        password: "현재 비밀번호가 틀립니다.",
-      }));
-      return;
-    }
+    console.log(currentPassword);
+    console.log(formData.password);
 
     if (newPassword.length < 8 || newPassword.length > 16) {
       setErrorMessage((prevErrors) => ({
@@ -179,6 +228,24 @@ export default function ProfileEditPage({
         ...prev,
         password: newPassword,
       }));
+      const passwordDTO = {
+        currentPassword: currentPassword,
+        password: newPassword,
+      };
+      const response = await axios.put(
+        `${SERVER_URL}/damdda/member/${user.key}/password`,
+        passwordDTO,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${Cookies.get("accessToken") || ""}`,
+          },
+        }
+      );
+      if (!response.data.success) {
+        alert("현재 비밀번호가 일치하지 않습니다.");
+        return;
+      }
       alert("비밀번호가 성공적으로 변경되었습니다.");
       handleCloseModal();
     } catch (error) {
@@ -207,7 +274,7 @@ export default function ProfileEditPage({
     >
       <Avatar
         sx={{ width: 80, height: 80, marginBottom: "10px" }}
-        src={profileImage}
+        src={profilePreview}
       />
 
       <Button
@@ -432,9 +499,9 @@ export default function ProfileEditPage({
             onChange={(e) => setConfirmPassword(e.target.value)}
             margin="normal"
           />
-          {errorMessage && (
+          {errorMessage.password && (
             <Typography variant="body2" color="error" sx={{ mt: 2 }}>
-              {errorMessage}
+              {errorMessage.password}
             </Typography>
           )}
           <Button

@@ -413,7 +413,7 @@ export const ProductRecommendations = ({ search, cartegory }) => {
   const fetchRecommendedProducts = async (page, progress) => {
     try {
       const response = await axios.get(
-        ` ${SERVER_URL}/damdda/project/project`,
+        ` ${SERVER_URL}/damdda/project/projects`,
         {
           headers: {
             ...(Cookies.get("accessToken") && {

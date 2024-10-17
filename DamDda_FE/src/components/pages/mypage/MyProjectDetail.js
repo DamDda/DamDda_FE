@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
 import {
   Typography,
   LinearProgress,
@@ -17,38 +16,18 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
-import { border, borderBottom, styled } from "@mui/system";
+import { styled } from "@mui/system";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import StatusButton from "./StatusButton";
 import ProgressChart from "./ProgressChart";
-// import { Row } from "react-bootstrap";
+
 import axios from "axios";
 import Cookies from "js-cookie";
 import { SERVER_URL } from "../../../constants/URLs";
 
 import { useUser } from "../../../UserContext";
-
-// // 가짜 데이터 (실제 백엔드 구현 전까지 사용)
-// const mockProjectData = {
-//   1: {
-//     category: "💄뷰티",
-//     organizer_id: "홍길동",
-//     title: "세상에 단 하나뿐인 멋진 프로젝트",
-//     description: "세상에 단 하나뿐인 아주아주 멋진 예술품을 만들었습니다.",
-//     fundsReceive: 500000,
-//     targetFunding: 1000000,
-//     startDate: "2024.01.01",
-//     endDate: "2024.06.30",
-//     delivery_date: 30,
-//     supporterCnt: 500,
-//     supporter_count: 100,
-//     approval: -1,
-//     rejectMessage: "내용부족",
-//     thumbnail_url: "https://via.placeholder.com/500",
-//   },
-// };
 
 // 후원 통계
 const mockSupportStat = {
@@ -57,57 +36,6 @@ const mockSupportStat = {
   supporters: 708,
   remainingDays: 0,
 };
-
-// // 후원자 조회
-// const mockSupporterData = [
-//   {
-//     deliveryId: "123456",
-//     deliveryName: "홍길동",
-//     supportedAt: "2024.09.07 - 오전 11:30",
-//     item_name: "눌림 플레이트 2세트 + 미니 보냉백 1개",
-//     deliveryPhoneNumber: "010-1234-5678",
-//     deliveryAddress: "경기도 광명시",
-//     deliveryDetailedAddress: "oo동",
-//     deliveryMessage: "배송 전 연락 주세요.",
-//     // history: [
-//     //   {
-//     //     date: "2024-09-01",
-//     //     customerId: "11091700",
-//     //     amount: 3,
-//     //   },
-//     // ],
-//   },
-//   {
-//     deliveryId: "123457",
-//     deliveryName: "김철수",
-//     supportedAt: "2024.09.07 - 오후 2:30",
-//     item_name: "세트 상품 1개",
-//     deliveryPhoneNumber: "010-9876-5432",
-//     deliveryAddress: "서울특별시 강남구",
-//     deliveryDetailedAddress: "xx동",
-//     deliveryMessage: "배송 전에 전화 부탁드립니다.",
-//     // history: [
-//     //   {
-//     //     date: "2024-09-03",
-//     //     customerId: "11091701",
-//     //     amount: 2,
-//     //   },
-//     // ],
-//   },
-// ];
-
-// 서버 연동 후 주석 풀기
-// const mockServerData = [
-//   ["2024-10-08T00:00:00", 103000],
-//   ["2024-10-09T00:00:00", 103000],
-//   ["2024-10-22T00:00:00", 103000],
-//   ["2024-11-01T00:00:00", 103000],
-//   ["2024-11-02T00:00:00", 103000],
-//   ["2024-11-05T00:00:00", 103000],
-//   ["2024-11-09T00:00:00", 103000],
-//   ["2024-11-10T00:00:00", 206000],
-//   ["2024-11-16T00:00:00", 103000],
-// ];
 
 const mockChartData = [
   ["2024-10-08T00:00:00", 103000],
@@ -298,11 +226,6 @@ function SupporterTable() {
             >
               후원 날짜
             </TableCell>
-
-            {/* <TableCell>선물 정보</TableCell>
-            <TableCell>연락처</TableCell>
-            <TableCell>배송지 정보</TableCell>
-            <TableCell>배송 요청 사항</TableCell> */}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -328,7 +251,6 @@ function SupporterTable() {
 }
 
 export default function MyProjectDetails({ projectId, setMyprojectClick }) {
-  // const { projectId } = useParams(); // URL에서 projectId 추출
   const [projectData, setProjectData] = useState(null); // 프로젝트 정보 상태
   const [supportStat, setSupportStat] = useState(null); // 후원 통계 상태
 
@@ -337,7 +259,6 @@ export default function MyProjectDetails({ projectId, setMyprojectClick }) {
   const { user } = useUser();
   const [chartData, setChartData] = useState(null);
   const targetFunding = 500000; // 목표 금액 설정
-  const navigate = useNavigate();
 
   // 두 API를 병렬로 호출하여 데이터를 가져옴
   useEffect(() => {
@@ -357,17 +278,10 @@ export default function MyProjectDetails({ projectId, setMyprojectClick }) {
           }).then((response) => response),
         ]);
 
-        // 가짜 차트 데이터 사용
-        // const processedChartData = mockChartData.map(([date, amount]) => ({
-        //   date: new Date(date).toLocaleDateString(), // 날짜 형식 변환
-        //   amount, // 후원액
-        // }));
-
         // 후원 통계 api 호출
         setSupportStat(mockSupportStat);
 
         setProjectData(projectResponse.data); // 프로젝트 데이터 저장
-        // setChartData(processedChartData); // 차트 데이터 저장
 
         setLoading(false); // 로딩 상태 완료
       } catch (error) {
@@ -379,54 +293,6 @@ export default function MyProjectDetails({ projectId, setMyprojectClick }) {
     fetchData();
   }, []);
 
-  // const [projectId, setProjectId] = useState(null);
-  const [statistics, setStatistics] = useState(null);
-  const [error, setError] = useState(null);
-
-  // 프로젝트 ID 가져오기
-  // const fetchUserProjectId = async (memberId) => {
-  //   try {
-  //     console.log("API 요청 중..."); // 요청 전에 로그 출력
-  //     const response = await axios.get(
-  //       `http://localhost:9000/order/user/project?memberId=${memberId}`
-  //     );
-  //     console.log("응답 데이터:", response.data); // 응답 로그 출력
-
-  //     // 응답에서 projectId를 추출
-  //     const userProjectId = response.data; // 단순히 ID를 반환하므로, 아래와 같이 수정
-  //     setProjectId(userProjectId); // 상태에 저장
-  //   } catch (error) {
-  //     console.error("프로젝트 ID를 가져오는 중 오류 발생:", error);
-  //   }
-  // };
-
-  // 프로젝트 통계 정보를 가져오는 함수
-  // const fetchProjectStatistics = async (projectId) => {
-  //   if (!projectId) return; // projectId가 없으면 함수 종료
-  //   try {
-  //     console.log("projectId:", projectId); // projectId 확인
-  //     const response = await axios.get(
-  //       `http://localhost:9000/order/statistics/${projectId}`
-  //     );
-  //     setStatistics(response.data); // 통계 정보를 상태에 저장
-  //     setLoading(false); // 로딩 완료
-  //   } catch (err) {
-  //     setError("프로젝트 통계 정보를 가져오는 중 오류가 발생했습니다.");
-  //     setLoading(false); // 로딩 완료
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   const memberId = 8; // JWT로 변경
-  //   fetchUserProjectId(memberId); // 사용자 프로젝트 ID 가져오기
-  // }, []); // 빈 배열을 전달하여 컴포넌트가 처음 렌더링될 때만 호출
-
-  // useEffect(() => {
-  //   if (projectId) {
-  //     fetchProjectStatistics(projectId); // projectId가 설정되면 통계 가져오기
-  //   }
-  // }, [projectId]); // projectId가 변경될 때마다 호출
-
   if (loading) {
     return <div>로딩중..</div>;
   }
@@ -434,34 +300,6 @@ export default function MyProjectDetails({ projectId, setMyprojectClick }) {
   if (!projectData && !supportStat) {
     return <div>데이터를 가져오는 중 오류가 발생</div>;
   }
-
-  // 백엔드가 준비되지 않았을 때 가짜 데이터 사용
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const projectResponse =
-  //         mockProjectData[projectId] || mockProjectData[1];
-  //       const supportStatResponse = mockSupportStat;
-
-  //       setProjectData(projectResponse); // 프로젝트 데이터 저장
-  //       setSupportStat(supportStatResponse); // 후원 통계 데이터 저장
-  //       setLoading(false); // 로딩 상태 완료
-  //     } catch (error) {
-  //       console.log("데이터를 불러오는 중 오류 발생:", error);
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, [projectId]);
-
-  // if (loading) {
-  //   return <div>로딩 중...</div>;
-  // }
-
-  // if (!projectData || !supportStat) {
-  //   return <div>데이터를 가져오는 중 오류가 발생했습니다.</div>;
-  // }
 
   const {
     approval,
@@ -507,7 +345,6 @@ export default function MyProjectDetails({ projectId, setMyprojectClick }) {
     <DetailContainer>
       {/* 뒤로 가기 버튼 */}
       <IconButton
-        // onClick={() => navigate("/myproject")}
         onClick={() => setMyprojectClick(false)}
         style={{ position: "absolute", top: "330px", left: "700px" }}
       >
@@ -638,7 +475,6 @@ export default function MyProjectDetails({ projectId, setMyprojectClick }) {
             <Typography style={{ fontSize: "14px" }}>펀딩기간</Typography>
             <Typography style={{ fontSize: "14px", marginLeft: "50px" }}>
               {startDate}~ {endDate}
-              {/* {new Date(statistics.startDate).toLocaleDateString()}~{new Date(statistics.endDate).toLocaleDateString()} */}
             </Typography>
           </Box>
         </ProgressSection>
@@ -665,10 +501,7 @@ export default function MyProjectDetails({ projectId, setMyprojectClick }) {
       {/* 후원 통계 */}
       {tabIndex === 0 && (
         <>
-          <div style={{ fontSize: "20px" }}>
-            {/* 시작일: {new Date(statistics.startDate).toLocaleDateString()} |
-            마감일: {new Date(statistics.endDate).toLocaleDateString()} */}
-          </div>
+          <div style={{ fontSize: "20px" }}></div>
           <DashboardSection
             style={{
               display: "flex",

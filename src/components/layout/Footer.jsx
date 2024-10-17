@@ -11,7 +11,7 @@ export const Footer = () => {
     return (
         <div className="footer" maxWidth="100%"
         style={{
-              marginTop:'1000px',
+              marginTop:'300px',
         }}>
             <div className="footer-container">
                 <div className="horizontal-border">

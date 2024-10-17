@@ -41,6 +41,8 @@ import { ProjectDetail } from "pages/detail/ProjectDetail";
 import Register from "pages/register/Register";
 import { FindID } from  "pages/member/FindID";
 import { ResetPassword } from  "pages/member/ResetPassword";
+import { Payment } from  "pages/support/Payment";
+import { PaymentSuccess } from  "pages/support/PaymentSuccess";
 
 // import { ResetPassword } from  "pages/member/ResetPassword";
 const theme = createTheme({
@@ -392,6 +394,8 @@ function App() {
               <Route path="/register" element={<Register />} />
               <Route path="/find-id" element={<FindID />} />
               <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/payment" element={<Payment />} />
+              <Route path="/payment/success" element={<PaymentSuccess />} />
 
               
 
@@ -399,8 +403,6 @@ function App() {
               {/* +                    <Route path="/order" element={<OrderPage />} />
                     <Route path="/user/myorders/:userId" element={<MyOrders />} />
                     <Route path="/yourpage" element={<YourPage />} />
-                    <Route path="/payment" element={<Payment />} />
-                    <Route path="/payment/success" element={<PaymentSuccess />} />
                     <Route path="/TossReady" element={<TossReady />} /> */}
 
               {/* /////////////////////////////남희/////////////////////////////////// */}

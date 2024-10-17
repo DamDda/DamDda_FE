@@ -52,7 +52,7 @@ export function Main() {
 
 //////////////////////////////////
   const navigate = useNavigate();
-  const [category, setCategory] = useState("전체");
+  const [category, setCategory] = useState("전체 ");
   const isFirstRender = useRef(true); // 처음 렌더링 여부 추적
   const [search, setSearch] = useState('');
 

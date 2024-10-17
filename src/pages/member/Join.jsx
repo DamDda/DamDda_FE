@@ -6,7 +6,7 @@ import styled from "styled-components";
 import { Layout } from "components/layout/DamDdaContainer";
 import { SERVER_URL } from "constants/URLs";
 import { StandardInputBox, PasswordInputBox } from "components/common/InputBoxComponent";
-import { BlueButtonComponent, BlueBorderButtonComponent } from "components/common/ButtonComponent";
+import { StyledBlueButtonComponent, BlueButtonComponent, BlueBorderButtonComponent } from "components/common/ButtonComponent";
 
 const FormContainer = styled.div`
   display: flex;
@@ -27,26 +27,6 @@ const FormRow = styled.div`
   
 `;
 
-const StyledBlueButton = styled.button`
-  width: 120px; /* 버튼 너비 */
-  height: 56px; /* 입력 필드와 동일한 높이 */
-  background-color: #677cf9;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-
-  display: flex; /* 플렉스 박스 사용 */
-  align-items: center; /* 수직 중앙 정렬 */
-  justify-content: center; /* 수평 중앙 정렬 */
-
-  margin: 0; /* 버튼의 기본 마진 제거 */
-  padding: 0; /* 버튼의 기본 패딩 제거 */
-
-  &:hover {
-    background-color: #556cd6;
-  }
-`;
 export const Join = () => {
   const navigate = useNavigate();
   const [checked, setChecked] = useState(false);
@@ -160,7 +140,7 @@ export const Join = () => {
                   error={Boolean(errors.id)}
                   errorMessage={errors.id}
                 />
-                <StyledBlueButton onClick={checkIdDuplicate}>중복 확인</StyledBlueButton>
+                <StyledBlueButtonComponent onClick={checkIdDuplicate}>중복 확인</StyledBlueButtonComponent>
               </FormRow>
 
               {/* 비밀번호와 비밀번호 확인 입력 */}
@@ -194,7 +174,7 @@ export const Join = () => {
                   error={Boolean(errors.nickname)}
                   errorMessage={errors.nickname}
                 />
-                <StyledBlueButton onClick={checkNicknameDuplicate}>중복 확인</StyledBlueButton>
+                <StyledBlueButtonComponent onClick={checkNicknameDuplicate}>중복 확인</StyledBlueButtonComponent>
               </FormRow>
 
               <StandardInputBox

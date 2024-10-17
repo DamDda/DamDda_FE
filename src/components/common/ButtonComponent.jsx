@@ -188,6 +188,7 @@
 // }
 
 import { Button, Tooltip } from "@mui/material";
+import React, { useState, useEffect } from "react";
 
 const ButtonComponent = ({ text, onClick, style }) => {
   return (
@@ -399,23 +400,46 @@ export const ProgressButton = ({ type, progress, handleClick, children }) => {
   );
 };
 
-//로그인 버튼
-// export const LoginBlueButtonComponent = ({ text, onClick, type = "button" }) => {
-//   const buttonStyle = {
-//     backgroundColor: "#677cf9",
-//     padding: "10px 20px",
-//     border: "none",
-//     borderRadius: "5px",
-//     cursor: "pointer",
-//     color: "#ffffff",
-//     width: "100%",
-//   };
-//   return (
-//     <button style={buttonStyle} onClick={onClick} type={type}>
-//       {text}
-//     </button>
-//   );
-// };
+//중복 확인 버튼
+export const StyledBlueButtonComponent = ({
+  text,
+  onClick,
+  type = "button",
+  onKeyDown,
+}) => {
+  const [isHovered, setIsHovered] = useState(false);
+
+  const buttonStyle = {
+    width: "120px", // 버튼 너비
+    height: "56px", // 입력 필드와 동일한 높이
+    backgroundColor: isHovered ? "#556cd6" : "#677cf9", // 호버 시 색상 변경
+    color: "white",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer",
+    display: "flex", // 플렉스 박스 사용
+    alignItems: "center", // 수직 중앙 정렬
+    justifyContent: "center", // 수평 중앙 정렬
+    margin: 0, // 버튼의 기본 마진 제거
+    padding: 0, // 버튼의 기본 패딩 제거
+    transition: "background-color 0.3s ease", // 부드러운 색상 전환 효과
+  };
+
+  return (
+    <button
+      onKeyDown={onKeyDown}
+      style={buttonStyle}
+      onClick={onClick}
+      type={type}
+      onMouseEnter={() => setIsHovered(true)} // 마우스가 버튼에 올라갈 때
+      onMouseLeave={() => setIsHovered(false)} // 마우스가 버튼에서 벗어날 때
+    >
+      {text}
+    </button>
+  );
+};
+
+
 //로그인 버튼
 export const LoginBlueButtonComponent = ({ text, onClick, type = "button", onKeyDown }) => {
   const buttonStyle = {

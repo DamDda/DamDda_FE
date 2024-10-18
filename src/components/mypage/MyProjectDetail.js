@@ -78,7 +78,7 @@
 //                 const [projectResponse] = await Promise.all([
 //                     axios({
 //                         method: 'GET',
-//                         url: `${SERVER_URL}/damdda/project/myproject/${projectId}`, // 템플릿 리터럴을 올바르게 적용
+//                         url: `${SERVER_URL}/project/myproject/${projectId}`, // 템플릿 리터럴을 올바르게 적용
 //                         // params: {
 //                         //   memberId: user.key,
 //                         // },

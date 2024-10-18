@@ -32,7 +32,7 @@
 
 //     const handleReadDetail = async () => {
 //         try {
-//             const response = await axios.get(`${SERVER_URL}/damdda/collab/readDetail/${collabId}`, {
+//             const response = await axios.get(`${SERVER_URL}/collab/readDetail/${collabId}`, {
 //                 headers: {
 //                     ...(Cookies.get('accessToken') && {
 //                         Authorization: `Bearer ${Cookies.get('accessToken')}`,
@@ -57,7 +57,7 @@
 //         console.log(fileName); // 파일명 확인용 로그
 
 //         try {
-//             const response = await axios.get(`${SERVER_URL}/damdda/collab/download`, {
+//             const response = await axios.get(`${SERVER_URL}/collab/download`, {
 //                 params: { fileName },
 //                 headers: {
 //                     ...(Cookies.get('accessToken') && {
@@ -110,9 +110,9 @@
 //     const handleApproval = async (status) => {
 //         let approvalPath;
 //         if (status === '승인') {
-//             approvalPath = `${SERVER_URL}/damdda/collab/approval`;
+//             approvalPath = `${SERVER_URL}/collab/approval`;
 //         } else if (status === '거절') {
-//             approvalPath = `${SERVER_URL}/damdda/collab/reject`;
+//             approvalPath = `${SERVER_URL}/collab/reject`;
 //         }
 //         try {
 //             await axios.put(approvalPath, [collabId], {
@@ -133,7 +133,7 @@
 //     };
 
 //     const handleDelete = async (status) => {
-//         await axios.delete(`${SERVER_URL}/damdda/collab/delete`, {
+//         await axios.delete(`${SERVER_URL}/collab/delete`, {
 //             params: {
 //                 // user_id: user.id
 //             },

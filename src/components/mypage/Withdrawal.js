@@ -31,7 +31,7 @@
 //         try {
 //             // let valid = true;
 
-//             const response = await axios.post(`${SERVER_URL}/damdda/member/login`, formatLogin, {
+//             const response = await axios.post(`${SERVER_URL}/member/login`, formatLogin, {
 //                 withCredentials: true,
 //                 headers: { 'Content-Type': 'application/json' },
 //             });
@@ -73,7 +73,7 @@
 //     // 회원탈퇴 요청 함수
 //     const handleDeleteAccount = async () => {
 //         try {
-//             const response = await axios.delete(`${SERVER_URL}/damdda/member/${user.key}`, {
+//             const response = await axios.delete(`${SERVER_URL}/member/${user.key}`, {
 //                 withCredentials: true,
 //                 headers: {
 //                     'Content-Type': 'application/json',

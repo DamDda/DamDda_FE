@@ -13,7 +13,7 @@ export function MyOrders() {
             // API를 통해 사용자 주문 목록을 가져옵니다.
             // axios.get(`${SERVER_URL}/order/myOrders/${userId}`, {
             axios
-                .get(`${SERVER_URL}/damdda/order/myOrders`, {
+                .get(`${SERVER_URL}/order/myOrders`, {
                     headers: {
                         // Authorization: `Bearer ${localStorage.getItem("token")}`  // JWT 토큰을 헤더에 추가
                         ...(Cookies.get('accessToken') && {

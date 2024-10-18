@@ -149,7 +149,7 @@
 
 //     const fetchProducts = async (page) => {
 //         try {
-//             const response = await axios.get(`${SERVER_URL}/damdda/project/myproject`, {
+//             const response = await axios.get(`${SERVER_URL}/project/myproject`, {
 //                 params: {
 //                     page: page,
 //                     size: itemsPerPage,

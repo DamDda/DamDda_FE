@@ -76,7 +76,7 @@
 //             console.log('aceessToken' + Cookies.get('accessToken'));
 
 //             const response = await axios.put(
-//                 `${SERVER_URL}/damdda/member/${user.key}/Photo`,
+//                 `${SERVER_URL}/member/${user.key}/Photo`,
 //                 { imageUrl: profileImage },
 //                 config
 //             );
@@ -149,7 +149,7 @@
 //                 withCredentials: true,
 //             };
 
-//             await axios.put(`${SERVER_URL}/damdda/member/${user.key}`, sendData, config);
+//             await axios.put(`${SERVER_URL}/member/${user.key}`, sendData, config);
 
 //             // 모의 로컬 스토리지 저장
 //             localStorage.setItem('profileData', JSON.stringify(updatedFormData));
@@ -170,7 +170,7 @@
 //         event.preventDefault(); // Prevent default action
 //         const { nickname } = formData;
 //         try {
-//             const response = await axios.get(`${SERVER_URL}/damdda/member/check/nickname?nickname=${nickname}`);
+//             const response = await axios.get(`${SERVER_URL}/member/check/nickname?nickname=${nickname}`);
 //             console.log(response.data);
 //             setNicknameError(
 //                 response.data === 'available' ? '사용 가능한 닉네임입니다.' : '이미 사용중인 닉네임입니다.'
@@ -220,7 +220,7 @@
 //                 currentPassword: currentPassword,
 //                 password: newPassword,
 //             };
-//             const response = await axios.put(`${SERVER_URL}/damdda/member/${user.key}/password`, passwordDTO, {
+//             const response = await axios.put(`${SERVER_URL}/member/${user.key}/password`, passwordDTO, {
 //                 headers: {
 //                     'Content-Type': 'application/json',
 //                     Authorization: `Bearer ${Cookies.get('accessToken') || ''}`,

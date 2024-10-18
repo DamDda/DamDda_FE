@@ -101,14 +101,14 @@ export default function TossReady() {
                 orderName: createdOrderData.projectTitle || '펀딩 결제', // 프로젝트 제목
                 customerName: createdOrderData.name || '김토스', // 사용자 이름
                 customerEmail: createdOrderData.email || 'customer123@gmail.com', // 사용자 이메일
-                successUrl: `${SERVER_URL}/damdda/payment/toss/success`, // 성공 시 서버로 요청
-                failUrl: `${SERVER_URL}/damdda/payment/toss/fail`, // 실패 시 서버로 요청
+                successUrl: `${SERVER_URL}/payment/toss/success`, // 성공 시 서버로 요청
+                failUrl: `${SERVER_URL}/payment/toss/fail`, // 실패 시 서버로 요청
             });
 
             console.log('반환완료');
 
             // 결제 결과 확인을 위해 successUrl에 리다이렉트된 후 결제 상태를 가져옴
-            const response = await axios.get(`${SERVER_URL}/damdda/payment/toss/success/getOrder`, {
+            const response = await axios.get(`${SERVER_URL}/payment/toss/success/getOrder`, {
                 params: {
                     orderId: createdOrderId.toString(),
                 },

@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import ProfileEditPage from './ProfileEditPage';
-import Myproject from './MyProject';
-import MyProjectDetails from './MyProjectDetail';
-import ProfileStatistics from './ProfileStatistics';
-import SupportedProjects from './SupportedProjects';
-import Withdrawal from './Withdrawal';
-import TabsUnderlinePlacement from './TabsUnderlinePlacement';
-import CollaborationList from './CollaborationList';
-import LikeProject from './LikeProject';
-import MypageHeader from './MypageHeader';
+import { ProfileEditPage } from 'components/mypage/ProfileEditPage';
+import { Myproject } from 'components/mypage/MyProject';
+import { MyProjectDetails } from 'components/mypage/MyProjectDetail';
+import { ProfileStatistics } from 'components/mypage/ProfileStatistics';
+import { SupportedProjects } from 'components/mypage/SupportedProjects';
+import { Withdrawal } from 'components/mypage/Withdrawal';
+import { TabsUnderlinePlacement } from 'components/mypage/TabsUnderlinePlacement';
+import { CollaborationList } from 'components/mypage/CollaborationList';
+import { LikeProject } from 'components/mypage/LikeProject';
+import { MypageHeader } from 'components/mypage/MypageHeader';
 import axios from 'axios';
 import { useUser } from 'UserContext';
-import CollaborationDetail from './CollaborationDetail';
+import { CollaborationDetail } from 'components/mypage/CollaborationDetail';
 import Cookies from 'js-cookie';
 import { SERVER_URL } from 'constants/URLs';
 
@@ -27,7 +27,7 @@ export const UserMyPage = () => {
         try {
             console.log('User state:', user);
             // const response = await axios.get(`${SERVER_URL}/members/profile?loginId=${user.id}`, {
-            const response = await axios.get(`${SERVER_URL}/damdda/member/profile?loginId=${user.id}`, {
+            const response = await axios.get(`${SERVER_URL}/member/profile?loginId=${user.id}`, {
                 headers: {
                     ...(Cookies.get('accessToken') && {
                         Authorization: `Bearer ${Cookies.get('accessToken')}`,

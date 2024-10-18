@@ -22,7 +22,7 @@
 //         console.log('fetchProfileData' + fetchProfileData);
 //         try {
 //             // const response = await axios.get(`${SERVER_URL}/members/profile?loginId=${user.id}`, {
-//             const response = await axios.get(`${SERVER_URL}/damdda/member/profile?loginId=${user.id}`, {
+//             const response = await axios.get(`${SERVER_URL}/member/profile?loginId=${user.id}`, {
 //                 headers: {
 //                     ...(Cookies.get('accessToken') && {
 //                         Authorization: `Bearer ${Cookies.get('accessToken')}`,
@@ -87,7 +87,7 @@
 //             // 모든 필드가 입력되었을 때만 검증 진행
 //             if (valid) {
 //                 console.log('if처음부분임:');
-//                 const response = await axios.post(`${SERVER_URL}/damdda/member/login`, formatLogin, {
+//                 const response = await axios.post(`${SERVER_URL}/member/login`, formatLogin, {
 //                     withCredentials: true,
 //                     headers: { 'Content-Type': 'application/json' },
 //                 });

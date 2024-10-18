@@ -58,7 +58,7 @@
 //         console.log('user_id' + user.id);
 //         console.log(path);
 //         try {
-//             const response = await axios.get(`${SERVER_URL}/damdda/collab/${path}`, {
+//             const response = await axios.get(`${SERVER_URL}/collab/${path}`, {
 //                 params: {
 //                     page,
 //                     size,
@@ -119,7 +119,7 @@
 
 //     const handleDelete = async () => {
 //         console.log(selectedRows);
-//         await axios.delete(`${SERVER_URL}/damdda/collab/delete`, {
+//         await axios.delete(`${SERVER_URL}/collab/delete`, {
 //             params: {
 //                 // user_id: user.id
 //             },
@@ -145,10 +145,10 @@
 //         let approvalPath;
 //         if (status === '승인') {
 //             console.log('저거임!');
-//             approvalPath = `${SERVER_URL}/damdda/collab/approval`;
+//             approvalPath = `${SERVER_URL}/collab/approval`;
 //         } else if (status === '거절') {
 //             console.log('이거임!');
-//             approvalPath = `${SERVER_URL}/damdda/collab/reject`;
+//             approvalPath = `${SERVER_URL}/collab/reject`;
 //         }
 //         try {
 //             await axios.put(approvalPath, selectedRows, {

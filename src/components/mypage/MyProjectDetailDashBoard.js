@@ -190,7 +190,7 @@
 //     // 주문 정보를 가져오는 함수
 //     const fetchOrders = async () => {
 //         try {
-//             const response = await axios.get(`${SERVER_URL}/damdda/order/all`, {
+//             const response = await axios.get(`${SERVER_URL}/order/all`, {
 //                 headers: {
 //                     Authorization: `Bearer ${Cookies.get('accessToken')}`,
 //                 },
@@ -284,7 +284,7 @@
 //                 const [projectResponse] = await Promise.all([
 //                     axios({
 //                         method: 'GET',
-//                         url: `${SERVER_URL}/damdda/project/myproject/${projectId}`, // 템플릿 리터럴을 올바르게 적용
+//                         url: `${SERVER_URL}/project/myproject/${projectId}`, // 템플릿 리터럴을 올바르게 적용
 
 //                         headers: {
 //                             Authorization: `Bearer ${Cookies.get('accessToken')}`, // 템플릿 리터럴을 올바르게 적용

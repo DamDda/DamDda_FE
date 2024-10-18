@@ -22,7 +22,7 @@
 
 //         try {
 //             const response = await axios.put(
-//                 `${SERVER_URL}/damdda/order/${supportingProject.payment.paymentId}/cancel`,
+//                 `${SERVER_URL}/order/${supportingProject.payment.paymentId}/cancel`,
 //                 updatedPaymentStatus
 //             ); // 객체를 JSON 바디로 전달
 //             if (response.status === 200) {

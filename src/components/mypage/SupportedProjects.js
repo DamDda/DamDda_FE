@@ -17,7 +17,7 @@
 //     // 백엔드에서 후원한 프로젝트 목록을 가져오는 함수 (주석 처리)
 //     const fetchOrders = async () => {
 //         try {
-//             const response = await axios.get(`${SERVER_URL}/damdda/order/supportingprojects`, {
+//             const response = await axios.get(`${SERVER_URL}/order/supportingprojects`, {
 //                 headers: {
 //                     ...(Cookies.get('accessToken') && {
 //                         Authorization: `Bearer ${Cookies.get('accessToken')}`,

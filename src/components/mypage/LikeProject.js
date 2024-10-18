@@ -26,7 +26,7 @@
 //         // liked가 true이면 DELETE 요청
 //         const response = await axios({
 //             method: project.liked ? 'DELETE' : 'POST',
-//             url: `${SERVER_URL}/damdda/project/like`,
+//             url: `${SERVER_URL}/project/like`,
 //             params: {
 //                 // memberId: user.key, // ==========================>> user.key 로 수정해야해요
 //                 projectId: project.id,
@@ -55,7 +55,7 @@
 //     const fetchProjects = async () => {
 //         axios({
 //             method: 'GET',
-//             url: `${SERVER_URL}/damdda/project/like`,
+//             url: `${SERVER_URL}/project/like`,
 //             params: {
 //                 page: page,
 //                 size: itemsPerPage,

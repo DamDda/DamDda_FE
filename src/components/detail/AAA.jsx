@@ -23,7 +23,6 @@
 //     selectedCount: 1,
 //   });
 
-
 //   const [errors, setErrors] = useState({
 //     name: false,
 //     phone: false,
@@ -43,7 +42,7 @@
 //   const fetchPackage = async () => {
 //     try {
 //       const response = await axios.get(
-//         `${SERVER_URL}/damdda/package/${projectId}`,
+//         `${SERVER_URL}/package/${projectId}`,
 //         {
 //           //project id 받아줘야 함.
 //           //project_id를 넘겨받아야 함.
@@ -70,12 +69,10 @@
 //     }
 //   };
 
-
-
 //   // 프로젝트 정보 요청을 보내는 함수
 //   const fetchProducts = () => {
 //     axios
-//       .get(` ${SERVER_URL}/damdda/project/${projectId}`, {
+//       .get(` ${SERVER_URL}/project/${projectId}`, {
 //         params: {
 //           // memberId: user.key,
 //         },
@@ -107,7 +104,7 @@
 //     // liked가 true이면 DELETE 요청
 //     axios({
 //       method: project.liked ? "DELETE" : "POST",
-//       url: `${SERVER_URL}/damdda/project/like`,
+//       url: `${SERVER_URL}/project/like`,
 //       params: {
 //         projectId: project.id,
 //       },
@@ -120,7 +117,7 @@
 //       .then((response) => {
 //         if (response.status === 200) {
 //           console.log(`좋아요 ${project.liked ? "취소" : "추가"} 성공:`, response.data);
-          
+
 //           // 상태 업데이트 - 불변성 유지
 //           setProjectDetail(prevState => ({
 //             ...prevState,
@@ -132,7 +129,6 @@
 //         console.error(e);
 //       });
 //   };
-  
 
 //   const handleCollabSubmit = async () => {
 //     const newErrors = {
@@ -225,114 +221,109 @@
 //   };
 // };
 
-
-
-
-
-
-import { SERVER_URL } from "constants/URLs";
-import Cookies from "js-cookie";
-import axios from "axios";
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { SERVER_URL } from 'constants/URLs';
+import Cookies from 'js-cookie';
+import axios from 'axios';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export const AAA = () => {
-  const navigate = useNavigate();
+    const navigate = useNavigate();
 
-  const projectId = 1;
-  const userId = 1;
-  const [likedCount, setLikedCount] = useState();
-  const [isHearted, setIsHearted] = useState();
-  const [projectDetail, setProjectDetail] = useState();
-  const [projectPackage, setProjectPackage] = useState();
-  const [selectedPackages, setSelectedPackages] = useState({
-    packageName: "패키지 D",
-    packagePrice: 25000,
-    selectOption: [
-      { rewardName: "보상 D1", selectOption: "옵션 1" },
-      { rewardName: "보상 D2", selectOption: "옵션 1" },
-    ],
-    selectedCount: 1,
-  });
+    const projectId = 1;
+    const userId = 1;
+    const [likedCount, setLikedCount] = useState();
+    const [isHearted, setIsHearted] = useState();
+    const [projectDetail, setProjectDetail] = useState();
+    const [projectPackage, setProjectPackage] = useState();
+    const [selectedPackages, setSelectedPackages] = useState({
+        packageName: '패키지 D',
+        packagePrice: 25000,
+        selectOption: [
+            { rewardName: '보상 D1', selectOption: '옵션 1' },
+            { rewardName: '보상 D2', selectOption: '옵션 1' },
+        ],
+        selectedCount: 1,
+    });
 
-  const [errors, setErrors] = useState({
-    name: false,
-    phone: false,
-    email: false,
-    message: false,
-  });
+    const [errors, setErrors] = useState({
+        name: false,
+        phone: false,
+        email: false,
+        message: false,
+    });
 
-  const [collabDetails, setCollabDetails] = useState({
-    title: "project.title", //------------------> project.title로 수정하기
-    name: "",
-    phone: "",
-    email: "",
-    message: "",
-    files: [],
-  });
+    const [collabDetails, setCollabDetails] = useState({
+        title: 'project.title', //------------------> project.title로 수정하기
+        name: '',
+        phone: '',
+        email: '',
+        message: '',
+        files: [],
+    });
 
-  // 패키지 가져오는 기능
-  const fetchPackage = async () => {
-    try {
-      const response = await axios.get(`${SERVER_URL}/damdda/package/${projectId}`, {
-        withCredentials: true,
-      });
+    // 패키지 가져오는 기능
+    const fetchPackage = async () => {
+        try {
+            const response = await axios.get(`${SERVER_URL}/package/${projectId}`, {
+                withCredentials: true,
+            });
 
-      if (!Array.isArray(response.data)) {
-        console.error("API response is not an array:", response.data);
-        return;
-      }
+            if (!Array.isArray(response.data)) {
+                console.error('API response is not an array:', response.data);
+                return;
+            }
 
-      const formattedPackages = response.data.map((pac) => ({
-        id: pac.id,
-        name: pac.name,
-        count: pac.count,
-        price: pac.price,
-        quantityLimited: pac.quantityLimited,
-        RewardList: Array.isArray(pac.RewardList) ? pac.RewardList : [],
-      }));
+            const formattedPackages = response.data.map((pac) => ({
+                id: pac.id,
+                name: pac.name,
+                count: pac.count,
+                price: pac.price,
+                quantityLimited: pac.quantityLimited,
+                RewardList: Array.isArray(pac.RewardList) ? pac.RewardList : [],
+            }));
 
-      console.log("패키지 데이터: ", formattedPackages); // 패키지 데이터를 콘솔에 출력
-      setProjectPackage(formattedPackages);
-    } catch (error) {
-      console.error("패키지 목록을 가져오는 중 오류 발생:", error);
-    }
-  };
-
-  // 프로젝트 정보 요청을 보내는 함수
-  const fetchProducts = () => {
-    axios
-      .get(`${SERVER_URL}/damdda/project/${projectId}`, {
-        headers: {
-          ...(Cookies.get("accessToken") && {
-            Authorization: `Bearer ${Cookies.get("accessToken")}`,
-          }),
-        },
-      })
-      .then((response) => {
-        console.log("프로젝트 데이터: ", response.data); // 프로젝트 데이터를 콘솔에 출력
-        if (response.data !== null) {
-          setProjectDetail(response.data);
-          setIsHearted(response.data.liked);
-          setLikedCount(response.data.likeCnt);
-        } else {
-          setProjectDetail({});
+            console.log('패키지 데이터: ', formattedPackages); // 패키지 데이터를 콘솔에 출력
+            setProjectPackage(formattedPackages);
+        } catch (error) {
+            console.error('패키지 목록을 가져오는 중 오류 발생:', error);
         }
-      })
-      .catch((error) => {
-        console.error("프로젝트 데이터를 가져오는 중 오류 발생:", error);
-      });
-  };
+    };
 
-  // 컴포넌트가 마운트될 때 데이터를 불러오는 useEffect
-  useEffect(() => {
-    fetchProducts(); // 프로젝트 데이터 가져오기
-    fetchPackage(); // 패키지 데이터 가져오기
-  }, []); // 빈 배열을 전달하여 컴포넌트가 처음 렌더링될 때만 실행되도록 설정
+    // 프로젝트 정보 요청을 보내는 함수
+    const fetchProducts = () => {
+        axios
+            .get(`${SERVER_URL}/project/${projectId}`, {
+                headers: {
+                    ...(Cookies.get('accessToken') && {
+                        Authorization: `Bearer ${Cookies.get('accessToken')}`,
+                    }),
+                },
+            })
+            .then((response) => {
+                console.log('프로젝트 데이터: ', response.data); // 프로젝트 데이터를 콘솔에 출력
+                if (response.data !== null) {
+                    setProjectDetail(response.data);
+                    setIsHearted(response.data.liked);
+                    setLikedCount(response.data.likeCnt);
+                } else {
+                    setProjectDetail({});
+                }
+            })
+            .catch((error) => {
+                console.error('프로젝트 데이터를 가져오는 중 오류 발생:', error);
+            });
+    };
 
-  return (
-    <div>
-      <h1>데이터 불러오기 테스트</h1>
-    </div>
-  );
+    // 컴포넌트가 마운트될 때 데이터를 불러오는 useEffect
+    useEffect(() => {
+        fetchProducts(); // 프로젝트 데이터 가져오기
+        fetchPackage(); // 패키지 데이터 가져오기
+    }, []); // 빈 배열을 전달하여 컴포넌트가 처음 렌더링될 때만 실행되도록 설정
+
+    return (
+        <div>
+            <h1>데이터 불러오기 테스트</h1>
+        </div>
+    );
 };

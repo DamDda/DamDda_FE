@@ -31,7 +31,7 @@
 //     const handleDownload = async (fileName) => {
 //         console.log(fileName); //4604642e-2515-466e-aa78-a18afebf9a3b_성공성공오예.txt
 //         try {
-//             const response = await axios.get(`${SERVER_URL}/damdda/collab/download`, {
+//             const response = await axios.get(`${SERVER_URL}/collab/download`, {
 //                 params: { fileName },
 //                 responseType: 'blob',
 //                 withCredentials: true,
@@ -86,7 +86,7 @@
 //         console.log('handleAddCollab' + CollaborateDate);
 
 //         try {
-//             await axios.post(`${SERVER_URL}/damdda/collab/register/1`, formData, {
+//             await axios.post(`${SERVER_URL}/collab/register/1`, formData, {
 //                 //projectId 받아오기
 //                 withCredentials: true,
 //                 headers: {
@@ -101,7 +101,7 @@
 
 //     const handleReadDetail = async (index) => {
 //         try {
-//             const response = await axios.get(`${SERVER_URL}/damdda/collab/readDetail/${index}`, {
+//             const response = await axios.get(`${SERVER_URL}/collab/readDetail/${index}`, {
 //                 withCredentials: true,
 //             });
 //             console.log(response.data);
@@ -119,7 +119,7 @@
 //     const handleReadReceive = async () => {
 //         console.log('user_id' + user.id);
 //         const response = await axios.get(
-//             `${SERVER_URL}/damdda/collab/readListReceive`,
+//             `${SERVER_URL}/collab/readListReceive`,
 //             { params: { page, size, userId: user.id } },
 //             {
 //                 withCredentials: true,
@@ -151,7 +151,7 @@
 //     };
 
 //     const handleDelete = async (id) => {
-//         await axios.delete(`${SERVER_URL}/damdda/collab/delete`, {
+//         await axios.delete(`${SERVER_URL}/collab/delete`, {
 //             params: { cno: id, user_id: user.id },
 //         });
 //         alert('선택된 협업이 삭제되었습니다.');
@@ -162,7 +162,7 @@
 //     /*협업받은 제안자일 때만 approval, reject 가능하도록 설정 */
 //     const handleApproval = async () => {
 //         try {
-//             await axios.put(`${SERVER_URL}/damdda/collab/approval`, selectedCollabs, {
+//             await axios.put(`${SERVER_URL}/collab/approval`, selectedCollabs, {
 //                 withCredentials: true,
 //             });
 //             alert('선택된 협업들이 승인되었습니다.');
@@ -177,7 +177,7 @@
 //     };
 //     const handleReject = async () => {
 //         try {
-//             await axios.put(`${SERVER_URL}/damdda/collab/reject`, selectedCollabs, {
+//             await axios.put(`${SERVER_URL}/collab/reject`, selectedCollabs, {
 //                 withCredentials: true,
 //             });
 //             alert('선택된 협업들이 거절되었습니다.');

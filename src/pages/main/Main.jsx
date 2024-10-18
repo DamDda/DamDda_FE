@@ -18,6 +18,7 @@ import new_section_image3 from 'assets/newSection_image_3.png';
 import new_section_image4 from 'assets/newSection_image_4.png';
 import Banner2 from 'assets/Banner2.png';
 import { Layout } from 'components/layout/DamDdaContainer'; // Layout 컴포넌트 import
+import { useLocation } from 'react-router-dom';
 
 const cardData = [
     // 카드 데이터 설정
@@ -48,6 +49,8 @@ const cardData = [
 ];
 
 export function Main() {
+    const location = useLocation();
+
     //////////////////////////////////
     const navigate = useNavigate();
     const [category, setCategory] = useState('전체 ');
@@ -135,6 +138,7 @@ export function Main() {
     return (
         <Layout>
             <Box
+                key={location.pathname + location.state?.forceReload}
                 sx={
                     {
                         // margin: '0 auto',

@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Box, Typography, IconButton } from '@mui/material';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import { useUser } from '../../UserContext';
+import { useUser } from 'UserContext';
 import { ProductCard } from './ProjectCard';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';

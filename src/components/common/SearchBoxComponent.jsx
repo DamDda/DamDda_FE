@@ -71,7 +71,7 @@ export const SearchBoxComponent = ({ search, setSearch }) => {
     };
 
     const enterSearch = () => {
-        navigate(`/entire?category=${'전체'}&search=${searchText}`);
+        navigate(`/entire?category=${'전체'}&search=${searchText}`, { state: { forceReload: Date.now() } });
     };
 
     return (

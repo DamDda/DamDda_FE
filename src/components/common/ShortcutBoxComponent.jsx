@@ -32,7 +32,7 @@ export const ShortcutBoxComponent = () => {
 
     return (
         <Box className={styles.container}>
-            <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 2, mt: 5 }}>
+            <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 2, mt: 3 }}>
                 신뢰와 안정의 금융결제원 CMS
             </Typography>
             <Typography variant="body1" sx={{ mb: 4 }}>

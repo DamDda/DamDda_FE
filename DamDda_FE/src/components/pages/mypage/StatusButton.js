@@ -108,7 +108,7 @@ const StatusButton = ({
           "&:hover": {
             backgroundColor: disableHover
               ? backgroundColor
-              : hoverBackgroundColor || backgroundColor,
+              : hoverBackgroundColor || backgroundColor, // 결제 취소일 때 hover 시 색 변경 안 함
             borderColor,
             color,
           },

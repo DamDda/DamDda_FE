@@ -17,10 +17,10 @@ const Withdrawal = () => {
   const { user, setUser } = useUser();
   const navigate = useNavigate();
 
-  // 모달 열기
-  useEffect(() => {
-    setIsModalOpen(true);
-  }, []);
+  // // 모달 열기
+  // useEffect(() => {
+  //   setIsModalOpen(true);
+  // }, []);
 
   // 비밀번호 확인 함수
   const handleSubmit = async (inputPassword) => {
@@ -44,6 +44,9 @@ const Withdrawal = () => {
       if (nickname === user.nickname) {
         setPasswordError(""); // 에러 메시지 초기화
         setIsModalOpen(false); // 모달 닫기
+        if (window.confirm("정말로 탈퇴하시겠습니까?")) {
+          handleDeleteAccount(); // 계정 삭제 함수 호출
+        }
       } else {
         setPasswordError("비밀번호가 틀렸습니다. 다시 입력해주세요.");
       }
@@ -52,10 +55,10 @@ const Withdrawal = () => {
     }
   };
 
-  // 모달을 닫을 수 없도록 비활성화
-  const handleCloseModal = () => {
-    // 아무 동작도 하지 않음
-  };
+  // // 모달을 닫을 수 없도록 비활성화
+  // const handleCloseModal = () => {
+  //   // 아무 동작도 하지 않음
+  // };
 
   // 체크박스 상태 변경
   const handleCheck = (event) => {
@@ -65,7 +68,7 @@ const Withdrawal = () => {
   // 회원탈퇴 버튼 클릭 처리
   const handleWithdrawlCilck = () => {
     if (checked) {
-      handleDeleteAccount();
+      setIsModalOpen(true);
     } else {
       alert("탈퇴 동의가 필요합니다");
     }
@@ -75,7 +78,7 @@ const Withdrawal = () => {
   const handleDeleteAccount = async () => {
     try {
       const response = await axios.delete(
-        `${SERVER_URL}/damdda/member/${user.id}`,
+        `${SERVER_URL}/damdda/member/${user.key}`,
         {
           withCredentials: true,
           headers: {
@@ -89,11 +92,17 @@ const Withdrawal = () => {
       console.log("회원탈퇴 응답:", response);
       if (response.status === 200) {
         alert("회원탈퇴가 완료되었습니다.");
+        //토큰 제거 먼저 처리
+        Cookies.remove("accessToken");
         // 로그아웃 처리
         setUser(null);
-        Cookies.remove("accessToken"); // 쿠키에서 토큰 제거
+        if (user) {
+          console.log("111111111111111111 유저키:", user.key);
+        } else {
+          console.log("1111111111111111111accessToken:", user.key);
+        }
         // 메인페이지로 리다이렉트
-        navigate("/");
+        navigate("/", { replace: true });
       }
     } catch (error) {
       console.log("회원탈퇴 오류:", error);
@@ -106,13 +115,14 @@ const Withdrawal = () => {
       {/* 비밀번호 확인 모달 */}
       <Modal
         open={isModalOpen}
-        onClose={handleCloseModal}
+        onClose={() => setIsModalOpen(false)}
         disableEscapeKeyDown
         onSubmit={handleSubmit}
         currentPassword={password}
         errorMessage={passwordError}
         setError={setPasswordError}
         error={passwordError}
+        instruction="암호 입력 후 탈퇴페이지로 이동할 수 있습니다." // 문구 추가
       />
 
       {/* 모달이 닫힌 후에만 탈퇴 내용 표시 */}

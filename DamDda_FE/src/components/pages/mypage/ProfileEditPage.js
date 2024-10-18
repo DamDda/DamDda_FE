@@ -39,7 +39,7 @@ export default function ProfileEditPage({
   const fetchProfileData = async () => {
     setIsLoading(true);
     try {
-      setFormData(profile);
+      setFormData({ ...profile, password: "" });
     } catch (error) {
       console.error("프로필 데이터를 불러오는 중 오류 발생:", error);
     } finally {
@@ -63,6 +63,7 @@ export default function ProfileEditPage({
       reader.readAsDataURL(file);
     }
   };
+
   const handleImageDelete = () => {
     setProfileImage(null);
     fileInputRef.current.value = "";
@@ -86,7 +87,7 @@ export default function ProfileEditPage({
       console.log("aceessToken" + Cookies.get("accessToken"));
 
       const response = await axios.put(
-        `${SERVER_URL}/damdda/member/profile/photo`,
+        `${SERVER_URL}/damdda/member/${user.key}/Photo`,
         { imageUrl: profileImage },
         config
       );
@@ -98,27 +99,30 @@ export default function ProfileEditPage({
   };
 
   const handleSubmit = async () => {
+    console.log("--------handleSubmit click------------");
     // 닉네임 중복 확인이 실패한 경우 프로필 저장을 중단
-    if (!nicknameCheck) {
+    // if (!nicknameCheck) {
+    //   setNicknameError("닉네임 중복 확인을 해주세요.");
+    //   return; // 닉네임 중복 확인이 완료되지 않았으면 저장 중단
+    // }
+    console.log("handleSubmit line : 107");
+    if (formData.nickname !== profile.nickname && !nicknameCheck) {
       setNicknameError("닉네임 중복 확인을 해주세요.");
       return; // 닉네임 중복 확인이 완료되지 않았으면 저장 중단
     }
 
-    // if (formData.nickname !== profile.nickname && !nicknameCheck) {
-    //   setNicknameError("닉네임 중복 확인을 해주세요.");
-    //   return; // 닉네임 중복 확인이 완료되지 않았으면 저장 중단
-    // }
-
-    if (!formData.nickname || !formData.phoneNumber || !formData.address) {
+    console.log("handleSubmit line : 112");
+    if (!formData.nickname || !formData.phoneNumber) {
       setErrorMessage({
         nickname: !formData.nickname ? "닉네임을 입력해주세요." : "",
         phoneNumber: !formData.phoneNumber ? "전화번호를 입력해주세요." : "",
-        address: !formData.address ? "주소를 입력해주세요." : "",
       });
       return;
     }
 
+    console.log("handleSubmit line : 121");
     const imageUrl = await handleImage();
+    console.log("handleSubmit line : 124");
     const updatedFormData = {
       ...formData,
       email: formData.email,
@@ -128,7 +132,7 @@ export default function ProfileEditPage({
       address: formData.address,
       imageUrl: imageUrl,
     };
-
+    console.log("image Url : ", imageUrl);
     const sendData = {
       email: formData.email,
       password: formData.password,
@@ -138,12 +142,15 @@ export default function ProfileEditPage({
       address: formData.address,
       imageUrl: imageUrl,
     };
+    console.log("sendData : ", sendData);
     // 부모 컴포넌트에 데이터 전달
     updateProfileData(updatedFormData);
 
+    console.log("handleSubmit line : 107");
     // 스낵바 열기
     setOpenSnackbar(true);
 
+    console.log("handleSubmit line : 107");
     try {
       const config = {
         headers: {
@@ -154,7 +161,7 @@ export default function ProfileEditPage({
       };
 
       await axios.put(
-        `${SERVER_URL}/damdda/member/${user.id}`,
+        `${SERVER_URL}/damdda/member/${user.key}`,
         sendData,
         config
       );
@@ -242,7 +249,8 @@ export default function ProfileEditPage({
           },
         }
       );
-      if (!response.data.success) {
+      console.log("response.data : ", response.data);
+      if (!response.data.isSuccess) {
         alert("현재 비밀번호가 일치하지 않습니다.");
         return;
       }

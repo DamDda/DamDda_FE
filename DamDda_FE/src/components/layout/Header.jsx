@@ -357,7 +357,7 @@ export function Header({ search, setSearch }) {
 
             {/* 프로필 카드 부분 */}
             <Box sx={{ position: "relative" }}>
-              {user.id ? (
+              {user && user.id ? (
                 // 로그인 후 프로필 카드
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -484,6 +484,7 @@ export function Header({ search, setSearch }) {
                           }}
                           onClick={() => {
                             logout();
+
                             navigate("/");
                           }}
                         >

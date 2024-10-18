@@ -84,6 +84,7 @@ const Mypage = () => {
   const renderSelectedTabContent = () => {
     if (isEditing) {
       // 수정 모드일 때는 ProfileEditPage 렌더링
+      console.log("profileData : ", profileData);
       return (
         <ProfileEditPage
           profile={profileData}

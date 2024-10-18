@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ProductCard } from "../mainpage/Product";
-import { Box, Grid2 } from "@mui/material";
+import { Box, Grid2, Typography } from "@mui/material";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import axios from "axios";
@@ -60,7 +60,6 @@ const Likeproject = () => {
       method: "GET",
       url: `${SERVER_URL}/damdda/project/like`,
       params: {
-        // memberId: user.key, // ==========================>> user.key 로 수정해야해요
         page: page,
         size: itemsPerPage,
       },
@@ -71,7 +70,7 @@ const Likeproject = () => {
       },
     })
       .then((response) => {
-        setProjects(response.data.dtoList);
+        setProjects(response.data.dtoList || []);
         setTotal(response.data.total);
         console.log(response);
       })
@@ -106,20 +105,24 @@ const Likeproject = () => {
         sx={{ flexGrow: 1 }}
         columns={{ xs: 3, md: 6, lg: 12 }}
       >
-        {projects.map((product) => (
-          <Grid2
-            item
-            key={product.id}
-            size={{ xs: 3, md: 3, lg: 2.4 }}
-            // xs={12}
-            // sm={6}
-            // md={2.4}
-            display="flex"
-            justifyContent="center"
-          >
-            <ProductCard product={product} handleLike={handleLike} />
-          </Grid2>
-        ))}
+        {projects.length > 0 ? (
+          projects.map((product) => (
+            <Grid2
+              item
+              key={product.id}
+              size={{ xs: 3, md: 3, lg: 2.4 }}
+              // xs={12}
+              // sm={6}
+              // md={2.4}
+              display="flex"
+              justifyContent="center"
+            >
+              <ProductCard product={product} handleLike={handleLike} />
+            </Grid2>
+          ))
+        ) : (
+          <Typography variant="h6">관심 프로젝트가 없습니다.</Typography>
+        )}
       </Grid2>
 
       {/* Pagination 컴포넌트 추가 */}

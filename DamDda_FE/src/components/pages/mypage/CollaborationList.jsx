@@ -62,28 +62,44 @@ const CollaborationList = ({
   const handleReadProject = async (path) => {
     console.log("user_id" + user.id);
     console.log(path);
-    const response = await axios.get(`${SERVER_URL}/damdda/collab/${path}`, {
-      params: {
-        page,
-        size,
-        // userId: user.id
-      },
-      withCredentials: true,
-      headers: {
-        ...(Cookies.get("accessToken") && {
-          Authorization: `Bearer ${Cookies.get("accessToken")}`,
-        }),
-      },
-    });
-    const { dtoList, total, page: responsePage } = response.data;
-    console.log("dtoList:", dtoList);
-    setCollaborations(dtoList);
-    setTotalElements(total);
-    setTotalPages(Math.ceil(total / size));
-    // setSelectionModel([]);
-    setSelectedRows([]);
-    setCheckReset((checkReset + 1) % 50);
-    //setPage(responsePage + 1);
+    try {
+      const response = await axios.get(`${SERVER_URL}/damdda/collab/${path}`, {
+        params: {
+          page,
+          size,
+          // userId: user.id
+        },
+        withCredentials: true,
+        headers: {
+          ...(Cookies.get("accessToken") && {
+            Authorization: `Bearer ${Cookies.get("accessToken")}`,
+          }),
+        },
+      });
+
+      const { dtoList, total, page: responsePage } = response.data;
+      console.log("dtoList:", dtoList);
+      setCollaborations(dtoList);
+      setTotalElements(total);
+      setTotalPages(Math.ceil(total / size));
+      // setSelectionModel([]);
+      setSelectedRows([]);
+      setCheckReset((checkReset + 1) % 50);
+      //setPage(responsePage + 1);
+    } catch (error) {
+      // 404 오류 처리
+      if (error.response) {
+        console.error("API 요청 실패:", error.response.data);
+        if (error.response.status === 404) {
+          setCollaborations([]); // 빈 목록으로 설정
+        } else {
+          alert("데이터를 가져오는 중 오류가 발생했습니다.");
+        }
+      } else {
+        console.error("서버에 연결할 수 없습니다:", error.message);
+        alert("서버에 연결할 수 없습니다.");
+      }
+    }
   };
 
   // 모달 열기
@@ -289,6 +305,11 @@ const CollaborationList = ({
             onRowClick={(params) => handleRowClick(params.id)} // 행 클릭 시 상세 페이지 이동
             sx={{ border: 0 }}
           />
+          {collaborations.length === 0 && (
+            <Typography variant="h6" sx={{ textAlign: "center", marginTop: 2 }}>
+              협업 제안이 없습니다.
+            </Typography>
+          )}
         </Paper>
 
         <Box

@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from "react"; // React
 import { Typography, Box, Divider } from "@mui/material";
 import { PackageCard } from "components/common/Gift/PackageCard";
-import { GiftOrder } from "components/common/Gift/GiftOrder"
+import { GiftOrder } from "components/common/Gift/GiftOrder";
 import { BlueButtonComponent } from "../ButtonComponent";
 import { SERVER_URL } from "constants/URLs";
 import Cookies from "js-cookie";
 import axios from "axios";
 
-export const GiftCompositionComponent = ({ handleSponsorClick, selectedPackages, setSelectedPackages, projectId }) => {
+export const GiftCompositionComponent = ({
+  handleSponsorClick,
+  selectedPackages,
+  setSelectedPackages,
+  projectId,
+}) => {
   // 더미 데이터
   const packageData = [
     {
@@ -119,46 +124,49 @@ export const GiftCompositionComponent = ({ handleSponsorClick, selectedPackages,
       ],
     },
   ];
- // const [selectPackages, setSelectPackages] = useState([]);
+  // const [selectPackages, setSelectPackages] = useState([]);
 
+  const [projectPackage, setProjectPackage] = useState([]);
+  ////////패키지 데이터 가져오기 시작//////////////////////////////////////
+  const fetchPackage = async () => {
+    try {
+      const response = await axios.get(`${SERVER_URL}/package/${projectId}`, {
+        withCredentials: true,
+      });
 
- const [projectPackage, setProjectPackage] = useState([]);
- ////////패키지 데이터 가져오기 시작//////////////////////////////////////
- const fetchPackage = async () => {
-  try {
-    const response = await axios.get(`${SERVER_URL}/package/${projectId}`, {
-      withCredentials: true,
-    });
-
-    if (!Array.isArray(response.data)) {
-      console.error("API response is not an array:", response.data);
-      return;
+      if (!Array.isArray(response.data)) {
+        console.error("API response is not an array:", response.data);
+        return;
+      }
+      const formattedPackages = response.data?.map((pac) => ({
+        id: pac.id,
+        name: pac.name,
+        count: pac.count,
+        price: pac.price,
+        quantityLimited: pac.quantityLimited,
+        RewardList: Array.isArray(pac.RewardList) ? pac.RewardList : [],
+      }));
+      console.log("패키지 데이터: ", formattedPackages); // 패키지 데이터를 콘솔에 출력
+      setProjectPackage(formattedPackages);
+    } catch (error) {
+      console.error(`패키지 목록을 가져오는 중 오류 발생:`, error);
     }
-    const formattedPackages = response.data?.map((pac) => ({
-      id: pac.id,
-      name: pac.name,
-      count: pac.count,
-      price: pac.price,
-      quantityLimited: pac.quantityLimited,
-      RewardList: Array.isArray(pac.RewardList) ? pac.RewardList : [],
-    }));
-    console.log("패키지 데이터: ", formattedPackages); // 패키지 데이터를 콘솔에 출력
-    setProjectPackage(formattedPackages);
-  } catch (error) {
-    console.error(`패키지 목록을 가져오는 중 오류 발생:`, error);
-  }
-};
+  };
 
-useEffect(() => {
-  fetchPackage()
-}, []);
+  useEffect(() => {
+    fetchPackage();
+  }, []);
 
-
- ////////패키지 데이터 가져오기 끝//////////////////////////////////////
+  ////////패키지 데이터 가져오기 끝//////////////////////////////////////
 
   const deepEqual = (obj1, obj2) => {
     if (obj1 === obj2) return true; // 같은 참조거나 값이 같으면 true
-    if (typeof obj1 !== "object" || typeof obj2 !== "object" || obj1 === null || obj2 === null) {
+    if (
+      typeof obj1 !== "object" ||
+      typeof obj2 !== "object" ||
+      obj1 === null ||
+      obj2 === null
+    ) {
       return false; // 객체가 아닌 경우 false
     }
 
@@ -177,27 +185,34 @@ useEffect(() => {
     return true;
   };
 
-
   // 패키지를 삭제하는 함수
   const removePackageById = (selectName, selectOption) => {
     setSelectedPackages((prevPackages) => {
       const newPackages = prevPackages.filter(
-        (pkg) => pkg.packageName !== selectName || !deepEqual(pkg.selectOption, selectOption)
+        (pkg) =>
+          pkg.packageName !== selectName ||
+          !deepEqual(pkg.selectOption, selectOption)
       );
       console.log("Updated packages after deletion:", newPackages); // 상태 확인
       return newPackages;
     });
   };
 
-
-
   // 선택된 패키지의 수량을 변경하는 함수
   const updateSelectedCountById = (selectName, selectOption, setNum) => {
-    console.log("selectName, selectOption, setNum", selectName, selectOption, setNum);
+    console.log(
+      "selectName, selectOption, setNum",
+      selectName,
+      selectOption,
+      setNum
+    );
 
     setSelectedPackages((prevPackages) => {
       const newPackages = prevPackages?.map((pkg) => {
-        if (pkg.packageName === selectName && deepEqual(pkg.selectOption, selectOption)) {
+        if (
+          pkg.packageName === selectName &&
+          deepEqual(pkg.selectOption, selectOption)
+        ) {
           return { ...pkg, selectedCount: setNum };
         }
         return pkg;
@@ -206,9 +221,6 @@ useEffect(() => {
       return newPackages;
     });
   };
-
-
-
 
   // 주문 처리 함수
   const handleOrder = (packageName, packagePrice, selectOption) => {
@@ -222,8 +234,11 @@ useEffect(() => {
       if (existingPackage) {
         return prevSelectedPackages?.map((selectedPackage) =>
           selectedPackage.packageName === packageName &&
-            deepEqual(selectedPackage.selectOption, selectOption)
-            ? { ...selectedPackage, selectedCount: selectedPackage.selectedCount + 1 }
+          deepEqual(selectedPackage.selectOption, selectOption)
+            ? {
+                ...selectedPackage,
+                selectedCount: selectedPackage.selectedCount + 1,
+              }
             : selectedPackage
         );
       }
@@ -239,9 +254,6 @@ useEffect(() => {
       ];
     });
   };
-
-
-  
 
   // 패키지 선택 수량 계산 함수
   const findSelectCount = (packageName) => {
@@ -266,10 +278,14 @@ useEffect(() => {
           />
         ))}
 
-        
-        {selectedPackages?.length > 0 && <div style={{width:"100px", marginLeft:"300px"}}><BlueButtonComponent onClick={handleSponsorClick} text={"후원하기"}/></div>}
-        {selectedPackages?.length > 0 && <Divider sx={{ my: 3,  width: "400px", borderColor:"black" }} />}
-
+      {selectedPackages?.length > 0 && (
+        <div style={{ width: "100px", marginLeft: "300px" }}>
+          <BlueButtonComponent onClick={handleSponsorClick} text={"후원하기"} />
+        </div>
+      )}
+      {selectedPackages?.length > 0 && (
+        <Divider sx={{ my: 3, width: "400px", borderColor: "black" }} />
+      )}
 
       {projectPackage?.map((packageDTO) => (
         <PackageCard

@@ -15,7 +15,7 @@ export const ProjectInfo = ({
   handleCollabClick,
   handleHeartClick,
 }) => {
-  console.log("projectInfo.liked: ",projectInfo.liked);
+  console.log("projectInfo.liked: ", projectInfo.liked);
   // 날짜 형식을 변환하는 함수
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -106,7 +106,9 @@ export const ProjectInfo = ({
               <div style={{ width: "180px" }}>
                 <BlueBorderButtonComponent
                   text={
-                    (projectInfo.liked ? "♥ " : "♡ ") + projectInfo.liked_count + "명"
+                    (projectInfo.liked ? "♥ " : "♡ ") +
+                    projectInfo.liked_count +
+                    "명"
                   }
                   onClick={() => handleHeartClick(projectInfo.liked)}
                   className="heart-button"

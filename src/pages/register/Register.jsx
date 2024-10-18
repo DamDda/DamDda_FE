@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Box, Modal, Snackbar, Alert, Divider } from "@mui/material";
+import { Box, Modal, Divider, Snackbar, Typography } from "@mui/material";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { SERVER_URL } from "constants/URLs";
@@ -13,9 +13,19 @@ import { Layout } from "components/layout/DamDdaContainer";
 import { BlueButtonComponent } from "components/common/ButtonComponent";
 
 import "pages/register/Register.css";
-import Preview from "components/register/preview/Preview";
 import InfoTabs from "components/register/info/InfoTabs";
 import MessageBox from "components/register/info/MessageBar";
+import { Preview } from "components/register/preview/Preview";
+const getUrl = (_file) => {
+  let _url;
+  if (_file.file === null) {
+    const splitted = _file.url.split("/");
+    _url = `${SERVER_URL}/${splitted[0]}/${splitted[1]}/${splitted[2]}/${encodeURIComponent(splitted[3])}`;
+  } else {
+    _url = _file.url;
+  }
+  return _url;
+};
 
 const Register = () => {
   ////////////////////////////
@@ -23,11 +33,10 @@ const Register = () => {
   ////////////////////////////
   const location = useLocation();
   const navigate = useNavigate();
-  const query = new URLSearchParams(location.search);
-  const [projectId, setProjectId] = useState(query.get("projectId") || 1);
+  const projectId = new URLSearchParams(location.search).get("projectId");
+  // for project information
   const [writeData, setWriteData] = useState([]);
-
-  const [tags, setTags] = useState([]); // 태그 목록
+  const [tags, setTags] = useState([]);
   const [formData, setFormData] = useState({
     // 기본 폼 데이터
     category_id: "",
@@ -40,15 +49,15 @@ const Register = () => {
     delivery_date: null,
     tags: "",
   });
+  // for project detail and files
   const [descriptionDetail, setDescriptionDetail] = useState(""); // 상세설명
-
   const [productImages, setProductImages] = useState([]); // 상품이미지
   const [descriptionImages, setDescriptionImages] = useState([]); // 설명이미지
   const [docs, setDocs] = useState([]);
 
-  const [openPreview, setOpenPreview] = useState(false);
-  const handleOpen = () => setOpenPreview(true);
-  const handleClose = () => setOpenPreview(false);
+  const [preview, setPreview] = useState(false);
+  const handlePreviewOpen = () => setPreview(true);
+  const handlePreviewClose = () => setPreview(false);
 
   //////////////////////
   // DEFINE CALLBACKS //
@@ -256,7 +265,6 @@ const Register = () => {
 
     try {
       const accessToken = Cookies.get("accessToken");
-      console.log(accessToken);
       const response = await axios({
         method: "PUT",
         url: `${SERVER_URL}/project/register/${projectId}`,
@@ -287,7 +295,10 @@ const Register = () => {
           <h1>프로젝트 등록하기</h1>
           <div className="button-right">
             <div className="button-group">
-              <BlueButtonComponent text="미리보기" onClick={handleOpen} />
+              <BlueButtonComponent
+                text="미리보기"
+                onClick={handlePreviewOpen}
+              />
               <BlueButtonComponent
                 text="저장하기"
                 onClick={() => saveProject(projectId, "저장")}
@@ -336,7 +347,7 @@ const Register = () => {
         {/* register information to server */}
         <Divider style={{ margin: "20px 0", width: "0" }} />
         <div className="button-group">
-          <BlueButtonComponent text="미리보기" onClick={handleOpen} />
+          <BlueButtonComponent text="미리보기" onClick={handlePreviewOpen} />
           <BlueButtonComponent
             text="저장하기"
             onClick={() => saveProject(projectId, "저장")}
@@ -353,30 +364,48 @@ const Register = () => {
         handleClose={handleSnackbarClose}
       />
       {/* 미리보기 모달 창 */}
-      <Modal open={openPreview} onClose={handleClose}>
-        <div
-          style={{
-            padding: "20px",
-            background: "white",
-            margin: "auto",
-            width: "80%",
-            maxWidth: "600px",
-            borderRadius: "10px",
-            top: "20%",
-            position: "absolute",
-          }}
-        >
-          {/* 입력한 값들을 미리보기로 전달 */}
-          <Preview
-            formData={formData}
-            tags={tags}
-            productImages={productImages}
-          />
-          <BlueButtonComponent text="닫기" onClick={handleClose} />
-        </div>
-      </Modal>
+      {/* <Modal open={preview} onClose={handlePreviewClose}>
+        <Box sx={style}>아무거나</Box>
+        <BlueButtonComponent text="닫기" onClick={handlePreviewClose} />
+      </Modal> */}
+      <div>
+        <Modal open={preview} onClose={handlePreviewClose}>
+          <Box sx={style}>
+            <Preview
+              projectId={projectId}
+              project={{
+                title: formData.title,
+                nickName: "sample nickname",
+                description: formData.description,
+                targetFunding: parseInt(
+                  formData.target_funding.replace(/,/g, "")
+                ),
+                startDate: formData.start_date,
+                endDate: formData.end_date,
+                category: formData.category_id,
+                descriptionDetail: descriptionDetail,
+                productImages: productImages.map((image) => getUrl(image)),
+                descriptionImages: descriptionImages.map((image) =>
+                  getUrl(image)
+                ),
+              }}
+            />
+          </Box>
+        </Modal>
+      </div>
     </>
   );
 };
-
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  height: "80%",
+  overflow: "auto",
+  transform: "translate(-50%, -50%)",
+  maxWidth: "1700px",
+  width: "90%",
+  bgcolor: "#FFFFFF",
+  border: "2px solid #000",
+};
 export default Register;

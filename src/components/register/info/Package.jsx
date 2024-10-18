@@ -69,6 +69,17 @@ const Package = (props) => {
       withCredentials: true,
     })
       .then((response) => {
+        console.log("Fetch packages");
+        console.log(
+          response.data.map((pack) => ({
+            id: pack.id,
+            name: pack.name,
+            count: pack.count,
+            price: pack.price,
+            quantityLimited: pack.quantityLimited,
+            RewardList: Array.isArray(pack.RewardList) ? pack.RewardList : [],
+          }))
+        );
         setPackages(
           response.data.map((pack) => ({
             id: pack.id,

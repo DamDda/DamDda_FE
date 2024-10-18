@@ -58,24 +58,24 @@ const RewardConfig = (props) => {
       OptionList: optionList,
       optionType: optionType,
     };
-    try {
-      const response = await axios({
-        method: "POST",
-        url: `${SERVER_URL}/package/rewards/${projectId}`,
-        data: newReward,
-        withCredentials: true,
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
+    const status = await axios({
+      method: "POST",
+      url: `${SERVER_URL}/package/rewards/${projectId}`,
+      data: newReward,
+      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+      .then((response) => response.status)
+      .catch((error) => {
+        console.error("선물 옵션을 추가하던 중 오류 발생:", error);
+        handleSnackbarOpen("error", "선물 옵션을 추가하지 못했어요.");
       });
-      if (response.status === 200) {
-        handleSnackbarOpen("success", "선물 옵션이 추가되었습니다.");
-        fetchRewards();
-        clearRewardInput();
-      }
-    } catch (error) {
-      console.error("선물 옵션을 추가하던 중 오류 발생:", error);
-      handleSnackbarOpen("error", "선물 옵션을 추가하지 못했어요.");
+    if (200 <= status <= 299) {
+      handleSnackbarOpen("success", "선물 옵션이 추가되었습니다.");
+      fetchRewards();
+      clearRewardInput();
     }
   };
 
@@ -98,7 +98,7 @@ const RewardConfig = (props) => {
         handleSnackbarOpen("error", "선물을 삭제하지 못했어요.");
       });
 
-    if (status === 204) {
+    if (200 <= status <= 299) {
       handleSnackbarOpen("success", "선물이 성공적으로 삭제되었습니다.");
       fetchRewards();
     }

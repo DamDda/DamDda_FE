@@ -97,7 +97,6 @@ const PackageConfig = (props) => {
       return;
     }
     const newPackage = {
-      id: currentPackageId,
       name: packageName,
       RewardList: packageRewards.map((reward) => ({
         id: reward.id,
@@ -109,6 +108,9 @@ const PackageConfig = (props) => {
       quantityLimited: isLimit ? packageLimit : -1, // 제한 수량이 없으면 '무제한'
       price: parseInt(packagePrice.replace(/,/g, "")),
     };
+    if (isEditing) {
+      newPackage.id = currentPackageId;
+    }
 
     const status = await axios({
       method: isEditing ? "PUT" : "POST",
@@ -128,7 +130,7 @@ const PackageConfig = (props) => {
           `선물 구성이 ${isEditing ? "수정" : "추가"}되지 못했어요.`
         );
       });
-    if (status === 201) {
+    if (200 <= status <= 299) {
       let newPackages;
       if (isEditing) {
         newPackages = packages

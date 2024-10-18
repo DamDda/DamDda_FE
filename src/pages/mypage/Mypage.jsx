@@ -8,7 +8,7 @@ export const Mypage = () => {
         <div style={{ width: '100%' }}>
             <Layout>
                 <div style={{ width: '100%' }}>
-                    <UserMyPage style={{ width: '100%' }} />
+                    <UserMyPage  />
                 </div>
             </Layout>
         </div>

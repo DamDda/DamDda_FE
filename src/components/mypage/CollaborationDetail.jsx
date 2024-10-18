@@ -30,7 +30,7 @@ export const CollaborationDetail = ({ clickCollb, filter, setClickCollb }) => {
 
     const handleReadDetail = async () => {
         try {
-            const response = await axios.get(`${SERVER_URL}/collab/readDetail/${clickCollb}`, {
+            const response = await axios.get(`${SERVER_URL}/collab/read/detail/${clickCollb}`, {
                 headers: {
                     ...(Cookies.get('accessToken') && {
                         Authorization: `Bearer ${Cookies.get('accessToken')}`,

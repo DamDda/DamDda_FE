@@ -259,96 +259,121 @@ export const CollaborationList = ({ setClickCollb, filter, setFilter }) => {
     };
 
     return (
-        <>
-            <TableContainer
-                sx={{
-                    margin: '100px auto',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyItems: 'justify-content',
-                    alignItems: 'center',
-                }}
-                component={Paper}
+      <>
+        <TableContainer
+          sx={{
+            margin: "100px auto",
+            display: "flex",
+            flexDirection: "column",
+            justifyItems: "justify-content",
+            alignItems: "center",
+          }}
+          component={Paper}
+        >
+          <Box display="flex" width="100%" justifyContent="flex-end" p={2}>
+            <FormControl variant="outlined">
+              <InputLabel>협업 선택</InputLabel>
+              <Select
+                value={filter}
+                onChange={handleFilterChange}
+                label="협업 선택"
+              >
+                <MenuItem value="제안 받은 협업">제안 받은 협업</MenuItem>
+                <MenuItem value="제안 한 협업">제안 한 협업</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+
+          <Typography
+            variant="h6"
+            style={{ fontWeight: "bold", color: "#000000" }}
+          >
+            {filter}
+          </Typography>
+
+          <Paper sx={{ height: 400, width: "90%" }}>
+            <DataGrid
+              key={checkReset} // 상태에 따라 리렌더링 강제
+              rows={collaborations}
+              columns={columns}
+              // initialState={{ pagination: { paginationModel } }}
+              // pageSizeOptions={[5, 10]}
+              checkboxSelection
+              disableColumnMenu // 컬럼 메뉴 비활성화
+              selectionModel={selectedRows}
+              onRowSelectionModelChange={(newSelection) => {
+                setSelectedRows(newSelection);
+              }}
+              onRowClick={(params) => handleRowClick(params.id)} // 행 클릭 시 상세 페이지 이동
+              sx={{ border: 0 }}
+            />
+            {collaborations && collaborations.length === 0 && ( /////-------------------------------------> 이거 추가됨
+              <Typography
+                variant="h6"
+                sx={{ textAlign: "center", marginTop: 2 }}
+              >
+                협업 제안이 없습니다.
+              </Typography>
+            )}
+          </Paper>
+
+          <Box
+            marginTop="20px"
+            display="flex"
+            width="100%"
+            justifyContent="space-between"
+            p={2}
+          >
+            {/* 좌측에 삭제 버튼 */}
+            <Button
+              sx={{ margin: "10px" }}
+              variant="outlined"
+              color="error"
+              onClick={(event) => handleClickOpen("삭제")}
             >
-                <Box display="flex" width="100%" justifyContent="flex-end" p={2}>
-                    <FormControl variant="outlined">
-                        <InputLabel>협업 선택</InputLabel>
-                        <Select value={filter} onChange={handleFilterChange} label="협업 선택">
-                            <MenuItem value="제안 받은 협업">제안 받은 협업</MenuItem>
-                            <MenuItem value="제안 한 협업">제안 한 협업</MenuItem>
-                        </Select>
-                    </FormControl>
-                </Box>
+              삭제
+            </Button>
 
-                <Typography variant="h6" style={{ fontWeight: 'bold', color: '#000000' }}>
-                    {filter}
-                </Typography>
+            {/* 우측에 승인, 거절 버튼 */}
+            {filter === "제안 받은 협업" && (
+              <Box display="flex">
+                <Button
+                  sx={{ margin: "10px" }}
+                  variant="contained"
+                  onClick={() => handleClickOpen("승인")}
+                >
+                  승인
+                </Button>
+                <Button
+                  sx={{ margin: "10px" }}
+                  variant="outlined"
+                  onClick={() => handleClickOpen("거절")}
+                >
+                  거절
+                </Button>
+              </Box>
+            )}
+          </Box>
+        </TableContainer>
 
-                <Paper sx={{ height: 400, width: '90%' }}>
-                    <DataGrid
-                        key={checkReset} // 상태에 따라 리렌더링 강제
-                        rows={collaborations}
-                        columns={columns}
-                        // initialState={{ pagination: { paginationModel } }}
-                        // pageSizeOptions={[5, 10]}
-                        checkboxSelection
-                        disableColumnMenu // 컬럼 메뉴 비활성화
-                        selectionModel={selectedRows}
-                        onRowSelectionModelChange={(newSelection) => {
-                            setSelectedRows(newSelection);
-                        }}
-                        onRowClick={(params) => handleRowClick(params.id)} // 행 클릭 시 상세 페이지 이동
-                        sx={{ border: 0 }}
-                    />
-                    {collaborations.length === 0 && (
-                        <Typography variant="h6" sx={{ textAlign: 'center', marginTop: 2 }}>
-                            협업 제안이 없습니다.
-                        </Typography>
-                    )}
-                </Paper>
-
-                <Box marginTop="20px" display="flex" width="100%" justifyContent="space-between" p={2}>
-                    {/* 좌측에 삭제 버튼 */}
-                    <Button
-                        sx={{ margin: '10px' }}
-                        variant="outlined"
-                        color="error"
-                        onClick={(event) => handleClickOpen('삭제')}
-                    >
-                        삭제
-                    </Button>
-
-                    {/* 우측에 승인, 거절 버튼 */}
-                    {filter === '제안 받은 협업' && (
-                        <Box display="flex">
-                            <Button sx={{ margin: '10px' }} variant="contained" onClick={() => handleClickOpen('승인')}>
-                                승인
-                            </Button>
-                            <Button sx={{ margin: '10px' }} variant="outlined" onClick={() => handleClickOpen('거절')}>
-                                거절
-                            </Button>
-                        </Box>
-                    )}
-                </Box>
-            </TableContainer>
-
-            {/* 모달 (Dialog) */}
-            <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>정말로 {currentAction}하시겠습니까?</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        확인을 누르면 {currentAction}됩니다. 정말로 {currentAction} 하시겠습니까?
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose} color="primary">
-                        취소
-                    </Button>
-                    <Button onClick={() => handleAction(currentAction)} color="primary">
-                        확인
-                    </Button>
-                </DialogActions>
-            </Dialog>
-        </>
+        {/* 모달 (Dialog) */}
+        <Dialog open={open} onClose={handleClose}>
+          <DialogTitle>정말로 {currentAction}하시겠습니까?</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              확인을 누르면 {currentAction}됩니다. 정말로 {currentAction}{" "}
+              하시겠습니까?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary">
+              취소
+            </Button>
+            <Button onClick={() => handleAction(currentAction)} color="primary">
+              확인
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </>
     );
 };

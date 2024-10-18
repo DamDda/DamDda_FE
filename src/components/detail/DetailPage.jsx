@@ -44,8 +44,7 @@ export const DetailPage = () => {
     liked_count: 120, // 좋아요를 누른 사람의 수
   };
 
-
-  const { isLogin } = useUser();
+  const { user, isLogin } = useUser();
 
   ///////////////////////////데이터 요청 시작/////////////////////////////
   const navigate = useNavigate();
@@ -54,7 +53,7 @@ export const DetailPage = () => {
   const query = new URLSearchParams(location.search);
 
   const [projectId, setProjectId] = useState(query.get("projectId") || "");
-  
+
   const initialProjectDetail = {
     id: projectId, // 프로젝트 ID
     title: "프로젝트 명", // 프로젝트 명
@@ -87,13 +86,11 @@ export const DetailPage = () => {
   //   liked_count: 120, // 좋아요를 누른 사람의 수
   // };
 
-
   const [projectDetail, setProjectDetail] = useState(initialProjectDetail);
   const [projectInfo, setProjectInfo] = useState();
   const [likedCount, setLikedCount] = useState();
   const [isHearted, setIsHearted] = useState();
   const [selectedPackages, setSelectedPackages] = useState([]);
-
 
   // 프로젝트 정보 요청을 보내는 함수
   const fetchProducts = () => {
@@ -121,9 +118,8 @@ export const DetailPage = () => {
   };
 
   useEffect(() => {
-    fetchProducts()
+    fetchProducts();
   }, []);
-
 
   useEffect(() => {
     const currentTime = new Date();
@@ -132,7 +128,10 @@ export const DetailPage = () => {
 
     setProjectInfo({
       fundsReceive: projectDetail.fundsReceive, // 모인 금액
-      achievementRate: Math.min((projectDetail.fundsReceive / projectDetail.targetFunding) * 100, 100), // 달성률 (퍼센트로 표현)
+      achievementRate: Math.min(
+        (projectDetail.fundsReceive / projectDetail.targetFunding) * 100,
+        100
+      ), // 달성률 (퍼센트로 표현)
       daysLeft: Math.floor(timeDifference / (1000 * 60 * 60 * 24)), // 남은 일수
       supporterCnt: projectDetail.supporterCnt, // 후원자 수
       targetFunding: projectDetail.targetFunding, // 목표 금액
@@ -140,68 +139,63 @@ export const DetailPage = () => {
       endDate: projectDetail.endDate, // 펀딩 종료일
       liked: projectDetail.liked, // 사용자가 좋아요를 눌렀는지 여부
       liked_count: projectDetail.likeCnt, // 좋아요를 누른 사람의 수
-    }
-    );
-    console.log("projectDetail useEffect" , projectDetail);
-    console.log("projectInfo useEffect" , projectInfo);
+    });
+    console.log("projectDetail useEffect", projectDetail);
+    console.log("projectInfo useEffect", projectInfo);
   }, [projectDetail]);
   ///////////////////////////프로젝트 정보 요청 끝/////////////////////////////
 
-
   //////////////////주문 요청 시작/////////////////////////////////////
   const handleSponsorClick = () => {
-    if(isLogin){
-    if (selectedPackages || selectedPackages.legnth() > 0) {
-      const confirmation = window.confirm("이 프로젝트를 후원하시겠습니까?");
-      if (confirmation) {
-        handleNavigateToPayment()
+    if (isLogin) {
+      if (selectedPackages || selectedPackages.legnth() > 0) {
+        const confirmation = window.confirm("이 프로젝트를 후원하시겠습니까?");
+        if (confirmation) {
+          handleNavigateToPayment();
+        }
+      } else {
+        alert("선물구성을 선택하세요.");
       }
     } else {
-      alert("선물구성을 선택하세요.");      
-    }} else {
-      alert("로그인 후 이용이 가능합니다.")
+      alert("로그인 후 이용이 가능합니다.");
     }
   };
 
-
-    // 주문하는 코드
-    const handleNavigateToPayment = () => {
-      const orderInfo = {
-        projectTitle: projectDetail.title, // 프로젝트 이름 (실제 값으로 설정 가능)
-        selectedPackages: selectedPackages?.map((pkg) => ({
-          packageName: pkg.packageName, // 선택된 선물 구성의 이름
-          selectedOption: pkg.selectOption, // 선택된 옵션
-          price: pkg.packagePrice, // 가격
-          quantity: pkg.selectedCount, // 수량
-        })),
-        totalAmount: selectedPackages.reduce((acc, pkg) => {
-          return acc + pkg.packagePrice * pkg.selectedCount;
-        }, 0), // 총 금액
-        projectId: projectDetail.id, // projectId 추가
-        memberId: 3, //--------------------------------------> jwt로 바꿔야함
-      };
+  // 주문하는 코드
+  const handleNavigateToPayment = () => {
+    const orderInfo = {
+      projectTitle: projectDetail.title, // 프로젝트 이름 (실제 값으로 설정 가능)
+      selectedPackages: selectedPackages?.map((pkg) => ({
+        packageName: pkg.packageName, // 선택된 선물 구성의 이름
+        selectedOption: pkg.selectOption, // 선택된 옵션
+        price: pkg.packagePrice, // 가격
+        quantity: pkg.selectedCount, // 수량
+      })),
+      totalAmount: selectedPackages.reduce((acc, pkg) => {
+        return acc + pkg.packagePrice * pkg.selectedCount;
+      }, 0), // 총 금액
+      projectId: projectDetail.id, // projectId 추가
+      memberId: 3, //--------------------------------------> jwt로 바꿔야함
+    };
     console.log("보내는 OrderInfo:", orderInfo); // 데이터 전달 전에 확인
 
-      // navigate 함수로 orderInfo 데이터를 전달하여 payment 페이지로 이동
-      navigate("/payment", { state: orderInfo });
-    };
-
-
+    // navigate 함수로 orderInfo 데이터를 전달하여 payment 페이지로 이동
+    navigate("/payment", { state: orderInfo });
+  };
 
   //////////////////주문 요청 끝/////////////////////////////////////
 
-
   //////////캐러셀//////////////////////////////
-  const CarouselStyle = { width: "500px", height: "500px"};
+  const CarouselStyle = { width: "500px", height: "500px" };
 
   //////////Tab 관련 시작//////////////////////////////////
   const [tabIndex, setTabIndex] = useState(0);
 
   // 각 섹션에 대한 ref 정의
   const sectionRefs = {
-    "descriptionRef": useRef(null),
-    "noticeRef": useRef(null),
-    "qnaRef": useRef(null),
+    descriptionRef: useRef(null),
+    noticeRef: useRef(null),
+    qnaRef: useRef(null),
   };
 
   const labels = ["상 세 설 명", "공 지 사 항", "Q & A"]; // 탭 레이블을 배열로 정의
@@ -214,24 +208,24 @@ export const DetailPage = () => {
     const selectedSectionRef = sectionRefs[selectedSectionKey];
 
     if (selectedSectionRef && selectedSectionRef.current) {
-      const elementPosition = selectedSectionRef.current.getBoundingClientRect().top + window.pageYOffset;
+      const elementPosition =
+        selectedSectionRef.current.getBoundingClientRect().top +
+        window.pageYOffset;
 
       // 원하는 위치로 스크롤, offset을 적용해서 100px만큼 내려오게 함
       window.scrollTo({
         top: elementPosition - 150, // 100px만큼 상단에서 떨어지게 설정
-        behavior: 'smooth', // 부드러운 스크롤 이동
+        behavior: "smooth", // 부드러운 스크롤 이동
       });
     }
   };
 
   //////////Tab 관련 끝//////////////////////////////////
 
-
-
   //////협업하기/////////////////////////////////////////////////
   const [modalOpen, setModalOpen] = useState(false);
   const [collabDetails, setCollabDetails] = useState({
-    title: projectDetail.title, 
+    title: projectDetail.title,
     name: "",
     phone: "",
     email: "",
@@ -240,7 +234,7 @@ export const DetailPage = () => {
   });
 
   const [errors, setErrors] = useState({
-    title: false, 
+    title: false,
     name: false,
     phone: false,
     email: false,
@@ -248,14 +242,18 @@ export const DetailPage = () => {
   });
 
   const handleCollabClick = (isHearted) => {
-    if(isLogin){
-    //handleCollabSubmit();
-    setModalOpen(true);
+    if (isLogin) {
+      //handleCollabSubmit();
+      if (projectDetail.nickName === user.nickname) {
+        alert("본인 프로젝트에는 협업신청이 불가능합니다.");
+      } else {
+        setModalOpen(true);
+      }
     } else {
-      alert("로그인 후 이용이 가능합니다.")
+      alert("로그인 후 이용이 가능합니다.");
     }
   };
-  
+
   // const handleCollabSubmit = async () => {
   //   const newErrors = {
   //     title: !collabDetails.title,
@@ -325,7 +323,6 @@ export const DetailPage = () => {
   //   }
   // };
 
-
   const handleModalClose = () => {
     const confirmation = window.confirm("창을 닫으시겠습니까?");
     if (confirmation) {
@@ -337,15 +334,21 @@ export const DetailPage = () => {
         message: "",
         files: [],
       });
-      setErrors({ title: false, name: false, phone: false, email: false, message: false });
+      setErrors({
+        title: false,
+        name: false,
+        phone: false,
+        email: false,
+        message: false,
+      });
     }
   };
 
   //////좋아요 요청 시작////////////////////////////////////////////////
   const handleHeartClick = async () => {
-    const isLike = projectDetail.liked
-    console.log("projectDetail.Liked",isLike);
-    if(isLogin){
+    const isLike = projectDetail.liked;
+    console.log("projectDetail.Liked", isLike);
+    if (isLogin) {
       axios({
         method: isLike ? "DELETE" : "POST",
         url: `${SERVER_URL}/project/like`,
@@ -360,10 +363,13 @@ export const DetailPage = () => {
       })
         .then((response) => {
           if (response.status === 200) {
-            console.log(`좋아요 ${isLike ? "취소" : "추가"} 성공:`, response.data);
-            
+            console.log(
+              `좋아요 ${isLike ? "취소" : "추가"} 성공:`,
+              response.data
+            );
+
             // 상태 업데이트 - 불변성 유지
-            setProjectDetail(prevState => ({
+            setProjectDetail((prevState) => ({
               ...prevState,
               liked: !prevState.liked, // liked 상태를 반전시킴
               likeCnt: isLike ? prevState.likeCnt - 1 : prevState.likeCnt + 1,
@@ -372,14 +378,13 @@ export const DetailPage = () => {
         })
         .catch((e) => {
           console.error(e);
-        });      
+        });
     } else {
-      alert("로그인 후 이용이 가능합니다.")
+      alert("로그인 후 이용이 가능합니다.");
     }
   };
   //////좋아요 요청 끝////////////////////////////////////////////////
 
- 
   return (
     <div style={{ width: "100%", margin: "0px auto" }}>
       {/* <AAA/> */}
@@ -401,18 +406,24 @@ export const DetailPage = () => {
           alignItems: "center",
         }}
       >
-        <ImageCarousel images={projectDetail.productImages} style={CarouselStyle} />
-        {projectInfo &&
-        <ProjectInfo
-          projectInfo={projectInfo}
-          handleSponsorClick={handleSponsorClick}
-          handleHeartClick={handleHeartClick}
-          handleCollabClick={handleCollabClick}
+        <ImageCarousel
+          images={projectDetail.productImages}
+          style={CarouselStyle}
+        />
+        {projectInfo && (
+          <ProjectInfo
+            projectInfo={projectInfo}
+            handleSponsorClick={handleSponsorClick}
+            handleHeartClick={handleHeartClick}
+            handleCollabClick={handleCollabClick}
           />
-        }
+        )}
       </div>
 
-      <div ref={sectionRefs.descriptionRef} style={{ margin: "100px 0px 50px 0px" }}>
+      <div
+        ref={sectionRefs.descriptionRef}
+        style={{ margin: "100px 0px 50px 0px" }}
+      >
         <TabComponent
           tabIndex={tabIndex}
           setTabIndex={(index) => handleScrollToSectionWithOffset(index)}
@@ -440,20 +451,27 @@ export const DetailPage = () => {
         >
           <DetailDescroption
             descriptionDetail={projectDetail.description}
-            descriptionImages={projectDetail.descriptionImages.flatMap(image => Array(5).fill(image))}
+            descriptionImages={projectDetail.descriptionImages.flatMap(
+              (image) => Array(5).fill(image)
+            )}
           />
         </div>
         <div
-    id="gift-component"
-    style={{
-      width: "35%",
-      position: "sticky",
-      top: "130px", // 상단 고정 위치
-      maxHeight: "calc(100vh - 130px)", // 뷰포트 높이에 맞춘 최대 높이
-      overflowY: "auto", // 내부 스크롤 활성화
-    }}
-  >
-          <GiftCompositionComponent handleSponsorClick={handleSponsorClick} selectedPackages={selectedPackages} setSelectedPackages={setSelectedPackages} projectId={projectDetail.id}/>
+          id="gift-component"
+          style={{
+            width: "35%",
+            position: "sticky",
+            top: "130px", // 상단 고정 위치
+            maxHeight: "calc(100vh - 130px)", // 뷰포트 높이에 맞춘 최대 높이
+            overflowY: "auto", // 내부 스크롤 활성화
+          }}
+        >
+          <GiftCompositionComponent
+            handleSponsorClick={handleSponsorClick}
+            selectedPackages={selectedPackages}
+            setSelectedPackages={setSelectedPackages}
+            projectId={projectDetail.id}
+          />
         </div>
       </div>
 

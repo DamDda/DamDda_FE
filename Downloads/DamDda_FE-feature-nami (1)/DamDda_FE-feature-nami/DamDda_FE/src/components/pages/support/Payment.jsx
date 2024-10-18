@@ -195,7 +195,7 @@ function Payment() {
                 id: r.id,
                 name: r.name,
                 count: r.count,
-                OptionList: [selectedOption], // 이미 배열로 만듭니다
+                OptionList: [selectedOption],
                 optionType: r.optionType,
               });
             }
@@ -213,7 +213,7 @@ function Payment() {
       // 주문 정보 생성 POST 요청 (결제 대기중 상태로 먼저 저장)
       console.log("Order Data:", orderData); // 서버로 전송 전에 데이터 확인
       const response = await axios.post(
-        `${SERVER_URL}/damdda/order/create`,
+        `${SERVER_URL}/order/create`,
         orderData,
         {
           headers: {
@@ -243,14 +243,14 @@ function Payment() {
         axios
           .post(
             `${SERVER_URL}/payment/kakao/ready`,
-            { orderId: createdOrderId },
-            {
-              headers: {
-                ...(Cookies.get("accessToken") && {
-                  Authorization: `Bearer ${Cookies.get("accessToken")}`,
-                }),
-              },
-            }
+            { orderId: createdOrderId }
+            // {
+            //   headers: {
+            //     ...(Cookies.get("accessToken") && {
+            //       Authorization: `Bearer ${Cookies.get("accessToken")}`,
+            //     }),
+            //   },
+            // }
           )
           .then((res) => {
             window.location.href = res.data.next_redirect_pc_url; // 카카오페이 결제 페이지로 리디렉션

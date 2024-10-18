@@ -23,15 +23,16 @@ import { SERVER_URL } from "../../../constants/URLs";
 
 // Individual product card component
 export const ProductCard = ({ product, handleLike }) => {
-
-  const formattedTargetFunding = new Intl.NumberFormat().format(product.targetFunding);
+  const formattedTargetFunding = new Intl.NumberFormat().format(
+    product.targetFunding
+  );
 
   // 달성률 계산 (fundsReceive / targetFunding * 100)
   const achievementRate = Math.min(
     (product.fundsReceive / product.targetFunding) * 100,
     100
   );
-  
+
   // 현재 시간
   const currentTime = new Date();
   // product.endDate를 Date 객체로 변환
@@ -44,7 +45,6 @@ export const ProductCard = ({ product, handleLike }) => {
 
   const navigate = useNavigate(); //새로운 프로젝트 눌렀을 때 이동하는 네비게이트
 
-
   return (
     <>
       <Card
@@ -52,7 +52,7 @@ export const ProductCard = ({ product, handleLike }) => {
           borderRadius: "15px",
           boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
           padding: 2,
-          margin: '0px 10px',
+          margin: "0px 10px",
           // position: "relative",
           display: "flex",
           flexDirection: "column",
@@ -132,7 +132,7 @@ export const ProductCard = ({ product, handleLike }) => {
               flexDirection: "row",
               alignItems: "center",
               justifyContent: "space-between",
-              width: "100%",  // 부모 Box가 전체 너비를 가지도록 설정
+              width: "100%", // 부모 Box가 전체 너비를 가지도록 설정
             }}
           >
             <Typography
@@ -145,8 +145,7 @@ export const ProductCard = ({ product, handleLike }) => {
               variant="body2"
               sx={{ fontWeight: "bold", fontSize: "0.8rem" }}
             >
-              {formattedTargetFunding}원
-              {/* {product.targetFunding} */}
+              {formattedTargetFunding}원{/* {product.targetFunding} */}
             </Typography>
           </Box>
 
@@ -172,7 +171,7 @@ export const ProductCard = ({ product, handleLike }) => {
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
-              width: "100%",  // 부모 Box가 전체 너비를 가지도록 설정
+              width: "100%", // 부모 Box가 전체 너비를 가지도록 설정
             }}
           >
             <Button
@@ -215,34 +214,31 @@ export const ProductRecommendations = ({ sortCondition, title, subTitle }) => {
   //   //setUser(prevUser => ({ ...prevUser, key: 0 }));
   // }
 
-
-
   const [products, setProducts] = useState([]); // 서버에서 가져온 프로젝트 데이터
 
   const itemsPerPage = 10; // 페이지당 항목 수
 
   // 페이지네이션 요청을 보내는 함수
   const fetchProducts = async () => {
-    console.log("user.id : " + user.id)
-    console.log("user.key : " + user.key)
-    console.log("user.profile : " + user.profile)
-    console.log("user.nickname : " + user.nickname)
-    console.log("Cookies.get(accessToken)" + Cookies.get("accessToken"))
+    console.log("user.id : " + user.id);
+    console.log("user.key : " + user.key);
+    console.log("user.profile : " + user.profile);
+    console.log("user.nickname : " + user.nickname);
+    console.log("Cookies.get(accessToken)" + Cookies.get("accessToken"));
     try {
-      const response = await axios.get(
-        ` ${SERVER_URL}/api/projects/projects`,
-        {
-          params: {
-            // memberId: user.key,
-            page: 1,
-            sort: sortCondition,
-            size: itemsPerPage,
-          },
-          headers: {
-            ...(Cookies.get("accessToken") && { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
-          },
-        }
-      );
+      const response = await axios.get(` ${SERVER_URL}/project/projects`, {
+        params: {
+          // memberId: user.key,
+          page: 1,
+          sort: sortCondition,
+          size: itemsPerPage,
+        },
+        headers: {
+          ...(Cookies.get("accessToken") && {
+            Authorization: `Bearer ${Cookies.get("accessToken")}`,
+          }),
+        },
+      });
 
       if (response.data.dtoList !== null) {
         setProducts(response.data.dtoList); // 서버에서 받은 프로젝트 리스트
@@ -269,9 +265,11 @@ export const ProductRecommendations = ({ sortCondition, title, subTitle }) => {
           ` ${SERVER_URL}/api/projects/like`,
           {
             headers: {
-              ...(Cookies.get("accessToken") && { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+              ...(Cookies.get("accessToken") && {
+                Authorization: `Bearer ${Cookies.get("accessToken")}`,
+              }),
             },
-  
+
             params: {
               // memberId: user.key,
               projectId: project.id,
@@ -286,7 +284,9 @@ export const ProductRecommendations = ({ sortCondition, title, subTitle }) => {
           null,
           {
             headers: {
-              ...(Cookies.get("accessToken") && { Authorization: `Bearer ${Cookies.get("accessToken")}` }),
+              ...(Cookies.get("accessToken") && {
+                Authorization: `Bearer ${Cookies.get("accessToken")}`,
+              }),
             },
             params: {
               // memberId: user.key,
@@ -433,7 +433,6 @@ export const ProductRecommendations = ({ sortCondition, title, subTitle }) => {
               >
                 <ProductCard product={product} handleLike={handleLike} />
               </Box>
-              
             ))}
           </Box>
 

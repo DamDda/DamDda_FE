@@ -23,7 +23,7 @@ const PaymentDeliveryInfo = ({ project }) => {
 
     try {
       const response = await axios.put(
-        `${SERVER_URL}/damdda/order/${supportingProject.payment.paymentId}/cancel`,
+        `${SERVER_URL}/order/${supportingProject.payment.paymentId}/cancel`,
         updatedPaymentStatus,
         {
           headers: {
@@ -141,8 +141,9 @@ const PaymentDeliveryInfo = ({ project }) => {
             총 상품 금액:
           </Typography>
           <Typography sx={{ marginLeft: "38px" }}>
-            {project.supportingPackages.map(
-              (pac) => pac.packageDTO.price * pac.packageCount
+            {project.supportingPackages.reduce(
+              (total, pac) => total + pac.packageDTO.price * pac.packageCount,
+              0
             )}
           </Typography>
         </Box>

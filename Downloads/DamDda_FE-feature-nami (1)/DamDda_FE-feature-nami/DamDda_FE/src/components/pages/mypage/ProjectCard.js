@@ -205,19 +205,25 @@ export default function ProjectCard({ project }) {
           </Typography>
           <Typography level="body2" sx={{ mb: 1, color: "text.secondary" }}>
             선물 구성:{" "}
-            {project.supportingPackages.map((pac) => pac.packageDTO.name)}[
-            {project.supportingPackages.map(
-              (pac) =>
-                pac.packageDTO.RewardList.map((reward) => reward.OptionList) +
-                ","
-            )}
-            ]
+            {project.supportingPackages.map((pac, pacIndex) => (
+              <div key={pacIndex}>
+                <h3>{pac.packageDTO.name}</h3>
+                <ul>
+                  {pac.packageDTO.RewardList.map((reward, rewardIndex) => (
+                    <li key={rewardIndex}>
+                      {reward.name}:{reward.OptionList[rewardIndex]}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </Typography>
           <Typography level="body2" sx={{ mb: 1, color: "text.secondary" }}>
             후원 금액:{" "}
             {parseInt(
-              project.supportingPackages.map(
-                (pac) => pac.packageDTO.price * pac.packageCount
+              project.supportingPackages.reduce(
+                (total, pac) => total + pac.packageDTO.price * pac.packageCount,
+                0
               )
             ).toLocaleString()}
             원

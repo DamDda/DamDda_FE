@@ -21,7 +21,7 @@ export default function SupportedProjects() {
     try {
       // const response = await axios.get(`${SERVER_URL}/order/supportingprojects?userId=${userId}`);
       const response = await axios.get(
-        `${SERVER_URL}/damdda/order/supportingprojects`,
+        `${SERVER_URL}/order/supportingprojects`,
         {
           headers: {
             ...(Cookies.get("accessToken") && {

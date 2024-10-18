@@ -30,7 +30,7 @@ const PaymentSuccess = () => {
       };
 
       await axios.put(
-        `${SERVER_URL}/damdda/order/${orderId}/status`,
+        `${SERVER_URL}/order/${orderId}/status`,
         updatedPaymentStatus,
         {
           headers: {
@@ -54,7 +54,7 @@ const PaymentSuccess = () => {
       // const response = await axios.get(`http://localhost:9000/order/details/${orderId}`);
 
       const response = await axios.get(
-        `${SERVER_URL}/damdda/order/details/${orderId}`,
+        `${SERVER_URL}/order/details/${orderId}`,
         {
           headers: {
             ...(Cookies.get("accessToken") && {

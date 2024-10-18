@@ -8,7 +8,7 @@
 }
 
 .title {
-  font-size: 24px; /* 타이틀 일관된 크기 */
+  font-size: 28px; /* 타이틀 일관된 크기 */
   color: #333;
   margin-bottom: 20px;
   font-weight: bold;
@@ -25,6 +25,40 @@
   width: 100%;
   border-radius: 8px;
 }
+
+.order-summary p {
+  font-size: 18px; /* 텍스트 크기 */
+  color: #333; /* 텍스트 색상 */
+  margin-bottom: 10px; /* 텍스트 간격 */
+  font-weight: 500; /* 글자 굵기 */
+}
+
+.order-summary div {
+  margin-top: 15px; /* 옵션 섹션 간격 */
+  border-top: 1px solid #eee; /* 위아래 섹션 구분 */
+  padding-top: 10px; /* 구분선 위의 여백 */
+}
+
+.selected-option {
+  margin-top: 5px; /* 각 옵션 간격 */
+  font-size: 16px; /* 옵션 텍스트 크기 */
+  color: #555; /* 옵션 텍스트 색상 */
+  line-height: 1.5; /* 줄 간격 */
+}
+
+ .package-header {
+  font-weight: 600; /* 제목 굵기 */
+  color: #4a90e2; /* 제목 색상 */
+  font-size: 28px; /* 제목 크기 */
+  margin-bottom: 5px;
+} 
+
+.price-info {
+  font-size: 18px; /* 가격 정보 크기 */
+  font-weight: 700; /* 가격 굵기 */
+  color: #e74c3c; /* 가격 색상 */
+}
+
 
 .form-section {
   background-color: #fff;

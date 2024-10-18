@@ -169,10 +169,10 @@ export const DetailPage = () => {
       const orderInfo = {
         projectTitle: projectDetail.title, // 프로젝트 이름 (실제 값으로 설정 가능)
         selectedPackages: selectedPackages?.map((pkg) => ({
-          packageName: pkg.name, // 선택된 선물 구성의 이름
-          selectedOption: pkg.selectedOption, // 선택된 옵션
-          price: pkg.price, // 가격
-          quantity: pkg.count, // 수량
+          packageName: pkg.packageName, // 선택된 선물 구성의 이름
+          selectedOption: pkg.selectOption, // 선택된 옵션
+          price: pkg.packagePrice, // 가격
+          quantity: pkg.selectedCount, // 수량
         })),
         totalAmount: selectedPackages.reduce((acc, pkg) => {
           return acc + pkg.packagePrice * pkg.selectedCount;
@@ -180,7 +180,8 @@ export const DetailPage = () => {
         projectId: projectDetail.id, // projectId 추가
         memberId: 3, //--------------------------------------> jwt로 바꿔야함
       };
-  
+    console.log("보내는 OrderInfo:", orderInfo); // 데이터 전달 전에 확인
+
       // navigate 함수로 orderInfo 데이터를 전달하여 payment 페이지로 이동
       navigate("/payment", { state: orderInfo });
     };

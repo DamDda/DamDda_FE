@@ -1,13 +1,20 @@
 import React, { useState } from "react"; // React
-import { Card, CardContent, Typography, Button, Box, Grid } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  Typography,
+  Button,
+  Box,
+  Grid,
+} from "@mui/material";
 import CheckIcon from "@mui/icons-material/CheckCircle";
-import { DropdownComponent } from 'components/common/DropdownComponent';
+import { DropdownComponent } from "components/common/DropdownComponent";
 import { BlueButtonComponent } from "../ButtonComponent";
 
 export const PackageCard = ({ packageDTO, selectedCount, handleOrder }) => {
-  const [onclickCard, setOnclickCard] = useState(false)
-  console.log("onclickCard", onclickCard)
-  console.log("packageDTO : " , packageDTO);
+  const [onclickCard, setOnclickCard] = useState(false);
+  console.log("onclickCard", onclickCard);
+  console.log("packageDTO : ", packageDTO);
   // useState로 초기값 설정
   const [selectOptions, setSelectOptions] = useState(
     packageDTO?.RewardList?.map((reward) => ({
@@ -36,9 +43,13 @@ export const PackageCard = ({ packageDTO, selectedCount, handleOrder }) => {
         <Grid container spacing={2} alignItems="center">
           <Grid item xs={8}>
             <Box>
-              <Box onClick={() => {
-                setOnclickCard((prev) => packageDTO.quantityLimited > 0 ? !prev : false)
-                }}>
+              <Box
+                onClick={() => {
+                  setOnclickCard((prev) =>
+                    packageDTO.quantityLimited > 0 ? !prev : false
+                  );
+                }}
+              >
                 {selectedCount > 0 && (
                   <Box
                     sx={{
@@ -62,39 +73,13 @@ export const PackageCard = ({ packageDTO, selectedCount, handleOrder }) => {
                   {packageDTO.name}
                 </Typography>
               </Box>
-
-              <Typography variant="body2" color="text.secondary">
-                {packageDTO.RewardList &&
-                  packageDTO.RewardList.map((reward, index) => (
-                    <div key={reward.id} style={{ display: "flex", flexDirection:"row", justifyContent:"space-between", alignItems:"center", height: onclickCard > 0 ? "80px" : "35px" }}>
-                      <div style={{ width: "130px", fontSize:"18px" }}>
-                        {reward.name} : {reward.count}개
-                      </div>
-
-                      {onclickCard && Array.isArray(reward.OptionList) &&
-                        reward.OptionList.length > 0 && (
-                          <div style={{width: "150px", height: "50px"}}>
-                           <DropdownComponent
-                            inputLabel={reward.name + "의 옵션"}
-                            menuItems={reward.OptionList}
-                            selectValue={selectOptions[index].selectOption} // 기본 선택값
-                            onChange={(e) => {
-                              handleSelectOptions(index, e);
-                            }}
-                          />
-                          </div>
-
-
-                        )}
-                    </div>
-                  ))}
-              </Typography>
             </Box>
           </Grid>
+
           <Grid item xs={4} sx={{ textAlign: "right" }}>
             <Button
               size="small"
-              sx={{ width: "100px"}}
+              sx={{ width: "100px" }}
               variant="outlined"
               color={packageDTO.quantityLimited === 0 ? "error" : "primary"}
               disabled={packageDTO.quantityLimited === 0}
@@ -105,18 +90,57 @@ export const PackageCard = ({ packageDTO, selectedCount, handleOrder }) => {
             </Button>
           </Grid>
         </Grid>
-        {onclickCard &&
-          <div style={{display:"flex", justifyContent:"flex-end"}}>
-          <div style={{width: "150px", marginTop:"10px"}}>
 
-            <BlueButtonComponent text={"장바구니 담기"} onClick={() => {
-              setOnclickCard(false);
-              handleOrder(packageDTO.name, packageDTO.price, selectOptions)
-            }}
-            />
+        <Grid container spacing={0} alignItems="center">
+          <Typography variant="body2" color="text.secondary">
+            {packageDTO.RewardList &&
+              packageDTO.RewardList.map((reward, index) => (
+                <div
+                  key={reward.id}
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    height: onclickCard > 0 ? "80px" : "35px",
+                  }}
+                >
+                  <div style={{ width: "218px", fontSize: "17px" }}>
+                    {reward.name} : {reward.count}개
+                  </div>
+
+                  {onclickCard &&
+                    Array.isArray(reward.OptionList) &&
+                    reward.OptionList.length > 0 && (
+                      <div style={{ width: "150px", height: "50px" }}>
+                        <DropdownComponent
+                          inputLabel={reward.name + "의 옵션"}
+                          menuItems={reward.OptionList}
+                          selectValue={selectOptions[index].selectOption} // 기본 선택값
+                          onChange={(e) => {
+                            handleSelectOptions(index, e);
+                          }}
+                        />
+                      </div>
+                    )}
+                </div>
+              ))}
+          </Typography>
+        </Grid>
+
+        {onclickCard && (
+          <div style={{ display: "flex", justifyContent: "flex-end" }}>
+            <div style={{ width: "150px", marginTop: "10px" }}>
+              <BlueButtonComponent
+                text={"장바구니 담기"}
+                onClick={() => {
+                  setOnclickCard(false);
+                  handleOrder(packageDTO.name, packageDTO.price, selectOptions);
+                }}
+              />
+            </div>
           </div>
-          </div>
-        }
+        )}
       </CardContent>
     </Card>
   );

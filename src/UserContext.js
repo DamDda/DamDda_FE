@@ -10,8 +10,8 @@ export const UserProvider = ({ children }) => {
     return savedUser ? JSON.parse(savedUser) : { key: 0 };
   });
 
-  const [isLogin, setIsLogin] = useState(0);
-
+  const [isLogin, setIsLogin] = useState(true);
+  
   useEffect(() => {
     // user 상태가 변경될 때마다 localStorage에 저장합니다.
     if (user) {

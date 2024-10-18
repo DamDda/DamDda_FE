@@ -134,7 +134,7 @@ export const GiftOrder = ({ selectedPackage, updateSelectedCountById, removePack
 
                     </Grid>
 
-                    <Grid item xs={3}>
+                    <Grid item xs={4}>
                         <NumericInput
                             value={selectedPackage.selectedCount}
                             min={0}
@@ -143,8 +143,6 @@ export const GiftOrder = ({ selectedPackage, updateSelectedCountById, removePack
                                 updateSelectedCountById(selectedPackage.packageName, selectedPackage.selectOption, newNum)
                             }
                         />
-                    </Grid>
-                    <Grid item xs={1}>
                     </Grid>
                     <Grid item xs={1}>
                         <DeleteButtonX onClick={handleClickOpen} />

@@ -122,7 +122,7 @@ const Withdrawal = () => {
         errorMessage={passwordError}
         setError={setPasswordError}
         error={passwordError}
-        instruction="암호 입력 후 탈퇴페이지로 이동할 수 있습니다." // 문구 추가
+        instruction="암호 입력 후 탈퇴페이지로 이동할 수 있습니다."
       />
 
       {/* 모달이 닫힌 후에만 탈퇴 내용 표시 */}

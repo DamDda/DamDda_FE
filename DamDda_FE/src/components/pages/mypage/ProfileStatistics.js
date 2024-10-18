@@ -258,6 +258,7 @@ export default function ProfileStatistics({ setIsEditing }) {
         errorMessage={passwordError} // 비밀번호 오류 메시지
         setError={setPasswordError}
         error={passwordError}
+        instruction="암호 입력 후 프로필 수정 페이지로 이동할 수 있습니다."
       />
     </div>
   );

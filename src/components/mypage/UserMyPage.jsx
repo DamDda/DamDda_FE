@@ -24,6 +24,10 @@ export const UserMyPage = () => {
     const [isClickCollb, setClickCollb] = useState(0);
     const [collbFilter, setCollbFilter] = useState('제안 받은 협업');
 
+    
+
+
+
     // 각 섹션에 대한 ref 정의
     const sectionRefs = {
         profileRef: useRef(null),
@@ -53,7 +57,7 @@ export const UserMyPage = () => {
         switch (tabIndex) {
             case 0:
                 return isClickProfile ?
-                        <div>나의 정보가 여기에 나타납니다.</div>
+                <ProfileStatistics />
                     :   <div>나의 정보 수정이 여기에 나타납니다.</div>;
             case 1:
                 return <SupportedProjects></SupportedProjects>;
@@ -76,7 +80,7 @@ export const UserMyPage = () => {
                             setFilter={setCollbFilter}
                         />;
             case 5:
-                return <div>탈퇴하기 관련 정보가 여기에 나타납니다.</div>;
+                return <Withdrawal />;
             default:
                 return <div>다시 선택해주세요.</div>;
         }

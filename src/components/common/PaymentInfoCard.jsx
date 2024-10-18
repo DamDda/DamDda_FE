@@ -15,47 +15,46 @@ export const PaymentInfoCard = ({ project }) => {
         };
     };
 
+    const deliveryInfo = [
+        { label: '수령인', value: project?.supportingProject?.user?.name },
+        { label: '휴대폰', value: project?.supportingProject?.user?.phoneNumber },
+        {
+            label: '주소',
+            value: `${project?.supportingProject?.delivery?.deliveryAddress} (${project?.supportingProject?.delivery?.deliveryDetailedAddress})`,
+        },
+        { label: '배송 요청 사항', value: project?.supportingProject?.delivery?.deliveryMessage },
+    ];
+
+    const paymentInfo = [
+        { label: '결제 방법', value: project?.supportingProject?.payment?.paymentMethod },
+        { label: '총 상품 금액', value: project?.supportingPackage?.packagePrice },
+        { label: '결제 상태', value: paymentStatus },
+    ];
+
     return (
         <div className={styles.container}>
+            {/* 배송 정보 */}
             <div className={styles.deliveryInfo}>
                 <div className={styles.title}>배송 정보</div>
-                <div className={styles.infoRow}>
-                    <div className={styles.label}>수령인:</div>
-                    <div>{project?.supportingProject?.user?.name}</div>
-                </div>
-                <div className={styles.infoRow}>
-                    <div className={styles.label}>휴대폰:</div>
-                    <div>{project?.supportingProject?.user?.phoneNumber}</div>
-                </div>
-                <div className={styles.infoRow}>
-                    <div className={styles.label}>주소:</div>
-                    <div>
-                        {project?.supportingProject?.delivery?.deliveryAddress} (
-                        {project?.supportingProject?.delivery?.deliveryDetailedAddress})
+                {deliveryInfo.map((item, index) => (
+                    <div className={styles.infoRow} key={index}>
+                        <div className={styles.label}>{item.label}:</div>
+                        <div>{item.value}</div>
                     </div>
-                </div>
-                <div className={styles.infoRow}>
-                    <div className={styles.label}>배송 요청 사항: </div>
-                    <div>{project?.supportingProject?.delivery?.deliveryMessage}</div>
-                </div>
+                ))}
             </div>
 
             <div className={styles.separator} />
 
+            {/* 결제 정보 */}
             <div className={styles.paymentInfo}>
                 <div className={styles.title}>결제 내역</div>
-                <div className={styles.infoRow}>
-                    <div className={styles.label}>결제 방법:</div>
-                    <div>{project?.supportingProject?.payment?.paymentMethod}</div>
-                </div>
-                <div className={styles.infoRow}>
-                    <div className={styles.label}>총 상품 금액:</div>
-                    <div>{project?.supportingPackage?.packagePrice}</div>
-                </div>
-                <div className={styles.infoRow}>
-                    <div className={styles.label}>결제 상태:</div>
-                    <div>{paymentStatus}</div>
-                </div>
+                {paymentInfo.map((item, index) => (
+                    <div className={styles.infoRow} key={index}>
+                        <div className={styles.label}>{item.label}:</div>
+                        <div>{item.value}</div>
+                    </div>
+                ))}
             </div>
 
             <div className={styles.cancelButtonBox}>

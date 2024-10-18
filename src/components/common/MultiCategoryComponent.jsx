@@ -15,7 +15,7 @@ export const MultiCategoryComponent = ({ setCategory }) => {
         { value: '음식', text: 'foodBasket', imgUrl: require('../../assets/Food-basket-with-groceries.png') },
         { value: '패션', text: 'tShirtMockup', imgUrl: require('../../assets/t-shirt-mockup.png') },
         { value: '게임', text: 'gameController', imgUrl: require('../../assets/game-controller.png') },
-        { value: '전통', text: 'traditional', imgUrl: require('../../assets/traditional.png') },
+        { value: '문화재', text: 'traditional', imgUrl: require('../../assets/traditional.png') },
     ];
 
     return (

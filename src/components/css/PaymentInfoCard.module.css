@@ -1,50 +1,49 @@
 .container {
     padding: 20px;
     max-width: 800px;
-  }
-  
-  .deliveryInfo, .paymentInfo {
+}
+
+.deliveryInfo,
+.paymentInfo {
     margin-bottom: 20px;
-  }
-  
-  .title {
+}
+
+.title {
     margin-bottom: 10px;
     font-weight: bold;
     color: black;
     font-size: 20px;
-  }
-  
-  .infoRow {
+}
+
+.infoRow {
     display: flex;
     margin-bottom: 5px;
-  }
-  
-  .label {
+}
+
+.label {
     font-weight: bold;
     color: gray;
     min-width: 80px;
-  }
-  
-  .separator {
+}
+
+.separator {
     border-bottom: 1px solid #e0e0e0;
     margin-bottom: 20px;
-    max-width: 800px;
+    max-width: 1000px;
+}
 
-  }
-  
-  .cancelButtonBox {
+.cancelButtonBox {
     text-align: right;
     position: relative;
     top: -60px;
-    left: -10px;
-  }
-  
-  .cancelButton {
+    left: 80px;
+}
+
+.cancelButton {
     background-color: white;
     color: red;
     font-size: 12px;
     width: 90px;
     height: 30px;
     border: 1px solid red;
-  }
-  
+}

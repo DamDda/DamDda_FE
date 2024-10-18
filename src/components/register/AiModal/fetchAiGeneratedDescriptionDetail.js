@@ -1,9 +1,9 @@
 import axios from "axios";
 
 import Cookies from "js-cookie";
-import { SERVER_URL } from "utils/URLs";
+import { SERVER_URL } from "constants/URLs";
 
-const API_URL = `${SERVER_URL}/api/generative-ai/project-description`;
+const API_URL = `${SERVER_URL}/generative-ai/project-description`;
 // TODO: Update to the actual cloud server IP address when deploying
 
 /**

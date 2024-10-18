@@ -11,6 +11,7 @@ import Write from "../write";
 import AiModal from "../AiModal/AiModal";
 import { BlueButtonComponent } from "components/common/ButtonComponent";
 import { FileUploadComponent } from "components/common/FileUploadComponent";
+import { SERVER_URL } from "constants/URLs";
 
 //상세설명 페이지
 const DetailPage = (props) => {
@@ -157,7 +158,7 @@ const DetailPage = (props) => {
                     className="detail-image-image"
                     src={
                       image.file === null
-                        ? `http://localhost:9000/${image.url}`
+                        ? `${SERVER_URL}/${image.url}`
                         : image.url
                     }
                     alt={`preview-${index}`}

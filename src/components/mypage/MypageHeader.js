@@ -1,6 +1,6 @@
-// import React, { useState } from 'react';
+import React, { useState } from 'react';
 
-// export const MypageHeader = ({ nickname }) => {
+export const MypageHeader = ({ nickname }) => {
 //     return (
 //         <div style={{ marginTop: '20px', marginLeft: '100px', textAlign: 'left' }}>
 //             <h1
@@ -17,4 +17,4 @@
 //             </h1>
 //         </div>
 //     );
-// };
+};

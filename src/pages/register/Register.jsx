@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Box, Modal, Snackbar, Alert, Divider } from "@mui/material";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { SERVER_URL } from "utils/URLs";
+import { SERVER_URL } from "constants/URLs";
 import Package from "components/register/info/Package";
 import InfoContainer from "components/register/info/InfoContainer";
 import DetailPage from "components/register/info/DetailPage";
@@ -15,6 +15,7 @@ import { BlueButtonComponent } from "components/common/ButtonComponent";
 import "pages/register/Register.css";
 import Preview from "components/register/preview/Preview";
 import InfoTabs from "components/register/info/InfoTabs";
+import MessageBox from "components/register/info/MessageBar";
 
 const Register = () => {
   ////////////////////////////
@@ -82,7 +83,7 @@ const Register = () => {
     try {
       const accessToken = Cookies.get("accessToken");
       const response = await axios
-        .get(`${SERVER_URL}/api/projects/write/${projectId}`, {
+        .get(`${SERVER_URL}/project/write/${projectId}`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
@@ -97,6 +98,7 @@ const Register = () => {
       console.log(error);
     }
   };
+
   useEffect(() => {
     fetchWriteData();
   }, []);
@@ -107,7 +109,7 @@ const Register = () => {
       subcategory: "",
       title: writeData.title,
       description: writeData.description,
-      target_funding: writeData.targetFunding,
+      target_funding: Number(writeData.targetFunding).toLocaleString(),
       start_date: dayjs(writeData.startDate).format("YYYY-MM-DD"),
       end_date: dayjs(writeData.endDate).format("YYYY-MM-DD"),
       delivery_date: null,
@@ -147,29 +149,61 @@ const Register = () => {
   };
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarColor, setSnackbarColor] = useState("success");
   const [snackbarMessage, setSnackbarMessage] = useState("");
+
+  const handleSnackbarOpen = (color, message) => {
+    setSnackbarColor(color);
+    setSnackbarMessage(message);
+    setSnackbarOpen(true);
+  };
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
 
   const handleSubmit = () => {
     if (window.confirm("정말로 제출하시겠습니까?")) {
       saveProject(projectId, "제출");
-      setSnackbarMessage("제출되었습니다.");
-      setSnackbarOpen(true);
+      handleSnackbarOpen("success", "작성하신 프로젝트가 제출되었습니다.");
     }
   };
 
-  const handleSnackbarClose = () => {
-    setSnackbarOpen(false);
+  const addFileToForm = (form, files, fileField, metaField, updateField) => {
+    const metas = [];
+    const updates = [];
+    files.forEach((image, index) => {
+      if (image.file !== null) {
+        form.append(fileField, image.file);
+        metas.push({
+          url: "",
+          ord: index + 1,
+        });
+      } else {
+        updates.push({
+          url: image.url,
+          ord: index + 1,
+        });
+      }
+    });
+    form.append(
+      metaField,
+      new Blob([JSON.stringify(metas)], {
+        type: "application/json",
+      })
+    );
+    form.append(
+      updateField,
+      new Blob([JSON.stringify(updates)], {
+        type: "application/json",
+      })
+    );
   };
-  /////////////////////////////
-  // Request of project save //
-  /////////////////////////////
-  const saveProject = async (projectId, submit) => {
-    if (!window.confirm("저장하시겠습니까?")) {
+
+  const saveProject = async (projectId, submit, isSkip = false) => {
+    if (!isSkip && !window.confirm("저장하시겠습니까?")) {
       return; // 사용자가 "취소"를 선택하면 함수 종료
     }
-
     const projectFormData = new FormData();
-
     // ProjectDetailDTO 데이터
     const projectDetailDTO = {
       id: projectId, // 프로젝트 ID
@@ -177,7 +211,7 @@ const Register = () => {
       description: formData.description, // formData에서 가져오는 값 예시
       descriptionDetail: descriptionDetail,
       fundsReceive: 0,
-      targetFunding: formData.target_funding, // 목표 금액
+      targetFunding: parseInt(formData.target_funding.replace(/,/g, "")), // 목표 금액
       nickName: "testNickName", // 진행자 닉네임
       startDate: new Date(formData.start_date), // 시작 날짜 (적절하게 변환 필요)
       endDate: new Date(formData.end_date), // 종료 날짜 (적절하게 변환 필요)
@@ -197,97 +231,26 @@ const Register = () => {
     );
 
     // productImages 파일 추가
-    const productImagesMeta = [];
-    const updateProductImages = [];
-    productImages.forEach((image, index) => {
-      if (image.file !== null) {
-        projectFormData.append(`productImages`, image.file);
-        productImagesMeta.push({
-          url: "",
-          ord: index + 1,
-        });
-      } else {
-        updateProductImages.push({
-          url: image.url,
-          ord: index + 1,
-        });
-      }
-    });
-    projectFormData.append(
-      `productImagesMeta`,
-      new Blob([JSON.stringify(productImagesMeta)], {
-        type: "application/json",
-      })
-    );
-    projectFormData.append(
-      `updateProductImages`,
-      new Blob([JSON.stringify(updateProductImages)], {
-        type: "application/json",
-      })
+    addFileToForm(
+      projectFormData,
+      productImages,
+      "productImages",
+      "productImagesMeta",
+      "updateProductImages"
     );
 
     // descriptionImages 파일 추가
-    const descriptionImagesMeta = [];
-    const updateDescriptionImages = [];
-    descriptionImages.forEach((image, index) => {
-      if (image.file !== null) {
-        projectFormData.append(`descriptionImages`, image.file);
-        descriptionImagesMeta.push({
-          url: "",
-          ord: index + 1,
-        });
-      } else {
-        updateDescriptionImages.push({
-          url: image.url,
-          ord: index + 1,
-        });
-      }
-    });
-    projectFormData.append(
-      `descriptionImagesMeta`,
-      new Blob([JSON.stringify(descriptionImagesMeta)], {
-        type: "application/json",
-      })
-    );
-    projectFormData.append(
-      `updateDescriptionImages`,
-      new Blob([JSON.stringify(updateDescriptionImages)], {
-        type: "application/json",
-      })
+    addFileToForm(
+      projectFormData,
+      descriptionImages,
+      "descriptionImages",
+      "descriptionImagesMeta",
+      "updateDescriptionImages"
     );
 
     // descriptionImages 파일 추가
-    const docsMeta = [];
-    const updateDocs = [];
-    docs.forEach((doc, index) => {
-      if (doc.file !== null) {
-        projectFormData.append(`docs`, doc.file);
-        docsMeta.push({
-          url: "",
-          ord: index + 1,
-        });
-      } else {
-        updateDocs.push({
-          url: doc.url,
-          ord: index + 1,
-        });
-      }
-    });
-    projectFormData.append(
-      `docsMeta`,
-      new Blob([JSON.stringify(docsMeta)], {
-        type: "application/json",
-      })
-    );
-    projectFormData.append(
-      `updateDocs`,
-      new Blob([JSON.stringify(updateDocs)], {
-        type: "application/json",
-      })
-    );
+    addFileToForm(projectFormData, docs, "docs", "docsMeta", "updateDocs");
 
-    // checking
-    console.log(docs);
     // 추가적으로 필요한 텍스트 필드 데이터
     projectFormData.append("submit", submit); // "저장" 혹은 "제출"
 
@@ -296,18 +259,17 @@ const Register = () => {
       console.log(accessToken);
       const response = await axios({
         method: "PUT",
-        url: `${SERVER_URL}/api/projects/register/${projectId}`,
+        url: `${SERVER_URL}/project/register/${projectId}`,
         data: projectFormData,
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      console.log("프로젝트 업데이트 성공:", response.data);
-      alert("저장이 완료되었습니다."); // 저장 완료 메시지
+      handleSnackbarOpen("success", "저장이 완료되었습니다.");
     } catch (error) {
       console.error("프로젝트 업데이트 중 오류 발생:", error);
-      alert("저장을 성공하지 못했습니다."); // 저장 오류 메시지
+      handleSnackbarOpen("error", "저장을 성공하지 못했습니다.");
     }
 
     if (submit === "제출") {
@@ -355,14 +317,14 @@ const Register = () => {
             setDescriptionDetail={setDescriptionDetail}
             descriptionImages={descriptionImages}
             setDescriptionImages={setDescriptionImages}
-            aiRequestData={aiRequestData} // AI용 정보 전달 송신
+            aiRequestData={aiRequestData}
           />
           <hr />
         </div>
         {/* register package information */}
         <div id="package">
           <InfoTabs value={1} scrollToSection={scrollToSection} />
-          <Package />
+          <Package handleSnackbarOpen={handleSnackbarOpen} />
           <hr />
         </div>
         {/* register project documents */}
@@ -383,16 +345,13 @@ const Register = () => {
         </div>
         <Divider style={{ margin: "20px 0", width: "0" }} />
       </Layout>
-      {/* 제출 모달창 */}
-      <Snackbar
+      {/* 스낵바 */}
+      <MessageBox
         open={snackbarOpen}
-        autoHideDuration={3000}
-        onClose={handleSnackbarClose}
-      >
-        <Alert onClose={handleSnackbarClose} severity="success">
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
+        color={snackbarColor}
+        message={snackbarMessage}
+        handleClose={handleSnackbarClose}
+      />
       {/* 미리보기 모달 창 */}
       <Modal open={openPreview} onClose={handleClose}>
         <div

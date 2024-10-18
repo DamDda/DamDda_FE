@@ -3,6 +3,7 @@ import { SortableContext } from "@dnd-kit/sortable";
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
 import { Button, IconButton } from "@mui/material";
 import SortableItem from "./SortableItem";
+import { SERVER_URL } from "constants/URLs";
 
 const ImageCard = (props) => {
   const {
@@ -20,6 +21,10 @@ const ImageCard = (props) => {
     activeId,
   } = props;
 
+  const getUrl = (image) => {
+    return image.file !== null ? image.url : `${SERVER_URL}/${image.url}`;
+  };
+
   return (
     <div className="image-section">
       <div className="image-preview">
@@ -27,11 +32,7 @@ const ImageCard = (props) => {
           <>
             <img
               className="image-thumbnail"
-              src={
-                productImages[currentImageIndex].file === null
-                  ? `http://localhost:9000/${productImages[currentImageIndex].url}`
-                  : productImages[currentImageIndex].url
-              }
+              src={getUrl(productImages[currentImageIndex])}
               alt={`미리보기 ${currentImageIndex}`}
             />
             <IconButton
@@ -76,7 +77,7 @@ const ImageCard = (props) => {
                 {productImages.map((image, index) => (
                   <SortableItem
                     key={image.url}
-                    url={image.url}
+                    url={getUrl(image)}
                     index={index}
                     title={image.title}
                     onRemove={handleRemoveImage}
@@ -89,10 +90,11 @@ const ImageCard = (props) => {
                     <div className="image-overlay">
                       <img
                         className="image-image"
-                        src={
-                          productImages.find((item) => item.url === activeId)
-                            .url
-                        }
+                        src={getUrl(
+                          productImages.find(
+                            (image) => getUrl(image) === activeId
+                          )
+                        )}
                         alt="Drag Image"
                       />
                     </div>

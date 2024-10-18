@@ -53,28 +53,21 @@ const SortableItem = (props) => {
           대표
         </div>
       )}
-      {/* 이미지 이름과 삭제 버튼 */}
-
-      <div style={{ fontSize: "10px", textAlign: "center" }}>
-        {/* {title.length > 10
-          ? title.slice(title.length - 10, title.length)
-          : title} */}
-        <IconButton
-          onClick={(e) => {
-            e.stopPropagation(); // 클릭 이벤트 버블링 방지
-            onRemove(index); // 삭제 버튼 클릭 시 이미지 삭제
-          }}
-          style={{
-            position: "absolute",
-            top: "-1px",
-            right: "-5px",
-            backgroundColor: "#EDEDED",
-            padding: "0px",
-          }}
-        >
-          <CloseIcon fontSize={"small"} />
-        </IconButton>
-      </div>
+      <IconButton
+        onClick={(e) => {
+          e.stopPropagation(); // 클릭 이벤트 버블링 방지
+          onRemove(index); // 삭제 버튼 클릭 시 이미지 삭제
+        }}
+        style={{
+          position: "absolute",
+          top: "-1px",
+          right: "-5px",
+          backgroundColor: "#EDEDED",
+          padding: "0px",
+        }}
+      >
+        <CloseIcon fontSize={"small"} />
+      </IconButton>
     </div>
   );
 };

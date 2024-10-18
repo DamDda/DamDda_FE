@@ -14,7 +14,10 @@ import { arrayMove, rectSortingStrategy } from "@dnd-kit/sortable";
 import datejs from "dayjs";
 import { DropdownComponent } from "components/common/DropdownComponent";
 import ImageCard from "./ImageCard";
-import { baseTheme, InputBox } from "components/common/InputBoxComponent";
+import {
+  baseTheme,
+  InputBox,
+} from "components/register/info/InputBoxComponent";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import Form from "./Form";
 
@@ -32,7 +35,15 @@ const InfoContainer = (props) => {
   const [activeId, setActiveId] = useState(null);
 
   const handleChange = (event) => {
-    console.log(event.target.name, " : ", event.target.value);
+    if (event.target.name === "target_funding") {
+      setFormData({
+        ...formData,
+        [event.target.name]: event.target.value
+          .replace(/[^\d]/g, "")
+          .replace(/\B(?=(\d{3})+(?!\d))/g, ","),
+      });
+      return;
+    }
     setFormData({
       ...formData,
       [event.target.name]: event.target.value,
@@ -54,7 +65,6 @@ const InfoContainer = (props) => {
 
   // 이미지 삭제 함수
   const handleRemoveImage = (index) => {
-    console.log("DELETE HERE ! ", index);
     const newImages = productImages.filter((_, i) => i !== index); // 클릭된 이미지 제거
     setProductImages(newImages); // 이미지 배열 업데이트
     if (currentImageIndex >= index && currentImageIndex > 0) {
@@ -110,7 +120,6 @@ const InfoContainer = (props) => {
         (item) => item.url === active.id
       );
       const newIndex = productImages.findIndex((item) => item.url === over.id);
-
       setProductImages((items) => arrayMove(items, oldIndex, newIndex));
     }
   };
@@ -188,13 +197,11 @@ const InfoContainer = (props) => {
             <InputBox
               label=""
               name="target_funding"
-              type="number"
-              value={formData.target_funding}
+              value={formData.target_funding + " 원"}
               onChange={handleChange}
               tooltip={"프로젝트의 목표 후원 금액을 입력하세요."}
             />
           </Form>
-
           <ThemeProvider theme={baseTheme}>
             <Form title={"프로젝트 일정"}>
               <DesktopDatePicker
@@ -256,6 +263,7 @@ const InfoContainer = (props) => {
               <div className="scrollable" style={{ height: "auto" }}>
                 {tags.map((tag, index) => (
                   <Chip
+                    variant="outlined"
                     color="info"
                     key={index}
                     label={tag}

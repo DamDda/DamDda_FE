@@ -38,27 +38,29 @@ const EditModal = ({
       }}
     >
       <DialogTitle id="form-dialog-title">
-        <Typography variant="h6" align="center">
-          🔒 접근 암호 인증
-        </Typography>
+        <h4 align="center">🔒 접근 암호 인증</h4>
       </DialogTitle>
       <DialogContent>
         <Typography align="center">{instruction}</Typography>
 
-        <PasswordInputBox
-          name="password"
-          placeholder="비밀번호를 입력해주세요"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+        <from
           onKeyDown={(e) => {
             if (e.key === "Enter") {
+              e.preventDefault();
               handleSubmit();
             }
           }}
-          style={{
-            marginTop: "20px",
-          }}
-        />
+        >
+          <PasswordInputBox
+            name="password"
+            placeholder="비밀번호를 입력해주세요"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            style={{
+              marginTop: "20px",
+            }}
+          />
+        </from>
 
         {/* 에러 메시지 표시 */}
         {error && (

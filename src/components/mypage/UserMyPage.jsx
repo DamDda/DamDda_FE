@@ -15,11 +15,22 @@ import { CollaborationDetail } from "components/mypage/CollaborationDetail";
 import Cookies from "js-cookie";
 import { SERVER_URL } from "constants/URLs";
 import { TabComponent } from "components/common/TabComponent";
+import { useLocation } from "react-router-dom";
 
 export const UserMyPage = () => {
+  const { user } = useUser();
   //////////Tab 관련 시작//////////////////////////////////
-  const [tabIndex, setTabIndex] = useState(0);
-  const [isClickProfile, setClickProfile] = useState(false);
+  const location = useLocation();
+  const query = new URLSearchParams(location.search);
+  const [tabIndex, setTabIndex] = useState(
+    parseInt(query.get("initIndex"), 10) || 0
+  );
+
+  console.log("tabIndex: ", tabIndex);
+  console.log(tabIndex === 3);
+  //const [tabIndex, setTabIndex] = useState(3);
+  //const [isClickProfile, setClickProfile] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const [isClickMyproject, setClickMyproject] = useState(0); //클릭한 프로젝트 번호 저장
   const [isClickCollb, setClickCollb] = useState(0);
   const [collbFilter, setCollbFilter] = useState("제안 받은 협업");
@@ -45,7 +56,7 @@ export const UserMyPage = () => {
 
   //탭 이동
   const handleTabClick = (index) => {
-    setClickProfile(false);
+    setIsEditing(false);
     setClickMyproject(0);
     setClickCollb(0);
     setTabIndex(index);
@@ -53,16 +64,67 @@ export const UserMyPage = () => {
 
   //////////Tab 관련 끝//////////////////////////////////
 
+  //////회원정보 관련 데이터 받아오기 시작////////////////////////////////
+
+  const [profile, setProfile] = useState(null); // 사용자 프로필 정보 상태
+
+  const fetchProfileData = async () => {
+    try {
+      // const response = await axios.get(`${SERVER_URL}/members/profile?loginId=${user.id}`, {
+
+      const response = await axios.get(
+        `${SERVER_URL}/member/profile?loginId=${user.id}`,
+        {
+          headers: {
+            ...(Cookies.get("accessToken") && {
+              Authorization: `Bearer ${Cookies.get("accessToken")}`,
+            }),
+          },
+          withCredentials: true,
+        }
+      );
+      // 로컬 스토리지에 데이터가 없을 때 초기 비밀번호 설정
+      const initialProfileData = {
+        loginId: response.data.loginId,
+        name: response.data.name,
+        email: response.data.email,
+        nickname: response.data.nickname,
+        phoneNumber: response.data.phoneNumber,
+        password: response.data.password,
+        address: response.data.address,
+        imageUrl: response.data.imageUrl,
+      };
+
+      setProfile(initialProfileData);
+    } catch (error) {
+      console.error("프로필 데이터를 불러오는 중 오류 발생:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchProfileData();
+  }, []);
+
+  //////회원정보 관련 데이터 받아오기 끝////////////////////////////////
+
   //////////Tab 클릭 시 아래 랜더링 되는 부분 나타내기//////////////////////////////////
 
   // 각 탭에 맞는 내용을 렌더링하는 함수
   const renderTabContent = () => {
     switch (tabIndex) {
       case 0:
-        return isClickProfile ? (
-          <ProfileStatistics />
+        return isEditing ? (
+          <ProfileEditPage
+            profile={profile}
+            setProfile={setProfile}
+            setIsEditing={setIsEditing}
+          />
         ) : (
-          <div>나의 정보 수정이 여기에 나타납니다.</div>
+          <ProfileStatistics
+            profile={profile}
+            setProfile={setProfile}
+            setIsEditing={setIsEditing}
+          />
         );
       case 1:
         return <SupportedProjects></SupportedProjects>;

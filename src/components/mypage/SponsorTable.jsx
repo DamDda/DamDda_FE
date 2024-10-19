@@ -250,8 +250,36 @@ export const SponsorTable = () => {
       setLoading(false); // 로딩 완료
     }
   };
-  const downloadFile = () => {
-    alert("엑셀 다운로드를 클릭하였습니다. ");
+
+  const downloadFile = async (projectId) => {
+    try {
+      // 엑셀 다운로드 버튼을 클릭 시 경고 메시지
+      alert("엑셀 다운로드를 클릭하였습니다.");
+
+      // 서버로부터 프리사인드 URL을 가져오기 위한 요청
+      const response = await axios.get(
+        `${SERVER_URL}/order/${projectId}/supporters/excel`,
+        {
+          headers: {
+            Authorization: `Bearer ${Cookies.get("accessToken")}`, // 토큰이 필요하면 추가
+          },
+        }
+      );
+
+      // 서버에서 프리사인드 URL을 응답으로 받음
+      const presignedUrl = response.data;
+
+      // 프리사인드 URL을 이용해 파일 다운로드
+      const link = document.createElement("a");
+      link.href = presignedUrl; // 프리사인드 URL
+      link.setAttribute("download", "supporters_list.xlsx"); // 다운로드 파일 이름 설정
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link); // 사용 후 링크 제거
+    } catch (error) {
+      console.error("엑셀 파일 다운로드에 실패했습니다.", error);
+      alert("엑셀 파일 다운로드에 실패했습니다.");
+    }
   };
 
   // 컴포넌트가 마운트될 때 주문 정보 가져오기

@@ -64,7 +64,7 @@ export const SponsorStatistics = ({ projectId }) => {
 
   // 두 API를 병렬로 호출하여 데이터를 가져옴
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchChartData = async () => {
       try {
         // 프로젝트 상세 정보 api 호출
         const [response] = await Promise.all([
@@ -92,7 +92,36 @@ export const SponsorStatistics = ({ projectId }) => {
       }
     };
 
-    fetchData();
+    const fetchSummaryData = async () => {
+      try {
+        // 프로젝트 상세 정보 api 호출
+        const [response] = await Promise.all([
+          axios({
+            method: "GET",
+            url: `${SERVER_URL}/order/statistics/${projectId}`, // 템플릿 리터럴을 올바르게 적용
+
+            headers: {
+              Authorization: `Bearer ${Cookies.get("accessToken")}`, // 템플릿 리터럴을 올바르게 적용
+            },
+          }).then((response) => response),
+        ]);
+
+        console.log("후원 프로젝트 정보 조회", response.data);
+        // console.log("mockChartData 목업데이터", mockChartData);
+        console.log("mockSupportStat 목업데이터", mockSupportStat);
+        // 후원 통계 api 호출
+        setSupportStat(mockSupportStat);
+
+        setProjectData(response.data); // 프로젝트 데이터 저장
+
+        setLoading(false); // 로딩 상태 완료
+      } catch (error) {
+        setLoading(false);
+      }
+    };
+
+    fetchChartData();
+    fetchSummaryData();
   }, [projectId]);
 
   if (loading) {

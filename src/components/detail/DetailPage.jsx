@@ -128,10 +128,8 @@ export const DetailPage = () => {
 
     setProjectInfo({
       fundsReceive: projectDetail.fundsReceive, // 모인 금액
-      achievementRate: Math.min(
-        (projectDetail.fundsReceive / projectDetail.targetFunding) * 100,
-        100
-      ), // 달성률 (퍼센트로 표현)
+      achievementRate:
+        (projectDetail.fundsReceive / projectDetail.targetFunding) * 100, // 달성률 (퍼센트로 표현)
       daysLeft: Math.floor(timeDifference / (1000 * 60 * 60 * 24)), // 남은 일수
       supporterCnt: projectDetail.supporterCnt, // 후원자 수
       targetFunding: projectDetail.targetFunding, // 목표 금액

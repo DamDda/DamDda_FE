@@ -167,10 +167,7 @@ export const ProductCard = ({ product, handleLike }) => {
   );
 
   // 달성률 계산 (fundsReceive / targetFunding * 100)
-  const achievementRate = Math.min(
-    (product.fundsReceive / product.targetFunding) * 100,
-    100
-  );
+  const achievementRate = (product.fundsReceive / product.targetFunding) * 100;
 
   // 현재 시간
   const currentTime = new Date();
@@ -281,7 +278,7 @@ export const ProductCard = ({ product, handleLike }) => {
               variant="body2"
               sx={{ fontWeight: "bold", fontSize: "1rem" }} // 폰트 크기 줄이기
             >
-              달성률 {achievementRate.toFixed(2)}%
+              달성률 {achievementRate.toFixed(0)}%
             </Typography>
             <Typography
               variant="body2"

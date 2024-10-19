@@ -23,6 +23,7 @@ import { ProjectList } from "components/main/ProjectList";
 import { useUser } from "UserContext";
 import { MyInfoBox } from "./MyInfoBox";
 import { WriteProjectBox } from "./WriteProjectBox";
+import { width } from "@mui/system";
 export const UserAvatar = ({ profile, defaultImageUrl, ...props }) => {
   return <Avatar src={profile.imageUrl || defaultImageUrl} {...props} />;
 };
@@ -223,15 +224,15 @@ export function Header() {
           <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
             <Box
               ref={showProjects ? boxRef : null}
-              sx={{ position: "relative" }}
+              sx={{ position: "relative", width: "100px" }}
             >
               <BlueButtonComponent
                 text="프로젝트 등록"
                 onClick={handleShowProjects}
-                style={{
-                  padding: "16px 32px", // 버튼 크기 조정
-                  fontSize: "1.2rem", // 글자 크기 조정
-                }}
+                // style={{
+                //   padding: "16px 32px", // 버튼 크기 조정
+                //   fontSize: "1.2rem", // 글자 크기 조정
+                // }}
               />
               {showProjects && (
                 <WriteProjectBox

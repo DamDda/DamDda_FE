@@ -150,7 +150,7 @@ export const UserMyPage = () => {
           <CollaborationDetail
             clickCollb={isClickCollb}
             filter={collbFilter}
-            setFilter={setCollbFilter}
+            setClickCollb={setClickCollb}
           />
         );
       case 5:

@@ -224,7 +224,13 @@ export const GiftCompositionComponent = ({
 
   // 주문 처리 함수
   const handleOrder = (packageName, packagePrice, selectOption) => {
-    if (selectOption.selectOption == null) {
+    console.log(selectOption);
+    const hasNullOption =
+      Array.isArray(selectOption) && selectOption.length > 0
+        ? selectOption.some((optionItem) => optionItem.selectOption == null)
+        : true;
+
+    if (hasNullOption) {
       alert("옵션을 선택해주세요.");
       return;
     }

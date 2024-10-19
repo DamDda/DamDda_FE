@@ -79,44 +79,44 @@ export const ProductRecommendations = ({ search, cartegory }) => {
     }
   };
 
-  const fetchRecommendedProducts = async (page, progress) => {
-    try {
-      const response = await axios.get(` ${SERVER_URL}/api/projects/projects`, {
-        headers: {
-          ...(Cookies.get("accessToken") && {
-            Authorization: `Bearer ${Cookies.get("accessToken")}`,
-          }),
-        },
+  // const fetchRecommendedProducts = async (page, progress) => {
+  //   try {
+  //     const response = await axios.get(` ${SERVER_URL}/api/projects/projects`, {
+  //       headers: {
+  //         ...(Cookies.get("accessToken") && {
+  //           Authorization: `Bearer ${Cookies.get("accessToken")}`,
+  //         }),
+  //       },
 
-        params: {
-          page: page,
-          sort: "recommend",
-          // memberId: user.key,
-          size: recommendedItemPerPage,
-          progress: progress, // 진행 상태 필터 적용
-        },
-      });
+  //       params: {
+  //         page: page,
+  //         sort: "recommend",
+  //         // memberId: user.key,
+  //         size: recommendedItemPerPage,
+  //         progress: progress, // 진행 상태 필터 적용
+  //       },
+  //     });
 
-      if (response.data.dtoList !== null) {
-        setRecommendedProducts(response.data.dtoList); // 서버에서 받은 프로젝트 리스트
-      } else {
-        setRecommendedProducts([]); // 서버에서 받은 프로젝트 리스트
-      }
-    } catch (error) {
-      console.error("추천 프로젝트 데이터를 가져오는 중 오류 발생:", error);
-    }
-  };
+  //     if (response.data.dtoList !== null) {
+  //       setRecommendedProducts(response.data.dtoList); // 서버에서 받은 프로젝트 리스트
+  //     } else {
+  //       setRecommendedProducts([]); // 서버에서 받은 프로젝트 리스트
+  //     }
+  //   } catch (error) {
+  //     console.error("추천 프로젝트 데이터를 가져오는 중 오류 발생:", error);
+  //   }
+  // };
 
   // 처음 마운트되었을 때 및 페이지 변경 시 데이터 가져오기
   useEffect(() => {
     fetchProducts(currentPage, progress, sortCondition, cartegory, search);
-    fetchRecommendedProducts(
-      currentPage,
-      progress,
-      sortCondition,
-      cartegory,
-      search
-    );
+    // fetchRecommendedProducts(
+    //   currentPage,
+    //   progress,
+    //   sortCondition,
+    //   cartegory,
+    //   search
+    // );
   }, [currentPage, progress, sortCondition, cartegory, search]);
 
   // 클릭 핸들러

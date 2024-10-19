@@ -224,7 +224,7 @@ export function Header() {
           <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
             <Box
               ref={showProjects ? boxRef : null}
-              sx={{ position: "relative", width: "100px" }}
+              sx={{ position: "relative", width: "130px" }}
             >
               <BlueButtonComponent
                 text="프로젝트 등록"

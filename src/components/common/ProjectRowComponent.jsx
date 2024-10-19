@@ -43,14 +43,13 @@ export const ProjectRowComponent = ({ sortCondition, title, subTitle }) => {
     const handleLike = async (project) => {
         if (isLogin) {
             try {
-                console.log('프로젝트 ID 확인:', project.id, typeof project.id); // 타입 및 값 확인
+                // 타입 및 값 확인
 
                 const accessToken = Cookies.get('accessToken');
                 const headers = {
                     ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
                 };
 
-                console.log(project, '********');
                 const url = `${SERVER_URL}/project/like`;
 
                 if (project.liked) {
@@ -58,13 +57,11 @@ export const ProjectRowComponent = ({ sortCondition, title, subTitle }) => {
                         headers,
                         params: { projectId: project.id }, // DELETE 요청 시 params 사용
                     });
-                    console.log('좋아요 취소 성공:', response.data);
                 } else {
                     const response = await axios.post(url, null, {
                         headers,
                         params: { projectId: project.id }, // POST 요청 시 params 사용
                     });
-                    console.log('좋아요 성공:', response.data);
                 }
 
                 // UI 업데이트

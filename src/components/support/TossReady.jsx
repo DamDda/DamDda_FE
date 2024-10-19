@@ -13,8 +13,6 @@ export default function TossReady() {
     const location = useLocation();
     const navigate = useNavigate();
     const { createdOrderId, createdOrderData } = location.state || {}; // orderId와 추가 정보 가져오기
-    console.log('넘어온 주문 ID:', createdOrderId);
-    console.log('넘어온 주문 DATA:', createdOrderData);
 
     // const [amount, setAmount] = useState({
     //   currency: "KRW",
@@ -88,14 +86,13 @@ export default function TossReady() {
         //       successUrl: `http://localhost:9000/payment/toss/success`,  // 성공 시 서버로 요청
         //       failUrl: `http://localhost:9000/payment/toss/fail`,  // 실패 시 서버로 요청
         //     }).then(() => {
-        //       console.log('결제성공');
+        //
         //     });
         //   } catch (error) {
         //     console.error('결제 에러 발생:', error);
         //   }
         // };
         try {
-            console.log('createdOrderId: ' + createdOrderId);
             await widgets.requestPayment({
                 orderId: 'DAMDDA-ORDER-' + createdOrderId.toString(), // 서버에서 받은 주문 ID 사용
                 orderName: createdOrderData.projectTitle || '펀딩 결제', // 프로젝트 제목
@@ -104,8 +101,6 @@ export default function TossReady() {
                 successUrl: `${SERVER_URL}/payment/toss/success`, // 성공 시 서버로 요청
                 failUrl: `${SERVER_URL}/payment/toss/fail`, // 실패 시 서버로 요청
             });
-
-            console.log('반환완료');
 
             // 결제 결과 확인을 위해 successUrl에 리다이렉트된 후 결제 상태를 가져옴
             const response = await axios.get(`${SERVER_URL}/payment/toss/success/getOrder`, {

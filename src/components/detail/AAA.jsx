@@ -62,7 +62,7 @@
 //         quantityLimited: pac.quantityLimited,
 //         RewardList: Array.isArray(pac.RewardList) ? pac.RewardList : [],
 //       }));
-//       console.log(formattedPackages.map((reward) => reward.RewardList));
+//
 //       setProjectPackage(formattedPackages);
 //     } catch (error) {
 //       console.error("패키지 목록을 가져오는 중 오류 발생:", error);
@@ -83,7 +83,7 @@
 //         },
 //       })
 //       .then((response) => {
-//         console.log(response.data);
+//
 //         if (response.data !== null) {
 //           setProjectDetail(response.data);
 //           setIsHearted(response.data.liked);
@@ -92,10 +92,10 @@
 //           setProjectDetail({});
 //         }
 
-//         console.log(projectDetail);
+//
 //       })
 //       .catch((error) => {
-//         console.log(window.location.hostname);
+//
 //         console.error("프로젝트 데이터를 가져오는 중 오류 발생:", error);
 //       });
 //   };
@@ -116,7 +116,7 @@
 //     })
 //       .then((response) => {
 //         if (response.status === 200) {
-//           console.log(`좋아요 ${project.liked ? "취소" : "추가"} 성공:`, response.data);
+//
 
 //           // 상태 업데이트 - 불변성 유지
 //           setProjectDetail(prevState => ({
@@ -167,7 +167,7 @@
 //       formData.append("collabDocList", file);
 //     });
 
-//     console.log("formData" + formData);
+//
 //     if (
 //       !newErrors.title &&
 //       !newErrors.message &&
@@ -176,7 +176,7 @@
 //       !newErrors.email
 //     ) {
 //       try {
-//         console.log("요청 전까지는 가능함!!");
+//
 //         const response = await axios.post(
 //           `damdda/collab/register/${projectId}`,
 //           formData,
@@ -190,11 +190,11 @@
 //             },
 //           }
 //         );
-//         console.log("결과" + response);
+//
 //         alert("협업 요청이 전송되었습니다.");
 //         //handleModalClose();
 //       } catch (error) {
-//         console.log("register 과정 중 에러 발생 " + error);
+//
 //       }
 //     }
 //   };
@@ -283,7 +283,7 @@ export const AAA = () => {
                 RewardList: Array.isArray(pac.RewardList) ? pac.RewardList : [],
             }));
 
-            console.log('패키지 데이터: ', formattedPackages); // 패키지 데이터를 콘솔에 출력
+            // 패키지 데이터를 콘솔에 출력
             setProjectPackage(formattedPackages);
         } catch (error) {
             console.error('패키지 목록을 가져오는 중 오류 발생:', error);
@@ -301,7 +301,7 @@ export const AAA = () => {
                 },
             })
             .then((response) => {
-                console.log('프로젝트 데이터: ', response.data); // 프로젝트 데이터를 콘솔에 출력
+                // 프로젝트 데이터를 콘솔에 출력
                 if (response.data !== null) {
                     setProjectDetail(response.data);
                     setIsHearted(response.data.liked);

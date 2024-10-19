@@ -29,7 +29,7 @@
 //     };
 
 //     const handleDownload = async (fileName) => {
-//         console.log(fileName); //4604642e-2515-466e-aa78-a18afebf9a3b_성공성공오예.txt
+//           //4604642e-2515-466e-aa78-a18afebf9a3b_성공성공오예.txt
 //         try {
 //             const response = await axios.get(`${SERVER_URL}/collab/download`, {
 //                 params: { fileName },
@@ -81,9 +81,9 @@
 //         // 파일 추가
 //         collabDocList.forEach((file, index) => {
 //             formData.append(`collabDocList`, file);
-//             console.log(`Appending file ${index + 1}:`, file.name);
+//
 //         });
-//         console.log('handleAddCollab' + CollaborateDate);
+//
 
 //         try {
 //             await axios.post(`${SERVER_URL}/collab/register/1`, formData, {
@@ -95,7 +95,7 @@
 //             });
 //             alert('Collaboration registered successfully!');
 //         } catch (error) {
-//             console.log('register 과정 중 에러 발생 ' + error);
+//
 //         }
 //     };
 
@@ -104,11 +104,11 @@
 //             const response = await axios.get(`${SERVER_URL}/collab/readDetail/${index}`, {
 //                 withCredentials: true,
 //             });
-//             console.log(response.data);
+//
 //             setSelectedCollab(response.data);
 //             setShowModal(true);
 //         } catch (error) {
-//             console.log('handleReadDetail에서 에러 발생 ' + error);
+//
 //         }
 //     };
 //     const handleCloseModal = () => {
@@ -117,7 +117,7 @@
 //     };
 
 //     const handleReadReceive = async () => {
-//         console.log('user_id' + user.id);
+//
 //         const response = await axios.get(
 //             `${SERVER_URL}/collab/readListReceive`,
 //             { params: { page, size, userId: user.id } },
@@ -126,7 +126,7 @@
 //             }
 //         );
 //         const { dtoList, total, page: responsePage } = response.data;
-//         console.log('dtoList:', dtoList);
+//
 //         setCollaborations(dtoList);
 //         setTotalElements(total);
 //         setTotalPages(Math.ceil(total / size));
@@ -134,7 +134,7 @@
 //     };
 
 //     const handleReadRequest = async () => {
-//         console.log('user_id' + user.id);
+//
 //         const response = await axios.get(
 //             '/collab/readListRequest',
 //             { params: { page, size, userId: user.id } },
@@ -143,7 +143,7 @@
 //             }
 //         );
 //         const { dtoList, total, page: responsePage } = response.data;
-//         console.log('dtoList:', dtoList);
+//
 //         setCollaborations(dtoList);
 //         setTotalElements(total);
 //         setTotalPages(Math.ceil(total / size));

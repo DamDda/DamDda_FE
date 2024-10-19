@@ -40,7 +40,6 @@ export const Likeproject = () => {
             .then((response) => response.status)
             .catch((e) => console.error(e));
         if (response == 200) {
-            console.log(`좋아요 ${project.liked ? '취소' : '추가'} 성공:`, response.data);
         }
         setProjects(
             projects.map((_project) => {
@@ -69,7 +68,6 @@ export const Likeproject = () => {
             .then((response) => {
                 setProjects(response.data.dtoList || []);
                 setTotal(response.data.total);
-                console.log(response);
             })
             .catch((e) => console.error(e));
     };

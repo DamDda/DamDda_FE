@@ -20,9 +20,9 @@ export const FindID = () => {
     // 입력 값 변경 핸들러
     const handleChange = (e) => {
         const { name, value } = e.target;
-        console.log('어쩌구'); // 입력 값 디버깅
+        // 입력 값 디버깅
 
-        console.log(`Field: ${name}, Value: ${value}`); // 입력 값 디버깅
+        // 입력 값 디버깅
         setFormData({ ...formData, [name]: value });
     };
 
@@ -46,14 +46,13 @@ export const FindID = () => {
                 params: { name: formData.name, email: formData.email },
             });
 
-            console.log('Axios 응답 수신:', response); // 응답 로깅
+            // 응답 로깅
 
             if (response.status !== 200) {
                 throw new Error(`서버 오류: ${response.status}`);
             }
 
             const idData = response.data;
-            console.log('ID Data:', idData);
 
             if (idData && idData.userId) {
                 setUserId(idData.userId);

@@ -1,86 +1,68 @@
 /* 전체 컨테이너 */
 .container {
-  background-color: #f9f4e7; /* 아이보리 색상 적용 */
-  padding: 30px 0; /* 상하 여백 */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin: 40px 0px;
+    padding: 40px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 70px auto; /* 가운데 정렬 */
 }
+
+/* 헤더 스타일 */
+.header {
+    color: #333336;
+    font-weight: bold;
+    margin-bottom: 40px;
+    text-align: center;
+}
+
 /* 그리드 컨테이너 */
 .gridContainer {
-  width: 95%;
-  /* max-width: 1500px; */
-  display: grid; /* 그리드 레이아웃 사용 */
-  grid-template-columns: repeat(3, 1fr); /* 3개씩 나열 */
-  gap: 20px; /* 카드 간격 */
-  justify-content: center; /* 중앙 정렬 */
-  margin: 0 auto;
-  
-  
-
-
+    /* width: 80%; 더 넓은 그리드 */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* 반응형 */
+    gap: 30px;
+    justify-content: center;
+    align-items: stretch; /* 카드가 같은 높이로 */
+    margin: 30px 0;
 }
 
 /* 카드 스타일 */
 .card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border-radius: 15px;
-  padding: 40px 20px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  height: 300px;
-  margin: 0px 10px;
-
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-radius: 15px;
+    padding: 20px;
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    min-height: 200px;
+    background-color: #f5f5f5; /* 배경색 */
+    width: 400px;
 }
 
-/* 카드 호버 시 확대 및 그림자 효과 */
+/* 호버 효과 */
 .card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+    transform: scale(1.05);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* 아이콘 박스 */
-.iconBox {
-    background-color: rgba(255, 255, 255, 0.8);
-
-  background-color: rgba(255, 255, 255, 0.8);
-  border-radius: 50%;
-  padding: 15px;
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* 아이콘 스타일 */
-.icon {
-  font-size: 60px;
-}
-
-/* 텍스트 박스 */
-.textBox {
-  text-align: center;
-  margin-top: 10px;
-}
-
-/* 타이틀 스타일 */
+/* 타이틀 텍스트 */
 .title {
-  font-weight: 700;
-  font-size: 22px;
-  color: #333;
-  margin-bottom: 5px;
-  letter-spacing: 1.2px;
+    font-size: 20px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 10px;
 }
 
-/* 설명 스타일 */
+/* 설명 텍스트 */
 .description {
-  font-size: 14px;
-  color: #666;
-  font-style: italic;
+    font-size: 16px;
+    color: #666;
+    line-height: 1.5;
+    font-weight: 400;
+    margin-top: 5px;
 }

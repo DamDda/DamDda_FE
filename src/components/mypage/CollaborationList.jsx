@@ -46,8 +46,6 @@ export const CollaborationList = ({ setClickCollb, filter, setFilter }) => {
     }, [size, page, filter]);
 
     const handleReadProject = async (path) => {
-        console.log('user_id : ' + user.id);
-        console.log(path);
         try {
             const response = await axios.get(`${SERVER_URL}/collab/read/${path}`, {
                 params: {
@@ -64,7 +62,7 @@ export const CollaborationList = ({ setClickCollb, filter, setFilter }) => {
             });
 
             const { dtoList, total, page: responsePage } = response.data;
-            console.log('dtoList:', dtoList);
+
             setCollaborations(dtoList);
             setTotalElements(total);
             setTotalPages(Math.ceil(total / size));
@@ -109,7 +107,7 @@ export const CollaborationList = ({ setClickCollb, filter, setFilter }) => {
     };
 
     // const handleDelete = async () => {
-    //     console.log(selectedRows);
+    //
     //     await axios.delete(`${SERVER_URL}/collab/delete`, {
     //             headers: {
     //             ...(Cookies.get('accessToken') && {
@@ -130,7 +128,7 @@ export const CollaborationList = ({ setClickCollb, filter, setFilter }) => {
 
     const handleDelete = async () => {
         try {
-            console.log('selectedRows: ', selectedRows); // 서버로 보내는 데이터 확인
+            // 서버로 보내는 데이터 확인
 
             // axios.delete로 데이터 전송
             const response = await axios.delete(`${SERVER_URL}/collab/delete`, {
@@ -160,10 +158,8 @@ export const CollaborationList = ({ setClickCollb, filter, setFilter }) => {
     const handleApproval = async (status) => {
         let approvalPath;
         if (status === '승인') {
-            console.log('저거임!');
             approvalPath = `${SERVER_URL}/collab/approval`;
         } else if (status === '거절') {
-            console.log('이거임!');
             approvalPath = `${SERVER_URL}/collab/reject`;
         }
         try {
@@ -251,7 +247,7 @@ export const CollaborationList = ({ setClickCollb, filter, setFilter }) => {
     // 체크박스로 선택된 행의 ID를 업데이트
     // const handleSelectionChange = (ids) => {
     //   setSelectedRows(ids); // 선택된 행의 ID들을 업데이트
-    //   console.log("선택된 행 ID:", ids);
+    //
     // };
 
     const handleRowClick = (id) => {
@@ -259,121 +255,97 @@ export const CollaborationList = ({ setClickCollb, filter, setFilter }) => {
     };
 
     return (
-      <>
-        <TableContainer
-          sx={{
-            margin: "100px auto",
-            display: "flex",
-            flexDirection: "column",
-            justifyItems: "justify-content",
-            alignItems: "center",
-          }}
-          component={Paper}
-        >
-          <Box display="flex" width="100%" justifyContent="flex-end" p={2}>
-            <FormControl variant="outlined">
-              <InputLabel>협업 선택</InputLabel>
-              <Select
-                value={filter}
-                onChange={handleFilterChange}
-                label="협업 선택"
-              >
-                <MenuItem value="제안 받은 협업">제안 받은 협업</MenuItem>
-                <MenuItem value="제안 한 협업">제안 한 협업</MenuItem>
-              </Select>
-            </FormControl>
-          </Box>
-
-          <Typography
-            variant="h6"
-            style={{ fontWeight: "bold", color: "#000000" }}
-          >
-            {filter}
-          </Typography>
-
-          <Paper sx={{ height: 400, width: "90%" }}>
-            <DataGrid
-              key={checkReset} // 상태에 따라 리렌더링 강제
-              rows={collaborations}
-              columns={columns}
-              // initialState={{ pagination: { paginationModel } }}
-              // pageSizeOptions={[5, 10]}
-              checkboxSelection
-              disableColumnMenu // 컬럼 메뉴 비활성화
-              selectionModel={selectedRows}
-              onRowSelectionModelChange={(newSelection) => {
-                setSelectedRows(newSelection);
-              }}
-              onRowClick={(params) => handleRowClick(params.id)} // 행 클릭 시 상세 페이지 이동
-              sx={{ border: 0 }}
-            />
-            {collaborations && collaborations.length === 0 && ( /////-------------------------------------> 이거 추가됨
-              <Typography
-                variant="h6"
-                sx={{ textAlign: "center", marginTop: 2 }}
-              >
-                협업 제안이 없습니다.
-              </Typography>
-            )}
-          </Paper>
-
-          <Box
-            marginTop="20px"
-            display="flex"
-            width="100%"
-            justifyContent="space-between"
-            p={2}
-          >
-            {/* 좌측에 삭제 버튼 */}
-            <Button
-              sx={{ margin: "10px" }}
-              variant="outlined"
-              color="error"
-              onClick={(event) => handleClickOpen("삭제")}
+        <>
+            <TableContainer
+                sx={{
+                    margin: '100px auto',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyItems: 'justify-content',
+                    alignItems: 'center',
+                }}
+                component={Paper}
             >
-              삭제
-            </Button>
+                <Box display="flex" width="100%" justifyContent="flex-end" p={2}>
+                    <FormControl variant="outlined">
+                        <InputLabel>협업 선택</InputLabel>
+                        <Select value={filter} onChange={handleFilterChange} label="협업 선택">
+                            <MenuItem value="제안 받은 협업">제안 받은 협업</MenuItem>
+                            <MenuItem value="제안 한 협업">제안 한 협업</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Box>
 
-            {/* 우측에 승인, 거절 버튼 */}
-            {filter === "제안 받은 협업" && (
-              <Box display="flex">
-                <Button
-                  sx={{ margin: "10px" }}
-                  variant="contained"
-                  onClick={() => handleClickOpen("승인")}
-                >
-                  승인
-                </Button>
-                <Button
-                  sx={{ margin: "10px" }}
-                  variant="outlined"
-                  onClick={() => handleClickOpen("거절")}
-                >
-                  거절
-                </Button>
-              </Box>
-            )}
-          </Box>
-        </TableContainer>
+                <Typography variant="h6" style={{ fontWeight: 'bold', color: '#000000' }}>
+                    {filter}
+                </Typography>
 
-        {/* 모달 (Dialog) */}
-        <Dialog open={open} onClose={handleClose}>
-          <DialogTitle>정말로 {currentAction}하시겠습니까?</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              확인을 누르면 {currentAction}됩니다. 정말로 {currentAction}{" "}
-              하시겠습니까?
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose} color="primary">
-              취소
-            </Button>
-            <Button onClick={() => handleAction(currentAction)} color="primary">
-              확인
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </>
+                <Paper sx={{ height: 400, width: '90%' }}>
+                    <DataGrid
+                        key={checkReset} // 상태에 따라 리렌더링 강제
+                        rows={collaborations}
+                        columns={columns}
+                        // initialState={{ pagination: { paginationModel } }}
+                        // pageSizeOptions={[5, 10]}
+                        checkboxSelection
+                        disableColumnMenu // 컬럼 메뉴 비활성화
+                        selectionModel={selectedRows}
+                        onRowSelectionModelChange={(newSelection) => {
+                            setSelectedRows(newSelection);
+                        }}
+                        onRowClick={(params) => handleRowClick(params.id)} // 행 클릭 시 상세 페이지 이동
+                        sx={{ border: 0 }}
+                    />
+                    {collaborations &&
+                        collaborations.length === 0 && ( /////-------------------------------------> 이거 추가됨
+                            <Typography variant="h6" sx={{ textAlign: 'center', marginTop: 2 }}>
+                                협업 제안이 없습니다.
+                            </Typography>
+                        )}
+                </Paper>
+
+                <Box marginTop="20px" display="flex" width="100%" justifyContent="space-between" p={2}>
+                    {/* 좌측에 삭제 버튼 */}
+                    <Button
+                        sx={{ margin: '10px' }}
+                        variant="outlined"
+                        color="error"
+                        onClick={(event) => handleClickOpen('삭제')}
+                    >
+                        삭제
+                    </Button>
+
+                    {/* 우측에 승인, 거절 버튼 */}
+                    {filter === '제안 받은 협업' && (
+                        <Box display="flex">
+                            <Button sx={{ margin: '10px' }} variant="contained" onClick={() => handleClickOpen('승인')}>
+                                승인
+                            </Button>
+                            <Button sx={{ margin: '10px' }} variant="outlined" onClick={() => handleClickOpen('거절')}>
+                                거절
+                            </Button>
+                        </Box>
+                    )}
+                </Box>
+            </TableContainer>
+
+            {/* 모달 (Dialog) */}
+            <Dialog open={open} onClose={handleClose}>
+                <DialogTitle>정말로 {currentAction}하시겠습니까?</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        확인을 누르면 {currentAction}됩니다. 정말로 {currentAction} 하시겠습니까?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} color="primary">
+                        취소
+                    </Button>
+                    <Button onClick={() => handleAction(currentAction)} color="primary">
+                        확인
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </>
     );
 };

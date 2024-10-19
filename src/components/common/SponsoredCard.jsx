@@ -8,8 +8,6 @@ export const SponsoredCard = ({ project }) => {
     // 결제/배송 정보 표시 토글
     const toggleDetails = () => setShowDetails(!showDetails); // 토글
 
-    console.log('/4/1/1/' + project);
-
     return (
         <>
             <div

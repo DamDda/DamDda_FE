@@ -83,7 +83,6 @@ export const ResetPassword = () => {
             const pwData = await response.data;
             formData.resetPw = pwData.id;
 
-            console.log(pwData);
             // 비밀번호 재설정 성공 처리
             if (pwData) {
                 setOpenModal(true); // 성공 시 모달 열기

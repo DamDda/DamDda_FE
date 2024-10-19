@@ -195,7 +195,7 @@ function SupporterTable() {
                     Authorization: `Bearer ${Cookies.get('accessToken')}`,
                 },
             });
-            console.log(response.data); // 데이터 확인
+            // 데이터 확인
             setOrders(response.data); // 가져온 주문 정보를 상태에 저장
             setLoading(false); // 로딩 완료
         } catch (err) {
@@ -299,7 +299,6 @@ export const MyProjectDetailDashBoard = ({ projectId }) => {
 
                 setLoading(false); // 로딩 상태 완료
             } catch (error) {
-                console.log('데이터를 불러오는 중 오류 발생:', error);
                 setLoading(false);
             }
         };

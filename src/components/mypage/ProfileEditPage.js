@@ -73,14 +73,14 @@
 //                 },
 //                 withCredentials: true,
 //             };
-//             console.log('aceessToken' + Cookies.get('accessToken'));
+//
 
 //             const response = await axios.put(
 //                 `${SERVER_URL}/member/${user.key}/Photo`,
 //                 { imageUrl: profileImage },
 //                 config
 //             );
-//             console.log('프로필 이미지' + response.data);
+//
 //             return response.data;
 //         } catch (error) {
 //             console.error('프로필 이미지 저장 중 오류 발생:', error);
@@ -88,19 +88,19 @@
 //     };
 
 //     const handleSubmit = async () => {
-//         console.log('--------handleSubmit click------------');
+//
 //         // 닉네임 중복 확인이 실패한 경우 프로필 저장을 중단
 //         // if (!nicknameCheck) {
 //         //   setNicknameError("닉네임 중복 확인을 해주세요.");
 //         //   return; // 닉네임 중복 확인이 완료되지 않았으면 저장 중단
 //         // }
-//         console.log('handleSubmit line : 107');
+//
 //         if (formData.nickname !== profile.nickname && !nicknameCheck) {
 //             setNicknameError('닉네임 중복 확인을 해주세요.');
 //             return; // 닉네임 중복 확인이 완료되지 않았으면 저장 중단
 //         }
 
-//         console.log('handleSubmit line : 112');
+//
 //         if (!formData.nickname || !formData.phoneNumber) {
 //             setErrorMessage({
 //                 nickname: !formData.nickname ? '닉네임을 입력해주세요.' : '',
@@ -109,9 +109,9 @@
 //             return;
 //         }
 
-//         console.log('handleSubmit line : 121');
+//
 //         const imageUrl = await handleImage();
-//         console.log('handleSubmit line : 124');
+//
 //         const updatedFormData = {
 //             ...formData,
 //             email: formData.email,
@@ -121,7 +121,7 @@
 //             address: formData.address,
 //             imageUrl: imageUrl,
 //         };
-//         console.log('image Url : ', imageUrl);
+//
 //         const sendData = {
 //             email: formData.email,
 //             password: formData.password,
@@ -131,15 +131,15 @@
 //             address: formData.address,
 //             imageUrl: imageUrl,
 //         };
-//         console.log('sendData : ', sendData);
+//
 //         // 부모 컴포넌트에 데이터 전달
 //         updateProfileData(updatedFormData);
 
-//         console.log('handleSubmit line : 107');
+//
 //         // 스낵바 열기
 //         setOpenSnackbar(true);
 
-//         console.log('handleSubmit line : 107');
+//
 //         try {
 //             const config = {
 //                 headers: {
@@ -171,7 +171,7 @@
 //         const { nickname } = formData;
 //         try {
 //             const response = await axios.get(`${SERVER_URL}/member/check/nickname?nickname=${nickname}`);
-//             console.log(response.data);
+//
 //             setNicknameError(
 //                 response.data === 'available' ? '사용 가능한 닉네임입니다.' : '이미 사용중인 닉네임입니다.'
 //             );
@@ -191,8 +191,8 @@
 //     const handlePasswordChange = async () => {
 //         setErrorMessage((prevErrors) => ({ ...prevErrors, password: '' }));
 
-//         console.log(currentPassword);
-//         console.log(formData.password);
+//
+//
 
 //         if (newPassword.length < 8 || newPassword.length > 16) {
 //             setErrorMessage((prevErrors) => ({
@@ -226,7 +226,7 @@
 //                     Authorization: `Bearer ${Cookies.get('accessToken') || ''}`,
 //                 },
 //             });
-//             console.log('response.data : ', response.data);
+//
 //             if (!response.data.isSuccess) {
 //                 alert('현재 비밀번호가 일치하지 않습니다.');
 //                 return;

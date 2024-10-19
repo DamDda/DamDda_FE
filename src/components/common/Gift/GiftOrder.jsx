@@ -1,10 +1,19 @@
 import React, { useState, useEffect } from 'react'; // React
 import { borderRadius } from '@mui/system';
-import { Card, CardContent, Typography, Button, Box, Grid, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'; // MUI 관련 컴포넌트
+import {
+    Card,
+    CardContent,
+    Typography,
+    Button,
+    Box,
+    Grid,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+} from '@mui/material'; // MUI 관련 컴포넌트
 import { OptionOrder } from 'components/common/Gift/OptionOrder'; // OptionOrder 컴포넌트
 import { DeleteButtonX, DeleteButtonTrash, NumericInput } from 'components/common/Gift/DeleteButtons'; // 경로에 맞게 수정
-
-
 
 // export const GiftOrder1 = ({ title, price, options, setOptions }) => {
 //     const style = {
@@ -50,8 +59,6 @@ import { DeleteButtonX, DeleteButtonTrash, NumericInput } from 'components/commo
 //         handleClose();
 //     };
 
-
-
 //     return (
 //         <div style={style}>
 //             <div style={{ fontSize: "18px", fontWeight: "bold", letterSpacing: "5px" }}>{title}</div>
@@ -81,18 +88,12 @@ import { DeleteButtonX, DeleteButtonTrash, NumericInput } from 'components/commo
 //     );
 // };
 
-
-
-
-
-
-
 export const GiftOrder = ({ selectedPackage, updateSelectedCountById, removePackageById }) => {
     const [open, setOpen] = useState(false); // Dialog 상태 관리
 
     const handleClickOpen = () => {
         setOpen(true);
-        console.log("Modal opened:", open); // 상태가 true로 바뀌었는지 확인
+        // 상태가 true로 바뀌었는지 확인
     };
 
     const handleClose = () => {
@@ -100,9 +101,7 @@ export const GiftOrder = ({ selectedPackage, updateSelectedCountById, removePack
     };
 
     // open 상태가 변경될 때마다 콘솔에 로그 출력
-    useEffect(() => {
-        console.log("Modal state updated:", open);
-    }, [open]);
+    useEffect(() => {}, [open]);
 
     return (
         <Card
@@ -111,7 +110,7 @@ export const GiftOrder = ({ selectedPackage, updateSelectedCountById, removePack
                 borderRadius: 2,
                 borderColor: 'black',
                 borderWidth: 1,
-                padding: "10px",
+                padding: '10px',
                 width: '400px',
                 backgroundColor: '#fafafa',
             }}
@@ -119,19 +118,22 @@ export const GiftOrder = ({ selectedPackage, updateSelectedCountById, removePack
             <CardContent>
                 <Grid container spacing={2} alignItems="center">
                     <Grid item xs={7}>
-                    <Typography variant="h7" sx={{ fontWeight: 'bold' }}>
+                        <Typography variant="h7" sx={{ fontWeight: 'bold' }}>
                             [ 장바구니 ]
                         </Typography>
                         <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
                             {selectedPackage.packageName}
                         </Typography>
-                        <Typography variant="h7" sx={{ fontWeight: 'bold' }}>가격: {selectedPackage.packagePrice}원</Typography>
-                        {selectedPackage?.selectOption && selectedPackage.selectOption.length > 0 && selectedPackage.selectOption.map((option, index) => (
-                            <Typography key={index} variant="body2">
-                                {option.rewardName}: {option.selectOption}원
-                            </Typography>
-                        ))}
-
+                        <Typography variant="h7" sx={{ fontWeight: 'bold' }}>
+                            가격: {selectedPackage.packagePrice}원
+                        </Typography>
+                        {selectedPackage?.selectOption &&
+                            selectedPackage.selectOption.length > 0 &&
+                            selectedPackage.selectOption.map((option, index) => (
+                                <Typography key={index} variant="body2">
+                                    {option.rewardName}: {option.selectOption}원
+                                </Typography>
+                            ))}
                     </Grid>
 
                     <Grid item xs={4}>
@@ -140,7 +142,11 @@ export const GiftOrder = ({ selectedPackage, updateSelectedCountById, removePack
                             min={0}
                             max={9999}
                             setNum={(newNum) =>
-                                updateSelectedCountById(selectedPackage.packageName, selectedPackage.selectOption, newNum)
+                                updateSelectedCountById(
+                                    selectedPackage.packageName,
+                                    selectedPackage.selectOption,
+                                    newNum
+                                )
                             }
                         />
                     </Grid>
@@ -157,9 +163,12 @@ export const GiftOrder = ({ selectedPackage, updateSelectedCountById, removePack
                             <Box>{selectedPackage.packageName}의 </Box>
                             {selectedPackage.selectOption.map((option, index) => (
                                 <span key={index}>
-                                    <Box>{option.rewardName}: {option.selectOption}</Box>
+                                    <Box>
+                                        {option.rewardName}: {option.selectOption}
+                                    </Box>
                                 </span>
-                            ))}정말로 삭제하시겠습니까?
+                            ))}
+                            정말로 삭제하시겠습니까?
                         </Typography>
                     </DialogContent>
                     <DialogActions>

@@ -4,57 +4,45 @@ import styles from '../css/ShortcutBoxComponent.module.css'; // CSS 모듈 가�
 import Image1 from '../../assets/Food-basket-with-groceries.png'; // 임의 이미지 경로
 import Image2 from '../../assets/Food-basket-with-groceries.png'; // 임의 이미지 경로
 import Image3 from '../../assets/Food-basket-with-groceries.png'; // 임의 이미지 경로
-import { useNavigate } from 'react-router-dom';
 
 export const ShortcutBoxComponent = () => {
-    const navigate = useNavigate();
-
     const services = [
         {
-            title: '협업하기',
+            title: '01 협업하기',
             description: '진행자와 함께 협업하고 성공적인 프로젝트를 만들어보세요.',
-            icon: <img src={Image1} alt="Icon 1" className={styles.icon} />,
+            icon: '💻',
             route: 'mypage',
+            bgColor: '#eef0fc',
         },
         {
-            title: '프로젝트 등록하기',
+            title: '02 프로젝트 등록하기',
             description: '새로운 프로젝트를 등록하고 펀딩을 시작하세요.',
             icon: <img src={Image2} alt="Icon 2" className={styles.icon} />,
             route: 'register',
+            bgColor: '#f7efd4',
         },
         {
-            title: '인기 프로젝트 가기',
+            title: '03 인기 프로젝트 가기',
             description: '가장 인기 있는 프로젝트에 참여하고 후원하세요.',
             icon: <img src={Image3} alt="Icon 3" className={styles.icon} />,
             route: 'entire',
+            bgColor: '#dde5fe',
         },
     ];
 
     return (
         <Box className={styles.container}>
-            <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 2, mt: 3 }}>
-                신뢰와 안정의 금융결제원 CMS
+            <Typography variant="h4" className={styles.header}>
+                [담ː따] 와 함께 성공적인 펀딩 프로젝트를 진행시키세요
             </Typography>
-            <Typography variant="body1" sx={{ mb: 4 }}>
-                30년간의 운영으로 쌓아온 안정적인 지급관리 솔루션을 경험해보세요.
-            </Typography>
-
             <Grid container className={styles.gridContainer}>
                 {services.map((service, index) => (
-                    <Grid item key={index}>
-                        <Card
-                            className={styles.card}
-                            onClick={() => navigate(service.route)} // 클릭 시 경로 이동
-                        >
-                            <Box className={styles.iconBox}>{service.icon}</Box>
-                            <Box className={styles.textBox}>
-                                <Typography variant="h6" className={styles.title}>
-                                    {service.title}
-                                </Typography>
-                                <Typography variant="body2" className={styles.description}>
-                                    {service.description}
-                                </Typography>
-                            </Box>
+                    <Grid item xs={12} sm={4} key={index}>
+                        <Card className={styles.card} style={{ backgroundColor: service.bgColor }}>
+                            <Typography variant="h6" className={styles.title}>
+                                {service.title}
+                            </Typography>
+                            <Typography className={styles.description}>{service.description}</Typography>
                         </Card>
                     </Grid>
                 ))}

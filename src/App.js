@@ -79,11 +79,11 @@ function App() {
     //FileUploadComponent
     const handleFileChange = (event) => {
         const files = Array.from(event.target.files);
-        console.log(files); // 파일 목록 처리
+        // 파일 목록 처리
     };
 
     const handleFileUpload = (files) => {
-        console.log(files); // 업로드 로직 처리
+        // 업로드 로직 처리
     };
 
     //GiftCompositionComponent

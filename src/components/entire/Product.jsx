@@ -14,7 +14,7 @@ export const ProductRecommendations = ({ search, cartegory }) => {
 
     const { user } = useUser();
     // if(!isLogin){
-    //   console.log(user);
+    //
     //   //setUser(prevUser => ({ ...prevUser, key: 0 }));
     // }
 
@@ -150,7 +150,6 @@ export const ProductRecommendations = ({ search, cartegory }) => {
                         projectId: project.id,
                     },
                 });
-                console.log('좋아요 취소 성공:', response.data);
             } else {
                 // liked가 false이면 POST 요청
                 const response = await axios.post(` ${SERVER_URL}/api/projects/like`, null, {
@@ -162,7 +161,6 @@ export const ProductRecommendations = ({ search, cartegory }) => {
                         projectId: project.id,
                     },
                 });
-                console.log('좋아요 성공:', response.data);
             }
 
             // fetchProducts(currentPage, progress);

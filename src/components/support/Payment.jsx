@@ -130,7 +130,6 @@ export function PaymentPage() {
         }
 
         // 결제 처리 로직
-        console.log('결제 진행 중...');
 
         const deliveryMessage = orderInfo.customMessage || orderInfo.request; // 사용자 입력 메시지가 있으면 우선 사용
 
@@ -168,7 +167,7 @@ export function PaymentPage() {
 
         try {
             // 주문 정보 생성 POST 요청 (결제 대기중 상태로 먼저 저장)
-            console.log('Order Data:', orderData); // 서버로 전송 전에 데이터 확인
+            // 서버로 전송 전에 데이터 확인
             const response = await axios.post(`${SERVER_URL}/order/create`, orderData, {
                 headers: {
                     ...(Cookies.get('accessToken') && {
@@ -176,11 +175,9 @@ export function PaymentPage() {
                     }),
                 },
             });
-            console.log('주문생성 완료 :', response);
 
             // 서버에서 반환된 orderId 가져오기
             const createdOrderId = response.data.orderId; // response.data에서 orderId 값만 추출
-            console.log('주문 ID:', createdOrderId);
 
             // 결제 수단에 따른 처리
             if (paymentMethod === 'tossPay') {
@@ -251,8 +248,8 @@ export function PaymentPage() {
                     }
                 }
                 // 우편번호와 주소 정보를 업데이트
-                console.log('우편번호:', data.zonecode); // 콘솔에 우편번호 출력
-                console.log('주소:', addr); // 콘솔에 주소 출력
+                // 콘솔에 우편번호 출력
+                // 콘솔에 주소 출력
 
                 // 우편번호와 주소 정보를 업데이트
                 setOrderInfo({

@@ -38,11 +38,9 @@ export const CollaborationDetail = ({ clickCollb, filter, setClickCollb }) => {
                 },
                 withCredentials: true,
             });
-            console.log(response.data);
+
             setProjectDetail(response.data);
-        } catch (error) {
-            console.log('handleReadDetail에서 에러 발생 ' + error);
-        }
+        } catch (error) {}
     };
 
     useEffect(() => {
@@ -52,7 +50,7 @@ export const CollaborationDetail = ({ clickCollb, filter, setClickCollb }) => {
     if (!projectDetail) return <CircularProgress />; // 로딩 상태 표시
 
     const handleDownload = async (fileName) => {
-        console.log(fileName); // 파일명 확인용 로그
+        // 파일명 확인용 로그
 
         try {
             const response = await axios.get(`${SERVER_URL}/collab/download`, {

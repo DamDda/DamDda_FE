@@ -27,12 +27,10 @@ const convertDataToCumulative = (serverData) => {
 };
 
 export const ProgressChart = ({ serverData, targetFunding }) => {
-    console.log('targetFunding 값:', targetFunding);
     const dailyData = convertDataToCumulative(serverData);
 
     // targetFunding 값이 안전하게 설정되도록 보장
     const safeTargetFunding = targetFunding || 0;
-    console.log('safeTargetFunding:', safeTargetFunding);
 
     // Chart.js의 데이터 설정
     const data = {

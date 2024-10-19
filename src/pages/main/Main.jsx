@@ -121,7 +121,7 @@ export function Main() {
         try {
             const response = await axios.get('http://101.79.9.79:9000/admin/files/carousels');
 
-            console.log('서버 응답 데이터:', response.data); // 데이터 로그 찍기
+            // 데이터 로그 찍기
 
             setImages(response.data);
         } catch (error) {
@@ -154,20 +154,28 @@ export function Main() {
                     title={'인기 프로젝트'}
                     subTitle={'좋아요가 가장 많은 프로젝트'}
                 />
-                <NewsSection cardData={cardData} />
                 <ProjectRowComponent
                     sortCondition={'endDate'}
                     title={'마감 임박 프로젝트'}
                     subTitle={'마감임박! 마지막 기회 놓치지 말아요!'}
                 />
-                <div style={{ textAlign: 'center', margin: '70px 0' }}>
+                <NewsSection cardData={cardData} />
+                <div
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        marginLeft: '20px',
+                    }}
+                >
                     <img
                         src={Banner2}
                         alt="Banner"
                         style={{
-                            maxWidth: '1220px',
+                            maxWidth: '1820px',
                             height: '220px',
                             borderRadius: '20px',
+                            objectFit: 'cover',
                         }}
                     />
                 </div>

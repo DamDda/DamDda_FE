@@ -19,7 +19,7 @@
 //     const { user } = useUser();
 
 //     const fetchProfileData = async () => {
-//         console.log('fetchProfileData' + fetchProfileData);
+//
 //         try {
 //             // const response = await axios.get(`${SERVER_URL}/members/profile?loginId=${user.id}`, {
 //             const response = await axios.get(`${SERVER_URL}/member/profile?loginId=${user.id}`, {
@@ -30,7 +30,7 @@
 //                 },
 //                 withCredentials: true,
 //             });
-//             console.log(response.data);
+//
 //             // 로컬 스토리지에 데이터가 없을 때 초기 비밀번호 설정
 //             const initialProfileData = {
 //                 loginId: response.data.loginId,
@@ -73,7 +73,7 @@
 //     }
 
 //     const handleSubmit = async (inputPassword) => {
-//         console.log('handleSubmit 처음 부분:');
+//
 //         // e.preventDefault();
 
 //         const formatLogin = {
@@ -82,17 +82,17 @@
 //         };
 //         try {
 //             let valid = true;
-//             console.log('트라이 처음 부분:');
+//
 
 //             // 모든 필드가 입력되었을 때만 검증 진행
 //             if (valid) {
-//                 console.log('if처음부분임:');
+//
 //                 const response = await axios.post(`${SERVER_URL}/member/login`, formatLogin, {
 //                     withCredentials: true,
 //                     headers: { 'Content-Type': 'application/json' },
 //                 });
 //                 const nickname = response.data['X-Nickname'];
-//                 console.log('Nickname:', nickname);
+//
 //                 if (nickname === user.nickname) {
 //                     setIsEditing(true); // 프로필 수정 페이지로 이동
 //                     setPasswordError(''); // 에러 메시지 초기화

@@ -11,7 +11,6 @@ export const PaymentSuccessPage = () => {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const orderId = queryParams.get('orderId'); // URL 쿼리에서 orderId 가져옴
-    console.log(orderId + '!!!!!!!!!!');
 
     const [orderData, setOrderData] = useState([]); // 주문 데이터를 저장할 상태
     const [loading, setLoading] = useState(true); // 로딩 상태 관리
@@ -30,7 +29,6 @@ export const PaymentSuccessPage = () => {
                     Authorization: `Bearer ${accessToken}`,
                 },
             }); // JSON body로 전송
-            console.log('결제 완료:', updatedPaymentStatus);
         } catch (error) {
             console.error('결제 상태 변경 중 오류 발생:', error);
         }

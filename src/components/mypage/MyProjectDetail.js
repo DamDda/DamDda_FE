@@ -95,7 +95,6 @@ export const MyProjectDetails = ({ projectId, setClickMyproject }) => {
 
                 setLoading(false); // 로딩 상태 완료
             } catch (error) {
-                console.log('데이터를 불러오는 중 오류 발생:', error);
                 setLoading(false);
             }
         };

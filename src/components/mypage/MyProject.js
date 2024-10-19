@@ -134,9 +134,9 @@ export const Myproject = ({ setClickMyproject }) => {
                 setClickMyproject(product.id); // 부모 요소에서만 처리
               }}
             >
-                            <div
+              <div
                 style={{
-                    // margin:"10px 1px",
+                  // margin:"10px 1px",
                   display: "flex",
                   justifyContent: "flex-start", // 버튼을 오른쪽으로 정렬
                   alignItems: "center", // 수직 중앙 정렬 (필요시)
@@ -183,8 +183,6 @@ export const Myproject = ({ setClickMyproject }) => {
               >
                 <ProductCard product={product} />
               </div>
-
-
             </div>
           </Grid>
         ))}

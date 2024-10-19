@@ -14,7 +14,7 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
-import { styled } from "@mui/system";
+import { display, styled } from "@mui/system";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { ProgressChart } from "components/mypage/ProgressChart";
@@ -24,6 +24,8 @@ import Cookies from "js-cookie";
 import { SERVER_URL } from "constants/URLs";
 
 import { useUser } from "UserContext";
+import { Button } from "bootstrap";
+import { BlueBorderButtonComponent } from "components/common/ButtonComponent";
 
 // 후원 통계
 const mockSupportStat = {
@@ -126,14 +128,42 @@ const DashboardSection = styled("div")({
   boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
 });
 
+const fetchData = async () => {
+  // try {
+  //   // 프로젝트 상세 정보 api 호출
+  //   const [projectResponse] = await Promise.all([
+  //     axios({
+  //       method: "GET",
+  //       url: `${SERVER_URL}/project/myproject/${projectId}`, // 템플릿 리터럴을 올바르게 적용
+  //       // params: {
+  //       //   memberId: user.key,
+  //       // },
+  //       headers: {
+  //         Authorization: `Bearer ${Cookies.get("accessToken")}`, // 템플릿 리터럴을 올바르게 적용
+  //       },
+  //     }).then((response) => response),
+  //   ]);
+  //   // 후원 통계 api 호출
+  //   setSupportStat(mockSupportStat);
+  //   setProjectData(projectResponse.data); // 프로젝트 데이터 저장
+  //   setLoading(false); // 로딩 상태 완료
+  // } catch (error) {
+  //   setLoading(false);
+  // }
+};
+
 function CustomTableRow(props) {
   const { row } = props;
   const [open, setOpen] = useState(false);
 
   return (
     <React.Fragment>
-      <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
-        <TableCell>
+      <TableRow sx={{ "& > *": { border: "unset" } }}>
+        <TableCell
+          style={{
+            width: "50px", // 칸 너비 조절
+          }}
+        >
           <IconButton
             aria-label="expand row"
             size="small"
@@ -152,12 +182,13 @@ function CustomTableRow(props) {
           {new Date(row.supportingProject.supportedAt).toLocaleString()}
         </TableCell>
       </TableRow>
+
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box
               sx={{
-                margin: 3,
+                margin: 1,
                 display: "flex",
                 flexDirection: "column",
                 gap: 3,
@@ -197,7 +228,7 @@ function CustomTableRow(props) {
 }
 
 // 후원자 정보 테이블 컴포넌트
-function SupporterTable() {
+export const SponsorTable = () => {
   const [orders, setOrders] = useState(mockSupporterData); // 모든 주문 정보를 저장할 상태
   // const [orders, setOrders] = useState([]); // 모든 주문 정보를 저장할 상태
   const [error, setError] = useState(null); // 에러 상태 관리
@@ -219,55 +250,67 @@ function SupporterTable() {
       setLoading(false); // 로딩 완료
     }
   };
+  const downloadFile = () => {
+    alert("엑셀 다운로드를 클릭하였습니다. ");
+  };
 
   // 컴포넌트가 마운트될 때 주문 정보 가져오기
   useEffect(() => {
-    fetchOrders();
+    //fetchOrders();
   }, []);
   return (
-    <TableContainer component={Paper}>
-      <Table aria-label="collapsible table">
-        <TableHead>
-          <TableRow>
-            <TableCell />
-            <TableCell
-              style={{
-                textAlign: "center",
-                fontWeight: "bold",
-                fontSize: "16px",
-              }}
-            >
-              후원번호
-            </TableCell>
-            <TableCell
-              style={{
-                textAlign: "center",
-                fontWeight: "bold",
-                fontSize: "16px",
-              }}
-            >
-              주문자 이름
-            </TableCell>
-            <TableCell
-              style={{
-                textAlign: "center",
-                fontWeight: "bold",
-                fontSize: "16px",
-              }}
-            >
-              후원 날짜
-            </TableCell>
+    <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
+      <Box style={{ display: "flex", justifyContent: "flex-end" }}>
+        <div style={{ width: "auto" }}>
+          <BlueBorderButtonComponent
+            text={"엑셀 다운로드"}
+            onClick={downloadFile}
+          ></BlueBorderButtonComponent>
+        </div>
+      </Box>
+      <TableContainer component={Paper}>
+        <Table aria-label="collapsible table">
+          <TableHead>
+            <TableRow sx={{ "& > *": { border: "none" } }}>
+              <TableCell />
+              <TableCell
+                style={{
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: "16px",
+                }}
+              >
+                후원번호
+              </TableCell>
+              <TableCell
+                style={{
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: "16px",
+                }}
+              >
+                주문자 이름
+              </TableCell>
+              <TableCell
+                style={{
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: "16px",
+                }}
+              >
+                후원 날짜
+              </TableCell>
 
-            {/* <TableCell>선물 정보</TableCell>
+              {/* <TableCell>선물 정보</TableCell>
             <TableCell>연락처</TableCell>
             <TableCell>배송지 정보</TableCell>
             <TableCell>배송 요청 사항</TableCell> */}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {orders.map((order, index) => (
-            <CustomTableRow key={index} row={order}>
-              <TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {orders.map((order, index) => (
+              <CustomTableRow key={index} row={order}>
+                {/* <TableCell>
                 {order.supportingProject.supportingProjectId}
               </TableCell>
               <TableCell>{order.delivery.deliveryName}</TableCell>
@@ -277,167 +320,12 @@ function SupporterTable() {
               <TableCell>{order.supportingPackage.packageName}</TableCell>
               <TableCell>{order.delivery.deliveryPhoneNumber}</TableCell>
               <TableCell>{order.delivery.deliveryAddress}</TableCell>
-              <TableCell>{order.delivery.deliveryMessage}</TableCell>
-            </CustomTableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  );
-}
-
-export const MyProjectDetailDashBoard = ({ projectId }) => {
-  const [projectData, setProjectData] = useState(null); // 프로젝트 정보 상태
-  const [supportStat, setSupportStat] = useState(null); // 후원 통계 상태
-  const [loading, setLoading] = useState(true);
-  const [tabIndex, setTabIndex] = useState(0);
-  const { user } = useUser();
-  const [chartData, setChartData] = useState(null);
-  const targetFunding = useState(""); // 목표 금액 설정
-
-  // 두 API를 병렬로 호출하여 데이터를 가져옴
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // 프로젝트 상세 정보 api 호출
-        const [projectResponse] = await Promise.all([
-          axios({
-            method: "GET",
-            url: `${SERVER_URL}/project/myproject/${projectId}`, // 템플릿 리터럴을 올바르게 적용
-
-            headers: {
-              Authorization: `Bearer ${Cookies.get("accessToken")}`, // 템플릿 리터럴을 올바르게 적용
-            },
-          }).then((response) => response),
-        ]);
-
-        // 후원 통계 api 호출
-        setSupportStat(mockSupportStat);
-
-        setProjectData(projectResponse.data); // 프로젝트 데이터 저장
-
-        setLoading(false); // 로딩 상태 완료
-      } catch (error) {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [projectId]);
-
-  if (loading) {
-    return <div>로딩중..</div>;
-  }
-
-  if (!projectData && !supportStat) {
-    return <div>데이터를 가져오는 중 오류가 발생</div>;
-  }
-
-  // 탭 핸들러
-  const handleTabChange = (event, newValue) => {
-    setTabIndex(newValue);
-  };
-
-  return (
-    <DetailContainer>
-      {/* Tabs Section */}
-      {/* <Tabs
-                value={tabIndex}
-                onChange={handleTabChange}
-                aria-label="후원통계 및 후원자 조회 탭"
-                sx={{
-                    marginTop: '60px',
-                    marginBottom: '20px',
-                    '& .MuiTab-root': {
-                        fontSize: '20px',
-                    },
-                }}
-            >
-                <Tab label="후원 통계" />
-                <Tab label="후원자 조회" />
-            </Tabs> */}
-      <br />
-
-      {/* 후원 통계 */}
-      {tabIndex === 0 && (
-        <>
-          <Typography
-            variant="h5"
-            sx={{
-              marginBottom: "20px",
-              fontWeight: "bold",
-              //   marginRight: "-150px",
-            }}
-          >
-            후원 통계
-          </Typography>
-          <DashboardSection
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              padding: "20px",
-              borderRadius: "10px",
-              backgroundColor: "white",
-              width: "1000px",
-              marginTop: "20px",
-            }}
-          >
-            <Typography>
-              <span style={{ color: "red", fontSize: "18px" }}>
-                총 후원금액
-              </span>
-              <br />
-              <span style={{ color: "black", fontSize: "24px" }}>
-                {/* {statistics.totalSupportAmount.toLocaleString()}원 */}
-                {supportStat.totalAmount.toLocaleString()}원
-              </span>
-              <br />
-            </Typography>
-            <Typography>
-              <span style={{ color: "red", fontSize: "18px" }}>달성률</span>
-              <br />
-              <span style={{ color: "black", fontSize: "24px" }}>
-                {/* {(statistics.totalSupportAmount / statistics.targetFunding) *
-                  100} %*/}
-                {supportStat.percentage.toFixed(2)}%
-              </span>
-              <br />
-            </Typography>
-
-            <Typography>
-              <span style={{ color: "red", fontSize: "18px" }}>후원자 수</span>
-              <br />
-              <span style={{ color: "black", fontSize: "24px" }}>
-                {/* {statistics.totalSupporters}명 */}
-                {supportStat.supporters}명
-              </span>
-              <br />
-            </Typography>
-
-            <Typography>
-              <span style={{ color: "red", fontSize: "18px" }}>남은 기간</span>
-              <br />
-              <span style={{ color: "black", fontSize: "24px" }}>
-                {/* {statistics.remainingDays}일 */}
-                {supportStat.remainingDays}일
-              </span>
-              <br />
-            </Typography>
-          </DashboardSection>
-          {/* 후원 차트 추가 부분 */}
-          <Box mt={15}>
-            {/* 가짜 데이터 전달 */}
-            <ProgressChart
-              serverData={chartData || mockChartData}
-              targetFunding={targetFunding}
-            />
-          </Box>
-        </>
-      )}
-
-      {/* 후원자 조회 정보 */}
-      {tabIndex === 1 && <SupporterTable />}
-    </DetailContainer>
+              <TableCell>{order.delivery.deliveryMessage}</TableCell> */}
+              </CustomTableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </div>
   );
 };

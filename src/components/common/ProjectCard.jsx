@@ -298,7 +298,7 @@ export const ProductCard = ({ product, handleLike }) => {
           >
             <LinearProgress
               variant="determinate"
-              value={achievementRate}
+              value={Math.min(100, achievementRate)}
               sx={{ height: 8, borderRadius: "5px", mt: 1, mb: 2 }} // 높이 줄이기
             />
           </Box>

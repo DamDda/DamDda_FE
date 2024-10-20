@@ -49,6 +49,7 @@ import { ResetPassword } from "pages/member/ResetPassword";
 import { Payment } from "pages/support/Payment";
 import { PaymentSuccess } from "pages/support/PaymentSuccess";
 import { Mypage } from "pages/mypage/Mypage";
+import { TossReady } from "components/support/TossReady";
 
 // import { ResetPassword } from  "pages/member/ResetPassword";
 const theme = createTheme({
@@ -418,7 +419,7 @@ function App() {
               <Route path="/payment" element={<Payment />} />
               <Route path="/payment/success" element={<PaymentSuccess />} />
               <Route path="/mypage" element={<Mypage />} />
-
+              <Route path="/TossReady" element={<TossReady />} />
               {/* /////////////////////////////지영//////////////////////////////////// */}
               {/* +                    <Route path="/order" element={<OrderPage />} />
                     <Route path="/user/myorders/:userId" element={<MyOrders />} />

@@ -387,6 +387,37 @@ export const DetailPage = () => {
 
   return (
     <div style={{ width: "100%", margin: "0px auto" }}>
+      {projectInfo?.daysLeft < 0 && (
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.5)", // 투명한 회색
+            zIndex: 10,
+          }}
+        />
+      )}
+      {projectInfo?.daysLeft && (
+        <div
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            backgroundColor: "#fff",
+            padding: "20px",
+            borderRadius: "8px",
+            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+            zIndex: 20,
+            textAlign: "center",
+          }}
+        >
+          <h2>종료된 펀딩입니다.</h2>
+        </div>
+      )}
       <div style={{ marginTop: "150px" }}>
         <ProjectTitle
           projectTitle={{

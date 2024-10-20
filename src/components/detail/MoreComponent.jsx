@@ -54,7 +54,7 @@ export const ProjectInfoBox = ({ title, value, unit, statistics }) => {
           variant="h4"
           sx={{ fontWeight: "bold", fontSize: "36px", lineHeight: "1" }}
         >
-          {value} {/* 금액에 쉼표 추가 */}
+          {value}
         </Typography>
         {/* 단위 */}
         <Typography variant="h6" sx={{ fontSize: "20px", marginLeft: "5px" }}>

@@ -13,13 +13,13 @@ import { BlueButtonComponent } from "../ButtonComponent";
 
 export const PackageCard = ({ packageDTO, selectedCount, handleOrder }) => {
   const [onclickCard, setOnclickCard] = useState(false);
-  console.log("onclickCard", onclickCard);
+
   // useState로 초기값 설정
   const [selectOptions, setSelectOptions] = useState(
-    packageDTO?.RewardDTO?.map((reward) => ({
+    packageDTO?.RewardList?.map((reward) => ({
       rewardName: reward.name,
       selectOption: reward.option ? reward.option[0] : null,
-    })) || [] // 만약 RewardDTO가 undefined일 경우 빈 배열 반환
+    })) || [] // 만약 RewardList가 undefined일 경우 빈 배열 반환
   );
 
   const handleSelectOptions = (index, e) => {
@@ -35,17 +35,17 @@ export const PackageCard = ({ packageDTO, selectedCount, handleOrder }) => {
         borderRadius: 2,
         borderColor: selectedCount > 0 ? "#FF4081" : "#E0E0E0",
         borderWidth: 2,
-        width: "480px",
+        width: "400px",
       }}
     >
       <CardContent>
         <Grid container spacing={2} alignItems="center">
-          <Grid item xs={10}>
+          <Grid item xs={8}>
             <Box>
               <Box
                 onClick={() => {
                   setOnclickCard((prev) =>
-                    packageDTO.quantityLimited > 0 ? !prev : false
+                    packageDTO.quantityLimited !== 0 ? !prev : false
                   );
                 }}
               >
@@ -72,55 +72,85 @@ export const PackageCard = ({ packageDTO, selectedCount, handleOrder }) => {
                   {packageDTO.name}
                 </Typography>
               </Box>
-
-              <Typography variant="body2" color="text.secondary">
-                {packageDTO.RewardDTO &&
-                  packageDTO.RewardDTO.map((reward, index) => (
-                    <div key={reward.id}>
-                      <div style={{ width: "100px" }}>
-                        {reward.name} --- {reward.count}개
-                      </div>
-
-                      {onclickCard &&
-                        Array.isArray(reward.option) &&
-                        reward.option.length > 0 && (
-                          <DropdownComponent
-                            inputLabel={packageDTO.name + "의 옵션"}
-                            menuItems={reward.option}
-                            selectValue={selectOptions[index].selectOption} // 기본 선택값
-                            onChange={(e) => {
-                              handleSelectOptions(index, e);
-                            }}
-                          />
-                        )}
-                    </div>
-                  ))}
-              </Typography>
             </Box>
           </Grid>
-          <Grid item xs={2} sx={{ textAlign: "right" }}>
+
+          <Grid item xs={4} sx={{ textAlign: "right" }}>
             <Button
               size="small"
+              sx={{ width: "100px" }}
               variant="outlined"
+              onClick={() => {
+                setOnclickCard((prev) =>
+                  packageDTO.quantityLimited !== 0 ? !prev : false
+                );
+              }}
               color={packageDTO.quantityLimited === 0 ? "error" : "primary"}
               disabled={packageDTO.quantityLimited === 0}
             >
               {packageDTO.quantityLimited === 0
                 ? "품절"
-                : `${packageDTO.quantityLimited}개 남음`}
+                : packageDTO.quantityLimited < 0
+                  ? "무제한"
+                  : `${packageDTO.quantityLimited}개 남음`}
             </Button>
           </Grid>
         </Grid>
+
+        <Grid container spacing={0} alignItems="center">
+          <Typography variant="body2" color="text.secondary">
+            {packageDTO.RewardList &&
+              packageDTO.RewardList.map((reward, index) => (
+                <div
+                  key={reward.id}
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    height: onclickCard > 0 ? "80px" : "35px",
+                  }}
+                >
+                  <div style={{ width: "218px", fontSize: "17px" }}>
+                    {reward.name} : {reward.count}개
+                  </div>
+
+                  {onclickCard &&
+                    Array.isArray(reward.OptionList) &&
+                    reward.OptionList.length > 0 && (
+                      <div style={{ width: "150px", height: "50px" }}>
+                        <DropdownComponent
+                          inputLabel={reward.name + "의 옵션"}
+                          menuItems={reward.OptionList}
+                          selectValue={selectOptions[index].selectOption} // 기본 선택값
+                          onChange={(e) => {
+                            handleSelectOptions(index, e);
+                          }}
+                        />
+                      </div>
+                    )}
+                </div>
+              ))}
+          </Typography>
+        </Grid>
+
         {onclickCard && (
-          <Box display="flex" justifyContent="flex-end">
-            <BlueButtonComponent
-              text={"구매하기"}
-              onClick={() => {
-                setOnclickCard(false);
-                handleOrder(packageDTO.name, packageDTO.price, selectOptions);
-              }}
-            />
-          </Box>
+          <div style={{ display: "flex", justifyContent: "flex-end" }}>
+            <div style={{ width: "150px", marginTop: "10px" }}>
+              <BlueButtonComponent
+                text={"장바구니 담기"}
+                onClick={() => {
+                  setOnclickCard(false);
+                  handleOrder(
+                    packageDTO.id,
+                    packageDTO.name,
+                    packageDTO.price,
+                    selectOptions
+                  );
+                }}
+              />
+            </div>
+          </div>
         )}
       </CardContent>
     </Card>

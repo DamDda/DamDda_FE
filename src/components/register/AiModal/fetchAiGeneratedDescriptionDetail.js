@@ -1,9 +1,9 @@
-import axios from "axios";
+import axios from 'axios';
 
-import Cookies from "js-cookie";
-import { SERVER_URL } from "utils/URLs";
+import Cookies from 'js-cookie';
+import { SERVER_URL } from 'constants/URLs';
 
-const API_URL = `${SERVER_URL}/api/generative-ai/project-description`;
+const API_URL = `${SERVER_URL}/generative-ai/project-description`;
 // TODO: Update to the actual cloud server IP address when deploying
 
 /**
@@ -12,14 +12,14 @@ const API_URL = `${SERVER_URL}/api/generative-ai/project-description`;
  * @returns {string} - Cleaned and processed text
  */
 const cleanUpText = (aiGeneratedText) => {
-  return aiGeneratedText
-    .replace(/\\n/g, "\n") // Replace escaped newlines with actual newlines
-    .replace(/\\"/g, '"') // Convert escaped double quotes
-    .replace(/\\'/g, "'") // Convert escaped single quotes
-    .replace(/\d+\.\s+/g, "") // Remove leading numbers like "1. ", "2. "
-    .replace(/\s{2,}/g, " ") // Replace multiple spaces with a single space
-    .replace(/(문구:.*?\n설명:.*?\n)+/g, "$1") // Deduplicate repeated marketing phrases
-    .trim(); // Remove leading and trailing whitespaces
+    return aiGeneratedText
+        .replace(/\\n/g, '\n') // Replace escaped newlines with actual newlines
+        .replace(/\\"/g, '"') // Convert escaped double quotes
+        .replace(/\\'/g, "'") // Convert escaped single quotes
+        .replace(/\d+\.\s+/g, '') // Remove leading numbers like "1. ", "2. "
+        .replace(/\s{2,}/g, ' ') // Replace multiple spaces with a single space
+        .replace(/(문구:.*?\n설명:.*?\n)+/g, '$1') // Deduplicate repeated marketing phrases
+        .trim(); // Remove leading and trailing whitespaces
 };
 
 /**
@@ -27,16 +27,16 @@ const cleanUpText = (aiGeneratedText) => {
  * @param {Array} aiFilterData - List of filter data from API response
  */
 const logAiFilterData = (aiFilterData) => {
-  if (!Array.isArray(aiFilterData)) {
-    console.error("Invalid filter data format.");
-    return;
-  }
+    if (!Array.isArray(aiFilterData)) {
+        console.error('Invalid filter data format.');
+        return;
+    }
 
-  aiFilterData.forEach((filter) => {
-    console.log(
-      `Filter - Group: ${filter.groupName}, Name: ${filter.name}, Score: ${filter.score}, Result: ${filter.result}`
-    );
-  });
+    aiFilterData.forEach((filter) => {
+        console.log(
+            `Filter - Group: ${filter.groupName}, Name: ${filter.name}, Score: ${filter.score}, Result: ${filter.result}`
+        );
+    });
 };
 
 /**
@@ -48,51 +48,38 @@ const logAiFilterData = (aiFilterData) => {
  * @returns {Promise<string>} - Processed project description
  * @throws {Error} - Throws if API request fails
  */
-export const fetchAiGeneratedDescriptionDetail = async (
-  title = "",
-  description = "",
-  tags = [],
-  category = ""
-) => {
-  try {
-    const payload = { title, description, tags, category };
+export const fetchAiGeneratedDescriptionDetail = async (title = '', description = '', tags = [], category = '') => {
+    try {
+        const payload = { title, description, tags, category };
 
-    // Log request data
-    console.log(
-      `Request Data - Title: ${payload.title}, Description: ${payload.description}, Tags: ${payload.tags.join(", ")}, Category: ${payload.category}`
-    );
-    console.log("Starting API request...");
+        // Log request data
+        console.log(
+            `Request Data - Title: ${payload.title}, Description: ${payload.description}, Tags: ${payload.tags.join(', ')}, Category: ${payload.category}`
+        );
 
-    const { data, status } = await axios.post(API_URL, payload, {
-      headers: {
-        ...(Cookies.get("accessToken") && {
-          Authorization: `Bearer ${Cookies.get("accessToken")}`,
-        }),
-      },
-    });
+        const { data, status } = await axios.post(API_URL, payload, {
+            headers: {
+                ...(Cookies.get('accessToken') && {
+                    Authorization: `Bearer ${Cookies.get('accessToken')}`,
+                }),
+            },
+        });
 
-    // Log status and full_message from response
-    console.log(`API request completed with status: ${status}`);
-    console.log(`Response Full Message: ${data.full_message}`);
+        // Log status and full_message from response
 
-    logAiFilterData(data.ai_filter_data); // Log AI filter data
+        logAiFilterData(data.ai_filter_data); // Log AI filter data
 
-    return cleanUpText(data.full_message) || "No description available.";
-  } catch (error) {
-    console.error(
-      "Error generating project description:",
-      error.message || error
-    );
+        return cleanUpText(data.full_message) || 'No description available.';
+    } catch (error) {
+        console.error('Error generating project description:', error.message || error);
 
-    if (error.response) {
-      console.error(`Error Status: ${error.response.status}`);
-      console.error(`Error Data: ${JSON.stringify(error.response.data)}`);
+        if (error.response) {
+            console.error(`Error Status: ${error.response.status}`);
+            console.error(`Error Data: ${JSON.stringify(error.response.data)}`);
+        }
+
+        throw new Error('Failed to generate project description. Please try again.');
     }
-
-    throw new Error(
-      "Failed to generate project description. Please try again."
-    );
-  }
 };
 
 export default fetchAiGeneratedDescriptionDetail;

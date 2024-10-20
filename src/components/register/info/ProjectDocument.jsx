@@ -1,11 +1,10 @@
-import React, { useState } from "react";
-import { Paper, IconButton, Snackbar, Alert, Divider } from "@mui/material";
+import React from "react";
+import { Paper, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { styled } from "@mui/system";
 import axios from "axios";
-import { SERVER_URL } from "utils/URLs";
+import { SERVER_URL } from "constants/URLs";
 import { FileUploadComponent } from "components/common/FileUploadComponent";
-import { BlueButtonComponent } from "components/common/ButtonComponent";
 
 const FileContainer = styled("div")({
   display: "flex",
@@ -21,17 +20,23 @@ const FileItem = styled("div")({
 });
 
 const ProjectDocument = (props) => {
-  const { docs, setDocs, saveProject, projectId } = props;
+  const { docs, setDocs } = props;
 
-  const handleRemoveFile = (index) => {
-    const newDocs = docs.filter((_, i) => i !== index); // 클릭된 이미지 제거
+  const handleRemoveFile = (title) => {
+    const newDocs = docs.filter((doc) => doc.title !== title); // 클릭된 이미지 제거
     setDocs(newDocs); // 이미지 배열 업데이트
   };
   const handleDownloadFile = async (doc) => {
-    const splitted = doc.url.split("/");
+    let _url;
+    if (doc.file === null) {
+      const splitted = doc.url.split("/");
+      _url = `${SERVER_URL}/${splitted[0]}/${splitted[1]}/${splitted[2]}/${encodeURIComponent(splitted[3])}`;
+    } else {
+      _url = doc.url;
+    }
     axios({
       method: "GET",
-      url: `${SERVER_URL}/${splitted[0]}/${splitted[1]}/${splitted[2]}/${encodeURIComponent(splitted[3])}`,
+      url: _url,
       responseType: "blob",
       withCredentials: true,
     })
@@ -84,7 +89,7 @@ const ProjectDocument = (props) => {
                 <FileItem key={index} sx={{ cursor: "pointer" }}>
                   <div onClick={() => handleDownloadFile(doc)}>{doc.title}</div>
                   <IconButton
-                    onClick={() => handleRemoveFile(index)}
+                    onClick={() => handleRemoveFile(doc.title)}
                     style={{ marginLeft: "5px" }}
                   >
                     <CloseIcon fontSize="small" />
@@ -112,7 +117,7 @@ const ProjectDocument = (props) => {
                 <FileItem key={index} sx={{ cursor: "pointer" }}>
                   <div onClick={() => handleDownloadFile(doc)}>{doc.title}</div>
                   <IconButton
-                    onClick={() => handleRemoveFile(index)}
+                    onClick={() => handleRemoveFile(doc.title)}
                     style={{ marginLeft: "5px" }}
                   >
                     <CloseIcon fontSize="small" />

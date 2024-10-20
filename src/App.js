@@ -1,8 +1,13 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { createTheme, ThemeProvider, CssBaseline } from "@mui/material";
 import ReactDOM from "react-dom";
 
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
 
 import { MultiCategoryComponent } from "components/common/MultiCategoryComponent";
 import { BlueButtonComponent } from "components/common/ButtonComponent";
@@ -33,13 +38,40 @@ import StarIcon from "@mui/icons-material/Star";
 import "./App.css";
 ///////////////////////////////////
 import { Main } from "pages/main/Main";
+import { Entire } from "pages/entire/Entire";
+import { UserProvider } from "./UserContext";
+import { Login } from "pages/member/Login";
+import { Join } from "pages/member/Join";
+import { ProjectDetail } from "pages/detail/ProjectDetail";
 import Register from "pages/register/Register";
+import { FindID } from "pages/member/FindID";
+import { ResetPassword } from "pages/member/ResetPassword";
+import { Payment } from "pages/support/Payment";
+import { PaymentSuccess } from "pages/support/PaymentSuccess";
+import { Mypage } from "pages/mypage/Mypage";
+import { TossReady } from "components/support/TossReady";
+import ErrorPage from "pages/error/ErrorPage";
 
+// import { ResetPassword } from  "pages/member/ResetPassword";
 const theme = createTheme({
   typography: {
     fontFamily: "Pretendard-Regular, Arial, sans-serif", // 폰트 적용
   },
 });
+
+// ScrollToTop 컴포넌트 정의
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0); // 페이지 이동 시 스크롤을 맨 위로 이동
+    // document.documentElement.style.scrollBehavior = "auto";
+    // window.scrollTo(0, 0);
+    // document.documentElement.style.scrollBehavior = "";
+  }, [pathname]);
+
+  return null;
+}
 
 function App() {
   //MultiCategoryComponent
@@ -68,11 +100,11 @@ function App() {
   //FileUploadComponent
   const handleFileChange = (event) => {
     const files = Array.from(event.target.files);
-    console.log(files); // 파일 목록 처리
+    // 파일 목록 처리
   };
 
   const handleFileUpload = (files) => {
-    console.log(files); // 업로드 로직 처리
+    // 업로드 로직 처리
   };
 
   //GiftCompositionComponent
@@ -218,167 +250,201 @@ function App() {
   const labels = ["후원 통계", "후원자 조회"]; // 탭 레이블을 배열로 정의
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
+    <UserProvider>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
 
-      <div style={{ fontFamily: "Pretendard-Regular" }}>
-        <Router>
-          <Routes>
-            <Route
-              path="/BlueButtonComponent"
-              element={
-                <BlueButtonComponent
-                  text="버튼 테스트"
-                  onClick={() => alert("버튼이 클릭되었습니다!")}
-                  //style={buttonStyle} // 스타일 객체 전달
-                />
-              }
-            />
-            <Route path="/register" element={<Register />} />
+        <div style={{ fontFamily: "Pretendard-Regular" }}>
+          <Router>
+            <ScrollToTop /> {/* 여기에 ScrollToTop 추가 */}
+            <Routes>
+              <Route
+                path="/BlueButtonComponent"
+                element={
+                  <BlueButtonComponent
+                    text="버튼 테스트"
+                    onClick={() => alert("버튼이 클릭되었습니다!")}
+                    //style={buttonStyle} // 스타일 객체 전달
+                  />
+                }
+              />
+              <Route
+                path="/BlueBorderButtonComponent"
+                element={
+                  <BlueBorderButtonComponent
+                    text="버튼 테스트"
+                    onClick={() => alert("버튼이 클릭되었습니다!")}
+                    //style={buttonStyle} // 스타일 객체 전달
+                  />
+                }
+              />
+              <Route
+                path="/RedButtonComponent"
+                element={
+                  <RedButtonComponent
+                    text="버튼 테스트"
+                    onClick={() => alert("버튼이 클릭되었습니다!")}
+                    //style={buttonStyle} // 스타일 객체 전달
+                  />
+                }
+              />
+              <Route
+                path="/RedBorderButtonComponent"
+                element={
+                  <RedBorderButtonComponent
+                    text="버튼 테스트"
+                    onClick={() => alert("버튼이 클릭되었습니다!")}
+                    //style={buttonStyle} // 스타일 객체 전달
+                  />
+                }
+              />
 
-            <Route
-              path="/BlueBorderButtonComponent"
-              element={
-                <BlueBorderButtonComponent
-                  text="버튼 테스트"
-                  onClick={() => alert("버튼이 클릭되었습니다!")}
-                  //style={buttonStyle} // 스타일 객체 전달
-                />
-              }
-            />
-            <Route
-              path="/RedButtonComponent"
-              element={
-                <RedButtonComponent
-                  text="버튼 테스트"
-                  onClick={() => alert("버튼이 클릭되었습니다!")}
-                  //style={buttonStyle} // 스타일 객체 전달
-                />
-              }
-            />
-            <Route
-              path="/RedBorderButtonComponent"
-              element={
-                <RedBorderButtonComponent
-                  text="버튼 테스트"
-                  onClick={() => alert("버튼이 클릭되었습니다!")}
-                  //style={buttonStyle} // 스타일 객체 전달
-                />
-              }
-            />
+              <Route
+                path="/category"
+                element={
+                  <MultiCategoryComponent
+                    setCategory={(value) => handleyClick(value)}
+                  />
+                }
+              />
 
-            <Route
-              path="/category"
-              element={
-                <MultiCategoryComponent
-                  setCategory={(value) => handleyClick(value)}
-                />
-              }
-            />
+              <Route
+                path="/dropdown"
+                element={
+                  <DropdownComponent
+                    inputLabel="Select an option"
+                    menuItems={menuItems}
+                    selectValue={selectedValue}
+                    onChange={handleDropdownChange}
+                  />
+                }
+              />
 
-            <Route
-              path="/dropdown"
-              element={
-                <DropdownComponent
-                  inputLabel="Select an option"
-                  menuItems={menuItems}
-                  selectValue={selectedValue}
-                  onChange={handleDropdownChange}
-                />
-              }
-            />
+              <Route
+                path="/download"
+                element={
+                  <FileDownloadComponent
+                    handleDownload={handleFileDownload}
+                    fileName="example.pdf"
+                  />
+                }
+              />
 
-            <Route
-              path="/download"
-              element={
-                <FileDownloadComponent
-                  handleDownload={handleFileDownload}
-                  fileName="example.pdf"
-                />
-              }
-            />
+              <Route
+                path="/upload"
+                element={
+                  <FileUploadComponent
+                    handleChange={handleFileChange}
+                    handleUpload={handleFileUpload}
+                  />
+                }
+              />
 
-            <Route
-              path="/upload"
-              element={
-                <FileUploadComponent
-                  handleChange={handleFileChange}
-                  handleUpload={handleFileUpload}
-                />
-              }
-            />
+              <Route
+                path="/gifts"
+                element={<GiftCompositionComponent rewardData={rewardData} />}
+              />
 
-            <Route
-              path="/gifts"
-              element={<GiftCompositionComponent rewardData={rewardData} />}
-            />
+              <Route
+                path="/carousel"
+                element={
+                  <ImageCarousel
+                    images={CarouselImages}
+                    style={CarouselStyle}
+                  />
+                }
+              />
 
-            <Route
-              path="/carousel"
-              element={
-                <ImageCarousel images={CarouselImages} style={CarouselStyle} />
-              }
-            />
+              <Route
+                path="/pagination"
+                element={
+                  <PaginationComponent
+                    currentPage={currentPage}
+                    setCurrentPage={setCurrentPage}
+                  />
+                }
+              />
 
-            <Route
-              path="/pagination"
-              element={
-                <PaginationComponent
-                  currentPage={currentPage}
-                  setCurrentPage={setCurrentPage}
-                />
-              }
-            />
+              <Route
+                path="/searchBoxComponent"
+                element={<SearchBoxComponent />}
+              />
 
-            <Route
-              path="/searchBoxComponent"
-              element={<SearchBoxComponent />}
-            />
+              <Route path="/inputBox" element={<InputBox />} />
+              <Route path="/inputLine" element={<InputLine />} />
+              <Route path="/inputLargeBox" element={<InputLargeBox />} />
 
-            <Route path="/inputBox" element={<InputBox />} />
-            <Route path="/inputLine" element={<InputLine />} />
-            <Route path="/inputLargeBox" element={<InputLargeBox />} />
+              <Route
+                path="/shortcutBoxComponent"
+                element={<ShortcutBoxComponent services={services} />}
+              />
 
-            <Route
-              path="/shortcutBoxComponent"
-              element={<ShortcutBoxComponent services={services} />}
-            />
+              <Route
+                path="/tabComponent"
+                element={
+                  <TabComponent
+                    tabIndex={tabIndex}
+                    setTabIndex={setTabIndex}
+                    labels={labels}
+                    sectionRefs={sectionRefs} // ref 전달
+                  />
+                }
+              />
 
-            <Route
-              path="/tabComponent"
-              element={
-                <TabComponent
-                  tabIndex={tabIndex}
-                  setTabIndex={setTabIndex}
-                  labels={labels}
-                  sectionRefs={sectionRefs} // ref 전달
-                />
-              }
-            />
+              <Route
+                path="/sponsoredListComponent"
+                element={<SponsoredListComponent projects={projects} />}
+              />
+              {/* PaymentInfoCard가 표시되는 경로 */}
+              <Route
+                path="/projectRowComponent"
+                element={
+                  <ProjectRowComponent
+                    title={"타이틀"}
+                    sortCondition={"정렬기준"}
+                    subTitle={"서브타이틀"}
+                  />
+                }
+              />
 
-            <Route
-              path="/sponsoredListComponent"
-              element={<SponsoredListComponent projects={projects} />}
-            />
-            {/* PaymentInfoCard가 표시되는 경로 */}
-            <Route
-              path="/projectRowComponent"
-              element={
-                <ProjectRowComponent
-                  title={"타이틀"}
-                  sortCondition={"정렬기준"}
-                  subTitle={"서브타이틀"}
-                />
-              }
-            />
+              <Route path="/gift" element={<GiftPage />} />
+              {/* ////////////////////////////// */}
+              <Route path="/" element={<Main />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/join" element={<Join />} />
+              <Route path="/entire" element={<Entire />} />
+              <Route path="/detail" element={<ProjectDetail />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/find-id" element={<FindID />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/payment" element={<Payment />} />
+              <Route path="/payment/success" element={<PaymentSuccess />} />
+              <Route path="/mypage" element={<Mypage />} />
+              <Route path="/TossReady" element={<TossReady />} />
+              <Route path="/error" element={<ErrorPage />} />
+              {/* /////////////////////////////지영//////////////////////////////////// */}
+              {/* +                    <Route path="/order" element={<OrderPage />} />
+                    <Route path="/user/myorders/:userId" element={<MyOrders />} />
+                    <Route path="/yourpage" element={<YourPage />} />
+                    <Route path="/TossReady" element={<TossReady />} /> */}
 
-            <Route path="/gift" element={<GiftPage />} />
-            {/* ////////////////////////////// */}
-            <Route path="/" element={<Main />} />
-          </Routes>
-        </Router>
-      </div>
-    </ThemeProvider>
+              {/* /////////////////////////////남희/////////////////////////////////// */}
+
+              {/* 
+              <Route path="/reset-password" element={<ResetPassword />} />
+              
+              <Route path="/detail" element={<Detail />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/error" element={<ErrorPage />} />
+              <Route path="/projectDetail" element={<ProjectDetail />} /> */}
+              {/* /////////////////////////////혜원/////////////////////////////////// */}
+              {/* <Route path="/mypage" element={<MyPage />} /> */}
+              {/* /////////////////////////////주현/////////////////////////////////// */}
+            </Routes>
+          </Router>
+        </div>
+      </ThemeProvider>
+    </UserProvider>
   );
 }
 ReactDOM.render(<App />, document.getElementById("root"));

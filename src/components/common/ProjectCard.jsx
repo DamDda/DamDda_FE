@@ -210,7 +210,7 @@ export const ProductCard = ({ product, handleLike }) => {
         <Box
           sx={{
             position: "relative",
-            height: "140px",
+            height: "170px",
             width: "230px",
             marginTop: "5px",
             // margin: "3px",
@@ -220,7 +220,7 @@ export const ProductCard = ({ product, handleLike }) => {
             component="img"
             image={`${SERVER_URL}/${product.thumbnailUrl}`}
             // image={product.image}
-            sx={{ height: "140px", borderRadius: "5px", width: "100%" }} // 이미지 높이 증가
+            sx={{ height: "170px", borderRadius: "5px", width: "100%" }} // 이미지 높이 증가
           />
         </Box>
         <IconButton
@@ -241,7 +241,7 @@ export const ProductCard = ({ product, handleLike }) => {
         <CardContent
           sx={{
             width: "250px", // 너비 줄이기
-            height: "220px", // 높이 줄이기
+            height: "185px", // 높이 줄이기
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-around",
@@ -260,7 +260,7 @@ export const ProductCard = ({ product, handleLike }) => {
           <Typography
             variant="body2"
             color="text.secondary"
-            sx={{ fontSize: "0.9rem", mb: 2 }} // 폰트 크기 줄이기
+            sx={{ height: "30px", fontSize: "0.9rem", mb: 2 }} // 폰트 크기 줄이기
           >
             {product.description}
           </Typography>
@@ -309,7 +309,7 @@ export const ProductCard = ({ product, handleLike }) => {
               justifyContent: "space-between",
               alignItems: "center",
               width: "100%",
-              marginTop: "10px",
+              // marginTop: "5px",
             }}
           >
             <Button
@@ -317,14 +317,23 @@ export const ProductCard = ({ product, handleLike }) => {
               color="secondary"
               size="small"
               sx={{
-                backgroundColor: daysLeft < 0 ? "#cccccc" : "#5a87f7",
+                backgroundColor:
+                  daysLeft < 0
+                    ? "#cccccc"
+                    : daysLeft < 3
+                      ? "#f86247"
+                      : "#5a87f7",
                 borderRadius: "12px",
                 fontSize: "0.8rem", // 폰트 크기 줄이기
-                width: "110px", // 너비 줄이기
-                height: "35px", // 높이 줄이기
+                width: "79px", // 너비 줄이기
+                height: "30px", // 높이 줄이기
               }}
             >
-              {daysLeft < 0 ? "종료된 펀딩" : `마감임박 D - ${daysLeft}`}
+              {daysLeft < 0
+                ? "종료된 펀딩"
+                : daysLeft < 3
+                  ? `마감임박`
+                  : `D - ${daysLeft}`}
             </Button>
 
             <Typography

@@ -126,8 +126,8 @@ export const ProductRecommendations = ({ search, cartegory }) => {
   };
 
   const halfIndex = Math.ceil(products.length / 2); // 절반 인덱스 계산
-  const firstHalf = products.slice(0, halfIndex); // 첫 번째 절반
-  const secondHalf = products.slice(halfIndex); // 두 번째 절반
+  const firstHalf = products.slice(0, 20); // 첫 번째 절반
+  const secondHalf = products.slice(20); // 두 번째 절반
 
   // 페이지 번호 배열 생성
   const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
@@ -232,6 +232,7 @@ export const ProductRecommendations = ({ search, cartegory }) => {
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
+          width: "1800px",
           maxWidth: "100%",
         }}
       >
@@ -246,7 +247,7 @@ export const ProductRecommendations = ({ search, cartegory }) => {
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
-            width: 1600,
+            width: "1600px",
             maxWidth: "100%",
           }}
         >
@@ -366,22 +367,19 @@ export const ProductRecommendations = ({ search, cartegory }) => {
           >
             <Grid
               container
-              justifyContent="center"
-              alignItems="center"
-              spacing={2}
+              justifyContent="space-around"
+              alignItems="flex-start"
               sx={{ flexGrow: 0 }}
             >
               {firstHalf.map((product) => (
                 <Grid
                   item
                   key={product.id}
-                  xs={12}
-                  sm={6}
-                  md={4}
-                  lg={3}
-                  xl={2.4}
                   display="flex"
-                  justifyContent="center"
+                  wrap="wrap"
+                  justifyContent="space-around"
+                  alignItems="flex-start"
+                  margin="10px 0px"
                 >
                   <ProductCard product={product} handleLike={handleLike} />
                 </Grid>
@@ -397,7 +395,7 @@ export const ProductRecommendations = ({ search, cartegory }) => {
             {/* 두 번째 카드 그룹 */}
             <Grid
               container
-              justifyContent="center"
+              justifyContent="space-around"
               alignItems="center"
               spacing={2}
               sx={{ flexGrow: 0, marginTop: "45px" }}
@@ -406,13 +404,10 @@ export const ProductRecommendations = ({ search, cartegory }) => {
                 <Grid
                   item
                   key={product.id}
-                  xs={12}
-                  sm={6}
-                  md={4}
-                  lg={3}
-                  xl={2.4}
                   display="flex"
-                  justifyContent="center"
+                  wrap="wrap"
+                  justifyContent="space-around"
+                  margin="10px 0px"
                 >
                   <ProductCard product={product} handleLike={handleLike} />
                 </Grid>

@@ -3,6 +3,7 @@ import { StatusButton } from "./ButtonComponent"; // named export로 가져오�
 import { PaymentInfoCard } from "../common/PaymentInfoCard";
 import { width } from "@mui/system";
 import { SERVER_URL } from "constants/URLs";
+import { useNavigate } from "react-router-dom";
 
 export const SponsoredCard = ({ project }) => {
   const [showDetails, setShowDetails] = useState(false); // 결제/배송 정보 표시 상태
@@ -10,6 +11,8 @@ export const SponsoredCard = ({ project }) => {
   // 결제/배송 정보 표시 토글
   const toggleDetails = () => setShowDetails(!showDetails); // 토글
 
+  const navigate = useNavigate();
+  console.log(project);
   return (
     <>
       <div
@@ -28,6 +31,11 @@ export const SponsoredCard = ({ project }) => {
         {/* 왼쪽에 썸네일을 넣는 부분 */}
         <div style={{ flex: "0 0 150px", margin: "15px" }}>
           <div
+            onClick={() =>
+              navigate(
+                `/detail?projectId=${project.supportingProject.project.id}`
+              )
+            }
             style={{
               width: "100%",
               paddingBottom: "100%",

@@ -10,6 +10,7 @@ import { ImageCarousel } from "components/common/ImageCarousel";
 import { MyProjectDetailDashBoard } from "components/mypage/MyProjectDetailDashBoard";
 import { SponsorStatistics } from "components/mypage/SponsorStatistics";
 import { SponsorTable } from "components/mypage/SponsorTable";
+import { Tooltip, Button } from "@mui/material";
 
 // 후원 통계
 const mockSupportStat = {
@@ -224,9 +225,63 @@ export const MyProjectDetails = ({ projectId, setClickMyproject }) => {
         return "미정";
     }
   };
+  console.log("data : ", projectData);
 
   return (
     <div style={{ width: "100%", margin: "10px auto" }}>
+      <div
+        style={{
+          marginTop: "50px",
+          display: "flex",
+          justifyContent: "center", // 버튼을 오른쪽으로 정렬
+          alignItems: "center", // 수직 중앙 정렬 (필요시)
+        }}
+      >
+        <Tooltip
+          title={
+            <span style={{ fontSize: "16px" }}>
+              {projectData.rejectMessage}
+            </span>
+          } // 툴팁 글씨 크기 조정
+          placement="top" // 툴팁을 버튼 위에 표시
+        >
+          <Button
+            sx={{
+              //   backgroundColor: params.row.approval === "거절" ? "red" : "#4caf50",
+              backgroundColor:
+                projectData.approval === 1
+                  ? "#C8E6C9"
+                  : projectData.approval === 2
+                    ? "#FFCDD2"
+                    : "#E0E0E0", // 파스텔 톤 배경색
+              color:
+                projectData.approval === 1
+                  ? "#2E7D32"
+                  : projectData.approval === 2
+                    ? "#D32F2F"
+                    : "#000000", // 글씨 색
+              border:
+                projectData.approval === 1
+                  ? "2px solid #C8E6C9"
+                  : projectData.approval === 2
+                    ? "2px solid #FFCDD2"
+                    : "2px solid #E0E0E0", // 테두리 배경색과 동일
+              borderRadius: "50px",
+              width: "70px",
+              padding: "2px 10px", // 버튼 내부 패딩 줄임
+              fontSize: "12px", // 텍스트 크기 줄임
+              minWidth: "50px", // 버튼의 최소 너비를 줄임
+              height: "30px", // 버튼 높이를 줄임
+            }}
+          >
+            {projectData.approval === 0
+              ? "승인대기"
+              : projectData.approval === 1
+                ? "승인"
+                : "거절"}
+          </Button>
+        </Tooltip>
+      </div>
       {/* 타이틀 */}
       <div style={{ marginTop: "0px" }}>
         <ProjectTitle

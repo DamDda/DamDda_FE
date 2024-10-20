@@ -141,13 +141,11 @@ export function Main() {
     <Layout>
       <Box
         key={location.pathname + location.state?.forceReload}
-        sx={
-          {
-            // margin: '0 auto',
-            // maxWidth: "1750px",
-            // minWidth: '600px',
-          }
-        }
+        sx={{
+          margin: "0 auto",
+          maxWidth: "1350px",
+          // minWidth: '600px',
+        }}
       >
         <MainImageCarousel images={images} style={CarouselStyle} />{" "}
         {/* 상태를 props로 전달 */}

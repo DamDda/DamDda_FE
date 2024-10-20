@@ -22,16 +22,21 @@ export const Entire = () => {
   return (
     <>
       <Layout>
-        <div key={location.pathname + location.state?.forceReload}>
+        <div
+          key={location.pathname + location.state?.forceReload}
+          style={{ width: "1600px", margin: "0px auto" }}
+        >
           <Box sx={{ marginTop: "150px" }}>
             {" "}
             {/* marginTop으로 여백 조절 */}
             <MultiCategoryComponent setCategory={setCategory} />
           </Box>
-          <ProductRecommendations
-            cartegory={category}
-            search={search}
-          ></ProductRecommendations>
+          <Box sx={{ width: "1600px" }}>
+            <ProductRecommendations
+              cartegory={category}
+              search={search}
+            ></ProductRecommendations>
+          </Box>
         </div>
       </Layout>
     </>

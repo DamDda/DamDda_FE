@@ -84,7 +84,11 @@ export function MyInfoBox() {
 
                 fontWeight: "bold",
               }}
-              onClick={() => navigate(`/mypage?initIndex=${0}`)}
+              onClick={() =>
+                navigate(`/mypage?initIndex=${0}`, {
+                  state: { forceReload: Date.now() },
+                })
+              }
             >
               마이페이지
             </Button>
@@ -101,7 +105,9 @@ export function MyInfoBox() {
               onClick={
                 () =>
                   //   `/entire?category=${'전체'}&search=${searchText}`
-                  navigate(`/mypage?initIndex=${3}`)
+                  navigate(`/mypage?initIndex=${3}`, {
+                    state: { forceReload: Date.now() },
+                  })
                 //     , {
                 //   state: { activeTab: "likeProject" },
                 // })

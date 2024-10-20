@@ -60,37 +60,41 @@ export const SponsorStatistics = ({ projectId }) => {
   const [supportStat, setSupportStat] = useState(null); // 후원 통계 상태
   const [loading, setLoading] = useState(true);
   const [chartData, setChartData] = useState(null);
-  const targetFunding = useState(""); // 목표 금액 설정
+  const [achievementRate, setAchievementRate] = useState(0);
+  const [daysLeft, setDaysLeft] = useState(0);
+  const [supportersCount, setSupportersCount] = useState(0);
+  const [fundingReceived, setFundingReceived] = useState(0);
+  const [targetFunding, setTargetFunding] = useState(0);
 
   // 두 API를 병렬로 호출하여 데이터를 가져옴
   useEffect(() => {
-    const fetchChartData = async () => {
-      try {
-        // 프로젝트 상세 정보 api 호출
-        const [response] = await Promise.all([
-          axios({
-            method: "GET",
-            url: `${SERVER_URL}/project/daily/${projectId}`, // 템플릿 리터럴을 올바르게 적용
+    // const fetchChartData = async () => {
+    //   try {
+    //     // 프로젝트 상세 정보 api 호출
+    //     const [response] = await Promise.all([
+    //       axios({
+    //         method: "GET",
+    //         url: `${SERVER_URL}/project/daily/${projectId}`, // 템플릿 리터럴을 올바르게 적용
 
-            headers: {
-              Authorization: `Bearer ${Cookies.get("accessToken")}`, // 템플릿 리터럴을 올바르게 적용
-            },
-          }).then((response) => response),
-        ]);
+    //         headers: {
+    //           Authorization: `Bearer ${Cookies.get("accessToken")}`, // 템플릿 리터럴을 올바르게 적용
+    //         },
+    //       }).then((response) => response),
+    //     ]);
 
-        console.log("일별 후원액 조회", response.data);
-        console.log("mockChartData 목업데이터", mockChartData);
-        // console.log("mockSupportStat 목업데이터", mockSupportStat);
-        // 후원 통계 api 호출
-        setSupportStat(mockSupportStat);
+    //     console.log("일별 후원액 조회", response.data);
+    //     console.log("mockChartData 목업데이터", mockChartData);
+    //     // console.log("mockSupportStat 목업데이터", mockSupportStat);
+    //     // 후원 통계 api 호출
+    //     setSupportStat(mockSupportStat);
 
-        setProjectData(response.data); // 프로젝트 데이터 저장
+    //     setProjectData(response.data); // 프로젝트 데이터 저장
 
-        setLoading(false); // 로딩 상태 완료
-      } catch (error) {
-        setLoading(false);
-      }
-    };
+    //     setLoading(false); // 로딩 상태 완료
+    //   } catch (error) {
+    //     setLoading(false);
+    //   }
+    // };
 
     const fetchSummaryData = async () => {
       try {
@@ -99,12 +103,33 @@ export const SponsorStatistics = ({ projectId }) => {
           axios({
             method: "GET",
             url: `${SERVER_URL}/order/statistics/${projectId}`, // 템플릿 리터럴을 올바르게 적용
-
             headers: {
               Authorization: `Bearer ${Cookies.get("accessToken")}`, // 템플릿 리터럴을 올바르게 적용
             },
           }).then((response) => response),
         ]);
+        setAchievementRate(
+          (response.data.currentFundingReceived /
+            response.data.targetFundingGoal) *
+            100
+        ); // 달성률 (퍼센트로 표현)
+        const currentTime = new Date();
+        const endDate = new Date(response.data.projectEndDate);
+        const timeDifference = endDate - currentTime;
+        setDaysLeft(Math.floor(timeDifference / (1000 * 60 * 60 * 24))); // 남은 일수
+        setSupportersCount(response.data.currentSupportersCount);
+        setFundingReceived(response.data.currentFundingReceived);
+        setTargetFunding(response.data.targetFundingGoal);
+        setChartData(response.data.dailyFundings);
+        console.log(
+          "response.data.dailyFundings: ",
+          response.data.dailyFundings
+        );
+        console.log(
+          "currentFundingReceived",
+          response.data.currentFundingReceived
+        );
+        console.log(response.data.targetFundingGoal);
 
         console.log("후원 프로젝트 정보 조회", response.data);
         // console.log("mockChartData 목업데이터", mockChartData);
@@ -120,7 +145,7 @@ export const SponsorStatistics = ({ projectId }) => {
       }
     };
 
-    fetchChartData();
+    // fetchChartData();
     fetchSummaryData();
   }, [projectId]);
 
@@ -155,7 +180,7 @@ export const SponsorStatistics = ({ projectId }) => {
         <DashboardSection
           style={{
             display: "flex",
-            justifyContent: "space-between",
+            justifyContent: "space-around",
             alignItems: "center",
             padding: "20px",
             borderRadius: "10px",
@@ -169,7 +194,7 @@ export const SponsorStatistics = ({ projectId }) => {
             <br />
             <span style={{ color: "black", fontSize: "24px" }}>
               {/* {statistics.totalSupportAmount.toLocaleString()}원 */}
-              {supportStat.totalAmount.toLocaleString()}원
+              {fundingReceived.toLocaleString()}원
             </span>
             <br />
           </Typography>
@@ -179,27 +204,25 @@ export const SponsorStatistics = ({ projectId }) => {
             <span style={{ color: "black", fontSize: "24px" }}>
               {/* {(statistics.totalSupportAmount / statistics.targetFunding) *
                   100} %*/}
-              {supportStat.percentage.toFixed(2)}%
+              {achievementRate.toFixed(0)}%
             </span>
             <br />
           </Typography>
-
           <Typography>
             <span style={{ color: "red", fontSize: "18px" }}>후원자 수</span>
             <br />
             <span style={{ color: "black", fontSize: "24px" }}>
               {/* {statistics.totalSupporters}명 */}
-              {supportStat.supporters}명
+              {supportersCount}명
             </span>
             <br />
           </Typography>
-
           <Typography>
             <span style={{ color: "red", fontSize: "18px" }}>남은 기간</span>
             <br />
             <span style={{ color: "black", fontSize: "24px" }}>
               {/* {statistics.remainingDays}일 */}
-              {supportStat.remainingDays}일
+              {daysLeft < 0 ? `마감 ${-1 * daysLeft}일 지남` : `${daysLeft}일`}
             </span>
             <br />
           </Typography>
@@ -207,10 +230,7 @@ export const SponsorStatistics = ({ projectId }) => {
         {/* 후원 차트 추가 부분 */}
         <Box mt={15} style={{ width: "1000px" }}>
           {/* 가짜 데이터 전달 */}
-          <ProgressChart
-            serverData={chartData || mockChartData}
-            targetFunding={targetFunding}
-          />
+          <ProgressChart serverData={chartData} targetFunding={targetFunding} />
         </Box>
       </div>
     </>

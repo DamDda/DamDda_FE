@@ -112,7 +112,8 @@ export const Myproject = ({ setClickMyproject }) => {
     >
       <Grid
         container
-        justifyContent="center"
+        width="100%"
+        justifyContent="flex-start"
         alignItems="center"
         spacing={4}
         sx={{ flexGrow: 1 }}

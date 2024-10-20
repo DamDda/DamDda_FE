@@ -105,6 +105,10 @@ export const UserMyPage = () => {
     fetchProfileData();
   }, []);
 
+  useEffect(() => {
+    setTabIndex(parseInt(query.get("initIndex"), 10));
+  }, [location.pathname, location.state?.forceReload]);
+
   //////회원정보 관련 데이터 받아오기 끝////////////////////////////////
 
   //////////Tab 클릭 시 아래 랜더링 되는 부분 나타내기//////////////////////////////////
@@ -163,7 +167,11 @@ export const UserMyPage = () => {
 
   return (
     <>
-      <div ref={sectionRefs.qnaRef} style={{ margin: "150px 0px 50px 0px" }}>
+      <div
+        key={location.pathname + location.state?.forceReload}
+        ref={sectionRefs.qnaRef}
+        style={{ margin: "150px 0px 50px 0px" }}
+      >
         <TabComponent
           tabIndex={tabIndex}
           setTabIndex={(index) => handleTabClick(index)}

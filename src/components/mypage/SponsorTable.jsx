@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, memo } from "react";
 import {
   Typography,
   IconButton,
   Box,
-  Tab,
-  Tabs,
   Collapse,
   Table,
   TableBody,
@@ -14,172 +12,42 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
-import { display, styled } from "@mui/system";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import { ProgressChart } from "components/mypage/ProgressChart";
-
 import axios from "axios";
 import Cookies from "js-cookie";
 import { SERVER_URL } from "constants/URLs";
-
-import { useUser } from "UserContext";
-import { Button } from "bootstrap";
 import { BlueBorderButtonComponent } from "components/common/ButtonComponent";
 
-// 후원 통계
-const mockSupportStat = {
-  totalAmount: 80771500,
-  percentage: 161.54,
-  supporters: 708,
-  remainingDays: 0,
-};
-
-const mockChartData = [
-  ["2024-10-08T00:00:00", 103000],
-  ["2024-10-09T00:00:00", 103000],
-  ["2024-10-22T00:00:00", 103000],
-  ["2024-11-01T00:00:00", 103000],
-  ["2024-11-02T00:00:00", 103000],
-  ["2024-11-05T00:00:00", 103000],
-  ["2024-11-09T00:00:00", 103000],
-  ["2024-11-10T00:00:00", 206000],
-  ["2024-11-16T00:00:00", 103000],
-];
-
-const mockSupporterData = [
-  {
-    deliveryId: "123456",
-    delivery: {
-      deliveryName: "홍길동",
-      deliveryPhoneNumber: "010-1234-5678",
-      deliveryAddress: "경기도 광명시",
-      deliveryDetailedAddress: "oo동",
-      deliveryMessage: "배송 전 연락 주세요.",
-    },
-    supportedAt: "2024-09-07T11:30:00",
-    item_name: "눌림 플레이트 2세트 + 미니 보냉백 1개",
-    supportingProject: {
-      supportingProjectId: "SP123456",
-      supportedAt: "2024-09-07T11:30:00",
-    },
-    supportingPackage: {
-      packageName: "기본 패키지",
-    },
-  },
-  {
-    deliveryId: "123457",
-    delivery: {
-      deliveryName: "김철수",
-      deliveryPhoneNumber: "010-9876-5432",
-      deliveryAddress: "서울특별시 강남구",
-      deliveryDetailedAddress: "xx동",
-      deliveryMessage: "배송 전에 전화 부탁드립니다.",
-    },
-    supportedAt: "2024-09-07T14:30:00",
-    item_name: "세트 상품 1개",
-    supportingProject: {
-      supportingProjectId: "SP123457",
-      supportedAt: "2024-09-07T14:30:00",
-    },
-    supportingPackage: {
-      packageName: "프리미엄 패키지",
-    },
-  },
-  {
-    deliveryId: "123458",
-    delivery: {
-      deliveryName: "이영희",
-      deliveryPhoneNumber: "010-1234-8765",
-      deliveryAddress: "부산광역시 해운대구",
-      deliveryDetailedAddress: "yy동",
-      deliveryMessage: "시간 맞춰서 부탁해요.",
-    },
-    supportedAt: "2024-09-08T10:00:00",
-    item_name: "텀블러 1개",
-    supportingProject: {
-      supportingProjectId: "SP123458",
-      supportedAt: "2024-09-08T10:00:00",
-    },
-    supportingPackage: {
-      packageName: "스타터 패키지",
-    },
-  },
-];
-
-const DetailContainer = styled("div")({
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "center",
-  alignItems: "center",
-  maxWidth: "1200px",
-  margin: "0 auto",
-  padding: "40px",
-  textAlign: "center",
-});
-
-const DashboardSection = styled("div")({
-  width: "100%",
-  backgroundColor: "#f7f7f7",
-  padding: "20px",
-  borderRadius: "10px",
-  marginTop: "40px",
-  textAlign: "center",
-  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-});
-
-const fetchData = async () => {
-  // try {
-  //   // 프로젝트 상세 정보 api 호출
-  //   const [projectResponse] = await Promise.all([
-  //     axios({
-  //       method: "GET",
-  //       url: `${SERVER_URL}/project/myproject/${projectId}`, // 템플릿 리터럴을 올바르게 적용
-  //       // params: {
-  //       //   memberId: user.key,
-  //       // },
-  //       headers: {
-  //         Authorization: `Bearer ${Cookies.get("accessToken")}`, // 템플릿 리터럴을 올바르게 적용
-  //       },
-  //     }).then((response) => response),
-  //   ]);
-  //   // 후원 통계 api 호출
-  //   setSupportStat(mockSupportStat);
-  //   setProjectData(projectResponse.data); // 프로젝트 데이터 저장
-  //   setLoading(false); // 로딩 상태 완료
-  // } catch (error) {
-  //   setLoading(false);
-  // }
-};
-
-function CustomTableRow(props) {
-  const { row } = props;
+// Custom Table Row Component
+const CustomTableRow = memo(({ row }) => {
   const [open, setOpen] = useState(false);
+
+  console.log("Rendering CustomTableRow:", row); // Row 데이터 확인
 
   return (
     <React.Fragment>
       <TableRow sx={{ "& > *": { border: "unset" } }}>
-        <TableCell
-          style={{
-            width: "50px", // 칸 너비 조절
-          }}
-        >
+        <TableCell style={{ width: "50px" }}>
           <IconButton
             aria-label="expand row"
             size="small"
-            onClick={() => setOpen(!open)}
+            onClick={() => {
+              setOpen(!open);
+              console.log("Row toggled:", open); // Row 토글 상태 확인
+            }}
           >
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
         <TableCell style={{ textAlign: "center" }}>
-          {row.supportingProject.supportingProjectId}
+          {row["후원번호"] || "N/A"}
         </TableCell>
         <TableCell style={{ textAlign: "center" }}>
-          {row.delivery.deliveryName}
+          {row["이름"] || "N/A"}
         </TableCell>
         <TableCell style={{ textAlign: "center" }}>
-          {new Date(row.supportingProject.supportedAt).toLocaleString()}
+          {row["후원일시"] ? new Date(row["후원일시"]).toLocaleString() : "N/A"}
         </TableCell>
       </TableRow>
 
@@ -192,32 +60,40 @@ function CustomTableRow(props) {
                 display: "flex",
                 flexDirection: "column",
                 gap: 3,
+                margin: "20px",
               }}
             >
               <Typography variant="body1">
-                <strong style={{ fontSize: "18px", padding: "25px" }}>
-                  선물 정보
-                </strong>
-                {row.item_name}
+                <strong style={{ fontSize: "18px" }}>패키지 이름 : </strong>
+                {row["패키지 이름"] || "N/A"}
               </Typography>
               <Typography variant="body1">
-                <strong style={{ fontSize: "18px", padding: "25px" }}>
-                  연락처
-                </strong>
-                {row.delivery.deliveryPhoneNumber}
+                <strong style={{ fontSize: "18px" }}>패키지 가격 : </strong>
+                {row["패키지 가격"] || "N/A"}
               </Typography>
               <Typography variant="body1">
-                <strong style={{ fontSize: "18px", padding: "25px" }}>
-                  배송지 정보
-                </strong>
-                {row.delivery.deliveryAddress}{" "}
-                {row.delivery.deliveryDetailedAddress}
+                <strong style={{ fontSize: "18px" }}>패키지 개수 : </strong>
+                {row["패키지 개수"] || "N/A"}
               </Typography>
               <Typography variant="body1">
-                <strong style={{ fontSize: "18px", padding: "25px" }}>
-                  배송 요청 사항
+                <strong style={{ fontSize: "18px" }}>
+                  패키지 옵션 정보 :{" "}
                 </strong>
-                {row.delivery.deliveryMessage}
+                {row["패키지 옵션 정보"] || "N/A"}
+              </Typography>
+              <Typography variant="body1">
+                <strong style={{ fontSize: "18px" }}>전화번호 : </strong>
+                {row["전화번호"] || "N/A"}
+              </Typography>
+              <Typography variant="body1">
+                <strong style={{ fontSize: "18px" }}>주소 : </strong>
+                {row["주소"] || "N/A"} / {row["상세주소"] || "N/A"} /{" "}
+                {row["우편번호"] || "N/A"}
+              </Typography>
+
+              <Typography variant="body1">
+                <strong style={{ fontSize: "18px" }}>배송 요청 사항 : </strong>
+                {row["배송 메시지"] || "N/A"}
               </Typography>
             </Box>
           </Collapse>
@@ -225,74 +101,82 @@ function CustomTableRow(props) {
       </TableRow>
     </React.Fragment>
   );
-}
+});
 
-// 후원자 정보 테이블 컴포넌트
+// Sponsor Table Component
 export const SponsorTable = ({ projectId }) => {
-  const [orders, setOrders] = useState(mockSupporterData); // 모든 주문 정보를 저장할 상태
-  // const [orders, setOrders] = useState([]); // 모든 주문 정보를 저장할 상태
-  const [error, setError] = useState(null); // 에러 상태 관리
-  const [loading, setLoading] = useState(true); // 로딩 상태 관리
-  // 주문 정보를 가져오는 함수
+  const [orders, setOrders] = useState([]);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  console.log("SponsorTable rendered with projectId:", projectId); // 초기 렌더링 확인
+
   const fetchOrders = async () => {
+    console.log(`Fetching orders for projectId: ${projectId}`); // API 호출 시작
     try {
-      const response = await axios.get(`${SERVER_URL}/order/all`, {
-        headers: {
-          Authorization: `Bearer ${Cookies.get("accessToken")}`,
-        },
-      });
-      // 데이터 확인
-      setOrders(response.data); // 가져온 주문 정보를 상태에 저장
-      setLoading(false); // 로딩 완료
+      const response = await axios.get(
+        `${SERVER_URL}/order/${projectId}/supporters`,
+        {
+          headers: {
+            Authorization: `Bearer ${Cookies.get("accessToken")}`,
+          },
+        }
+      );
+
+      console.log("Orders fetched:", response.data); // API 응답 데이터 확인
+      setOrders(response.data);
     } catch (err) {
-      console.error(err); // 오류 확인
+      console.error("Error fetching orders:", err); // 오류 발생 시 로그
       setError("주문 정보를 가져오는 중 오류가 발생했습니다.");
-      setLoading(false); // 로딩 완료
+    } finally {
+      setLoading(false); // 로딩 상태 변경
     }
   };
 
-  const downloadFile = async () => {
+  const downloadFile = async (projectId) => {
+    console.log("Downloading file for project:", projectId); // 다운로드 시작
     try {
-      // 서버로부터 프리사인드 URL을 가져오기 위한 요청
       const response = await axios.get(
         `${SERVER_URL}/order/${projectId}/supporters/excel`,
         {
           headers: {
-            Authorization: `Bearer ${Cookies.get("accessToken")}`, // 토큰이 필요하면 추가
+            Authorization: `Bearer ${Cookies.get("accessToken")}`,
           },
         }
       );
-      console.log("response.data", response.data);
-      // 다운로드를 위한 임시 a 태그 생성
+
+      const presignedUrl = response.data;
+      console.log("Presigned URL received:", presignedUrl); // URL 확인
+
       const link = document.createElement("a");
-      link.href = response.data; //서버 응답 url
-
-      // 파일 이름을 지정하고 싶다면 아래 속성을 사용
-      //link.download = "어어"; // 다운로드할 파일명을 지정 (서버에서 설정한 이름을 사용할 수 있습니다)
-
-      // a 태그를 클릭하여 다운로드 실행
+      link.href = presignedUrl;
+      link.setAttribute("download", "supporters_list.xlsx");
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
     } catch (error) {
-      console.error("엑셀 파일 다운로드에 실패했습니다.", error);
+      console.error("Excel download failed:", error); // 오류 발생 시 로그
       alert("엑셀 파일 다운로드에 실패했습니다.");
     }
   };
 
-  // 컴포넌트가 마운트될 때 주문 정보 가져오기
   useEffect(() => {
-    //fetchOrders();
+    console.log("useEffect triggered. Fetching orders..."); // useEffect 확인
+    fetchOrders();
   }, []);
+
+  if (loading) return <p>로딩 중...</p>;
+  if (error) return <p>{error}</p>;
+
   return (
     <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
-      <Box style={{ display: "flex", justifyContent: "flex-end" }}>
-        <div style={{ width: "auto" }}>
-          <BlueBorderButtonComponent
-            text={"엑셀 다운로드"}
-            onClick={downloadFile}
-          ></BlueBorderButtonComponent>
-        </div>
+      <Box
+        style={{ display: "flex", justifyContent: "flex-end", width: "100%" }}
+      >
+        <BlueBorderButtonComponent
+          text="엑셀 다운로드"
+          onClick={() => downloadFile(projectId)}
+        />
       </Box>
       <TableContainer component={Paper}>
         <Table aria-label="collapsible table">
@@ -315,7 +199,7 @@ export const SponsorTable = ({ projectId }) => {
                   fontSize: "16px",
                 }}
               >
-                주문자 이름
+                이름
               </TableCell>
               <TableCell
                 style={{
@@ -324,30 +208,13 @@ export const SponsorTable = ({ projectId }) => {
                   fontSize: "16px",
                 }}
               >
-                후원 날짜
+                후원일시
               </TableCell>
-
-              {/* <TableCell>선물 정보</TableCell>
-            <TableCell>연락처</TableCell>
-            <TableCell>배송지 정보</TableCell>
-            <TableCell>배송 요청 사항</TableCell> */}
             </TableRow>
           </TableHead>
           <TableBody>
             {orders.map((order, index) => (
-              <CustomTableRow key={index} row={order}>
-                {/* <TableCell>
-                {order.supportingProject.supportingProjectId}
-              </TableCell>
-              <TableCell>{order.delivery.deliveryName}</TableCell>
-              <TableCell>
-                {new Date(order.supportingProject.supportedAt).toLocaleString()}
-              </TableCell>
-              <TableCell>{order.supportingPackage.packageName}</TableCell>
-              <TableCell>{order.delivery.deliveryPhoneNumber}</TableCell>
-              <TableCell>{order.delivery.deliveryAddress}</TableCell>
-              <TableCell>{order.delivery.deliveryMessage}</TableCell> */}
-              </CustomTableRow>
+              <CustomTableRow key={index} row={order} />
             ))}
           </TableBody>
         </Table>

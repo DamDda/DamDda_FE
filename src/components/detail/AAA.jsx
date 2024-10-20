@@ -1,329 +1,203 @@
-// import { SERVER_URL } from "constants/URLs";
-// import Cookies from "js-cookie";
-// import axios from "axios";
-// import { useState, navigate, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import axios from "axios";
+import styles from "components/support/css/PaymentSuccess.module.css"; // CSS Modules import
+import { useNavigate } from "react-router-dom"; // useNavigate를 import
+import Cookies from "js-cookie";
+import { SERVER_URL } from "constants/URLs";
+import cart from "assets/cart.png";
 
-// export const AAA = () => {
+export const PaymentSuccessPage = () => {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const orderId = queryParams.get("orderId"); // URL 쿼리에서 orderId 가져옴
+  const navigate = useNavigate(); // useNavigate 훅 사용
 
-//   const navigate = navigate();
+  const handleNavigateToMyPage = () => {
+    navigate("/mypage"); // 마이페이지 경로로 이동
+  };
 
-//   const projectId = 1;
-//   const userId = 1;
-//   const [likedCount, setLikedCount] = useState();
-//   const [isHearted, setIsHearted] = useState();
-//   const [projectDetail, setProjectDetail] = useState();
-//   const [projectPackage, setProjectPackage] = useState();
-//   const [selectedPackages, setSelectedPackages] = useState({
-//     packageName: "패키지 D",
-//     packagePrice: 25000,
-//     selectOption: (2)[
-//       ({ rewardName: "보상 D1", selectOption: "옵션 1" },
-//       { rewardName: "보상 D2", selectOption: "옵션 1" })
-//     ],
-//     selectedCount: 1,
-//   });
+  const handleNavigateToProjects = () => {
+    navigate("/entire"); // 후원한 프로젝트 경로로 이동
+  };
 
-//   const [errors, setErrors] = useState({
-//     name: false,
-//     phone: false,
-//     email: false,
-//     message: false,
-//   });
-//   const [collabDetails, setCollabDetails] = useState({
-//     title: "project.title", //------------------> project.title로 수정하기
-//     name: "",
-//     phone: "",
-//     email: "",
-//     message: "",
-//     files: [],
-//   });
+  const [orderData, setOrderData] = useState([]); // 주문 데이터를 저장할 상태
+  const [loading, setLoading] = useState(true); // 로딩 상태 관리
+  const [error, setError] = useState(null); // 에러 상태 관리
+  const accessToken = Cookies.get("accessToken");
 
-//   //패키지 가져오는 기능.
-//   const fetchPackage = async () => {
-//     try {
-//       const response = await axios.get(
-//         `${SERVER_URL}/package/${projectId}`,
-//         {
-//           //project id 받아줘야 함.
-//           //project_id를 넘겨받아야 함.
-//           withCredentials: true,
-//         }
-//       );
+  console.log("PaymentSuccessPage 렌더링: ", { orderId, accessToken }); // 초기 로그
 
-//       if (!Array.isArray(response.data)) {
-//         console.error("API response is not an array:", response.data);
-//         return;
-//       }
-//       const formattedPackages = response.data.map((pac) => ({
-//         id: pac.id,
-//         name: pac.name,
-//         count: pac.count,
-//         price: pac.price,
-//         quantityLimited: pac.quantityLimited,
-//         RewardList: Array.isArray(pac.RewardList) ? pac.RewardList : [],
-//       }));
-//
-//       setProjectPackage(formattedPackages);
-//     } catch (error) {
-//       console.error("패키지 목록을 가져오는 중 오류 발생:", error);
-//     }
-//   };
+  // 결제 완료로 변경하는 로직
+  const handlePaymentCompletion = async (orderId) => {
+    try {
+      console.log("결제 상태 변경 중:", orderId);
+      const updatedPaymentStatus = {
+        paymentStatus: "결제 완료",
+      };
 
-//   // 프로젝트 정보 요청을 보내는 함수
-//   const fetchProducts = () => {
-//     axios
-//       .get(` ${SERVER_URL}/project/${projectId}`, {
-//         params: {
-//           // memberId: user.key,
-//         },
-//         headers: {
-//           ...(Cookies.get("accessToken") && {
-//             Authorization: `Bearer ${Cookies.get("accessToken")}`,
-//           }),
-//         },
-//       })
-//       .then((response) => {
-//
-//         if (response.data !== null) {
-//           setProjectDetail(response.data);
-//           setIsHearted(response.data.liked);
-//           setLikedCount(response.data.likeCnt);
-//         } else {
-//           setProjectDetail({});
-//         }
-
-//
-//       })
-//       .catch((error) => {
-//
-//         console.error("프로젝트 데이터를 가져오는 중 오류 발생:", error);
-//       });
-//   };
-
-//   const handleLike = (project) => {
-//     // liked가 true이면 DELETE 요청
-//     axios({
-//       method: project.liked ? "DELETE" : "POST",
-//       url: `${SERVER_URL}/project/like`,
-//       params: {
-//         projectId: project.id,
-//       },
-//       headers: {
-//         ...(Cookies.get("accessToken") && {
-//           Authorization: `Bearer ${Cookies.get("accessToken")}`,
-//         }),
-//       },
-//     })
-//       .then((response) => {
-//         if (response.status === 200) {
-//
-
-//           // 상태 업데이트 - 불변성 유지
-//           setProjectDetail(prevState => ({
-//             ...prevState,
-//             liked: !prevState.liked, // liked 상태를 반전시킴
-//           }));
-//         }
-//       })
-//       .catch((e) => {
-//         console.error(e);
-//       });
-//   };
-
-//   const handleCollabSubmit = async () => {
-//     const newErrors = {
-//       title: !collabDetails.title,
-//       name: !collabDetails.name,
-//       phone: !collabDetails.phone,
-//       email: !collabDetails.email,
-//       message: !collabDetails.message,
-//     };
-
-//     setErrors(newErrors);
-
-//     const formData = new FormData();
-
-//     /*오늘 날짜*/
-//     const date = new Date();
-//     const year = date.getFullYear();
-//     const month = ("0" + (date.getMonth() + 1)).slice(-2);
-//     const day = ("0" + date.getDate()).slice(-2);
-//     const today = `${year}-${month}-${day}`;
-
-//     const jsonData = {
-//       email: collabDetails.email,
-//       phoneNumber: collabDetails.phone,
-//       content: collabDetails.message,
-//       user_id: userId,  //---------------->user.id로 수정 필요
-//       collaborationDTO: {
-//         title: collabDetails.title,
-//         CollaborateDate: today,
-//         name: collabDetails.name,
-//       },
-//     };
-
-//     formData.append("jsonData", JSON.stringify(jsonData));
-//     collabDetails.files.forEach((file, index) => {
-//       formData.append("collabDocList", file);
-//     });
-
-//
-//     if (
-//       !newErrors.title &&
-//       !newErrors.message &&
-//       !newErrors.name &&
-//       !newErrors.phone &&
-//       !newErrors.email
-//     ) {
-//       try {
-//
-//         const response = await axios.post(
-//           `damdda/collab/register/${projectId}`,
-//           formData,
-//           {
-//             withCredentials: true,
-//             headers: {
-//               "Content-Type": "multipart/form-data",
-//               ...(Cookies.get("accessToken") && {
-//                 Authorization: `Bearer ${Cookies.get("accessToken")}`,
-//               }),
-//             },
-//           }
-//         );
-//
-//         alert("협업 요청이 전송되었습니다.");
-//         //handleModalClose();
-//       } catch (error) {
-//
-//       }
-//     }
-//   };
-
-//   // 주문하는 코드
-//   const handleNavigateToPayment = () => {
-//     const orderInfo = {
-//       projectTitle: projectDetail.title, // 프로젝트 이름 (실제 값으로 설정 가능)
-//       selectedPackages: selectedPackages.map((pkg) => ({
-//         packageName: pkg.name, // 선택된 선물 구성의 이름
-//         selectedOption: pkg.selectedOption, // 선택된 옵션
-//         price: pkg.price, // 가격
-//         quantity: pkg.count, // 수량
-//       })),
-//       totalAmount: selectedPackages.reduce((acc, pkg) => {
-//         return acc + pkg.packagePrice * pkg.selectedCount;
-//       }, 0), // 총 금액
-//       projectId: projectDetail.id, // projectId 추가
-//       memberId: 3, //--------------------------------------> jwt로 바꿔야함
-//     };
-
-//     // navigate 함수로 orderInfo 데이터를 전달하여 payment 페이지로 이동
-//     navigate("/payment", { state: orderInfo });
-//   };
-// };
-
-import { SERVER_URL } from 'constants/URLs';
-import Cookies from 'js-cookie';
-import axios from 'axios';
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-
-export const AAA = () => {
-    const navigate = useNavigate();
-
-    const projectId = 1;
-    const userId = 1;
-    const [likedCount, setLikedCount] = useState();
-    const [isHearted, setIsHearted] = useState();
-    const [projectDetail, setProjectDetail] = useState();
-    const [projectPackage, setProjectPackage] = useState();
-    const [selectedPackages, setSelectedPackages] = useState({
-        packageName: '패키지 D',
-        packagePrice: 25000,
-        selectOption: [
-            { rewardName: '보상 D1', selectOption: '옵션 1' },
-            { rewardName: '보상 D2', selectOption: '옵션 1' },
-        ],
-        selectedCount: 1,
-    });
-
-    const [errors, setErrors] = useState({
-        name: false,
-        phone: false,
-        email: false,
-        message: false,
-    });
-
-    const [collabDetails, setCollabDetails] = useState({
-        title: 'project.title', //------------------> project.title로 수정하기
-        name: '',
-        phone: '',
-        email: '',
-        message: '',
-        files: [],
-    });
-
-    // 패키지 가져오는 기능
-    const fetchPackage = async () => {
-        try {
-            const response = await axios.get(`${SERVER_URL}/package/${projectId}`, {
-                withCredentials: true,
-            });
-
-            if (!Array.isArray(response.data)) {
-                console.error('API response is not an array:', response.data);
-                return;
-            }
-
-            const formattedPackages = response.data.map((pac) => ({
-                id: pac.id,
-                name: pac.name,
-                count: pac.count,
-                price: pac.price,
-                quantityLimited: pac.quantityLimited,
-                RewardList: Array.isArray(pac.RewardList) ? pac.RewardList : [],
-            }));
-
-            // 패키지 데이터를 콘솔에 출력
-            setProjectPackage(formattedPackages);
-        } catch (error) {
-            console.error('패키지 목록을 가져오는 중 오류 발생:', error);
+      const response = await axios.put(
+        `${SERVER_URL}/order/${orderId}/status`,
+        updatedPaymentStatus,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
         }
-    };
+      );
+      console.log("결제 상태 변경 성공:", response.data);
+    } catch (error) {
+      console.error("결제 상태 변경 중 오류 발생:", error);
+    }
+  };
 
-    // 프로젝트 정보 요청을 보내는 함수
-    const fetchProducts = () => {
-        axios
-            .get(`${SERVER_URL}/project/${projectId}`, {
-                headers: {
-                    ...(Cookies.get('accessToken') && {
-                        Authorization: `Bearer ${Cookies.get('accessToken')}`,
-                    }),
-                },
-            })
-            .then((response) => {
-                // 프로젝트 데이터를 콘솔에 출력
-                if (response.data !== null) {
-                    setProjectDetail(response.data);
-                    setIsHearted(response.data.liked);
-                    setLikedCount(response.data.likeCnt);
-                } else {
-                    setProjectDetail({});
-                }
-            })
-            .catch((error) => {
-                console.error('프로젝트 데이터를 가져오는 중 오류 발생:', error);
-            });
-    };
+  // 주문 정보를 가져오는 함수
+  const fetchOrderData = async () => {
+    console.log("주문 데이터 요청 시작:", orderId);
 
-    // 컴포넌트가 마운트될 때 데이터를 불러오는 useEffect
-    useEffect(() => {
-        fetchProducts(); // 프로젝트 데이터 가져오기
-        fetchPackage(); // 패키지 데이터 가져오기
-    }, []); // 빈 배열을 전달하여 컴포넌트가 처음 렌더링될 때만 실행되도록 설정
+    try {
+      const response = await axios.get(
+        `${SERVER_URL}/order/details/${orderId}`,
+        {
+          headers: {
+            ...(Cookies.get("accessToken") && {
+              Authorization: `Bearer ${Cookies.get("accessToken")}`,
+            }),
+          },
+        }
+      );
 
-    return (
-        <div>
-            <h1>데이터 불러오기 테스트</h1>
+      console.log("주문 데이터 응답:", response.data);
+      setOrderData(response.data);
+      setLoading(false); // 데이터를 가져왔으므로 로딩 완료
+      await handlePaymentCompletion(orderId); // 결제 상태 변경
+    } catch (err) {
+      console.error("주문 데이터 요청 오류:", err.message);
+      setError(err.message);
+      setLoading(false); // 에러가 발생해도 로딩 완료
+    }
+  };
+
+  // 컴포넌트가 마운트될 때 주문 정보 가져오기
+  useEffect(() => {
+    console.log("useEffect 호출됨. 주문 정보 가져오기 시도.");
+    fetchOrderData();
+  }, []);
+
+  if (loading) {
+    console.log("로딩 중...");
+    return <p>로딩 중...</p>; // 로딩 중일 때 표시할 내용
+  }
+
+  if (error) {
+    console.error("에러 발생:", error);
+    return <p>에러 발생: {error}</p>; // 에러 발생 시 표시할 내용
+  }
+
+  return (
+    <>
+      <div className="container">
+        <div className={styles["success-container"]}>
+          <div className={styles["success-header"]}>
+            <img
+              src={cart}
+              alt="Cart Icon"
+              className={styles["success-image"]}
+            />
+            <h1>주문이 완료되었습니다!</h1>
+            <p>선물은 정상 접수 완료되었으며 배송을 시작합니다!</p>
+            <div className={styles["success-buttons"]}>
+              <button
+                className={styles["my-orders-btn"]}
+                onClick={handleNavigateToMyPage} // 버튼 클릭 시 마이페이지로 이동
+              >
+                마이페이지
+              </button>
+              <button
+                className={styles["other-projects-btn"]}
+                onClick={handleNavigateToProjects} // 버튼 클릭 시 후원한 프로젝트로 이동
+              >
+                프로젝트 둘러보기
+              </button>
+            </div>
+          </div>
+
+          <div className={styles["order-summary-section"]}>
+            <div className={styles["order-title"]}>주문 상품</div>
+            <table>
+              <thead>
+                <tr>
+                  <th>상품명</th>
+                  <th>주문 일자</th>
+                  <th>수량</th>
+                  <th>결제 금액</th>
+                </tr>
+              </thead>
+              <tbody>
+                {orderData.paymentPackageDTO && orderData.supportingProject ? (
+                  orderData.paymentPackageDTO.map((packageItem, index) => (
+                    <tr key={index}>
+                      <td>{packageItem.name}</td> {/* 상품명 */}
+                      <td>
+                        {new Date(
+                          orderData.supportingProject.supportedAt
+                        ).toLocaleDateString()}
+                      </td>{" "}
+                      {/* 주문 일자 */}
+                      <td>{packageItem.count}</td> {/* 수량 */}
+                      <td>
+                        {parseInt(packageItem.price).toLocaleString()}원
+                      </td>{" "}
+                      {/* 결제 금액 */}
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="4">주문 상품이 없습니다.</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+
+          <div className={styles["details-section"]}>
+            <div className={styles["shipping-info"]}>
+              <div className={styles["order-title"]}>배송지 정보</div>
+              <div className={styles["detail-section-content"]}>
+                <p>이름: {orderData.delivery?.deliveryName}</p>
+                <p>전화번호: {orderData.delivery?.deliveryPhoneNumber}</p>
+                <p>
+                  배송지 주소:{" "}
+                  {orderData.delivery?.deliveryAddress +
+                    "  (" +
+                    orderData.delivery?.deliveryDetailedAddress +
+                    ")"}
+                </p>
+              </div>
+            </div>
+
+            <div className={styles["payment-info"]}>
+              <div className={styles["order-title"]}>결제 정보</div>
+              <div className={styles["detail-section-content"]}>
+                <p>결제 수단: {orderData.payment?.paymentMethod}</p>
+                <p>
+                  결제 금액:{" "}
+                  {orderData.paymentPackageDTO
+                    ? orderData.paymentPackageDTO
+                        .reduce(
+                          (total, pkg) =>
+                            total + (pkg.price || 0) * (pkg.count || 1),
+                          0
+                        )
+                        .toLocaleString()
+                    : "0"}
+                  원
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
-    );
+      </div>
+    </>
+  );
 };

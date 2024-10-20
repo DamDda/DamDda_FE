@@ -13,20 +13,65 @@ const convertDataToCumulative = (serverData) => {
   const cumulativeData = [];
   let total = 0;
 
-  if (Array.isArray(serverData)) {
-    serverData.forEach(([date, amount]) => {
+  // const chartData =
+  //   serverData &&
+  //   Object.entries(serverData).reduce((acc, [date, value], index) => {
+  //     // console.log("data, value, index : ", date, value, index);
+  //     // const numericValue = !isNaN(value) ? Number(value) : 0; // 숫자로 변환 가능한지 확인 후 변환
+
+  //     // const previousTotal =
+  //     //   acc.length > 0 && acc[index - 2] ? acc[index - 2][1] : Number(0);
+
+  //     // // 타입 확인을 위해 콘솔에 찍음
+  //     // console.log("previousTotal type: ", typeof previousTotal);
+  //     // console.log("numericValue type: ", typeof numericValue);
+  //     // const cumulativeValue = Number(previousTotal) + numericValue;
+  //     acc.push([date, value]);
+  //     return acc;
+  //   });
+  const chartData =
+    serverData &&
+    Object.entries(serverData).reduce((acc, [date, value], index) => {
+      acc.push([date, value]);
+      return acc;
+    }, []);
+  console.log("chartData:chartData:", chartData);
+  if (Array.isArray(chartData)) {
+    chartData.forEach(([date, amount]) => {
       total += amount;
-      cumulativeData.push({ date: date.split("T")[0], amount: total });
+      cumulativeData.push({ date: date, amount: total });
     });
   } else {
-    console.error("serverData가 배열 형식이 아닙니다.");
+    console.error("chartData 배열 형식이 아닙니다.");
     return [];
   }
+  console.log("cumulativeData", cumulativeData);
 
   return cumulativeData;
 };
 
 export const ProgressChart = ({ serverData, targetFunding }) => {
+  console.log("charData : ", serverData);
+
+  // const cumulativeData = dailyData.reduce((acc, current, index) => {
+  //   const [date, value] = current;
+  //   const previousTotal = index > 0 ? acc[index - 1][1] : 0;
+  //   const cumulativeValue = previousTotal + value;
+  //   acc.push([date + "T00:00:00", cumulativeValue]);
+  //   return acc;
+  // }, []);
+  // const convertedData = Object.entries(serverData).reduce(
+  //   (acc, [date, value], index) => {
+  //     const previousTotal = index > 0 ? acc[index - 1][1] : 0;
+  //     const cumulativeValue = previousTotal + value;
+  //     acc.push([date + "T00:00:00", cumulativeValue]);
+  //     return acc;
+  //   },
+  //   []
+  // );
+
+  // console.log(convertedData);
+
   const dailyData = convertDataToCumulative(serverData);
 
   // targetFunding 값이 안전하게 설정되도록 보장

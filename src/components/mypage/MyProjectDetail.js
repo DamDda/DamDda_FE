@@ -10,7 +10,8 @@ import { ImageCarousel } from "components/common/ImageCarousel";
 import { MyProjectDetailDashBoard } from "components/mypage/MyProjectDetailDashBoard";
 import { SponsorStatistics } from "components/mypage/SponsorStatistics";
 import { SponsorTable } from "components/mypage/SponsorTable";
-import { Tooltip, Button } from "@mui/material";
+import { Tooltip, Button, IconButton } from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 // 후원 통계
 const mockSupportStat = {
@@ -231,7 +232,24 @@ export const MyProjectDetails = ({ projectId, setClickMyproject }) => {
     <div style={{ width: "100%", margin: "10px auto" }}>
       <div
         style={{
-          marginTop: "50px",
+          // marginTop: "50px",
+          marginLeft: "100px",
+          display: "flex",
+          justifyContent: "flex-start", // 버튼을 오른쪽으로 정렬
+          alignItems: "center", // 수직 중앙 정렬 (필요시)
+        }}
+      >
+        <IconButton
+          onClick={() => setClickMyproject(0)}
+          //style={{ position: "absolute", top: "330px", left: "700px" }}
+        >
+          <ArrowBackIcon fontSize="large" />
+        </IconButton>
+      </div>
+
+      <div
+        style={{
+          // marginTop: "50px",
           display: "flex",
           justifyContent: "center", // 버튼을 오른쪽으로 정렬
           alignItems: "center", // 수직 중앙 정렬 (필요시)

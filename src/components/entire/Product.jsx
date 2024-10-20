@@ -165,37 +165,30 @@ export const ProductRecommendations = ({ search, cartegory }) => {
     try {
       if (project.liked) {
         // liked가 true이면 DELETE 요청
-        const response = await axios.delete(
-          ` ${SERVER_URL}/api/projects/like`,
-          {
-            headers: {
-              ...(Cookies.get("accessToken") && {
-                Authorization: `Bearer ${Cookies.get("accessToken")}`,
-              }),
-            },
-            params: {
-              // memberId: user.key,
-              projectId: project.id,
-            },
-          }
-        );
+        const response = await axios.delete(`${SERVER_URL}/project/like`, {
+          headers: {
+            ...(Cookies.get("accessToken") && {
+              Authorization: `Bearer ${Cookies.get("accessToken")}`,
+            }),
+          },
+          params: {
+            // memberId: user.key,
+            projectId: project.id,
+          },
+        });
       } else {
         // liked가 false이면 POST 요청
-        const response = await axios.post(
-          ` ${SERVER_URL}/api/projects/like`,
-          null,
-          {
-            headers: {
-              ...(Cookies.get("accessToken") && {
-                Authorization: `Bearer ${Cookies.get("accessToken")}`,
-              }),
-            },
-            params: {
-              // memberId: user.key,
-              projectId: project.id,
-            },
-          }
-        );
+        const response = await axios.post(`${SERVER_URL}/project/like`, null, {
+          headers: {
+            ...(Cookies.get("accessToken") && {
+              Authorization: `Bearer ${Cookies.get("accessToken")}`,
+            }),
+          },
+          params: {
+            // memberId: user.key,
+            projectId: project.id,
+          },
+        });
       }
 
       // fetchProducts(currentPage, progress);
@@ -365,21 +358,15 @@ export const ProductRecommendations = ({ search, cartegory }) => {
               height: "auto",
             }}
           >
-            <Grid
-              container
-              justifyContent="space-around"
-              alignItems="flex-start"
-              sx={{ flexGrow: 0 }}
-            >
+            <Grid container justifyContent="flex-start" sx={{ flexGrow: 0 }}>
               {firstHalf.map((product) => (
                 <Grid
                   item
                   key={product.id}
-                  display="flex"
-                  wrap="wrap"
-                  justifyContent="space-around"
-                  alignItems="flex-start"
-                  margin="10px 0px"
+                  // display="flex"
+                  // wrap="wrap"
+                  // justifyContent="flex-start"
+                  margin="10px 18px"
                 >
                   <ProductCard product={product} handleLike={handleLike} />
                 </Grid>
@@ -393,21 +380,15 @@ export const ProductRecommendations = ({ search, cartegory }) => {
             />
 
             {/* 두 번째 카드 그룹 */}
-            <Grid
-              container
-              justifyContent="space-around"
-              alignItems="center"
-              spacing={2}
-              sx={{ flexGrow: 0, marginTop: "45px" }}
-            >
+            <Grid container justifyContent="flex-start" sx={{ flexGrow: 0 }}>
               {secondHalf.map((product) => (
                 <Grid
                   item
                   key={product.id}
-                  display="flex"
-                  wrap="wrap"
-                  justifyContent="space-around"
-                  margin="10px 0px"
+                  // display="flex"
+                  // wrap="wrap"
+                  // justifyContent="space-around"
+                  margin="10px 18px"
                 >
                   <ProductCard product={product} handleLike={handleLike} />
                 </Grid>

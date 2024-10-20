@@ -246,6 +246,100 @@ export function StandardInputBox({
   );
 }
 
+export function joinInput({
+  title,
+  name,
+  value,
+  onChange,
+  placeholder = "아이디를 입력하세요",
+  id,
+  inputRef,
+  error = false,
+  errorMessage,
+  required = false,
+  readOnly = false,
+  sx,
+  style,
+}) {
+  return (
+    <div style={{ width: "100%" }}>
+      {title && <Typography variant="body1">{title}</Typography>}
+      <TextField
+        fullWidth
+        id={id}
+        name={name}
+        type="text" // 아이디는 일반 텍스트 입력
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        inputRef={inputRef}
+        error={error}
+        helperText={error ? errorMessage : ""}
+        required={required}
+        InputProps={{
+          transform: "translateX(88px)", // 라벨 위치를 오른쪽으로 8px 이동
+          readOnly: readOnly,
+        }}
+        sx={sx}
+        style={style}
+      />
+    </div>
+  );
+}
+
+export function JoinPasswordInputBox({
+  title,
+  name,
+  value,
+  onChange,
+  placeholder = "비밀번호를 입력하세요",
+  id,
+  inputRef,
+  error = false,
+  errorMessage,
+  required = false,
+  readOnly = false,
+  sx,
+  style,
+}) {
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleTogglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
+
+  return (
+    <div style={{ width: "100%" }}>
+      {title && <Typography variant="body1">{title}</Typography>}
+      <TextField
+        fullWidth
+        id={id}
+        name={name}
+        type={showPassword ? "text" : "password"} // 비밀번호 가리기/보이기 기능
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        inputRef={inputRef}
+        error={error}
+        helperText={error ? errorMessage : ""}
+        required={required}
+        InputProps={{
+          readOnly: readOnly,
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton onClick={handleTogglePasswordVisibility} edge="end">
+                {showPassword ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
+        sx={sx}
+        style={style}
+      />
+    </div>
+  );
+}
+
 export function PasswordInputBox({
   title,
   name,

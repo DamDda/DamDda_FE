@@ -60,6 +60,7 @@ export const PaymentSuccessPage = () => {
 
       console.log("주문 데이터 응답:", response.data);
       setOrderData(response.data);
+      console.log("주문완료 63줄 response.data : ", response.data);
       setLoading(false); // 데이터를 가져왔으므로 로딩 완료
       await handlePaymentCompletion(orderId); // 결제 상태 변경
     } catch (err) {

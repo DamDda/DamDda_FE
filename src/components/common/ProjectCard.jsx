@@ -317,14 +317,14 @@ export const ProductCard = ({ product, handleLike }) => {
               color="secondary"
               size="small"
               sx={{
-                backgroundColor: "#5a87f7",
+                backgroundColor: daysLeft < 0 ? "#cccccc" : "#5a87f7",
                 borderRadius: "12px",
                 fontSize: "0.8rem", // 폰트 크기 줄이기
                 width: "110px", // 너비 줄이기
                 height: "35px", // 높이 줄이기
               }}
             >
-              마감임박 D - {daysLeft}
+              {daysLeft < 0 ? "종료된 펀딩" : `마감임박 D - ${daysLeft}`}
             </Button>
 
             <Typography

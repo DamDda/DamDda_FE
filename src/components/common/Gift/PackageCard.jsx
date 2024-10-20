@@ -141,7 +141,12 @@ export const PackageCard = ({ packageDTO, selectedCount, handleOrder }) => {
                 text={"장바구니 담기"}
                 onClick={() => {
                   setOnclickCard(false);
-                  handleOrder(packageDTO.name, packageDTO.price, selectOptions);
+                  handleOrder(
+                    packageDTO.id,
+                    packageDTO.name,
+                    packageDTO.price,
+                    selectOptions
+                  );
                 }}
               />
             </div>

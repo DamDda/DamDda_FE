@@ -223,8 +223,8 @@ export const GiftCompositionComponent = ({
   };
 
   // 주문 처리 함수
-  const handleOrder = (packageName, packagePrice, selectOption) => {
-    console.log(selectOption);
+
+  const handleOrder = (packageId, packageName, packagePrice, selectOption) => {
     const hasNullOption =
       Array.isArray(selectOption) && selectOption.length > 0
         ? selectOption.some((optionItem) => optionItem.selectOption == null)
@@ -234,6 +234,9 @@ export const GiftCompositionComponent = ({
       alert("옵션을 선택해주세요.");
       return;
     }
+
+    console.log("selectOption: ", selectOption);
+
     setSelectedPackages((prevSelectedPackages) => {
       const existingPackage = prevSelectedPackages.find(
         (selectedPackage) =>
@@ -256,6 +259,7 @@ export const GiftCompositionComponent = ({
       return [
         ...prevSelectedPackages,
         {
+          packageId: packageId,
           packageName: packageName,
           packagePrice: packagePrice,
           selectOption: JSON.parse(JSON.stringify(selectOption)), // 깊은 복사

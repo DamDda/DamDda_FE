@@ -51,8 +51,10 @@ export const ProjectInfo = ({
           {/* 남은 기간 */}
           <ProjectInfoBox
             title={"남은 기간"}
-            value={projectInfo.daysLeft}
-            unit={"일"}
+            value={
+              projectInfo < 0 ? "종료된 펀딩입니다. " : projectInfo.daysLeft
+            }
+            unit={projectInfo < 0 ? "" : "일"}
             statistics={null}
           />
           {/* 후원자 수 */}

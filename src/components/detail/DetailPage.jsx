@@ -8,7 +8,6 @@ import { CollabModal } from "components/detail/CollabModal";
 import { ProjectTitle } from "./ProjectTitle";
 import { ImageCarousel } from "components/common/ImageCarousel";
 import { GiftCompositionComponent } from "components/common/Gift/GiftCompositionComponent";
-import { AAA } from "components/detail/AAA";
 import { SERVER_URL } from "constants/URLs";
 import Cookies from "js-cookie";
 import axios from "axios";
@@ -88,8 +87,8 @@ export const DetailPage = () => {
 
   const [projectDetail, setProjectDetail] = useState(initialProjectDetail);
   const [projectInfo, setProjectInfo] = useState();
-  const [likedCount, setLikedCount] = useState();
-  const [isHearted, setIsHearted] = useState();
+  // const [likedCount, setLikedCount] = useState();
+  // const [isHearted, setIsHearted] = useState();
   const [selectedPackages, setSelectedPackages] = useState([]);
 
   // 프로젝트 정보 요청을 보내는 함수
@@ -106,8 +105,8 @@ export const DetailPage = () => {
         // 프로젝트 데이터를 콘솔에 출력
         if (response.data !== null) {
           setProjectDetail(response.data);
-          setIsHearted(response.data.liked);
-          setLikedCount(response.data.likeCnt);
+          // setIsHearted(response.data.liked);
+          // setLikedCount(response.data.likeCnt);
         } else {
           setProjectDetail({});
         }
@@ -162,17 +161,21 @@ export const DetailPage = () => {
   const handleNavigateToPayment = () => {
     const orderInfo = {
       projectTitle: projectDetail.title, // 프로젝트 이름 (실제 값으로 설정 가능)
-      selectedPackages: selectedPackages?.map((pkg) => ({
+      selectedPackages: selectedPackages.map((pkg) => ({
+        id: pkg.packageId,
         packageName: pkg.packageName, // 선택된 선물 구성의 이름
         selectedOption: pkg.selectOption, // 선택된 옵션
         price: pkg.packagePrice, // 가격
-        quantity: pkg.selectedCount, // 수량
+        count: pkg.selectedCount, // 수량
+        RewardList: pkg.RewardList,
       })),
-      totalAmount: selectedPackages.reduce((acc, pkg) => {
-        return acc + pkg.packagePrice * pkg.selectedCount;
-      }, 0), // 총 금액
-      projectId: projectDetail.id, // projectId 추가
-      memberId: 3, //--------------------------------------> jwt로 바꿔야함
+      totalAmount: selectedPackages.reduce(
+        (acc, pkg) =>
+          acc + Number(pkg.packagePrice) * Number(pkg.selectedCount), // pkg.price와 pkg.count를 숫자로 변환
+        0
+      ), // 총 금액 계산
+      projectId: projectId, // projectId 추가
+      memberId: user.key, // jwt로 바꿔야함
     };
     // 데이터 전달 전에 확인
 
@@ -384,7 +387,6 @@ export const DetailPage = () => {
 
   return (
     <div style={{ width: "100%", margin: "0px auto" }}>
-      {/* <AAA/> */}
       <div style={{ marginTop: "150px" }}>
         <ProjectTitle
           projectTitle={{
@@ -449,7 +451,7 @@ export const DetailPage = () => {
           <DetailDescroption
             descriptionDetail={projectDetail.description}
             descriptionImages={projectDetail.descriptionImages.flatMap(
-              (image) => Array(5).fill(image)
+              (image) => Array(5).fill(image) //--------------------------------------> 이미지 한번만 나오게 해야함!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             )}
           />
         </div>
@@ -479,7 +481,7 @@ export const DetailPage = () => {
           collabDetails={collabDetails}
           errors={errors}
           setErrors={setErrors}
-          projectId={projectDetail.id} //------------------------------>project.id로 수정
+          projectId={projectDetail.id}
         />
       )}
 

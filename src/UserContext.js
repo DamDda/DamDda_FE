@@ -15,7 +15,7 @@ export const UserProvider = ({ children }) => {
   useEffect(() => {
     // user 상태가 변경될 때마다 쿠키에 저장합니다.
     if (user && user.key !== 0) {
-      Cookies.set("user", JSON.stringify(user), { expires: 7 }); // 7일 동안 유효한 쿠키
+      Cookies.set("user", JSON.stringify(user)); //, { expires: 7 }); // 7일 동안 유효한 쿠키
     } else {
       Cookies.remove("user"); // 유저 정보가 없을 때 쿠키 삭제
     }

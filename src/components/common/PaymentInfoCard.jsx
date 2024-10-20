@@ -74,14 +74,14 @@ export const PaymentInfoCard = ({ project }) => {
   }, [paymentStatus]);
 
   const deliveryInfo = [
-    { label: "수령인", value: project?.supportingProject?.user?.name },
-    { label: "휴대폰", value: project?.supportingProject?.user?.phoneNumber },
+    { label: "수령인", value: project?.delivery?.deliveryName },
+    { label: "휴대폰", value: project?.delivery?.deliveryPhoneNumber },
     {
       label: "주소",
       value: `${project?.supportingProject?.delivery?.deliveryAddress} (${project?.supportingProject?.delivery?.deliveryDetailedAddress})`,
     },
     {
-      label: "배송 요청 사항",
+      label: "요청 사항 ",
       value: project?.supportingProject?.delivery?.deliveryMessage,
     },
   ];
@@ -91,10 +91,18 @@ export const PaymentInfoCard = ({ project }) => {
       label: "결제 방법",
       value: project?.supportingProject?.payment?.paymentMethod,
     },
-    { label: "총 상품 금액", value: project?.supportingPackage?.packagePrice },
+    {
+      label: "총 금액 ",
+      value:
+        project?.paymentPackageDTO.reduce(
+          (total, pp) => (total = total + pp.price * pp.count),
+          0
+        ) + 3000,
+    },
     { label: "결제 상태", value: paymentStatus },
   ];
 
+  paymentInfo.map((pay) => console.log(pay));
   return (
     <div className={styles.container}>
       <div className={styles.deliveryInfo}>
@@ -121,10 +129,9 @@ export const PaymentInfoCard = ({ project }) => {
 
       <div className={styles.cancelButtonBox}>
         <StatusButton
-          status="결제 취소"
+          status={isCanceled ? "결제 취소됨" : "결제 취소"} // 결제 취소 시 상태 변경
           label="결제 취소"
           onClick={handleCancelPayment}
-          className={styles.cancelButton}
           disabled={isCanceled} // 비활성화 여부
         />
       </div>

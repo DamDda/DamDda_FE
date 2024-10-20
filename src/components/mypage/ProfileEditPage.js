@@ -84,7 +84,7 @@ export default function ProfileEditPage({ profile, setIsEditing, setProfile }) {
       id: user.key,
       loginId: user.id,
       email: formData.email,
-      // password: formData.password,
+      password: formData.password,
       name: formData.name,
       nickname: formData.nickname,
       phoneNumber: formData.phoneNumber,

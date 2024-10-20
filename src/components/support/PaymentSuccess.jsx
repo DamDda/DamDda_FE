@@ -11,6 +11,15 @@ export const PaymentSuccessPage = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const orderId = queryParams.get("orderId"); // URL 쿼리에서 orderId 가져옴
+  const navigate = useNavigate(); // useNavigate 훅 사용
+
+  const handleNavigateToMyPage = () => {
+    navigate("/mypage"); // 마이페이지 경로로 이동
+  };
+
+  const handleNavigateToProjects = () => {
+    navigate("/entire"); // 후원한 프로젝트 경로로 이동
+  };
 
   const [orderData, setOrderData] = useState([]); // 주문 데이터를 저장할 상태
   const [loading, setLoading] = useState(true); // 로딩 상태 관리
@@ -60,7 +69,6 @@ export const PaymentSuccessPage = () => {
 
       console.log("주문 데이터 응답:", response.data);
       setOrderData(response.data);
-      console.log("주문완료 63줄 response.data : ", response.data);
       setLoading(false); // 데이터를 가져왔으므로 로딩 완료
       await handlePaymentCompletion(orderId); // 결제 상태 변경
     } catch (err) {
@@ -99,9 +107,17 @@ export const PaymentSuccessPage = () => {
             <h1>주문이 완료되었습니다!</h1>
             <p>선물은 정상 접수 완료되었으며 배송을 시작합니다!</p>
             <div className={styles["success-buttons"]}>
-              <button className={styles["my-orders-btn"]}>마이페이지</button>
-              <button className={styles["other-projects-btn"]}>
-                후원한 프로젝트 보기
+              <button
+                className={styles["my-orders-btn"]}
+                onClick={handleNavigateToMyPage} // 버튼 클릭 시 마이페이지로 이동
+              >
+                마이페이지
+              </button>
+              <button
+                className={styles["other-projects-btn"]}
+                onClick={handleNavigateToProjects} // 버튼 클릭 시 후원한 프로젝트로 이동
+              >
+                프로젝트 둘러보기
               </button>
             </div>
           </div>

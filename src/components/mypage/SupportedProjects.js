@@ -38,14 +38,13 @@ export const SupportedProjects = () => {
   useEffect(() => {
     fetchOrders();
   }, []);
-
   return (
     <div
       style={{
         display: "flex", // flexbox 사용
-        // justifyContent: 'center', // 수평 중앙 정렬
-        // alignItems: 'center', // 수직 중앙 정렬
-        // minHeight: '100vh', // 화면 전체 높이 유지
+        justifyContent: "center", // 수평 중앙 정렬
+        alignItems: "center", // 수직 중앙 정렬
+        minHeight: "100vh", // 화면 전체 높이 유지
         padding: "20px", // 여백 추가 (선택 사항)
         width: "100%",
       }}

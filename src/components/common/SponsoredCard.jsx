@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { StatusButton } from "./ButtonComponent"; // named export로 가져오기
 import { PaymentInfoCard } from "../common/PaymentInfoCard";
+import { width } from "@mui/system";
 import { SERVER_URL } from "constants/URLs";
 
 export const SponsoredCard = ({ project }) => {
@@ -50,22 +51,34 @@ export const SponsoredCard = ({ project }) => {
         </div>
 
         {/* 중앙 텍스트 정보 */}
-        <div style={{ flex: 1, marginRight: "5px", padding: "8px" }}>
+        <div style={{ flex: 1, marginRight: "5px", padding: "15px" }}>
           <h5
             style={{
-              marginBottom: "8px",
+              marginBottom: "5px",
               fontWeight: "bold",
               fontSize: "20px",
+              marginLeft: "30px",
             }}
           >
             [{project.supportingProject.project.title}]
           </h5>
-          <p style={{ marginBottom: "8px", color: "#666" }}>
-            {/* 선물 구성: {project.supportingPackage.packageName} */}
-          </p>
-          <p style={{ marginBottom: "8px", color: "#666" }}>
-            {/* 후원 금액: {parseInt(project.supportingPackage.packagePrice).toLocaleString()}원 */}
-          </p>
+          <br></br>
+          <div>
+            {project.paymentPackageDTO.map((item, index) => (
+              <div key={index} style={{ marginLeft: "30px" }}>
+                <p style={{ marginBottom: "4px", color: "#666" }}>
+                  이름: {item.name}
+                </p>
+                <p style={{ marginBottom: "4px", color: "#666" }}>
+                  수량: {item.count}
+                </p>
+                <p style={{ marginBottom: "4px", color: "#666" }}>
+                  금액: {parseInt(item.price).toLocaleString()}원
+                </p>
+                <hr style={{ width: "400px" }} />
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* 오른쪽 정보 (상단: 후원번호와 결제 날짜, 하단: 버튼) */}
@@ -87,7 +100,7 @@ export const SponsoredCard = ({ project }) => {
                 color: "#666",
               }}
             >
-              후원번호: {project.payment.paymentId}
+              후원번호: {project.delivery.deliveryId}
             </p>
             <p style={{ fontSize: "0.875rem", color: "#666" }}>
               결제 날짜:{" "}

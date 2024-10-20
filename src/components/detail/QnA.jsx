@@ -158,7 +158,7 @@ export const QnA = () => {
       <div
         style={{
           marginBottom: "50px",
-          width: "80%",
+          width: "1200px",
           margin: "0 auto",
         }}
       >
@@ -198,7 +198,7 @@ export const QnA = () => {
       <br></br>
       <br></br>
       <br></br>
-      <div style={{ width: "100%", margin: "0 auto" }}>
+      <div style={{ width: "1200px", margin: "0 auto" }}>
         {questions.map((question, index) => (
           <React.Fragment key={question.id}>
             <Card

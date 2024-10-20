@@ -171,7 +171,7 @@ export const SponsorTable = ({ projectId }) => {
   return (
     <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
       <Box
-        style={{ display: "flex", justifyContent: "flex-end", width: "100%" }}
+        style={{ display: "flex", justifyContent: "flex-end", width: "160px" }}
       >
         <BlueBorderButtonComponent
           text="엑셀 다운로드"

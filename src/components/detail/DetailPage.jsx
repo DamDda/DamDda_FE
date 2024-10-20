@@ -131,7 +131,7 @@ export const DetailPage = () => {
       fundsReceive: projectDetail.fundsReceive, // 모인 금액
       achievementRate:
         (projectDetail.fundsReceive / projectDetail.targetFunding) * 100, // 달성률 (퍼센트로 표현)
-      daysLeft: Math.floor(timeDifference / (1000 * 60 * 60 * 24)), // 남은 일수
+      daysLeft: Math.round(timeDifference / (1000 * 60 * 60 * 24)), // 남은 일수
       supporterCnt: projectDetail.supporterCnt, // 후원자 수
       targetFunding: projectDetail.targetFunding, // 목표 금액
       startDate: projectDetail.startDate, // 펀딩 시작일
@@ -142,7 +142,7 @@ export const DetailPage = () => {
     if (
       projectInfo &&
       projectInfo.daysLeft !== null &&
-      Math.floor(timeDifference / (1000 * 60 * 60 * 24)) < 0
+      Math.round(timeDifference / (1000 * 60 * 60 * 24)) < 0
     ) {
       setModalVisible(true);
     }
@@ -460,7 +460,7 @@ export const DetailPage = () => {
           <DetailDescroption
             descriptionDetail={projectDetail.description}
             descriptionImages={projectDetail.descriptionImages.flatMap(
-              (image) => Array(5).fill(image) //--------------------------------------> 이미지 한번만 나오게 해야함!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+              (image) => Array(1).fill(image) //--------------------------------------> 이미지 한번만 나오게 해야함!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             )}
           />
         </div>

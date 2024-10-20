@@ -177,7 +177,7 @@ export const ProductCard = ({ product, handleLike }) => {
   const timeDifference = endDate - currentTime;
 
   // 밀리초를 일(day) 단위로 변환
-  const daysLeft = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+  const daysLeft = Math.round(timeDifference / (1000 * 60 * 60 * 24));
 
   const navigate = useNavigate(); //새로운 프로젝트 눌렀을 때 이동하는 네비게이트
 

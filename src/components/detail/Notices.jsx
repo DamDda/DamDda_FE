@@ -180,7 +180,7 @@ export const Notice = ({ nickName, projectId }) => {
         <div
           style={{
             marginBottom: "50px", // 아래쪽에 여유 공간 추가
-            maxWidth: "700px", // 입력 영역의 최대 너비 설정
+            maxWidth: "1200px", // 입력 영역의 최대 너비 설정
             margin: "0 auto", // 가운데 정렬
           }}
         >
@@ -218,7 +218,7 @@ export const Notice = ({ nickName, projectId }) => {
       )}
 
       {/* 등록된 공지사항 리스트 */}
-      <div style={{ width: "700px", margin: "10px auto", clear: "both" }}>
+      <div style={{ width: "1200px", margin: "10px auto", clear: "both" }}>
         {sortedNotices.map((notice, index) => (
           <React.Fragment key={notice.id}>
             {/* 공지사항 카드 */}

@@ -210,7 +210,6 @@ export const Join = () => {
       phone_number,
       address,
       detailed_address,
-      postcode,
     } = formData;
 
     const currentErrors = {
@@ -341,7 +340,13 @@ export const Join = () => {
               }}
             >
               {/* 아이디 입력 필드와 중복 확인 버튼 */}
-              <FormRow>
+              <FormRow
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "flex-end",
+                }}
+              >
                 <StandardInputBox
                   title="아이디"
                   name="id"
@@ -352,7 +357,7 @@ export const Join = () => {
                 />
                 <StyledBlueButtonComponent
                   onClick={checkIdDuplicate}
-                  text={"아이디 중복확인"}
+                  text={"중복확인"}
                 />
               </FormRow>
 
@@ -388,7 +393,13 @@ export const Join = () => {
               </FormRow>
 
               {/* 닉네임 입력 필드와 중복 확인 버튼 */}
-              <FormRow>
+              <FormRow
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "flex-end",
+                }}
+              >
                 <StandardInputBox
                   title="닉네임"
                   name="nickname"
@@ -400,7 +411,7 @@ export const Join = () => {
                 />
                 <StyledBlueButtonComponent
                   onClick={checkNicknameDuplicate}
-                  text={"닉네임 중복확인"}
+                  text={"중복확인"}
                 />
               </FormRow>
 

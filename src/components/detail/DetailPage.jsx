@@ -52,6 +52,7 @@ export const DetailPage = () => {
   const query = new URLSearchParams(location.search);
 
   const [projectId, setProjectId] = useState(query.get("projectId") || "");
+  const [modalVisible, setModalVisible] = useState(false); // 모달 상태 추가
 
   const initialProjectDetail = {
     id: projectId, // 프로젝트 ID
@@ -137,6 +138,13 @@ export const DetailPage = () => {
       liked: projectDetail.liked, // 사용자가 좋아요를 눌렀는지 여부
       liked_count: projectDetail.likeCnt, // 좋아요를 누른 사람의 수
     });
+    if (
+      projectInfo &&
+      projectInfo.daysLeft !== null &&
+      Math.floor(timeDifference / (1000 * 60 * 60 * 24)) < 0
+    ) {
+      setModalVisible(true);
+    }
   }, [projectDetail]);
   ///////////////////////////프로젝트 정보 요청 끝/////////////////////////////
 
@@ -387,37 +395,6 @@ export const DetailPage = () => {
 
   return (
     <div style={{ width: "100%", margin: "0px auto" }}>
-      {projectInfo?.daysLeft < 0 && (
-        <div
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            backgroundColor: "rgba(0, 0, 0, 0.5)", // 투명한 회색
-            zIndex: 10,
-          }}
-        />
-      )}
-      {projectInfo?.daysLeft && (
-        <div
-          style={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            backgroundColor: "#fff",
-            padding: "20px",
-            borderRadius: "8px",
-            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-            zIndex: 20,
-            textAlign: "center",
-          }}
-        >
-          <h2>종료된 펀딩입니다.</h2>
-        </div>
-      )}
       <div style={{ marginTop: "150px" }}>
         <ProjectTitle
           projectTitle={{
@@ -540,6 +517,38 @@ export const DetailPage = () => {
       <div style={{ padding: "20px", width: "90%", margin: "0 auto" }}>
         <QnA />
       </div>
+
+      {modalVisible && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.5)", // 투명한 회색
+            zIndex: 10,
+          }}
+        />
+      )}
+      {modalVisible && (
+        <div
+          style={{
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            backgroundColor: "#fff",
+            padding: "20px",
+            borderRadius: "8px",
+            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+            zIndex: 20,
+            textAlign: "center",
+          }}
+        >
+          <h2>종료된 펀딩입니다.</h2>
+        </div>
+      )}
     </div>
   );
 };

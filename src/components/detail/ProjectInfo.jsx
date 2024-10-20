@@ -85,7 +85,7 @@ export const ProjectInfo = ({
           </div>
           {/* 구분선 */}
           <Divider className="divider" />
-          <div className="button-container">
+          <div>
             <div style={{ margin: "10px 0px" }}>
               <BlueButtonComponent
                 text="이 프로젝트에 후원하기"

@@ -228,7 +228,7 @@ function CustomTableRow(props) {
 }
 
 // 후원자 정보 테이블 컴포넌트
-export const SponsorTable = () => {
+export const SponsorTable = ({ projectId }) => {
   const [orders, setOrders] = useState(mockSupporterData); // 모든 주문 정보를 저장할 상태
   // const [orders, setOrders] = useState([]); // 모든 주문 정보를 저장할 상태
   const [error, setError] = useState(null); // 에러 상태 관리
@@ -251,11 +251,8 @@ export const SponsorTable = () => {
     }
   };
 
-  const downloadFile = async (projectId) => {
+  const downloadFile = async () => {
     try {
-      // 엑셀 다운로드 버튼을 클릭 시 경고 메시지
-      alert("엑셀 다운로드를 클릭하였습니다.");
-
       // 서버로부터 프리사인드 URL을 가져오기 위한 요청
       const response = await axios.get(
         `${SERVER_URL}/order/${projectId}/supporters/excel`,
@@ -265,17 +262,18 @@ export const SponsorTable = () => {
           },
         }
       );
-
-      // 서버에서 프리사인드 URL을 응답으로 받음
-      const presignedUrl = response.data;
-
-      // 프리사인드 URL을 이용해 파일 다운로드
+      console.log("response.data", response.data);
+      // 다운로드를 위한 임시 a 태그 생성
       const link = document.createElement("a");
-      link.href = presignedUrl; // 프리사인드 URL
-      link.setAttribute("download", "supporters_list.xlsx"); // 다운로드 파일 이름 설정
+      link.href = response.data; //서버 응답 url
+
+      // 파일 이름을 지정하고 싶다면 아래 속성을 사용
+      //link.download = "어어"; // 다운로드할 파일명을 지정 (서버에서 설정한 이름을 사용할 수 있습니다)
+
+      // a 태그를 클릭하여 다운로드 실행
       document.body.appendChild(link);
       link.click();
-      document.body.removeChild(link); // 사용 후 링크 제거
+      document.body.removeChild(link);
     } catch (error) {
       console.error("엑셀 파일 다운로드에 실패했습니다.", error);
       alert("엑셀 파일 다운로드에 실패했습니다.");

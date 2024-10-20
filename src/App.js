@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { createTheme, ThemeProvider, CssBaseline } from "@mui/material";
 import ReactDOM from "react-dom";
+import ErrorBoundary from "pages/error/ErrorBoundary"; // 방금 만든 ErrorBoundary 컴포넌트
 
 import {
   BrowserRouter as Router,
@@ -257,190 +258,193 @@ function App() {
         <div style={{ fontFamily: "Pretendard-Regular" }}>
           <Router>
             <ScrollToTop /> {/* 여기에 ScrollToTop 추가 */}
-            <Routes>
-              <Route
-                path="/BlueButtonComponent"
-                element={
-                  <BlueButtonComponent
-                    text="버튼 테스트"
-                    onClick={() => alert("버튼이 클릭되었습니다!")}
-                    //style={buttonStyle} // 스타일 객체 전달
-                  />
-                }
-              />
-              <Route
-                path="/BlueBorderButtonComponent"
-                element={
-                  <BlueBorderButtonComponent
-                    text="버튼 테스트"
-                    onClick={() => alert("버튼이 클릭되었습니다!")}
-                    //style={buttonStyle} // 스타일 객체 전달
-                  />
-                }
-              />
-              <Route
-                path="/RedButtonComponent"
-                element={
-                  <RedButtonComponent
-                    text="버튼 테스트"
-                    onClick={() => alert("버튼이 클릭되었습니다!")}
-                    //style={buttonStyle} // 스타일 객체 전달
-                  />
-                }
-              />
-              <Route
-                path="/RedBorderButtonComponent"
-                element={
-                  <RedBorderButtonComponent
-                    text="버튼 테스트"
-                    onClick={() => alert("버튼이 클릭되었습니다!")}
-                    //style={buttonStyle} // 스타일 객체 전달
-                  />
-                }
-              />
+            <ErrorBoundary>
+              <Routes>
+                <Route
+                  path="/BlueButtonComponent"
+                  element={
+                    <BlueButtonComponent
+                      text="버튼 테스트"
+                      onClick={() => alert("버튼이 클릭되었습니다!")}
+                      //style={buttonStyle} // 스타일 객체 전달
+                    />
+                  }
+                />
+                <Route
+                  path="/BlueBorderButtonComponent"
+                  element={
+                    <BlueBorderButtonComponent
+                      text="버튼 테스트"
+                      onClick={() => alert("버튼이 클릭되었습니다!")}
+                      //style={buttonStyle} // 스타일 객체 전달
+                    />
+                  }
+                />
+                <Route
+                  path="/RedButtonComponent"
+                  element={
+                    <RedButtonComponent
+                      text="버튼 테스트"
+                      onClick={() => alert("버튼이 클릭되었습니다!")}
+                      //style={buttonStyle} // 스타일 객체 전달
+                    />
+                  }
+                />
+                <Route
+                  path="/RedBorderButtonComponent"
+                  element={
+                    <RedBorderButtonComponent
+                      text="버튼 테스트"
+                      onClick={() => alert("버튼이 클릭되었습니다!")}
+                      //style={buttonStyle} // 스타일 객체 전달
+                    />
+                  }
+                />
 
-              <Route
-                path="/category"
-                element={
-                  <MultiCategoryComponent
-                    setCategory={(value) => handleyClick(value)}
-                  />
-                }
-              />
+                <Route
+                  path="/category"
+                  element={
+                    <MultiCategoryComponent
+                      setCategory={(value) => handleyClick(value)}
+                    />
+                  }
+                />
 
-              <Route
-                path="/dropdown"
-                element={
-                  <DropdownComponent
-                    inputLabel="Select an option"
-                    menuItems={menuItems}
-                    selectValue={selectedValue}
-                    onChange={handleDropdownChange}
-                  />
-                }
-              />
+                <Route
+                  path="/dropdown"
+                  element={
+                    <DropdownComponent
+                      inputLabel="Select an option"
+                      menuItems={menuItems}
+                      selectValue={selectedValue}
+                      onChange={handleDropdownChange}
+                    />
+                  }
+                />
 
-              <Route
-                path="/download"
-                element={
-                  <FileDownloadComponent
-                    handleDownload={handleFileDownload}
-                    fileName="example.pdf"
-                  />
-                }
-              />
+                <Route
+                  path="/download"
+                  element={
+                    <FileDownloadComponent
+                      handleDownload={handleFileDownload}
+                      fileName="example.pdf"
+                    />
+                  }
+                />
 
-              <Route
-                path="/upload"
-                element={
-                  <FileUploadComponent
-                    handleChange={handleFileChange}
-                    handleUpload={handleFileUpload}
-                  />
-                }
-              />
+                <Route
+                  path="/upload"
+                  element={
+                    <FileUploadComponent
+                      handleChange={handleFileChange}
+                      handleUpload={handleFileUpload}
+                    />
+                  }
+                />
 
-              <Route
-                path="/gifts"
-                element={<GiftCompositionComponent rewardData={rewardData} />}
-              />
+                <Route
+                  path="/gifts"
+                  element={<GiftCompositionComponent rewardData={rewardData} />}
+                />
 
-              <Route
-                path="/carousel"
-                element={
-                  <ImageCarousel
-                    images={CarouselImages}
-                    style={CarouselStyle}
-                  />
-                }
-              />
+                <Route
+                  path="/carousel"
+                  element={
+                    <ImageCarousel
+                      images={CarouselImages}
+                      style={CarouselStyle}
+                    />
+                  }
+                />
 
-              <Route
-                path="/pagination"
-                element={
-                  <PaginationComponent
-                    currentPage={currentPage}
-                    setCurrentPage={setCurrentPage}
-                  />
-                }
-              />
+                <Route
+                  path="/pagination"
+                  element={
+                    <PaginationComponent
+                      currentPage={currentPage}
+                      setCurrentPage={setCurrentPage}
+                    />
+                  }
+                />
 
-              <Route
-                path="/searchBoxComponent"
-                element={<SearchBoxComponent />}
-              />
+                <Route
+                  path="/searchBoxComponent"
+                  element={<SearchBoxComponent />}
+                />
 
-              <Route path="/inputBox" element={<InputBox />} />
-              <Route path="/inputLine" element={<InputLine />} />
-              <Route path="/inputLargeBox" element={<InputLargeBox />} />
+                <Route path="/inputBox" element={<InputBox />} />
+                <Route path="/inputLine" element={<InputLine />} />
+                <Route path="/inputLargeBox" element={<InputLargeBox />} />
 
-              <Route
-                path="/shortcutBoxComponent"
-                element={<ShortcutBoxComponent services={services} />}
-              />
+                <Route
+                  path="/shortcutBoxComponent"
+                  element={<ShortcutBoxComponent services={services} />}
+                />
 
-              <Route
-                path="/tabComponent"
-                element={
-                  <TabComponent
-                    tabIndex={tabIndex}
-                    setTabIndex={setTabIndex}
-                    labels={labels}
-                    sectionRefs={sectionRefs} // ref 전달
-                  />
-                }
-              />
+                <Route
+                  path="/tabComponent"
+                  element={
+                    <TabComponent
+                      tabIndex={tabIndex}
+                      setTabIndex={setTabIndex}
+                      labels={labels}
+                      sectionRefs={sectionRefs} // ref 전달
+                    />
+                  }
+                />
 
-              <Route
-                path="/sponsoredListComponent"
-                element={<SponsoredListComponent projects={projects} />}
-              />
-              {/* PaymentInfoCard가 표시되는 경로 */}
-              <Route
-                path="/projectRowComponent"
-                element={
-                  <ProjectRowComponent
-                    title={"타이틀"}
-                    sortCondition={"정렬기준"}
-                    subTitle={"서브타이틀"}
-                  />
-                }
-              />
+                <Route
+                  path="/sponsoredListComponent"
+                  element={<SponsoredListComponent projects={projects} />}
+                />
+                {/* PaymentInfoCard가 표시되는 경로 */}
+                <Route
+                  path="/projectRowComponent"
+                  element={
+                    <ProjectRowComponent
+                      title={"타이틀"}
+                      sortCondition={"정렬기준"}
+                      subTitle={"서브타이틀"}
+                    />
+                  }
+                />
 
-              <Route path="/gift" element={<GiftPage />} />
-              {/* ////////////////////////////// */}
-              <Route path="/" element={<Main />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/join" element={<Join />} />
-              <Route path="/entire" element={<Entire />} />
-              <Route path="/detail" element={<ProjectDetail />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/find-id" element={<FindID />} />
-              <Route path="/reset-password" element={<ResetPassword />} />
-              <Route path="/payment" element={<Payment />} />
-              <Route path="/payment/success" element={<PaymentSuccess />} />
-              <Route path="/mypage" element={<Mypage />} />
-              <Route path="/TossReady" element={<TossReady />} />
-              <Route path="/error" element={<ErrorPage />} />
-              {/* /////////////////////////////지영//////////////////////////////////// */}
-              {/* +                    <Route path="/order" element={<OrderPage />} />
+                <Route path="/gift" element={<GiftPage />} />
+                {/* ////////////////////////////// */}
+                <Route path="/" element={<Main />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/join" element={<Join />} />
+                <Route path="/entire" element={<Entire />} />
+                <Route path="/detail" element={<ProjectDetail />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/find-id" element={<FindID />} />
+                <Route path="/reset-password" element={<ResetPassword />} />
+                <Route path="/payment" element={<Payment />} />
+                <Route path="/payment/success" element={<PaymentSuccess />} />
+                <Route path="/mypage" element={<Mypage />} />
+                <Route path="/TossReady" element={<TossReady />} />
+
+                <Route path="/error" element={<ErrorPage />} />
+                {/* /////////////////////////////지영//////////////////////////////////// */}
+                {/* +                    <Route path="/order" element={<OrderPage />} />
                     <Route path="/user/myorders/:userId" element={<MyOrders />} />
                     <Route path="/yourpage" element={<YourPage />} />
                     <Route path="/TossReady" element={<TossReady />} /> */}
 
-              {/* /////////////////////////////남희/////////////////////////////////// */}
+                {/* /////////////////////////////남희/////////////////////////////////// */}
 
-              {/* 
+                {/* 
               <Route path="/reset-password" element={<ResetPassword />} />
               
               <Route path="/detail" element={<Detail />} />
               <Route path="/register" element={<Register />} />
               <Route path="/error" element={<ErrorPage />} />
               <Route path="/projectDetail" element={<ProjectDetail />} /> */}
-              {/* /////////////////////////////혜원/////////////////////////////////// */}
-              {/* <Route path="/mypage" element={<MyPage />} /> */}
-              {/* /////////////////////////////주현/////////////////////////////////// */}
-            </Routes>
+                {/* /////////////////////////////혜원/////////////////////////////////// */}
+                {/* <Route path="/mypage" element={<MyPage />} /> */}
+                {/* /////////////////////////////주현/////////////////////////////////// */}
+              </Routes>
+            </ErrorBoundary>
           </Router>
         </div>
       </ThemeProvider>

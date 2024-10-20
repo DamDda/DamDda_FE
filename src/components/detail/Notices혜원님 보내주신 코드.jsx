@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import {
   Typography,
   Button,
@@ -8,20 +9,17 @@ import {
   TextField,
 } from "@mui/material";
 import { Edit, Delete } from "@mui/icons-material";
-import { useUser } from "UserContext";
 import axios from "axios";
 import { SERVER_URL } from "constants/URLs";
 import Cookies from "js-cookie";
+import { useUser } from "UserContext";
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
 
-export const Notice = ({ nickName, projectId }) => {
-  const [newTitle, setNewTitle] = useState("");
-  const [newContent, setNewContent] = useState("");
-  const [editTitle, setEditTitle] = useState("");
-  const [editContent, setEditContent] = useState("");
-  const [notices, setNotices] = useState([]);
-  const [editingNoticeId, setEditingNoticeId] = useState(null);
-  const { user } = useUser();
+export const Notice = () => {
   // 공지사항 리스트를 관리하는 상태 (처음에는 세 개의 더미 데이터로 초기화)
+  // const dummyData = [
   //   {
   //     id: 1,
   //     title: "1번째 예시 공지사항 제목",
@@ -43,43 +41,38 @@ export const Notice = ({ nickName, projectId }) => {
   //     date: new Date(2024, 4, 10).toLocaleDateString(),
   //     imageUrl: "https://via.placeholder.com/80",
   //   },
-  // ]);
+  // ];
+
+  // 새롭게 추가할 공지사항의 제목과 내용을 관리하는 상태
+  const [newTitle, setNewTitle] = useState("");
+  const [newContent, setNewContent] = useState("");
+  const [editTitle, setEditTitle] = useState("");
+  const [editContent, setEditContent] = useState("");
+  const [notices, setNotices] = useState([]);
+  const [editingNoticeId, setEditingNoticeId] = useState(null);
+  const query = useQuery();
+  const { user } = useUser();
+  const projectId = query.get("projectId");
 
   useEffect(() => {
     axios
-      .get(`${SERVER_URL}/notice?projectId=${projectId}`, {
-        headers: {
-          ...(Cookies.get("accessToken") && {
-            Authorization: `Bearer ${Cookies.get("accessToken")}`,
-          }),
-        },
-      })
+      .get(`${SERVER_URL}/notice?projectId=${projectId}`)
       .then((response) => {
         setNotices(response.data);
-        console.log(response.data);
       })
       .catch((error) => {
         console.error(error);
       });
   }, []);
 
-  // 새로운 공지사항을 추가하는 함수(수정 완)
-  const handleAddNotice = () => {
-    const alertText = newTitle
-      ? newContent
-        ? ""
-        : "내용을 입력해주세요."
-      : newContent
-        ? "제목을 입력해주세요."
-        : "제목과 내용을 입력해 주세요.";
-    if (alertText !== "") {
-      alert(alertText);
-      return;
-    }
+  // 새로운 공지사항을 추가하는 함수
+  const handleAddNotice = async () => {
     const newNotice = {
-      title: newTitle,
-      content: newContent,
+      //id: notices.length + 1,
+      memberId: user.id,
       projectId: projectId,
+      title: newTitle || "공지사항 제목을 입력해주세요.",
+      content: newContent || "진행자가 내용을 입력합니다.",
     };
     axios
       .post(`${SERVER_URL}/notice`, newNotice, {
@@ -93,7 +86,6 @@ export const Notice = ({ nickName, projectId }) => {
         setNotices((prevNotices) => [...prevNotices, response.data]);
         setNewTitle("");
         setNewContent("");
-        console.log(response.data);
         window.alert("공지사항이 등록되었습니다.");
       })
       .catch((error) => {
@@ -124,6 +116,10 @@ export const Notice = ({ nickName, projectId }) => {
         });
     }
   };
+  const token = Cookies.get("accessToken");
+  console.log("Access Token:", token);
+
+  // 공지사항 수정 처리
 
   const handleEditNotice = (id) => {
     setEditingNoticeId(id);
@@ -133,17 +129,18 @@ export const Notice = ({ nickName, projectId }) => {
       setEditContent(noticeToEdit.content);
     }
   };
-
   // 공지사항 저장
   const handleSaveNotice = async (id) => {
     const updatedNotice = {
       id: id,
+      memberId: user.id,
       projectId: projectId,
       title: editTitle,
       content: editContent,
       date: notices.find((notice) => notice.id === id).date,
       updated: new Date().toLocaleDateString(),
     };
+
     axios
       .put(`${SERVER_URL}/notice/${id}`, updatedNotice, {
         headers: {
@@ -176,49 +173,47 @@ export const Notice = ({ nickName, projectId }) => {
   return (
     <div style={{ width: "100%" }}>
       {/* 공지사항 입력 영역 */}
-      {user.nickname === nickName && (
-        <div
-          style={{
-            marginBottom: "50px", // 아래쪽에 여유 공간 추가
-            maxWidth: "700px", // 입력 영역의 최대 너비 설정
-            margin: "0 auto", // 가운데 정렬
-          }}
+      <div
+        style={{
+          marginBottom: "50px",
+          maxWidth: "700px",
+          margin: "0 auto",
+        }}
+      >
+        <Typography
+          variant="h6"
+          style={{ fontWeight: "bold", marginBottom: "20px" }}
         >
-          <Typography
-            variant="h6"
-            style={{ fontWeight: "bold", marginBottom: "20px" }}
-          >
-            공지사항 입력하기
-          </Typography>
+          공지사항 입력하기
+        </Typography>
 
-          <TextField
-            label="제목을 입력해주세요."
-            fullWidth
-            value={newTitle}
-            onChange={(e) => setNewTitle(e.target.value)}
-            style={{ marginBottom: "10px" }}
-          />
-          <TextField
-            label="내용을 입력해주세요."
-            fullWidth
-            multiline
-            rows={4}
-            value={newContent}
-            onChange={(e) => setNewContent(e.target.value)}
-            style={{ marginBottom: "10px" }}
-          />
-          <Button
-            variant="contained"
-            onClick={handleAddNotice}
-            style={{ float: "right" }}
-          >
-            등록하기
-          </Button>
-        </div>
-      )}
+        <TextField
+          label="제목을 입력해주세요."
+          fullWidth
+          value={newTitle}
+          onChange={(e) => setNewTitle(e.target.value)}
+          style={{ marginBottom: "10px" }}
+        />
+        <TextField
+          label="내용을 입력해주세요."
+          fullWidth
+          multiline
+          rows={4}
+          value={newContent}
+          onChange={(e) => setNewContent(e.target.value)}
+          style={{ marginBottom: "10px" }}
+        />
+        <Button
+          variant="contained"
+          onClick={handleAddNotice}
+          style={{ float: "right" }}
+        >
+          등록하기
+        </Button>
+      </div>
 
       {/* 등록된 공지사항 리스트 */}
-      <div style={{ width: "700px", margin: "10px auto", clear: "both" }}>
+      <div style={{ clear: "both" }}>
         {sortedNotices.map((notice, index) => (
           <React.Fragment key={notice.id}>
             {/* 공지사항 카드 */}
@@ -276,6 +271,7 @@ export const Notice = ({ nickName, projectId }) => {
                     )}
                   </Typography>
                 </div>
+
                 {/* 내용 */}
                 <Typography variant="body1" style={{ marginTop: "10px" }}>
                   {editingNoticeId === notice.id ? (
@@ -296,48 +292,53 @@ export const Notice = ({ nickName, projectId }) => {
                     ))
                   )}
                 </Typography>
+
                 {/* 작성일자 */}
                 <Typography
                   variant="body2"
                   style={{ color: "#888", marginTop: "5px" }}
                 >
-                  작성자: 관리자({nickName})
+                  작성자: 관리자 | {notice.date}
+                  {notice.updated && <span> (수정됨)</span>}
                 </Typography>
               </div>
 
+              {/* 이미지 */}
+              {/* <div style={{ marginLeft: "20px" }}>
+                <img
+                  src={notice.imageUrl}
+                  alt="공지 이미지"
+                  style={{ width: "80px", height: "60px", borderRadius: "5px" }}
+                />
+              </div> */}
+
               {/* 수정/삭제 버튼 */}
               <div style={{ marginLeft: "20px" }}>
-                {nickName === user.nickname && (
-                  <div>
-                    {editingNoticeId === notice.id ? (
-                      <>
-                        <Button
-                          variant="contained"
-                          onClick={() => handleSaveNotice(notice.id)}
-                          style={{ marginRight: "10px" }}
-                        >
-                          저장
-                        </Button>
-                        <Button
-                          variant="outlined"
-                          onClick={() => setEditingNoticeId(null)}
-                        >
-                          취소
-                        </Button>
-                      </>
-                    ) : (
-                      <>
-                        <IconButton onClick={() => handleEditNotice(notice.id)}>
-                          <Edit fontSize="small" />
-                        </IconButton>
-                        <IconButton
-                          onClick={() => handleDeleteNotice(notice.id)}
-                        >
-                          <Delete fontSize="small" />
-                        </IconButton>
-                      </>
-                    )}
-                  </div>
+                {editingNoticeId === notice.id ? (
+                  <>
+                    <Button
+                      variant="contained"
+                      onClick={() => handleSaveNotice(notice.id)}
+                      style={{ marginRight: "10px" }}
+                    >
+                      저장
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      onClick={() => setEditingNoticeId(null)}
+                    >
+                      취소
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <IconButton onClick={() => handleEditNotice(notice.id)}>
+                      <Edit fontSize="small" />
+                    </IconButton>
+                    <IconButton onClick={() => handleDeleteNotice(notice.id)}>
+                      <Delete fontSize="small" />
+                    </IconButton>
+                  </>
                 )}
               </div>
             </div>

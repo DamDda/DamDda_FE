@@ -91,6 +91,7 @@ export const DetailPage = () => {
   // const [likedCount, setLikedCount] = useState();
   // const [isHearted, setIsHearted] = useState();
   const [selectedPackages, setSelectedPackages] = useState([]);
+  console.log("projectDetailprojectDetailprojectDetail : ", projectDetail);
 
   // 프로젝트 정보 요청을 보내는 함수
   const fetchProducts = () => {
@@ -502,7 +503,10 @@ export const DetailPage = () => {
         />
       </div>
       <div style={{ padding: "20px", width: "90%", margin: "0 auto" }}>
-        <Notice />
+        <Notice
+          nickName={projectDetail.nickName}
+          projectId={projectDetail.id}
+        />
       </div>
 
       <div ref={sectionRefs.qnaRef} style={{ margin: "100px 0px 50px 0px" }}>

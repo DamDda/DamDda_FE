@@ -153,7 +153,7 @@ export const MyProjectDetails = ({ projectId, setClickMyproject }) => {
               justifyContent: "center",
             }}
           >
-            <SponsorTable />
+            <SponsorTable projectId={projectId} />
           </div>
         );
 

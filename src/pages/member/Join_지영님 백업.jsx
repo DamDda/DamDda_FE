@@ -427,7 +427,7 @@ export const Join = () => {
 
               <StandardInputBox
                 title="연락처"
-                name="phone_number"
+                name="phone_nu 확ㅇmber"
                 value={formData.phone_number}
                 onChange={handleChange}
                 placeholder="010-1234-5678"

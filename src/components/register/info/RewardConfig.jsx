@@ -1,4 +1,7 @@
-import { BlueButtonComponent } from "components/common/ButtonComponent";
+import {
+  BlueBorderButtonComponent,
+  BlueButtonComponent,
+} from "components/common/ButtonComponent";
 import Form from "./Form";
 import {
   baseTheme,
@@ -118,14 +121,28 @@ const RewardConfig = (props) => {
       <Form title={"옵션 조건"}>
         <div className="button-group" style={{ width: "100%", gap: "10px" }}>
           <div className="button-group" style={{ width: "100%", gap: "40px" }}>
-            <BlueButtonComponent
-              text="없음"
-              onClick={() => setOptionType("none")}
-            />
-            <BlueButtonComponent
-              text="선택식"
-              onClick={() => setOptionType("select")}
-            />
+            {optionType === "none" ? (
+              <BlueButtonComponent
+                text="없음"
+                onClick={() => setOptionType("none")}
+              />
+            ) : (
+              <BlueBorderButtonComponent
+                text="없음"
+                onClick={() => setOptionType("none")}
+              />
+            )}
+            {optionType === "select" ? (
+              <BlueButtonComponent
+                text="선택식"
+                onClick={() => setOptionType("select")}
+              />
+            ) : (
+              <BlueBorderButtonComponent
+                text="선택식"
+                onClick={() => setOptionType("select")}
+              />
+            )}
           </div>
           <ThemeProvider theme={baseTheme}>
             <Tooltip

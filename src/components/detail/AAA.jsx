@@ -70,7 +70,7 @@ export const PaymentSuccessPage = () => {
       console.log("주문 데이터 응답:", response.data);
       setOrderData(response.data);
       setLoading(false); // 데이터를 가져왔으므로 로딩 완료
-      await handlePaymentCompletion(orderId); // 결제 상태 변경
+      //await handlePaymentCompletion(orderId); // 결제 상태 변경
     } catch (err) {
       console.error("주문 데이터 요청 오류:", err.message);
       setError(err.message);

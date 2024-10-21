@@ -129,7 +129,7 @@ export const ProjectRowComponent = ({ sortCondition, title, subTitle }) => {
           display: "flex",
           alignItems: "center",
           width: "100%",
-          justifyContent: "space-between",
+          justifyContent: "flex-start",
         }}
       >
         <IconButton
@@ -144,8 +144,7 @@ export const ProjectRowComponent = ({ sortCondition, title, subTitle }) => {
             display: "flex",
             overflowX: "hidden",
             scrollBehavior: "smooth",
-            maxWidth: "100%",
-            width: "100%",
+            width: "87.5%",
           }}
           ref={scrollContainerRef}
         >

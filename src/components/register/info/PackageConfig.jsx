@@ -1,4 +1,7 @@
-import { BlueButtonComponent } from "components/common/ButtonComponent";
+import {
+  BlueBorderButtonComponent,
+  BlueButtonComponent,
+} from "components/common/ButtonComponent";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import Form from "./Form";
 import {
@@ -33,6 +36,7 @@ const PackageConfig = (props) => {
     packagePrice,
     setPackagePrice,
     isEditing,
+    setEditing,
     fetchPackages,
     handleSnackbarOpen,
   } = props;
@@ -147,6 +151,7 @@ const PackageConfig = (props) => {
     }
     fetchPackages();
     clearPackageInput();
+    setEditing(false);
   };
 
   return (
@@ -212,21 +217,43 @@ const PackageConfig = (props) => {
               className="button-group"
               style={{ width: "100%", gap: "20px" }}
             >
-              <BlueButtonComponent
-                text="없음"
-                onClick={() => {
-                  setLimit(false);
-                  setPackageLimit(-1);
-                }}
-              />
-              <BlueButtonComponent
-                text="있음"
-                onClick={() => {
-                  setLimit(true);
-                  setPackageLimit(100);
-                }}
-              />
-              {isLimit ? (
+              {isLimit && packageLimit !== -1 ? (
+                <BlueBorderButtonComponent
+                  text="없음"
+                  onClick={() => {
+                    setLimit(false);
+                    setPackageLimit(-1);
+                  }}
+                />
+              ) : (
+                <BlueButtonComponent
+                  text="없음"
+                  onClick={() => {
+                    setLimit(false);
+                    setPackageLimit(-1);
+                  }}
+                />
+              )}
+
+              {isLimit && packageLimit !== -1 ? (
+                <BlueButtonComponent
+                  text="있음"
+                  onClick={() => {
+                    setLimit(true);
+                    setPackageLimit(100);
+                  }}
+                />
+              ) : (
+                <BlueBorderButtonComponent
+                  text="있음"
+                  onClick={() => {
+                    setLimit(true);
+                    setPackageLimit(100);
+                  }}
+                />
+              )}
+
+              {isLimit && packageLimit !== -1 ? (
                 <div className="count-box">
                   <MinusButton onClick={() => handleLimitChange("--")} />
                   <input

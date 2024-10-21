@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import styles from "components/support/css/PaymentSuccess.module.css"; // CSS Modules import
@@ -6,6 +6,12 @@ import { useNavigate } from "react-router-dom"; // useNavigate를 import
 import Cookies from "js-cookie";
 import { SERVER_URL } from "constants/URLs";
 import cart from "assets/cart.png";
+
+// 결제 상태를 관리하는 전역 객체
+const paymentStatus = {
+  completed: false,
+  inProgress: false,
+};
 
 export const PaymentSuccessPage = () => {
   const location = useLocation();
@@ -25,13 +31,16 @@ export const PaymentSuccessPage = () => {
   const [loading, setLoading] = useState(true); // 로딩 상태 관리
   const [error, setError] = useState(null); // 에러 상태 관리
   const accessToken = Cookies.get("accessToken");
-
   console.log("PaymentSuccessPage 렌더링: ", { orderId, accessToken }); // 초기 로그
 
-  // 결제 완료로 변경하는 로직
   const handlePaymentCompletion = async (orderId) => {
+    if (paymentStatus.completed || paymentStatus.inProgress) {
+      console.log("결제 완료 처리가 이미 진행 중이거나 완료되었습니다.");
+      return;
+    }
+    paymentStatus.inProgress = true;
+
     try {
-      console.log("결제 상태 변경 중:", orderId);
       const updatedPaymentStatus = {
         paymentStatus: "결제 완료",
       };
@@ -45,44 +54,58 @@ export const PaymentSuccessPage = () => {
           },
         }
       );
-      console.log("결제 상태 변경 성공:", response.data);
+      paymentStatus.completed = true;
     } catch (error) {
       console.error("결제 상태 변경 중 오류 발생:", error);
+    } finally {
+      paymentStatus.inProgress = false;
     }
   };
 
-  // 주문 정보를 가져오는 함수
-  const fetchOrderData = async () => {
-    console.log("주문 데이터 요청 시작:", orderId);
+  const fetchOrderData = useCallback(async () => {
+    if (loading) {
+      try {
+        const response = await axios.get(
+          `${SERVER_URL}/order/details/${orderId}`,
+          {
+            headers: {
+              ...(accessToken && {
+                Authorization: `Bearer ${accessToken}`,
+              }),
+            },
+          }
+        );
 
-    try {
-      const response = await axios.get(
-        `${SERVER_URL}/order/details/${orderId}`,
-        {
-          headers: {
-            ...(Cookies.get("accessToken") && {
-              Authorization: `Bearer ${Cookies.get("accessToken")}`,
-            }),
-          },
+        if (response.data.payment?.paymentStatus !== "결제 완료") {
+          await handlePaymentCompletion(orderId);
+          // 결제 완료 후 주문 데이터를 다시 가져옵니다.
+          const updatedResponse = await axios.get(
+            `${SERVER_URL}/order/details/${orderId}`,
+            {
+              headers: {
+                ...(accessToken && {
+                  Authorization: `Bearer ${accessToken}`,
+                }),
+              },
+            }
+          );
+          setOrderData(updatedResponse.data);
+        } else {
+          setOrderData(response.data);
         }
-      );
-
-      console.log("주문 데이터 응답:", response.data);
-      setOrderData(response.data);
-      setLoading(false); // 데이터를 가져왔으므로 로딩 완료
-      await handlePaymentCompletion(orderId); // 결제 상태 변경
-    } catch (err) {
-      console.error("주문 데이터 요청 오류:", err.message);
-      setError(err.message);
-      setLoading(false); // 에러가 발생해도 로딩 완료
+      } catch (err) {
+        console.error("주문 데이터 요청 오류:", err.message);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
     }
-  };
+  }, [orderId, accessToken, handlePaymentCompletion]);
 
-  // 컴포넌트가 마운트될 때 주문 정보 가져오기
   useEffect(() => {
     console.log("useEffect 호출됨. 주문 정보 가져오기 시도.");
     fetchOrderData();
-  }, []);
+  }, [fetchOrderData]);
 
   if (loading) {
     console.log("로딩 중...");
@@ -146,7 +169,10 @@ export const PaymentSuccessPage = () => {
                       {/* 주문 일자 */}
                       <td>{packageItem.count}</td> {/* 수량 */}
                       <td>
-                        {parseInt(packageItem.price).toLocaleString()}원
+                        {parseInt(
+                          packageItem.price * packageItem.count
+                        ).toLocaleString()}
+                        원
                       </td>{" "}
                       {/* 결제 금액 */}
                     </tr>

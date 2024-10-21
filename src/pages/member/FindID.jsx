@@ -49,6 +49,7 @@ export const FindID = () => {
       return;
     }
 
+    console.log(formData.name, formData.email);
     try {
       const response = await axios.get(`${SERVER_URL}/member/findid`, {
         params: { name: formData.name, email: formData.email },
@@ -59,10 +60,10 @@ export const FindID = () => {
 
       // 응답 로깅
 
-      console.log(response);
+      console.log("response: ", response);
 
       const idData = response.data;
-      console.log(idData);
+      console.log("idData: ", idData);
 
       if (idData) {
         setUserId(idData);
@@ -183,16 +184,16 @@ export const FindID = () => {
                 alignItems: "center",
               }}
             >
-              <BlueBorderButtonComponent
-                text="로그인"
-                onClick={() => navigate("/login")}
-                sx={{ margin: "20px", width: "250px", height: "50px" }}
-              />
-              <div style={{ margin: "0px 5px" }}></div>
               <BlueButtonComponent
                 text="아이디 찾기"
                 type="submit" // 폼과 동기화
-                sx={{ width: "150px", height: "50px" }}
+                sx={{ width: "145px", height: "50px" }}
+              />
+              <div style={{ margin: "0px 5px" }}></div>
+              <BlueBorderButtonComponent
+                text="로그인"
+                onClick={() => navigate("/login")}
+                sx={{ width: "145px", height: "50px" }}
               />
             </div>
 

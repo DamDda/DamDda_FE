@@ -130,9 +130,7 @@ export const Preview = (props) => {
         >
           <DetailDescroption
             descriptionDetail={project.descriptionDetail}
-            descriptionImages={project.descriptionImages.flatMap((image) =>
-              Array(5).fill(image)
-            )}
+            descriptionImages={project.descriptionImages}
           />
         </div>
         <div

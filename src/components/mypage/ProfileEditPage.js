@@ -433,14 +433,7 @@ export default function ProfileEditPage({ profile, setIsEditing, setProfile }) {
           <Typography id="modal-modal-title" variant="h6" component="h2">
             비밀번호 변경
           </Typography>
-          <TextField
-            fullWidth
-            label="현재 비밀번호"
-            type="password"
-            value={currentPassword}
-            onChange={(e) => setCurrentPassword(e.target.value)}
-            margin="normal"
-          />
+          
           <TextField
             fullWidth
             label="새로운 비밀번호"
